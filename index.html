@@ -1,0 +1,661 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Banking – Smart Banking for a Better Future"/>
+  <title>azentio Banking</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <style>
+/* ── Tokens ── */
+:root {
+  --az-green: #2ed88e; --az-green-h: #25c47e;
+  --az-navy:  #16303d; --az-blue: #0085db;
+  --az-muted: #8a979e; --az-border: #e2e8ec;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px; color: var(--az-navy); background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Topbar ── */
+.lp-topbar {
+  background: var(--az-navy);
+  color: rgba(255,255,255,.75);
+  font-size: 12px;
+  padding: 5px 1.5rem;
+  display: flex; align-items: center; justify-content: flex-end; gap: 1.25rem;
+}
+.lp-topbar a { color: rgba(255,255,255,.75); text-decoration: none; }
+.lp-topbar a:hover { color: #fff; }
+
+/* ── Header ── */
+.lp-hdr {
+  position: sticky; top: 0; z-index: 900;
+  background: #fff;
+  box-shadow: 0 1px 0 var(--az-border);
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem;
+}
+.lp-nav { display: flex; align-items: center; gap: .25rem; }
+.lp-nav-link {
+  padding: .4375rem .875rem;
+  color: var(--az-navy); font-size: 13.5px; font-weight: 500;
+  text-decoration: none; border-radius: 6px;
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+.lp-nav-link:hover { background: #f0f4f6; color: var(--az-navy); }
+.lp-nav-link.active { color: var(--az-green); font-weight: 700; }
+.lp-hdr-actions { display: flex; align-items: center; gap: .625rem; }
+.btn-login {
+  padding: .5rem 1.25rem;
+  background: var(--az-navy); color: #fff; border: none;
+  border-radius: 6px; font-family: 'Roboto', sans-serif;
+  font-size: 13.5px; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: background .15s;
+}
+.btn-login:hover { background: #1e4356; color: #fff; }
+.btn-register {
+  padding: .5rem 1.25rem;
+  background: var(--az-green); color: #fff; border: none;
+  border-radius: 6px; font-family: 'Roboto', sans-serif;
+  font-size: 13.5px; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: background .15s;
+}
+.btn-register:hover { background: var(--az-green-h); color: #fff; }
+.hdr-lang-wrap { position: relative; display: flex; align-items: center; }
+.hdr-lang-wrap::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 12px; }
+.hdr-lang {
+  display: flex; align-items: center; gap: 5px;
+  background: none; border: 1px solid var(--az-border);
+  border-radius: 6px; padding: .375rem .75rem;
+  font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500;
+  color: var(--az-navy); cursor: pointer;
+}
+.hdr-lang:hover { background: #f0f4f6; }
+.hdr-lang-drop {
+  position: absolute; top: calc(100% + 12px); right: 0;
+  min-width: 150px; background: #fff;
+  border: 1px solid var(--az-border); border-radius: .5rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,.13);
+  z-index: 9997; opacity: 0; pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .2s .4s, transform .2s .4s;
+  padding: .25rem 0; overflow: hidden;
+}
+.hdr-lang-wrap:hover .hdr-lang-drop {
+  opacity: 1; pointer-events: auto; transform: translateY(0);
+  transition: opacity .15s, transform .15s;
+}
+.hdr-lang-opt {
+  display: flex; align-items: center; gap: .625rem;
+  padding: .5625rem 1rem; width: 100%;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Roboto', sans-serif; font-size: .8125rem;
+  color: var(--az-navy); text-align: left; transition: background .1s;
+}
+.hdr-lang-opt:hover { background: #f0faf5; }
+.hdr-lang-opt.active { font-weight: 700; background: #f5fdf9; }
+.hdr-lang-opt .fi { width: 20px; height: 15px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── Hero ── */
+.lp-hero {
+  position: relative; overflow: hidden;
+  background: var(--az-navy);
+  min-height: 420px;
+  display: flex; align-items: stretch;
+}
+.hero-img {
+  position: absolute; inset: 0;
+  background: url('images/landing/hero.png') center center / cover no-repeat;
+  opacity: .75;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(22,48,61,.92) 0%, rgba(22,48,61,.65) 45%, rgba(22,48,61,.1) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 620px;
+  padding: 4.5rem 2rem 4.5rem 3rem;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.hero-eyebrow {
+  font-size: 12px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--az-green);
+  margin-bottom: .75rem;
+}
+.hero-h1 {
+  font-size: 2.375rem; font-weight: 700; line-height: 1.2;
+  color: #fff; margin-bottom: 1rem;
+}
+.hero-h1 span { color: var(--az-green); }
+.hero-sub {
+  font-size: 1rem; color: rgba(255,255,255,.8);
+  line-height: 1.6; margin-bottom: 2rem; max-width: 480px;
+}
+.hero-btns { display: flex; gap: .75rem; flex-wrap: wrap; }
+.btn-hero-primary {
+  padding: .75rem 2rem; background: var(--az-green); color: #fff;
+  border: none; border-radius: 6px; font-family: 'Roboto', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: background .15s;
+}
+.btn-hero-primary:hover { background: var(--az-green-h); color: #fff; }
+.btn-hero-ghost {
+  padding: .75rem 2rem; background: transparent;
+  color: #fff; border: 2px solid rgba(255,255,255,.5);
+  border-radius: 6px; font-family: 'Roboto', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: border-color .15s, background .15s;
+}
+.btn-hero-ghost:hover { border-color: #fff; background: rgba(255,255,255,.08); color: #fff; }
+
+/* Decorative green curve lines on hero (CSS-only) */
+.hero-curve {
+  position: absolute; top: 0; right: 0;
+  width: 55%; height: 100%; pointer-events: none; z-index: 1; overflow: visible;
+}
+
+/* ── Section ── */
+.section { padding: 4rem 0; }
+.section-alt { background: #f7f9fb; }
+.section-navy { background: var(--az-navy); }
+.section-head { text-align: center; margin-bottom: 2.5rem; }
+.section-tag {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--az-green); margin-bottom: .5rem;
+}
+.section-title { font-size: 1.625rem; font-weight: 700; color: var(--az-navy); line-height: 1.25; }
+.section-title.light { color: #fff; }
+.section-sub { font-size: .9375rem; color: var(--az-muted); margin-top: .5rem; }
+.section-sub.light { color: rgba(255,255,255,.7); }
+
+/* ── Quick Services Grid ── */
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+.services-grid .svc-card {
+  flex: 0 0 140px;
+}
+.svc-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 1.5rem 1rem 1.25rem;
+  background: #fff; border: 1px solid var(--az-border);
+  border-radius: 12px; cursor: pointer;
+  text-decoration: none; color: var(--az-navy);
+  transition: box-shadow .18s, transform .18s, border-color .18s;
+}
+.svc-card:hover {
+  box-shadow: 0 6px 24px rgba(46,216,142,.18);
+  border-color: var(--az-green);
+  transform: translateY(-3px);
+  color: var(--az-navy);
+}
+.svc-icon {
+  width: 56px; height: 56px;
+  background: #edfaf6; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: .875rem; flex-shrink: 0;
+}
+.svc-icon img { width: 32px; height: 32px; object-fit: contain; }
+.svc-label { font-size: .8125rem; font-weight: 600; line-height: 1.35; }
+
+/* ── Feature Cards (bank products, etc.) ── */
+.feat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 1.5rem; }
+.feat-card {
+  background: #fff; border: 1px solid var(--az-border);
+  border-radius: 14px; padding: 1.75rem 1.5rem;
+  transition: box-shadow .18s, transform .18s;
+}
+.feat-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); transform: translateY(-4px); }
+.feat-card-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: #edfaf6; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+}
+.feat-card-icon img { width: 30px; height: 30px; object-fit: contain; }
+.feat-card-title { font-size: 1rem; font-weight: 700; margin-bottom: .4375rem; }
+.feat-card-text { font-size: .875rem; color: var(--az-muted); line-height: 1.6; }
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0; background: var(--az-navy);
+}
+.stat-item {
+  padding: 2rem 1.5rem; text-align: center;
+  border-right: 1px solid rgba(255,255,255,.1);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num { font-size: 2rem; font-weight: 700; color: var(--az-green); }
+.stat-lbl { font-size: .8125rem; color: rgba(255,255,255,.7); margin-top: .25rem; }
+
+/* ── CTA Band ── */
+.cta-band {
+  background: linear-gradient(135deg, var(--az-navy) 0%, #1d4d5e 100%);
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+}
+.cta-band-text h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: .375rem; }
+.cta-band-text p { font-size: .9375rem; color: rgba(255,255,255,.75); }
+.cta-band-btns { display: flex; gap: .75rem; flex-wrap: wrap; }
+
+/* ── Tools row (currency, calculator, prayer) ── */
+.tool-cards { display: grid; grid-template-columns: repeat(3, minmax(0,340px)); gap: 1.25rem; justify-content: center; }
+.tool-card {
+  background: var(--az-navy); border-radius: 14px;
+  padding: 1.5rem; display: flex; align-items: flex-start; gap: 1rem;
+  text-decoration: none; color: #fff;
+  transition: background .15s, transform .18s;
+  cursor: pointer;
+}
+.tool-card:hover { background: #1e4356; transform: translateY(-2px); color: #fff; }
+.tool-card-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(46,216,142,.15);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.tool-card-icon img { width: 28px; height: 28px; object-fit: contain; }
+.tool-card-title { font-size: .9375rem; font-weight: 700; margin-bottom: .25rem; }
+.tool-card-sub { font-size: .8125rem; color: rgba(255,255,255,.65); line-height: 1.5; }
+
+/* ── Info links row ── */
+.info-links { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+.info-link {
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+  padding: 1rem 1.25rem; background: #fff;
+  border: 1px solid var(--az-border); border-radius: 12px;
+  text-decoration: none; color: var(--az-navy); font-size: .8125rem; font-weight: 600;
+  min-width: 100px; text-align: center;
+  transition: border-color .15s, box-shadow .15s;
+}
+.info-link:hover { border-color: var(--az-green); box-shadow: 0 4px 16px rgba(46,216,142,.15); color: var(--az-navy); }
+.info-link img { width: 36px; height: 36px; object-fit: contain; }
+
+/* ── Footer ── */
+.lp-footer {
+  background: var(--az-navy); color: rgba(255,255,255,.75);
+  padding: 3rem 0 0;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; padding-bottom: 2rem; }
+.footer-brand p { font-size: .875rem; line-height: 1.7; color: rgba(255,255,255,.6); margin-top: .75rem; max-width: 280px; }
+.footer-col h4 { font-size: .8125rem; font-weight: 700; color: #fff; margin-bottom: .875rem; text-transform: uppercase; letter-spacing: .07em; }
+.footer-col a { display: block; font-size: .8125rem; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: .5rem; transition: color .12s; }
+.footer-col a:hover { color: var(--az-green); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding: 1.125rem 0;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: rgba(255,255,255,.5); flex-wrap: wrap; gap: .5rem;
+}
+.footer-bottom a { color: rgba(255,255,255,.5); text-decoration: none; }
+.footer-bottom a:hover { color: var(--az-green); }
+
+/* ── Divider ── */
+.lp-divider { height: 1px; background: var(--az-border); margin: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .lp-nav { display: none; }
+  .hero-h1 { font-size: 1.75rem; }
+  .hero-content { padding: 3rem 1.25rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .cta-band { text-align: center; justify-content: center; }
+}
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+</head>
+<body>
+
+<!-- ████ TOPBAR ████ -->
+<div class="lp-topbar">
+  <a href="tel:+96100000000">+961 0 000 0000</a>
+  <span>|</span>
+  <a href="#">info@azentio.com</a>
+  <span>|</span>
+  <a href="locations.html">Branch Locator</a>
+</div>
+
+<!-- ████ HEADER ████ -->
+<header class="lp-hdr">
+  <!-- Logo -->
+  <a href="index.html" style="text-decoration:none;display:flex;align-items:center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg>
+  </a>
+
+  <!-- Nav -->
+  <nav class="lp-nav">
+    <a href="#services" class="lp-nav-link active">Services</a>
+    <a href="#products" class="lp-nav-link">Products</a>
+    <a href="#tools" class="lp-nav-link">Tools</a>
+    <a href="#about" class="lp-nav-link">About</a>
+    <a href="#contact" class="lp-nav-link">Contact</a>
+  </nav>
+
+  <!-- Actions -->
+  <div class="lp-hdr-actions">
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#16303d"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <a href="login.html" class="btn-login">Sign In</a>
+    <a href="COA_identification_details.html" class="btn-register">Open Account</a>
+  </div>
+</header>
+
+<!-- ████ HERO ████ -->
+<section class="lp-hero" aria-label="Welcome banner">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <!-- Decorative SVG curves -->
+  <svg class="hero-curve" viewBox="0 0 600 420" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M580 0 C480 80 360 120 220 60 C120 20 40 100 20 200 C0 300 80 380 180 400" stroke="#2ed88e" stroke-width="1.5" opacity="0.6"/>
+    <path d="M620 30 C520 110 400 150 260 90 C160 50 80 130 60 230 C40 330 120 410 220 430" stroke="#2ed88e" stroke-width="1" opacity="0.35"/>
+    <path d="M540 -20 C440 60 320 100 180 40 C80 0 0 80 -20 180" stroke="#2ed88e" stroke-width="1" opacity="0.3"/>
+  </svg>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Smart Banking</p>
+    <h1 class="hero-h1">Banking Made<br/><span>Simple &amp; Secure</span></h1>
+    <p class="hero-sub">Experience seamless digital banking with azentio — manage accounts, transfer funds, and grow your savings, all from one place.</p>
+    <div class="hero-btns">
+      <a href="onboarding-1-personal-details.html" class="btn-hero-primary">Get Started</a>
+      <a href="#products" class="btn-hero-ghost">Explore Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- ████ STATS BAR ████ -->
+<div class="stats-bar" role="region" aria-label="Key statistics">
+  <div class="stat-item">
+    <div class="stat-num">2M+</div>
+    <div class="stat-lbl">Active Customers</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">150+</div>
+    <div class="stat-lbl">Branch Locations</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">99.9%</div>
+    <div class="stat-lbl">Uptime Guarantee</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">24/7</div>
+    <div class="stat-lbl">Customer Support</div>
+  </div>
+</div>
+
+<!-- ████ QUICK SERVICES ████ -->
+<section class="section" id="services" aria-labelledby="svc-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Quick Services</span>
+      <h2 class="section-title" id="svc-title">Everything You Need, In One Place</h2>
+      <p class="section-sub">Access all banking services instantly — no branch visit required.</p>
+    </div>
+    <div class="services-grid">
+      <a href="login.html" class="svc-card">
+        <div class="svc-icon"><img src="images/landing/currency_exchange.svg" alt="Currency Exchange Rate" loading="lazy"/></div>
+        <span class="svc-label">Currency Exchange Rate</span>
+      </a>
+      <a href="login.html" class="svc-card">
+        <div class="svc-icon"><img src="images/landing/locations.svg" alt="Branches & ATMs Location" loading="lazy"/></div>
+        <span class="svc-label">Branches &amp; ATMs Location</span>
+      </a>
+      <a href="login.html" class="svc-card">
+        <div class="svc-icon"><img src="images/landing/faq.svg" alt="Frequently Asked Questions" loading="lazy"/></div>
+        <span class="svc-label">Frequently Asked Questions</span>
+      </a>
+      <a href="bank-products.html" class="svc-card">
+        <div class="svc-icon"><img src="images/landing/bank_products.svg" alt="Bank Products" loading="lazy"/></div>
+        <span class="svc-label">Bank Products</span>
+      </a>
+      <a href="login.html" class="svc-card">
+        <div class="svc-icon"><img src="images/landing/prayer_timing.svg" alt="Prayer Timings Qibla Direction" loading="lazy"/></div>
+        <span class="svc-label">Prayer Timings Qibla Direction</span>
+      </a>
+      <a href="login.html" class="svc-card">
+        <div class="svc-icon"><img src="images/landing/financing_calculator.svg" alt="Financing Calculator" loading="lazy"/></div>
+        <span class="svc-label">Financing Calculator</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="lp-divider"></div>
+
+<!-- ████ BANK PRODUCTS ████ -->
+<section class="section section-alt" id="products" aria-labelledby="prod-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Our Products</span>
+      <h2 class="section-title" id="prod-title">Tailored Banking Solutions</h2>
+      <p class="section-sub">Financial products designed to help you save, invest, and grow.</p>
+    </div>
+    <div class="feat-cards">
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12.01" y2="12"/></svg>
+        </div>
+        <div class="feat-card-title">Current &amp; Savings Accounts</div>
+        <div class="feat-card-text">Flexible accounts with competitive interest rates, no hidden fees, and instant access to your funds anytime.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="feat-card-title">Credit &amp; Debit Cards</div>
+        <div class="feat-card-text">Premium cards with cashback rewards, travel benefits, and worldwide acceptance at millions of merchants.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="feat-card-title">Loans &amp; Financing</div>
+        <div class="feat-card-text">Personal, home, and business financing options with flexible repayment terms and competitive rates.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feat-card-title">Investment Products</div>
+        <div class="feat-card-text">Term deposits, mutual funds, and investment portfolios to grow your wealth with expert guidance.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="feat-card-title">Home Mortgage</div>
+        <div class="feat-card-text">Make your dream home a reality with our tailored mortgage solutions and fast approval process.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="feat-card-title">International Transfers</div>
+        <div class="feat-card-text">Fast, secure money transfers to 150+ countries with real-time exchange rates and low fees.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ████ TOOLS SECTION ████ -->
+<section class="section" id="tools" aria-labelledby="tools-title" style="background:#16303d">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Banking Tools</span>
+      <h2 class="section-title light" id="tools-title">Useful Financial Tools</h2>
+      <p class="section-sub light">Real-time tools to help you make smarter financial decisions.</p>
+    </div>
+    <div class="tool-cards">
+      <a href="#" class="tool-card">
+        <div class="tool-card-icon"><img src="images/landing/currency_exchange.svg" alt="" loading="lazy"/></div>
+        <div>
+          <div class="tool-card-title">Currency Exchange</div>
+          <div class="tool-card-sub">Live exchange rates for 50+ currencies updated in real-time.</div>
+        </div>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-card-icon"><img src="images/landing/financing_calculator.svg" alt="" loading="lazy"/></div>
+        <div>
+          <div class="tool-card-title">Financing Calculator</div>
+          <div class="tool-card-sub">Calculate monthly repayments for loans and mortgages instantly.</div>
+        </div>
+      </a>
+
+      <a href="#" class="tool-card">
+        <div class="tool-card-icon"><img src="images/landing/locations.svg" alt="" loading="lazy"/></div>
+        <div>
+          <div class="tool-card-title">Branch &amp; ATM Locator</div>
+          <div class="tool-card-sub">Find the nearest branch or ATM to you with maps and directions.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ████ CTA BAND ████ -->
+<section class="section">
+  <div class="container">
+    <div class="cta-band">
+      <div class="cta-band-text">
+        <h2>Ready to open your account?</h2>
+        <p>Join over 2 million customers banking smarter with azentio.</p>
+      </div>
+      <div class="cta-band-btns">
+        <a href="COA_identification_details.html" class="btn-register" style="display:inline-block;text-decoration:none;padding:.75rem 2rem;font-size:14px">Open Account</a>
+        <a href="#contact" class="btn-hero-ghost" style="display:inline-block;text-decoration:none;padding:.75rem 2rem;font-size:14px">Talk to Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ████ CONTACT ████ -->
+<section class="section" id="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Get In Touch</span>
+      <h2 class="section-title" id="contact-title">We're Here to Help</h2>
+      <p class="section-sub">Reach us through any channel — we're available 24/7.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;max-width:800px;margin:0 auto">
+      <a href="tel:+96100000000" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
+        <div class="feat-card-icon"><img src="images/landing/call_us.svg" alt="Call Us" loading="lazy"/></div>
+        <div class="feat-card-title">Call Us</div>
+        <div class="feat-card-text">+961 0 000 0000<br/>Available 24/7 for support.</div>
+      </a>
+      <a href="#" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
+        <div class="feat-card-icon"><img src="images/landing/contact_us.svg" alt="Contact Us" loading="lazy"/></div>
+        <div class="feat-card-title">Contact Us</div>
+        <div class="feat-card-text">Send us a message and we'll respond within 24 hours.</div>
+      </a>
+      <a href="#" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
+        <div class="feat-card-icon"><img src="images/landing/locations.svg" alt="Locations" loading="lazy"/></div>
+        <div class="feat-card-title">Find a Branch</div>
+        <div class="feat-card-text">150+ branches and ATMs across the country near you.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ████ FOOTER ████ -->
+<footer class="lp-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="26" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#fff" stroke="#fff" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg>
+        <p>Smart, secure banking for individuals and businesses. Serving customers across the region since 1985.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#">Accounts</a>
+        <a href="#">Cards</a>
+        <a href="#">Transfers</a>
+        <a href="#">Loans</a>
+        <a href="#">Investments</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Our Customers</a>
+        <a href="#">Careers</a>
+        <a href="#">News</a>
+        <a href="#">Locations</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Contact Us</a>
+        <a href="#">FAQ</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Copyright &copy; 2025 azentio Banking. All Rights Reserved.</span>
+      <div style="display:flex;gap:1rem">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Language selector */
+function setHdrLang(code, flagCode, optBtn) {
+  document.querySelectorAll('.hdr-lang').forEach(function(btn) {
+    var flagEl = btn.querySelector('.fi');
+    if (flagEl) { flagEl.className = 'fi fi-' + flagCode; }
+    btn.childNodes.forEach(function(n){ if (n.nodeType===3) n.textContent = code + ' '; });
+  });
+  if (optBtn) {
+    optBtn.closest('.hdr-lang-drop').querySelectorAll('.hdr-lang-opt').forEach(function(o){ o.classList.remove('active'); o.setAttribute('aria-selected','false'); });
+    optBtn.classList.add('active');
+    optBtn.setAttribute('aria-selected','true');
+  }
+}
+
+/* Smooth active nav on scroll */
+(function(){
+  var sections = document.querySelectorAll('section[id]');
+  var navLinks = document.querySelectorAll('.lp-nav-link');
+  function onScroll(){
+    var scrollY = window.scrollY + 80;
+    sections.forEach(function(sec){
+      if(scrollY >= sec.offsetTop && scrollY < sec.offsetTop + sec.offsetHeight){
+        navLinks.forEach(function(l){ l.classList.remove('active'); });
+        var link = document.querySelector('.lp-nav-link[href="#' + sec.id + '"]');
+        if(link) link.classList.add('active');
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
+</body>
+</html>
