@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – CTA Design System</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    body { background: #f5f7f9; font-family: 'Roboto', sans-serif; color: #16303d; }
+    .ds-wrap { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem 4rem; }
+
+    /* Page header */
+    .ds-page-title { font-size: 1.5rem; font-weight: 700; color: #16303d; margin-bottom: .25rem; }
+    .ds-page-sub { font-size: .9rem; color: #707070; margin-bottom: 2.5rem; }
+
+    /* Section */
+    .ds-section { margin-bottom: 2.5rem; }
+    .ds-section-title {
+      font-size: .6875rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: #707070;
+      border-bottom: 1px solid #e2e8ec;
+      padding-bottom: .5rem; margin-bottom: 1.25rem;
+    }
+
+    /* Token table */
+    .token-table { width: 100%; border-collapse: collapse; font-size: .8125rem; }
+    .token-table th { text-align: left; color: #707070; font-weight: 600; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; padding: .5rem .75rem; border-bottom: 1px solid #e2e8ec; }
+    .token-table td { padding: .6rem .75rem; border-bottom: 1px solid #f0f4f6; vertical-align: middle; }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-name { font-family: 'Courier New', monospace; font-size: .8rem; background: #f0f4f6; padding: .125rem .4rem; border-radius: 3px; }
+    .swatch { width: 28px; height: 28px; border-radius: .375rem; border: 1px solid rgba(0,0,0,.08); display: inline-block; vertical-align: middle; }
+
+    /* Card */
+    .ds-card { background: #fff; border: 1px solid #e2e8ec; border-radius: .75rem; padding: 1.5rem; }
+
+    /* Button rows */
+    .btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+    .btn-label { font-size: .75rem; color: #707070; margin-top: .375rem; }
+    .btn-group { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; }
+
+    /* Spec table */
+    .spec-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .spec-table th { text-align: left; color: #707070; font-weight: 600; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; padding: .5rem .75rem; background: #f8fafc; border-bottom: 1px solid #e2e8ec; }
+    .spec-table td { padding: .6rem .75rem; border-bottom: 1px solid #f0f4f6; font-size: .8125rem; vertical-align: top; }
+    .spec-table tr:last-child td { border-bottom: none; }
+    .spec-table code { font-family: 'Courier New', monospace; font-size: .775rem; background: #f0f4f6; padding: .1rem .35rem; border-radius: 3px; }
+
+    /* Dark preview area */
+    .dark-preview { background: #16303d; border-radius: .75rem; padding: 1.5rem; display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+
+    /* States strip */
+    .state-strip { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    .state-item { display: flex; flex-direction: column; align-items: flex-start; gap: .375rem; }
+    .state-lbl { font-size: .7rem; color: #707070; text-transform: uppercase; letter-spacing: .04em; }
+  </style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <h1 class="ds-page-title">CTA Design System</h1>
+  <p class="ds-page-sub">azentio Omnichannel Banking — Button &amp; Call-to-Action tokens, variants, and usage guidelines</p>
+
+  <!-- ── TOKENS ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Design Tokens</div>
+    <div class="ds-card">
+      <table class="token-table">
+        <thead>
+          <tr><th>Token</th><th>Value</th><th>Swatch</th><th>Usage</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="token-name">--az-green</span></td>
+            <td>#2ed88e</td>
+            <td><span class="swatch" style="background:#2ed88e"></span></td>
+            <td>Primary CTA background, accent borders</td>
+          </tr>
+          <tr>
+            <td><span class="token-name">--az-green-hover</span></td>
+            <td>#25c47e</td>
+            <td><span class="swatch" style="background:#25c47e"></span></td>
+            <td>Primary CTA hover state</td>
+          </tr>
+          <tr>
+            <td><span class="token-name">--az-navy</span></td>
+            <td>#16303d</td>
+            <td><span class="swatch" style="background:#16303d"></span></td>
+            <td>Secondary CTA, text on light backgrounds</td>
+          </tr>
+          <tr>
+            <td><span class="token-name">--az-blue</span></td>
+            <td>#00538A</td>
+            <td><span class="swatch" style="background:#00538A"></span></td>
+            <td>Link buttons, ghost CTAs</td>
+          </tr>
+          <tr>
+            <td><span class="token-name">--az-muted</span></td>
+            <td>#707070</td>
+            <td><span class="swatch" style="background:#707070"></span></td>
+            <td>Disabled / tertiary text</td>
+          </tr>
+          <tr>
+            <td><span class="token-name">--az-border</span></td>
+            <td>#e2e8ec</td>
+            <td><span class="swatch" style="background:#e2e8ec"></span></td>
+            <td>Outlined button borders</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── PRIMARY ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Primary CTA</div>
+    <div class="ds-card">
+      <p style="font-size:.8125rem;color:#707070;margin-bottom:1.25rem;">Use for the main action on a page — Submit, Confirm, Proceed. One per view.</p>
+      <div class="state-strip">
+        <div class="state-item">
+          <span class="state-lbl">Default</span>
+          <button class="btn-action btn-cancel">Submit</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">With icon</span>
+          <button class="btn-action btn-cancel" style="display:inline-flex;align-items:center;gap:.375rem;">
+            <span class="material-icons" style="font-size:16px;">check_circle</span> Confirm
+          </button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Disabled</span>
+          <button class="btn-action btn-cancel" disabled style="opacity:.45;cursor:not-allowed;">Submit</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Loading</span>
+          <button class="btn-action btn-cancel" disabled style="display:inline-flex;align-items:center;gap:.5rem;opacity:.75;">
+            <span style="width:13px;height:13px;border:2px solid rgba(22,48,61,.3);border-top-color:#16303d;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;"></span> Processing
+          </button>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #f0f4f6;margin:1.25rem 0"/>
+      <table class="spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Class</td><td><code>.btn-action .btn-cancel</code></td></tr>
+          <tr><td>Background</td><td><code>--az-green</code> (#2ed88e)</td></tr>
+          <tr><td>Text color</td><td><code>--az-navy</code> (#16303d)</td></tr>
+          <tr><td>Font</td><td>Roboto 700, 0.8125rem (13px)</td></tr>
+          <tr><td>Padding</td><td>0.5625rem 1.75rem</td></tr>
+          <tr><td>Border radius</td><td>0.25rem (4px)</td></tr>
+          <tr><td>Hover</td><td>Background → <code>--az-green-hover</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECONDARY ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Secondary CTA</div>
+    <div class="ds-card">
+      <p style="font-size:.8125rem;color:#707070;margin-bottom:1.25rem;">Paired alongside Primary. Used for Submit / secondary action pairs.</p>
+      <div class="state-strip">
+        <div class="state-item">
+          <span class="state-lbl">Default</span>
+          <button class="btn-action btn-submit">Submit</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">With icon</span>
+          <button class="btn-action btn-submit" style="display:inline-flex;align-items:center;gap:.375rem;">
+            <span class="material-icons" style="font-size:16px;">send</span> Send
+          </button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Disabled</span>
+          <button class="btn-action btn-submit" disabled>Submit</button>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #f0f4f6;margin:1.25rem 0"/>
+      <table class="spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Class</td><td><code>.btn-action .btn-submit</code></td></tr>
+          <tr><td>Background</td><td><code>--az-navy</code> (#16303d)</td></tr>
+          <tr><td>Text color</td><td>#ffffff</td></tr>
+          <tr><td>Font</td><td>Roboto 700, 0.8125rem</td></tr>
+          <tr><td>Padding</td><td>0.5625rem 1.75rem</td></tr>
+          <tr><td>Border radius</td><td>0.25rem (4px)</td></tr>
+          <tr><td>Hover</td><td>Background → #1e4356</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── OUTLINED ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Outlined / Ghost CTAs</div>
+    <div class="ds-card">
+      <p style="font-size:.8125rem;color:#707070;margin-bottom:1.25rem;">Used for secondary actions — Add, Request, Locate — where the primary action dominates.</p>
+      <div class="state-strip" style="margin-bottom:1.25rem;">
+        <div class="state-item">
+          <span class="state-lbl">Outlined Navy</span>
+          <button class="btn-add-ben"><span class="material-icons" style="font-size:15px;">add</span> Add Beneficiary</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Outlined Green</span>
+          <button class="btn-schedule"><span class="material-icons" style="font-size:15px;">schedule</span> Schedule</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Outlined Border</span>
+          <button class="btn-rpt"><span class="material-icons" style="font-size:15px;">download</span> Export</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Pill Outlined</span>
+          <button class="btn-cheq-det">View Details</button>
+        </div>
+      </div>
+      <table class="spec-table">
+        <thead><tr><th>Class</th><th>Border</th><th>Text</th><th>Hover bg</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td><code>.btn-add-ben</code></td><td>1.5px navy</td><td>navy</td><td>#f0f4f6</td><td>Add / create actions</td></tr>
+          <tr><td><code>.btn-schedule</code></td><td>1.5px green</td><td>navy</td><td>#edfaf6</td><td>Schedule / time actions</td></tr>
+          <tr><td><code>.btn-rpt</code></td><td>1.5px border</td><td>navy</td><td>#f0f4f6</td><td>Export / report actions</td></tr>
+          <tr><td><code>.btn-cheq-det</code></td><td>1.5px green, pill</td><td>navy</td><td>#edfaf6</td><td>View details, inline rows</td></tr>
+          <tr><td><code>.btn-locate</code></td><td>1px green</td><td>navy</td><td>#f0faf5</td><td>Map / locate actions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── TERTIARY / TEXT ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Tertiary &amp; Text CTAs</div>
+    <div class="ds-card">
+      <p style="font-size:.8125rem;color:#707070;margin-bottom:1.25rem;">Low-emphasis actions — links, inline triggers, report actions.</p>
+      <div class="state-strip">
+        <div class="state-item">
+          <span class="state-lbl">Text Link</span>
+          <button class="btn-view-details">View Details</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Green Action</span>
+          <button class="btn-rpt-action"><span class="material-icons" style="font-size:15px;">download</span> Download</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Bottom Action</span>
+          <a href="#" class="bottom-action-btn"><span class="material-icons" style="font-size:15px;">add_circle_outline</span> Add New</a>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Pill Tag</span>
+          <button class="btn-txn">View</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DESTRUCTIVE ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Destructive / Cancel</div>
+    <div class="ds-card">
+      <p style="font-size:.8125rem;color:#707070;margin-bottom:1.25rem;">Used for Cancel / Reset — neutral grey, never red to avoid alarm on reversible actions.</p>
+      <div class="state-strip">
+        <div class="state-item">
+          <span class="state-lbl">Cancel</span>
+          <button class="btn-action btn-save">Cancel</button>
+        </div>
+        <div class="state-item">
+          <span class="state-lbl">Reset</span>
+          <button class="btn-reset">Reset</button>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #f0f4f6;margin:1.25rem 0"/>
+      <table class="spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Background</td><td>#6c757d</td></tr>
+          <tr><td>Text color</td><td>#ffffff</td></tr>
+          <tr><td>Hover</td><td>#5a6268</td></tr>
+          <tr><td>Note</td><td>Never use red for cancel — red is reserved for errors/alerts</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SIZING ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Sizing &amp; Spacing</div>
+    <div class="ds-card">
+      <table class="spec-table">
+        <thead><tr><th>Size</th><th>Padding</th><th>Font size</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td>Large</td><td>0.625rem 2rem</td><td>0.9375rem (15px)</td><td>Hero / landing CTAs</td></tr>
+          <tr><td>Default</td><td>0.5625rem 1.75rem</td><td>0.8125rem (13px)</td><td>Form actions, modals</td></tr>
+          <tr><td>Small</td><td>0.375rem 0.875rem</td><td>0.8125rem (13px)</td><td>Inline, table row actions</td></tr>
+          <tr><td>Icon-only</td><td>0.375rem</td><td>—</td><td>Header icons, toolbar</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── USAGE RULES ── -->
+  <div class="ds-section">
+    <div class="ds-section-title">Usage Rules</div>
+    <div class="ds-card">
+      <table class="spec-table">
+        <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>One Primary per view</td><td>Only one <code>.btn-cancel</code> (green) primary CTA per screen section</td></tr>
+          <tr><td>Button order</td><td>Primary (green) always on the right; Cancel/Reset on the left</td></tr>
+          <tr><td>No red buttons</td><td>Red is reserved for error states and alerts, never buttons</td></tr>
+          <tr><td>Icons in buttons</td><td>Use Material Icons at <code>font-size: 15–16px</code> with <code>gap: .375rem</code></td></tr>
+          <tr><td>Disabled state</td><td>Add <code>disabled</code> attribute; CSS applies <code>opacity: .6; cursor: not-allowed</code></td></tr>
+          <tr><td>Full-width on mobile</td><td>Add <code>w-100</code> or <code>justify-content: center</code> below 576px</td></tr>
+          <tr><td>Min touch target</td><td>44×44px minimum for all interactive buttons</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</body>
+</html>
