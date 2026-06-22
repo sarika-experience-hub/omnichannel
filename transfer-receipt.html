@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -9,9 +9,11 @@
   <link rel="stylesheet" href="css/styles.css"/>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 <header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
   <div class="hdr-logo" id="hdrLogo"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
   <div class="hdr-right">    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
     <div class="hdr-div"></div>
@@ -68,12 +70,12 @@
       </div>
     </div>
     <div class="hdr-avatar-wrap">
-      <img src="images/user_s.png" class="hdr-avatar" alt="User profile" onerror="this.src='images/user_m.png'"/>
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
       <div class="avatar-dropdown" role="menu">
         <div class="av-drop-top">
-          <img src="images/user_m.png" class="av-drop-photo" alt="Shadab Pervaiz" onerror="this.style.display='none'"/>
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
           <div class="av-drop-userinfo">
-            <div class="av-drop-name">Shadab Pervaiz</div>
+            <div class="av-drop-name">Sarika Desai</div>
             <div class="av-drop-login-lbl">Last Login</div>
             <div class="av-drop-login-time">
               <span class="t-part">
@@ -89,9 +91,9 @@
           </div>
         </div>
         <div class="av-drop-details">
-          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">shadab.pervaiz</span></div>
-          <div class="av-detail-row"><span class="av-detail-lbl">CIF Name:</span><span class="av-detail-val">Shadab Pervaiz A.</span></div>
-          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Shadab</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sarika.desai</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF Name:</span><span class="av-detail-val">Sarika Desai A.</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sarika</span></div>
         </div>
         <div class="av-drop-nav">
           <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
@@ -106,15 +108,17 @@
             </div>
             My Tasks
           </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
         </div>
       </div>
-    </div>
-    <a href="login.html" class="btn-logout" style="text-decoration:none">Logout</a></div>
+    </div></div>
 </header>
 <aside class="app-sidebar" id="sidebar">
-  <button class="sb-collapse-btn" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Collapse sidebar">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-  </button>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
@@ -155,7 +159,7 @@
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
-    <div class="az-bc"><a href="#">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><a href="#">Transfer List</a><span class="sep">&#8250;</span><span class="cur">Transaction Receipt</span></div>
+    <div class="az-bc"><a href="dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><a href="#">Transfer List</a><span class="sep">&#8250;</span><span class="cur">Transaction Receipt</span></div>
     <h1 class="page-title mb-4">Transaction Receipt</h1>
     <div class="content-card">
       <div class="receipt-meta-card">
