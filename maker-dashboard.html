@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Maker Dashboard</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/maker-dashboard.css"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="js/theme.js"></script>
+</head>
+<body class="pg-maker-dashboard">
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="142 0 22 29" aria-hidden="true">
+        <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/>
+        <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/>
+      </svg>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+        <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" aria-label="5 notifications">5</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span><a href="#" class="notif-clear-all">Clear all</a></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">TXN-2024-01141 approved by Marc K.</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">3 drafts due before cut-off today 17:00</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">TXN-2024-01138 settled — CHF 4,600,000</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons-outlined" style="font-size:20px;">headset_mic</span></button>
+    <button class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons-outlined" style="font-size:20px;">help_outline</span></button>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#1a4f72;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#1a4f72;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>18 Jun, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:07</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Role:</span><span class="av-detail-val">Payment Maker · L2</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">bookmarks</span></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+  <button class="sb-item active-section" data-label="Dashboard"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">dashboard</span></span><span class="sb-label">Dashboard</span></button>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">account_balance</span></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">swap_horiz</span></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+    <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfer <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Account Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment <span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">payments</span></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">credit_card</span></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a><a href="cards-settlement-local.html" class="sb-sub3-item">Local Credit Card Settlement</a></div><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sCheq','cCheq')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">receipt_long</span></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cCheq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCheq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebooks</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a><a href="chequebook-report.html" class="sb-sub-item">Chequebook Report</a></div>
+  <button class="sb-item" data-label="Remittance" onclick="toggleSub('sRem','cRem')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">send</span></span><span class="sb-label">Remittance</span><span class="sb-chevron" id="cRem"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sRem" class="sb-sub" style="display:none"><a href="remittance-intra-bank.html" class="sb-sub-item">Intra Bank Remittance Request</a><a href="remittance-local.html" class="sb-sub-item">Local Remittance Request</a><a href="remittance-international.html" class="sb-sub-item">International Remittance Request</a></div>
+  <button class="sb-item" data-label="Sweeping and Pooling" onclick="toggleSub('sSP','cSP')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">account_tree</span></span><span class="sb-label">Sweeping and Pooling</span><span class="sb-chevron" id="cSP"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSP" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Sweeping and Pooling</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">attach_money</span></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+  <button class="sb-item" data-label="Cash Management" onclick="toggleSub('sCM','cCM')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">local_atm</span></span><span class="sb-label">Cash Management</span><span class="sb-chevron" id="cCM"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCM" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Cash Management</a></div>
+  <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">handshake</span></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-lg-status.html" class="sb-sub-item">LG Status and Details</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a><a href="tf-ob-status.html" class="sb-sub-item">OB Status and Details</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">miscellaneous_services</span></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+  <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">corporate_fare</span></span><span class="sb-label">Corporate End User Management Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc" style="padding:1.25rem 1.75rem .25rem;">
+      <a href="maker-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">Maker Dashboard</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.75rem;padding:0 1.75rem;">
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <h1 class="page-title">My Workspace</h1>
+        <span class="mk-role-badge"><span class="material-icons">edit</span>Payment Maker · L2</span>
+      </div>
+      <div style="display:flex;gap:.625rem;">
+        <button class="mk-hdr-btn mk-hdr-btn-outline" onclick="location.href='bulk-payment-upload.html'">
+          <span class="material-icons" style="font-size:15px;">upload_file</span> Bulk Upload
+        </button>
+        <button class="mk-hdr-btn mk-hdr-btn-primary" onclick="location.href='transfer-international.html'">
+          <span class="material-icons" style="font-size:15px;">add</span> New Payment
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="mk-wrap">
+
+      <!-- ── CTA Alert Bar ── -->
+      <div class="mk-cta-bar" id="ctaBar">
+        <div class="mk-cta-icon">
+          <span class="material-icons">schedule</span>
+        </div>
+        <div class="mk-cta-text">
+          <div class="mk-cta-title">3 transactions are awaiting your submission to checker review</div>
+          <div class="mk-cta-sub">Deadline: Today 17:00 &nbsp;·&nbsp; Total value: USD 6,840,000 &nbsp;·&nbsp; All within your daily limit</div>
+        </div>
+        <div class="mk-cta-actions">
+          <button class="mk-btn-submit-all" id="btnSubmitAll" onclick="submitAll()">
+            <span class="material-icons" style="font-size:15px;">send</span> Submit All
+          </button>
+          <button class="mk-btn-review" onclick="location.href='#txnTable'">
+            Review First
+          </button>
+        </div>
+      </div>
+
+      <!-- ── KPI Strip ── -->
+      <div class="mk-kpi-strip">
+
+        <!-- KPI 1: Initiated Today -->
+        <div class="mk-kpi" style="--mk-kpi-color:var(--az-blue)">
+          <div class="mk-kpi-top">
+            <div class="mk-kpi-icon">
+              <span class="material-icons">payments</span>
+            </div>
+            <span class="mk-kpi-delta up"><span class="material-icons" style="font-size:11px;">arrow_upward</span>12%</span>
+          </div>
+          <div class="mk-kpi-val" id="kpiInitiated">$0</div>
+          <div class="mk-kpi-label">Initiated Today</div>
+          <div class="mk-kpi-sub">7 transactions &nbsp;·&nbsp; 4 currencies</div>
+          <div class="mk-spark">
+            <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+              <polyline points="0,26 15,20 30,23 45,16 60,18 75,10 90,13 105,6 120,8" stroke="rgba(0,83,138,0.4)" stroke-width="1.5" fill="none"/>
+              <polyline points="0,26 15,20 30,23 45,16 60,18 75,10 90,13 105,6 120,8 120,30 0,30" fill="rgba(0,83,138,0.07)"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- KPI 2: Awaiting Submission -->
+        <div class="mk-kpi" style="--mk-kpi-color:#c88c00">
+          <div class="mk-kpi-top">
+            <div class="mk-kpi-icon amber">
+              <span class="material-icons">hourglass_top</span>
+            </div>
+            <span class="mk-kpi-delta neutral">3 Pending</span>
+          </div>
+          <div class="mk-kpi-val" id="kpiPending">$0</div>
+          <div class="mk-kpi-label">Awaiting Submission</div>
+          <div class="mk-kpi-sub">Deadline: Today 17:00</div>
+          <div class="mk-spark">
+            <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+              <polyline points="0,22 25,18 50,20 75,14 100,16 120,12" stroke="rgba(200,140,0,0.4)" stroke-width="1.5" fill="none"/>
+              <polyline points="0,22 25,18 50,20 75,14 100,16 120,12 120,30 0,30" fill="rgba(200,140,0,0.06)"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- KPI 3: Checker Approved -->
+        <div class="mk-kpi" style="--mk-kpi-color:#1a9e62">
+          <div class="mk-kpi-top">
+            <div class="mk-kpi-icon green">
+              <span class="material-icons">verified</span>
+            </div>
+            <span class="mk-kpi-delta up"><span class="material-icons" style="font-size:11px;">arrow_upward</span>2</span>
+          </div>
+          <div class="mk-kpi-val" id="kpiApproved">0 TXN</div>
+          <div class="mk-kpi-label">Checker Approved</div>
+          <div class="mk-kpi-sub">USD 7,120,000 settled · Today</div>
+          <div class="mk-spark">
+            <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+              <polyline points="0,28 30,26 60,18 90,12 120,6" stroke="rgba(26,158,98,0.4)" stroke-width="1.5" fill="none"/>
+              <polyline points="0,28 30,26 60,18 90,12 120,6 120,30 0,30" fill="rgba(26,158,98,0.06)"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- KPI 4: MTD Volume -->
+        <div class="mk-kpi" style="--mk-kpi-color:var(--az-navy)">
+          <div class="mk-kpi-top">
+            <div class="mk-kpi-icon navy">
+              <span class="material-icons">bar_chart</span>
+            </div>
+            <span class="mk-kpi-delta up"><span class="material-icons" style="font-size:11px;">arrow_upward</span>8%</span>
+          </div>
+          <div class="mk-kpi-val" id="kpiMtd">$0</div>
+          <div class="mk-kpi-label">MTD Initiated Volume</div>
+          <div class="mk-kpi-sub">99.7% STP rate &nbsp;·&nbsp; 18 days</div>
+          <div class="mk-spark">
+            <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+              <polyline points="0,26 12,22 24,24 36,18 48,20 60,14 72,16 84,10 96,12 108,6 120,8" stroke="rgba(22,48,61,0.35)" stroke-width="1.5" fill="none"/>
+              <polyline points="0,26 12,22 24,24 36,18 48,20 60,14 72,16 84,10 96,12 108,6 120,8 120,30 0,30" fill="rgba(22,48,61,0.05)"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Two Column: Table + Right Panels ── -->
+      <div class="mk-two-col" id="txnTable">
+
+        <!-- Transaction Table -->
+        <div class="mk-panel">
+          <div class="mk-panel-hdr">
+            <div class="mk-panel-title">
+              <span class="material-icons">receipt_long</span>
+              My Transactions · Today
+            </div>
+            <button class="mk-panel-action">View All <span class="material-icons">chevron_right</span></button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="mk-txn-table">
+              <thead>
+                <tr>
+                  <th style="padding-left:1.25rem">Reference / Beneficiary</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th style="text-align:right;padding-right:1.25rem">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding-left:1.25rem">
+                    <span class="mk-txn-ref">TXN-2024-01144</span>
+                    <span class="mk-txn-name">Deutsche Bank AG</span>
+                    <div class="mk-txn-bank">DE89 3704 0044 0532 0130 00 · Frankfurt</div>
+                  </td>
+                  <td><span class="mk-type-pill mk-pill-wire">Wire</span></td>
+                  <td><span class="mk-txn-amt">2,400,000</span><div class="mk-txn-ccy">USD</div></td>
+                  <td><span class="mk-chip mk-chip-draft"><span class="mk-chip-dot dot-draft"></span>Draft</span></td>
+                  <td style="padding-right:1.25rem">
+                    <div class="mk-row-actions">
+                      <button class="mk-row-btn mk-row-edit"><span class="material-icons">edit</span> Edit</button>
+                      <button class="mk-row-btn mk-row-submit" onclick="submitRow(this)"><span class="material-icons">send</span> Submit</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left:1.25rem">
+                    <span class="mk-txn-ref">TXN-2024-01141</span>
+                    <span class="mk-txn-name">Société Générale SA</span>
+                    <div class="mk-txn-bank">FR76 3000 6000 0112 3456 7890 189 · Paris</div>
+                  </td>
+                  <td><span class="mk-type-pill mk-pill-fx">FX</span></td>
+                  <td><span class="mk-txn-amt">1,840,000</span><div class="mk-txn-ccy">EUR → USD</div></td>
+                  <td><span class="mk-chip mk-chip-submitted"><span class="mk-chip-dot dot-submitted"></span>Submitted</span></td>
+                  <td style="padding-right:1.25rem">
+                    <div class="mk-row-actions">
+                      <button class="mk-row-btn mk-row-track"><span class="material-icons">track_changes</span> Track</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left:1.25rem">
+                    <span class="mk-txn-ref">TXN-2024-01138</span>
+                    <span class="mk-txn-name">Supplier Consortium AG</span>
+                    <div class="mk-txn-bank">CH56 0483 5012 3456 7800 9 · Zurich</div>
+                  </td>
+                  <td><span class="mk-type-pill mk-pill-bulk">Bulk</span></td>
+                  <td><span class="mk-txn-amt">4,600,000</span><div class="mk-txn-ccy">CHF</div></td>
+                  <td><span class="mk-chip mk-chip-approved"><span class="mk-chip-dot dot-approved"></span>Approved</span></td>
+                  <td style="padding-right:1.25rem">
+                    <div class="mk-row-actions">
+                      <button class="mk-row-btn mk-row-track"><span class="material-icons">description</span> Receipt</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left:1.25rem">
+                    <span class="mk-txn-ref">TXN-2024-01136</span>
+                    <span class="mk-txn-name">Trade LC — Meridian Export</span>
+                    <div class="mk-txn-bank">GB29 NWBK 6016 1331 9268 19 · London</div>
+                  </td>
+                  <td><span class="mk-type-pill mk-pill-lc">L/C</span></td>
+                  <td><span class="mk-txn-amt">780,000</span><div class="mk-txn-ccy">GBP</div></td>
+                  <td><span class="mk-chip mk-chip-processing"><span class="mk-chip-dot dot-processing"></span>Processing</span></td>
+                  <td style="padding-right:1.25rem">
+                    <div class="mk-row-actions">
+                      <button class="mk-row-btn mk-row-track"><span class="material-icons">track_changes</span> Track</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left:1.25rem">
+                    <span class="mk-txn-ref">TXN-2024-01133</span>
+                    <span class="mk-txn-name">Axiom Industrial GmbH</span>
+                    <div class="mk-txn-bank">DE12 5001 0517 0648 4898 90 · Munich</div>
+                  </td>
+                  <td><span class="mk-type-pill mk-pill-wire">Wire</span></td>
+                  <td><span class="mk-txn-amt">660,000</span><div class="mk-txn-ccy">USD</div></td>
+                  <td><span class="mk-chip mk-chip-draft"><span class="mk-chip-dot dot-draft"></span>Draft</span></td>
+                  <td style="padding-right:1.25rem">
+                    <div class="mk-row-actions">
+                      <button class="mk-row-btn mk-row-edit"><span class="material-icons">edit</span> Edit</button>
+                      <button class="mk-row-btn mk-row-submit" onclick="submitRow(this)"><span class="material-icons">send</span> Submit</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="mk-right-col">
+
+          <!-- Corporate Workspace — maker nav links -->
+          <div class="mk-panel">
+            <div class="mk-panel-hdr">
+              <div class="mk-panel-title"><span class="material-icons">corporate_fare</span>Corporate Workspace</div>
+            </div>
+            <div class="mk-corp-nav">
+              <a href="transfer-international.html" class="mk-corp-link">
+                <div class="mk-corp-link-icon"><span class="material-icons">send</span></div>
+                <div class="mk-corp-link-body">
+                  <div class="mk-corp-link-label">New Wire Transfer</div>
+                  <div class="mk-corp-link-sub">SWIFT / Local / Bulk</div>
+                </div>
+                <span class="material-icons mk-corp-link-arrow">chevron_right</span>
+              </a>
+              <a href="#" class="mk-corp-link">
+                <div class="mk-corp-link-icon amber"><span class="material-icons">currency_exchange</span></div>
+                <div class="mk-corp-link-body">
+                  <div class="mk-corp-link-label">FX Conversion</div>
+                  <div class="mk-corp-link-sub">Live rates · Deal booking</div>
+                </div>
+                <span class="material-icons mk-corp-link-arrow">chevron_right</span>
+              </a>
+              <a href="beneficiary-management.html" class="mk-corp-link">
+                <div class="mk-corp-link-icon green"><span class="material-icons">group</span></div>
+                <div class="mk-corp-link-body">
+                  <div class="mk-corp-link-label">Beneficiaries</div>
+                  <div class="mk-corp-link-sub">Manage counterparties</div>
+                </div>
+                <span class="material-icons mk-corp-link-arrow">chevron_right</span>
+              </a>
+              <a href="bulk-payment-upload.html" class="mk-corp-link">
+                <div class="mk-corp-link-icon purple"><span class="material-icons">upload_file</span></div>
+                <div class="mk-corp-link-body">
+                  <div class="mk-corp-link-label">Bulk Upload</div>
+                  <div class="mk-corp-link-sub">CSV / MT103 format</div>
+                </div>
+                <span class="material-icons mk-corp-link-arrow">chevron_right</span>
+              </a>
+              <a href="tf-lc-request.html" class="mk-corp-link">
+                <div class="mk-corp-link-icon navy"><span class="material-icons">handshake</span></div>
+                <div class="mk-corp-link-body">
+                  <div class="mk-corp-link-label">Trade Finance</div>
+                  <div class="mk-corp-link-sub">LC · LG · Outward Bill</div>
+                </div>
+                <span class="material-icons mk-corp-link-arrow">chevron_right</span>
+              </a>
+              <a href="#" class="mk-corp-link" style="border-bottom:none">
+                <div class="mk-corp-link-icon"><span class="material-icons">bar_chart</span></div>
+                <div class="mk-corp-link-body">
+                  <div class="mk-corp-link-label">Reports</div>
+                  <div class="mk-corp-link-sub">Audit trail · Limit usage</div>
+                </div>
+                <span class="material-icons mk-corp-link-arrow">chevron_right</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Approval Pipeline -->
+          <div class="mk-panel">
+            <div class="mk-panel-hdr">
+              <div class="mk-panel-title"><span class="material-icons">account_tree</span>Approval Pipeline</div>
+              <button class="mk-panel-action">TXN-01141 <span class="material-icons">chevron_right</span></button>
+            </div>
+            <div class="mk-flow">
+              <div class="mk-flow-step">
+                <div class="mk-flow-dot done"><span class="material-icons">check</span></div>
+                <div class="mk-flow-info">
+                  <div class="mk-flow-name">Sara Rahman <span style="font-size:.72rem;color:var(--az-muted)">(You)</span></div>
+                  <div class="mk-flow-role">Payment Maker · L2</div>
+                  <div class="mk-flow-status done"><span class="material-icons">check_circle</span> Initiated · 09:14</div>
+                </div>
+              </div>
+              <div class="mk-flow-step">
+                <div class="mk-flow-dot active"><span class="material-icons">schedule</span></div>
+                <div class="mk-flow-info">
+                  <div class="mk-flow-name">Marc Kowalski</div>
+                  <div class="mk-flow-role">Head of Treasury · Checker L1</div>
+                  <div class="mk-flow-status active"><span class="mk-flow-blink"></span> Reviewing now</div>
+                </div>
+              </div>
+              <div class="mk-flow-step">
+                <div class="mk-flow-dot wait"><span class="material-icons">person</span></div>
+                <div class="mk-flow-info">
+                  <div class="mk-flow-name">CFO Signatory</div>
+                  <div class="mk-flow-role">Final Authorizer · L3</div>
+                  <div class="mk-flow-status wait"><span class="material-icons">lock_clock</span> Awaiting L1 approval</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Three Column: Limits + Chart + Alerts ── -->
+      <div class="mk-three-col">
+
+        <!-- Daily Limits -->
+        <div class="mk-panel">
+          <div class="mk-panel-hdr">
+            <div class="mk-panel-title"><span class="material-icons">speed</span>Daily Limits Usage</div>
+            <button class="mk-panel-action">Details <span class="material-icons">chevron_right</span></button>
+          </div>
+          <div class="mk-limits">
+            <div>
+              <div class="mk-limit-top">
+                <span class="mk-limit-name">USD Wire Transfers</span>
+                <span class="mk-limit-vals"><strong>$14.3M</strong> / $20M</span>
+              </div>
+              <div class="mk-limit-track"><div class="mk-limit-fill mk-fill-blue" id="lim1" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="mk-limit-top">
+                <span class="mk-limit-name">FX Conversions</span>
+                <span class="mk-limit-vals"><strong>€3.2M</strong> / €8M</span>
+              </div>
+              <div class="mk-limit-track"><div class="mk-limit-fill mk-fill-gold" id="lim2" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="mk-limit-top">
+                <span class="mk-limit-name">Trade Finance (L/C)</span>
+                <span class="mk-limit-vals"><strong>£0.78M</strong> / £5M</span>
+              </div>
+              <div class="mk-limit-track"><div class="mk-limit-fill mk-fill-green" id="lim3" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="mk-limit-top">
+                <span class="mk-limit-name">Bulk Payments</span>
+                <span class="mk-limit-vals"><strong>CHF 4.6M</strong> / CHF 10M</span>
+              </div>
+              <div class="mk-limit-track"><div class="mk-limit-fill mk-fill-purple" id="lim4" style="width:0%"></div></div>
+            </div>
+          </div>
+          <!-- Ring -->
+          <div class="mk-ring-wrap">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+              <circle cx="45" cy="45" r="36" fill="none" stroke="#edf1f4" stroke-width="7"/>
+              <circle cx="45" cy="45" r="36" fill="none" stroke="var(--az-blue)" stroke-width="7"
+                stroke-dasharray="226.2" stroke-dashoffset="65.6"
+                stroke-linecap="round"
+                transform="rotate(-90 45 45)"
+                id="limitRing"
+                style="transition:stroke-dashoffset 1.5s cubic-bezier(.22,1,.36,1)"/>
+            </svg>
+            <div class="mk-ring-center">
+              <div class="mk-ring-val">71%</div>
+              <div class="mk-ring-lbl">USD Used</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Volume Chart -->
+        <div class="mk-panel">
+          <div class="mk-panel-hdr">
+            <div class="mk-panel-title"><span class="material-icons">stacked_bar_chart</span>My Volume · This Week</div>
+          </div>
+          <div class="mk-chart-wrap">
+            <div class="mk-chart-meta">
+              <div class="mk-chart-val">$48.9M</div>
+              <div class="mk-chart-trend"><span class="material-icons">arrow_upward</span>+8% vs last week</div>
+            </div>
+            <div class="mk-chart-sub">Initiated volume (USD equivalent)</div>
+            <div class="mk-chart-svg-wrap">
+              <svg viewBox="0 0 300 85" preserveAspectRatio="none">
+                <!-- Bars -->
+                <rect x="8"   y="58" width="28" height="27" fill="rgba(0,83,138,0.15)" rx="2"/>
+                <rect x="50"  y="43" width="28" height="42" fill="rgba(0,83,138,0.15)" rx="2"/>
+                <rect x="92"  y="48" width="28" height="37" fill="rgba(0,83,138,0.15)" rx="2"/>
+                <rect x="134" y="28" width="28" height="57" fill="rgba(0,83,138,0.15)" rx="2"/>
+                <rect x="176" y="38" width="28" height="47" fill="rgba(0,83,138,0.18)" rx="2"/>
+                <!-- Today highlight -->
+                <rect x="218" y="8"  width="28" height="77" fill="rgba(0,83,138,0.35)" rx="2"/>
+                <rect x="260" y="33" width="28" height="52" fill="rgba(0,83,138,0.12)" rx="2"/>
+                <!-- Today label -->
+                <text x="232" y="5" fill="var(--az-blue)" font-size="6.5" text-anchor="middle" font-family="Roboto,sans-serif" letter-spacing="1" font-weight="600">TODAY</text>
+                <!-- X labels -->
+                <text x="22"  y="82" fill="#9aabb5" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif">Mon</text>
+                <text x="64"  y="82" fill="#9aabb5" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif">Tue</text>
+                <text x="106" y="82" fill="#9aabb5" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif">Wed</text>
+                <text x="148" y="82" fill="#9aabb5" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif">Thu</text>
+                <text x="190" y="82" fill="#9aabb5" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif">Fri</text>
+                <text x="232" y="82" fill="var(--az-blue)" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif" font-weight="600">Mon</text>
+                <text x="274" y="82" fill="#9aabb5" font-size="7" text-anchor="middle" font-family="Roboto,sans-serif">Tue</text>
+              </svg>
+            </div>
+            <div class="mk-chart-legend">
+              <div class="mk-legend-item"><div class="mk-legend-dot" style="background:var(--az-blue)"></div>Initiated</div>
+              <div class="mk-legend-item"><div class="mk-legend-dot" style="background:#2ed88e"></div>Settled</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts & Activity -->
+        <div class="mk-panel">
+          <div class="mk-panel-hdr">
+            <div class="mk-panel-title"><span class="material-icons">notifications_active</span>Alerts &amp; Activity</div>
+            <button class="mk-panel-action">All <span class="material-icons">chevron_right</span></button>
+          </div>
+          <div class="mk-alert-list">
+            <div class="mk-alert-item">
+              <div class="mk-alert-pip pip-blue"></div>
+              <div class="mk-alert-icon"><span class="material-icons">verified</span></div>
+              <div class="mk-alert-text">
+                <div class="mk-alert-title">TXN-01141 approved by Marc K.</div>
+                <div class="mk-alert-meta">FX · EUR→USD · $1,840,000 · Moving to CFO</div>
+              </div>
+              <div class="mk-alert-time">09:31</div>
+            </div>
+            <div class="mk-alert-item">
+              <div class="mk-alert-pip pip-amber"></div>
+              <div class="mk-alert-icon"><span class="material-icons">schedule</span></div>
+              <div class="mk-alert-text">
+                <div class="mk-alert-title">3 drafts due before cut-off</div>
+                <div class="mk-alert-meta">Deadline 17:00 · $6,840,000 total</div>
+              </div>
+              <div class="mk-alert-time">09:00</div>
+            </div>
+            <div class="mk-alert-item">
+              <div class="mk-alert-pip pip-green"></div>
+              <div class="mk-alert-icon"><span class="material-icons">check_circle</span></div>
+              <div class="mk-alert-text">
+                <div class="mk-alert-title">TXN-01138 settled successfully</div>
+                <div class="mk-alert-meta">Bulk · CHF 4,600,000 · Supplier Consortium</div>
+              </div>
+              <div class="mk-alert-time">08:52</div>
+            </div>
+            <div class="mk-alert-item">
+              <div class="mk-alert-pip pip-red"></div>
+              <div class="mk-alert-icon"><span class="material-icons">warning</span></div>
+              <div class="mk-alert-text">
+                <div class="mk-alert-title">USD limit at 71% — monitor usage</div>
+                <div class="mk-alert-meta">$5.7M remaining · Resets 00:00</div>
+              </div>
+              <div class="mk-alert-time">08:30</div>
+            </div>
+            <div class="mk-alert-item">
+              <div class="mk-alert-pip pip-blue"></div>
+              <div class="mk-alert-icon"><span class="material-icons">security</span></div>
+              <div class="mk-alert-text">
+                <div class="mk-alert-title">New session authenticated</div>
+                <div class="mk-alert-meta">Chrome · IP 185.220.xxx · MFA verified</div>
+              </div>
+              <div class="mk-alert-time">08:07</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /mk-wrap -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <span>&copy; 2026 azentio software. All rights reserved.</span>
+    <div>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Security</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </footer>
+</div><!-- /app-main -->
+
+<script src="js/app.js"></script>
+<script src="js/shared.js"></script>
+<script>
+// ── Clock / greeting ──
+function tick(){
+  var now=new Date();
+  var h=now.getHours();
+  var greet=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  var el=document.getElementById('hdrGreet');
+  if(el)el.textContent=greet;
+}
+tick();setInterval(tick,60000);
+
+// ── Count-up animations ──
+var kpis=[
+  {id:'kpiInitiated', target:14280000, prefix:'$', compact:true},
+  {id:'kpiPending',   target:6840000,  prefix:'$', compact:true},
+  {id:'kpiApproved',  target:4,        prefix:'',  suffix:' TXN', compact:false},
+  {id:'kpiMtd',       target:48920000, prefix:'$', compact:true}
+];
+function countUp(el, target, prefix, suffix, compact){
+  suffix=suffix||'';
+  var dur=1300, start=performance.now();
+  function frame(now){
+    var p=Math.min((now-start)/dur,1);
+    var ease=1-Math.pow(1-p,4);
+    var val=target*ease;
+    var display;
+    if(compact){
+      if(val>=1e6) display='$'+(val/1e6).toFixed(1)+'M';
+      else if(val>=1e3) display='$'+(val/1e3).toFixed(0)+'K';
+      else display=prefix+Math.round(val).toLocaleString()+suffix;
+    } else {
+      display=prefix+Math.round(val).toLocaleString()+suffix;
+    }
+    el.textContent=display;
+    if(p<1)requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+setTimeout(function(){
+  kpis.forEach(function(k){
+    var el=document.getElementById(k.id);
+    if(el) countUp(el, k.target, k.prefix, k.suffix||'', k.compact);
+  });
+},300);
+
+// ── Limit bars ──
+var limits=[
+  {id:'lim1', pct:71},
+  {id:'lim2', pct:40},
+  {id:'lim3', pct:15},
+  {id:'lim4', pct:46}
+];
+setTimeout(function(){
+  limits.forEach(function(l){
+    var el=document.getElementById(l.id);
+    if(el) el.style.width=l.pct+'%';
+  });
+},400);
+
+// ── Submit row ──
+function submitRow(btn){
+  btn.innerHTML='<span class="material-icons" style="font-size:13px">check</span> Sent';
+  btn.style.background='#edfbf4';
+  btn.style.color='#1a9e62';
+  btn.style.borderColor='#b8f0d8';
+  btn.disabled=true;
+  var row=btn.closest('tr');
+  if(row){
+    var chip=row.querySelector('.mk-chip');
+    if(chip){
+      chip.className='mk-chip mk-chip-submitted';
+      chip.innerHTML='<span class="mk-chip-dot dot-submitted"></span>Submitted';
+    }
+  }
+}
+
+// ── Submit All ──
+function submitAll(){
+  var btn=document.getElementById('btnSubmitAll');
+  btn.innerHTML='<span class="material-icons" style="font-size:13px">check</span> All Submitted';
+  btn.style.background='#1a9e62';
+  btn.disabled=true;
+  var bar=document.getElementById('ctaBar');
+  if(bar){
+    bar.querySelector('.mk-cta-title').textContent='All 3 transactions submitted for checker review';
+    bar.style.background='#edfbf4';
+    bar.style.borderColor='#b8f0d8';
+    bar.style.borderLeftColor='#1a9e62';
+    bar.querySelector('.mk-cta-icon').style.background='#d6f5e7';
+    bar.querySelector('.mk-cta-icon').style.borderColor='#b8f0d8';
+    bar.querySelector('.mk-cta-icon .material-icons').style.color='#1a9e62';
+  }
+  // Update draft rows
+  document.querySelectorAll('.mk-row-submit').forEach(function(b){ submitRow(b); });
+}
+
+// ── Sidebar nav ──
+document.querySelectorAll('.sb-item').forEach(function(item){
+  item.addEventListener('click',function(){
+    if(!this.getAttribute('onclick')){
+      document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active-section'); });
+      this.classList.add('active-section');
+    }
+  });
+});
+
+// ── Sidebar search ──
+function sbFilter(q){
+  var cl=document.getElementById('sbSearchClear');
+  if(cl) cl.style.display=q?'flex':'none';
+  var items=document.querySelectorAll('.sb-item');
+  items.forEach(function(item){
+    var lbl=(item.dataset.label||item.querySelector('.sb-label')?.textContent||'').toLowerCase();
+    item.style.display=(!q||lbl.includes(q.toLowerCase()))?'':'none';
+  });
+}
+function sbClearSearch(){
+  var inp=document.getElementById('sbSearch');
+  var cl=document.getElementById('sbSearchClear');
+  if(inp){inp.value='';sbFilter('');}
+  if(cl) cl.style.display='none';
+}
+</script>
+</body>
+</html>

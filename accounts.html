@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -17,10 +17,12 @@
   <link rel="stylesheet" href="css/styles.css"/>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
   <div class="hdr-logo" id="hdrLogo">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
@@ -94,12 +96,12 @@
       </div>
     </div>
     <div class="hdr-avatar-wrap">
-      <img src="images/user_s.png" class="hdr-avatar" alt="User profile" onerror="this.src='images/user_m.png'"/>
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
       <div class="avatar-dropdown" role="menu">
         <div class="av-drop-top">
-          <img src="images/user_m.png" class="av-drop-photo" alt="Shadab Pervaiz" onerror="this.style.display='none'"/>
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
           <div class="av-drop-userinfo">
-            <div class="av-drop-name">Shadab Pervaiz</div>
+            <div class="av-drop-name">Sarika Desai</div>
             <div class="av-drop-login-lbl">Last Login</div>
             <div class="av-drop-login-time">
               <span class="t-part">
@@ -115,9 +117,9 @@
           </div>
         </div>
         <div class="av-drop-details">
-          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">shadab.pervaiz</span></div>
-          <div class="av-detail-row"><span class="av-detail-lbl">CIF Name:</span><span class="av-detail-val">Shadab Pervaiz A.</span></div>
-          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Shadab</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sarika.desai</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF Name:</span><span class="av-detail-val">Sarika Desai A.</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sarika</span></div>
         </div>
         <div class="av-drop-nav">
           <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
@@ -132,18 +134,20 @@
             </div>
             My Tasks
           </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
         </div>
       </div>
     </div>
-    <a href="login.html" class="btn-logout" style="text-decoration:none">Logout</a>
   </div>
 </header>
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <button class="sb-collapse-btn" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Collapse sidebar">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-  </button>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
@@ -187,7 +191,7 @@
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
 <div class="az-bc">
-  <a href="#">Home</a><span class="sep">&#8250;</span><span class="cur">My Accounts</span>
+  <a href="dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Accounts</span>
 </div>
 <div class="page-top-bar">
   <h1 class="page-title">My Accounts</h1>
@@ -216,7 +220,7 @@
     <div id="cardView"><div class="acct-row" id="accRow_gc0">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_gc0" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_gc0" class="text-truncate">Current Account</span>
       <button class="edit-name-btn" onclick="startEdit('gc0')" aria-label="Edit account name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -256,7 +260,7 @@
 <div class="acct-row" id="accRow_gc1">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_gc1" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_gc1" class="text-truncate">Savings Account</span>
       <button class="edit-name-btn" onclick="startEdit('gc1')" aria-label="Edit account name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -296,7 +300,7 @@
 <div class="acct-row" id="accRow_gc2">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_gc2" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_gc2" class="text-truncate">Salary Account</span>
       <button class="edit-name-btn" onclick="startEdit('gc2')" aria-label="Edit account name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -336,7 +340,7 @@
 <div class="acct-row" id="accRow_gc3">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_gc3" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_gc3" class="text-truncate">Joint Account</span>
       <button class="edit-name-btn" onclick="startEdit('gc3')" aria-label="Edit account name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -376,7 +380,7 @@
 <div class="acct-row" id="accRow_gc4">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_gc4" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_gc4" class="text-truncate">Foreign Currency</span>
       <button class="edit-name-btn" onclick="startEdit('gc4')" aria-label="Edit account name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -423,7 +427,7 @@
 </tr></thead>
 <tbody>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-active">Active</span></td>
   <td>IBAN8000</td><td>Current Account</td><td>0.00 USD</td><td>0.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -451,7 +455,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-inactive">Inactive</span></td>
   <td>IBAN8001</td><td>Savings Account</td><td>1,250.00 USD</td><td>1,250.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -479,7 +483,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-approved">Approved</span></td>
   <td>IBAN8002</td><td>Current Account</td><td>3,800.00 USD</td><td>3,600.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -507,7 +511,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-pending">Submitted</span></td>
   <td>IBAN8003</td><td>Current Account</td><td>0.00 USD</td><td>0.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -535,7 +539,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-cancelled">Cancelled</span></td>
   <td>IBAN8004</td><td>Savings Account</td><td>0.00 USD</td><td>0.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -566,10 +570,11 @@
   </div>
   <!-- Term Deposit Tab -->
   <div id="tabTerm" class="hidden" role="tabpanel" aria-labelledby="tabTermBtn">
+    <div class="info-bar"><img src="images/icons/information.svg" width="16" height="16" alt="information" loading="lazy"/> Term Deposit Accounts List</div>
     <div id="termCardView"><div class="acct-row" id="accRow_tc0">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_tc0" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_tc0" class="text-truncate">12-Month Deposit</span>
       <button class="edit-name-btn" onclick="startEdit('tc0')" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -578,7 +583,8 @@
   <div class="acct-field"><div class="lbl">Account Number</div><div class="val">TD001-2024</div></div>
   <div class="acct-field"><div class="lbl">Principal Amount</div><div class="val">25,000.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Interest Rate</div><div class="val">4.50% p.a.</div></div>
-  <div class="acct-field"><div class="lbl">Maturity Date</div><div class="val">31 Dec 2025</div></div>
+  <div class="acct-field"><div class="lbl">Tenure</div><div class="val">12 Months</div></div>
+  <div class="acct-field"><div class="lbl">Maturity Date</div><div class="val">31 Dec 2025</div><div class="td-prog-wrap"><div class="td-prog-track"><div class="td-prog-fill" style="width:85%;background:#2ed88e;"></div></div><div class="td-prog-lbl">85% elapsed</div></div></div>
   <div class="acct-actions ms-auto">
     <a href="transaction-history.html" class="btn-txn">Transaction History</a>
     <div class="ctx-wrap position-relative">
@@ -601,7 +607,6 @@
     <button class="ctx-item" onclick="closeCtx('ctx_tc0')" role="menuitem"><img src="images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
     <button class="ctx-item" onclick="closeCtx('ctx_tc0')" role="menuitem"><img src="images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
     <button class="ctx-item" onclick="openQR();closeCtx('ctx_tc0')" role="menuitem"><img src="images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
-    
     <div class="ctx-divider" role="separator"></div>
     <div class="ctx-sec">Term Deposit</div>
     <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tc0')"><img src="images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
@@ -613,7 +618,7 @@
 <div class="acct-row" id="accRow_tc1">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_tc1" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_tc1" class="text-truncate">6-Month Growth Plan</span>
       <button class="edit-name-btn" onclick="startEdit('tc1')" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -622,7 +627,8 @@
   <div class="acct-field"><div class="lbl">Account Number</div><div class="val">TD002-2024</div></div>
   <div class="acct-field"><div class="lbl">Principal Amount</div><div class="val">10,000.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Interest Rate</div><div class="val">5.00% p.a.</div></div>
-  <div class="acct-field"><div class="lbl">Maturity Date</div><div class="val">30 Jun 2025</div></div>
+  <div class="acct-field"><div class="lbl">Tenure</div><div class="val">6 Months</div></div>
+  <div class="acct-field"><div class="lbl">Maturity Date</div><div class="val">30 Jun 2025</div><div class="td-prog-wrap"><div class="td-prog-track"><div class="td-prog-fill" style="width:62%;background:#2ed88e;"></div></div><div class="td-prog-lbl">62% elapsed</div></div></div>
   <div class="acct-actions ms-auto">
     <a href="transaction-history.html" class="btn-txn">Transaction History</a>
     <div class="ctx-wrap position-relative">
@@ -645,7 +651,6 @@
     <button class="ctx-item" onclick="closeCtx('ctx_tc1')" role="menuitem"><img src="images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
     <button class="ctx-item" onclick="closeCtx('ctx_tc1')" role="menuitem"><img src="images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
     <button class="ctx-item" onclick="openQR();closeCtx('ctx_tc1')" role="menuitem"><img src="images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
-    
     <div class="ctx-divider" role="separator"></div>
     <div class="ctx-sec">Term Deposit</div>
     <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tc1')"><img src="images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
@@ -657,7 +662,7 @@
 <div class="acct-row" id="accRow_tc2">
   <div class="acct-name-col">
     <div class="acct-name">
-      <span id="accName_tc2" class="text-truncate">SHADAB PERVAIZ</span>
+      <span id="accName_tc2" class="text-truncate">Fixed Deposit 2023</span>
       <button class="edit-name-btn" onclick="startEdit('tc2')" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
     </div>
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
@@ -666,7 +671,8 @@
   <div class="acct-field"><div class="lbl">Account Number</div><div class="val">TD003-2023</div></div>
   <div class="acct-field"><div class="lbl">Principal Amount</div><div class="val">15,000.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Interest Rate</div><div class="val">3.75% p.a.</div></div>
-  <div class="acct-field"><div class="lbl">Maturity Date</div><div class="val">15 Jan 2025</div></div>
+  <div class="acct-field"><div class="lbl">Tenure</div><div class="val">18 Months</div></div>
+  <div class="acct-field"><div class="lbl">Maturity Date</div><div class="val">15 Jan 2025</div><div class="td-prog-wrap"><div class="td-prog-track"><div class="td-prog-fill" style="width:100%;background:#94a3b8;"></div></div><div class="td-prog-lbl">Matured</div></div></div>
   <div class="acct-actions ms-auto">
     <a href="transaction-history.html" class="btn-txn">Transaction History</a>
     <div class="ctx-wrap position-relative">
@@ -689,7 +695,6 @@
     <button class="ctx-item" onclick="closeCtx('ctx_tc2')" role="menuitem"><img src="images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
     <button class="ctx-item" onclick="closeCtx('ctx_tc2')" role="menuitem"><img src="images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
     <button class="ctx-item" onclick="openQR();closeCtx('ctx_tc2')" role="menuitem"><img src="images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
-    
     <div class="ctx-divider" role="separator"></div>
     <div class="ctx-sec">Term Deposit</div>
     <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tc2')"><img src="images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
@@ -701,16 +706,17 @@
     <div id="termTableView" class="hidden"><div class="table-responsive">
 <table class="az-table w-100" role="grid">
 <thead><tr>
-  <th scope="col">Account Name</th><th scope="col">Status</th>
+  <th scope="col">Deposit Name</th><th scope="col">Status</th>
   <th scope="col">Account Number</th><th scope="col">Principal Amount</th>
-  <th scope="col">Interest Rate</th><th scope="col">Maturity Date</th>
-  <th scope="col">Profit Account</th><th scope="col" class="text-end">Actions</th>
+  <th scope="col">Interest Rate</th><th scope="col">Tenure</th>
+  <th scope="col">Maturity Date</th><th scope="col">Profit Account</th>
+  <th scope="col" class="text-end">Actions</th>
 </tr></thead>
 <tbody>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">12-Month Deposit</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-active">Active</span></td>
-  <td>TD001-2024</td><td>25,000.00 USD</td><td>4.50% p.a.</td><td>31 Dec 2025</td><td>IBAN8000</td>
+  <td>TD001-2024</td><td>25,000.00 USD</td><td>4.50% p.a.</td><td>12 Months</td><td>31 Dec 2025</td><td>IBAN8000</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
   <button class="btn-more" onclick="toggleCtx('ctx_tt0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
   <div class="ctx-menu hidden" id="ctx_tt0" role="menu">
@@ -731,7 +737,6 @@
     <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
     <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
     <button class="ctx-item" onclick="openQR();closeCtx('ctx_tt0')" role="menuitem"><img src="images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
-    
     <div class="ctx-divider" role="separator"></div>
     <div class="ctx-sec">Term Deposit</div>
     <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tt0')"><img src="images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
@@ -740,9 +745,9 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">6-Month Growth Plan</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-active">Active</span></td>
-  <td>TD002-2024</td><td>10,000.00 USD</td><td>5.00% p.a.</td><td>30 Jun 2025</td><td>IBAN8001</td>
+  <td>TD002-2024</td><td>10,000.00 USD</td><td>5.00% p.a.</td><td>6 Months</td><td>30 Jun 2025</td><td>IBAN8001</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
   <button class="btn-more" onclick="toggleCtx('ctx_tt1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
   <div class="ctx-menu hidden" id="ctx_tt1" role="menu">
@@ -763,7 +768,6 @@
     <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
     <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
     <button class="ctx-item" onclick="openQR();closeCtx('ctx_tt1')" role="menuitem"><img src="images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
-    
     <div class="ctx-divider" role="separator"></div>
     <div class="ctx-sec">Term Deposit</div>
     <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tt1')"><img src="images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
@@ -772,9 +776,9 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SHADAB PERVAIZ</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">Fixed Deposit 2023</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-matured">Matured</span></td>
-  <td>TD003-2023</td><td>15,000.00 USD</td><td>3.75% p.a.</td><td>15 Jan 2025</td><td>IBAN8000</td>
+  <td>TD003-2023</td><td>15,000.00 USD</td><td>3.75% p.a.</td><td>18 Months</td><td>15 Jan 2025</td><td>IBAN8000</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
   <button class="btn-more" onclick="toggleCtx('ctx_tt2')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
   <div class="ctx-menu hidden" id="ctx_tt2" role="menu">
@@ -795,7 +799,6 @@
     <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
     <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
     <button class="ctx-item" onclick="openQR();closeCtx('ctx_tt2')" role="menuitem"><img src="images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
-    
     <div class="ctx-divider" role="separator"></div>
     <div class="ctx-sec">Term Deposit</div>
     <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tt2')"><img src="images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
@@ -861,9 +864,7 @@
 
 <!-- Bootstrap JS (local) -->
 <script src="js/bootstrap.bundle.min.js"></script>
-<!-- Date Picker (local vanilla JS) -->
-<script src="js/datepicker.min.js"></script>
-<!-- Application logic -->
 <script src="js/app.js"></script>
+<script src="js/shared.js"></script>
 </body>
 </html>

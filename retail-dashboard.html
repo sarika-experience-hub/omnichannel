@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Retail Dashboard</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/retail-dashboard.css"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="js/theme.js"></script>
+</head>
+<body class="pg-retail-dashboard">
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="142 0 22 29" aria-hidden="true">
+        <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/>
+        <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/>
+      </svg>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+        <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" aria-label="3 notifications">3</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span><a href="#" class="notif-clear-all">Clear all</a></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Scheduled transfer processed</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Card statement ready for download</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons-outlined" style="font-size:20px;">headset_mic</span></button>
+    <button class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons-outlined" style="font-size:20px;">help_outline</span></button>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sarika Desai</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>22 Nov, 2025</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>14.06</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sarika.desai</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">Sarika Desai A.</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">bookmarks</span></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+  <button class="sb-item active-section" data-label="Dashboard"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">dashboard</span></span><span class="sb-label">Dashboard</span></button>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">account_balance</span></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">swap_horiz</span></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+    <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfer <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Account Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment <span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">payments</span></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">credit_card</span></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a><a href="cards-settlement-local.html" class="sb-sub3-item">Local Credit Card Settlement</a></div><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sCheq','cCheq')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">receipt_long</span></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cCheq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCheq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebooks</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a><a href="chequebook-report.html" class="sb-sub-item">Chequebook Report</a></div>
+  <button class="sb-item" data-label="Remittance" onclick="toggleSub('sRem','cRem')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">send</span></span><span class="sb-label">Remittance</span><span class="sb-chevron" id="cRem"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sRem" class="sb-sub" style="display:none"><a href="remittance-intra-bank.html" class="sb-sub-item">Intra Bank Remittance Request</a><a href="remittance-local.html" class="sb-sub-item">Local Remittance Request</a><a href="remittance-international.html" class="sb-sub-item">International Remittance Request</a></div>
+  <button class="sb-item" data-label="Sweeping and Pooling" onclick="toggleSub('sSP','cSP')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">account_tree</span></span><span class="sb-label">Sweeping and Pooling</span><span class="sb-chevron" id="cSP"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSP" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Sweeping and Pooling</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">attach_money</span></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+  <button class="sb-item" data-label="Cash Management" onclick="toggleSub('sCM','cCM')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">local_atm</span></span><span class="sb-label">Cash Management</span><span class="sb-chevron" id="cCM"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCM" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Cash Management</a></div>
+  <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">handshake</span></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-lg-status.html" class="sb-sub-item">LG Status and Details</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a><a href="tf-ob-status.html" class="sb-sub-item">OB Status and Details</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">miscellaneous_services</span></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+  <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">corporate_fare</span></span><span class="sb-label">Corporate End User Management Reports</span></button>
+</nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc" style="padding:1.25rem 1.75rem .25rem;">
+      <a href="dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">Retail Dashboard</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.75rem;padding:0 1.75rem;">
+      <h1 class="page-title">My Overview</h1>
+      <div style="display:flex;gap:.625rem;">
+        <button class="btn-open-account" onclick="location.href='payments-bill-report.html'">
+          <span class="material-icons" style="font-size:15px;">receipt_long</span> Pay Bills
+          <span class="bill-badge">3</span>
+        </button>
+        <button class="btn-open-account" onclick="location.href='transfer-own-accounts.html'">
+          New Transfer <span class="material-icons" style="font-size:15px;">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="rd-wrap">
+
+      <!-- ── ROW 1: HERO ── -->
+      <div class="rd-hero">
+
+        <!-- Balance -->
+        <div class="rd-panel rd-reveal rd-d1">
+          <div class="bal-hero">
+            <div class="rd-ph">
+              <div class="rd-ph-left">
+                <span class="rd-ph-title">Total Balance</span>
+              </div>
+              <a href="accounts.html" class="rd-ph-action">View all <span class="material-icons">chevron_right</span></a>
+            </div>
+
+            <div class="bal-eyebrow">
+              <div class="bal-dot"></div>
+              <span class="bal-eyebrow-lbl">All accounts · Live</span>
+              <button class="eye-btn" id="eyeBtn" onclick="toggleBalance()" title="Show/hide balance">
+                <span class="material-icons" id="eyeIcon">visibility</span>
+              </button>
+            </div>
+
+            <div class="bal-amount" id="balAmount">AED 248,350.00</div>
+            <div class="bal-currency">UAE Dirham · Updated just now</div>
+
+            <div class="bal-change">
+              <span class="material-icons">trending_up</span>
+              +AED 4,200 &nbsp;·&nbsp; +1.7% this month
+            </div>
+
+            <div class="bal-stats">
+              <div class="bal-stat">
+                <div class="bal-stat-lbl">Current</div>
+                <div class="bal-stat-val">AED 84,200</div>
+              </div>
+              <div class="bal-stat">
+                <div class="bal-stat-lbl">Savings</div>
+                <div class="bal-stat-val">AED 142,000</div>
+              </div>
+              <div class="bal-stat">
+                <div class="bal-stat-lbl">Income · Jun</div>
+                <div class="bal-stat-val pos">+AED 18,500</div>
+              </div>
+              <div class="bal-stat">
+                <div class="bal-stat-lbl">Expenses · Jun</div>
+                <div class="bal-stat-val neg">−AED 12,340</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Spending Breakdown -->
+        <div class="rd-panel rd-reveal rd-d2">
+          <div class="rd-ph">
+            <div class="rd-ph-left">
+              <span class="rd-ph-title">Spending Breakdown</span>
+            </div>
+            <span class="spend-period">June 2026</span>
+          </div>
+
+          <div class="hbar-list">
+            <div class="hbar-row">
+              <div class="hbar-meta">
+                <div class="hbar-cat"><div class="hbar-pip" style="background:#2ed88e"></div>Shopping</div>
+                <div class="hbar-val">AED 3,840</div>
+              </div>
+              <div class="hbar-track"><div class="hbar-fill" style="background:#2ed88e" data-w="78%"></div></div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta">
+                <div class="hbar-cat"><div class="hbar-pip" style="background:#00538A"></div>Food &amp; Dining</div>
+                <div class="hbar-val">AED 2,560</div>
+              </div>
+              <div class="hbar-track"><div class="hbar-fill" style="background:#00538A" data-w="52%"></div></div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta">
+                <div class="hbar-cat"><div class="hbar-pip" style="background:#f59e0b"></div>Travel</div>
+                <div class="hbar-val">AED 2,100</div>
+              </div>
+              <div class="hbar-track"><div class="hbar-fill" style="background:#f59e0b" data-w="43%"></div></div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta">
+                <div class="hbar-cat"><div class="hbar-pip" style="background:#8b5cf6"></div>Utilities</div>
+                <div class="hbar-val">AED 1,360</div>
+              </div>
+              <div class="hbar-track"><div class="hbar-fill" style="background:#8b5cf6" data-w="28%"></div></div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta">
+                <div class="hbar-cat"><div class="hbar-pip" style="background:#ef4444"></div>Health</div>
+                <div class="hbar-val">AED 980</div>
+              </div>
+              <div class="hbar-track"><div class="hbar-fill" style="background:#ef4444" data-w="20%"></div></div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta">
+                <div class="hbar-cat"><div class="hbar-pip" style="background:#9ca3af"></div>Other</div>
+                <div class="hbar-val">AED 620</div>
+              </div>
+              <div class="hbar-track"><div class="hbar-fill" style="background:#9ca3af" data-w="13%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Debit Card -->
+        <div class="rd-panel rd-reveal rd-d3" style="background:#f8fafc;">
+          <div class="rd-ph">
+            <div class="rd-ph-left">
+              <span class="rd-ph-title">My Card</span>
+            </div>
+            <a href="cards-my-cards.html" class="rd-ph-action">Manage <span class="material-icons">chevron_right</span></a>
+          </div>
+
+          <div class="debit-card">
+            <div class="dc-top">
+              <div>
+                <div class="dc-bank">azentio</div>
+                <div class="dc-type">Platinum Visa</div>
+              </div>
+              <div class="dc-chip"></div>
+            </div>
+            <div class="dc-number">4532 •••• •••• 7841</div>
+            <div class="dc-bottom">
+              <div>
+                <div class="dc-name">Sarika Desai</div>
+                <div class="dc-exp">09 / 27</div>
+              </div>
+              <div class="dc-network">VISA</div>
+            </div>
+          </div>
+
+          <div class="card-quick-actions">
+            <div class="cqa-btn" onclick="location.href='cards-my-cards.html'">
+              <span class="material-icons">credit_card</span>
+              <span>Details</span>
+            </div>
+            <div class="cqa-btn" onclick="location.href='cards-block.html'">
+              <span class="material-icons">lock</span>
+              <span>Freeze</span>
+            </div>
+            <div class="cqa-btn" onclick="location.href='cards-pin-change.html'">
+              <span class="material-icons">pin</span>
+              <span>Change PIN</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /rd-hero -->
+
+      <!-- ── ROW 2: TRANSACTIONS + GOALS ── -->
+      <div class="rd-mid">
+
+        <!-- Transactions -->
+        <div class="rd-panel rd-reveal rd-d4" style="padding:0;">
+          <div style="padding:1.25rem 1.25rem 0;" class="rd-ph">
+            <div class="rd-ph-left">
+              <span class="rd-ph-title">Recent Transactions</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <a href="account-statement.html" class="rd-ph-action">View Statement</a>
+              <span style="width:1px;height:12px;background:var(--az-border);display:inline-block;"></span>
+              <a href="transaction-history.html" class="rd-ph-action">View all <span class="material-icons">chevron_right</span></a>
+            </div>
+          </div>
+
+          <div class="txn-tabs" style="padding:0 1rem;">
+            <div class="txn-tab active" onclick="setTab(this)">All</div>
+            <div class="txn-tab" onclick="setTab(this)">Income</div>
+            <div class="txn-tab" onclick="setTab(this)">Expenses</div>
+            <div class="txn-tab" onclick="setTab(this)">Transfers</div>
+          </div>
+
+          <div class="txn-list" style="margin: 10px;">
+            <!-- Today -->
+            <div class="txn-date-group">
+              <span class="txn-date-lbl">Today</span>
+              <div class="txn-date-line"></div>
+              <span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span>
+            </div>
+
+            <div class="txn-row">
+              <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
+              <div class="txn-body">
+                <div class="txn-name">Salary · Emirates Corp</div>
+                <div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amt credit">+AED 18,500</div>
+                <div class="txn-when">08:00</div>
+              </div>
+            </div>
+
+            <div class="txn-row">
+              <div class="txn-mono" style="background:#edfaf6;color:#16303d;">N</div>
+              <div class="txn-body">
+                <div class="txn-name">Noon.com</div>
+                <div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_bag</span><span>Shopping</span><span class="txn-sep">·</span><span>Visa contactless</span></div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amt debit">−AED 280</div>
+                <div class="txn-when">10:22</div>
+              </div>
+            </div>
+
+            <!-- Yesterday -->
+            <div class="txn-date-group">
+              <span class="txn-date-lbl">Yesterday</span>
+              <div class="txn-date-line"></div>
+              <span class="txn-date-total">−AED 1,640</span>
+            </div>
+
+            <div class="txn-row">
+              <div class="txn-mono" style="background:#eff6ff;color:#00538A;">E</div>
+              <div class="txn-body">
+                <div class="txn-name">Emirates Airlines</div>
+                <div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">flight</span><span>Travel</span><span class="txn-sep">·</span><span>DXB → LHR</span></div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amt debit">−AED 1,200</div>
+                <div class="txn-when">14:05</div>
+              </div>
+            </div>
+
+            <div class="txn-row">
+              <div class="txn-mono" style="background:#fef3c7;color:#d97706;">C</div>
+              <div class="txn-body">
+                <div class="txn-name">Carrefour Market</div>
+                <div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_cart</span><span>Groceries</span><span class="txn-sep">·</span><span>Dubai Mall</span></div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amt debit">−AED 440</div>
+                <div class="txn-when">18:30</div>
+              </div>
+            </div>
+
+            <!-- Jun 16 -->
+            <div class="txn-date-group">
+              <span class="txn-date-lbl">Jun 16</span>
+              <div class="txn-date-line"></div>
+              <span class="txn-date-total">−AED 860</span>
+            </div>
+
+            <div class="txn-row">
+              <div class="txn-mono" style="background:#fdecea;color:#c62828;">D</div>
+              <div class="txn-body">
+                <div class="txn-name">DEWA</div>
+                <div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">bolt</span><span>Utilities</span><span class="txn-sep">·</span><span>Auto-pay</span></div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amt debit">−AED 680</div>
+                <div class="txn-when">08:00</div>
+              </div>
+            </div>
+
+            <div class="txn-row">
+              <div class="txn-mono" style="background:#f3f4f6;color:#707070;">S</div>
+              <div class="txn-body">
+                <div class="txn-name">Spotify Premium</div>
+                <div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">music_note</span><span>Subscription</span><span class="txn-sep">·</span><span>Monthly</span></div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amt debit">−AED 180</div>
+                <div class="txn-when">00:00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Goals + Exchange Rates -->
+        <div class="rd-panel rd-reveal rd-d5" style="padding:0;">
+
+          <!-- Goals -->
+          <div style="padding:1.25rem 1.75rem; border-bottom:1px solid var(--az-border);">
+            <div class="rd-ph" style="margin-bottom:.875rem;">
+              <div class="rd-ph-left">
+                <span class="rd-ph-title">Savings Goals</span>
+              </div>
+              <a href="#" class="rd-ph-action"><span class="material-icons">add</span> Add</a>
+            </div>
+
+            <div class="goal-item">
+              <div class="goal-head">
+                <div class="goal-info">
+                  <div class="goal-icon" style="background:#edfaf6;"><span class="material-icons" style="font-size:18px;color:#1a9e63;">home</span></div>
+                  <div>
+                    <div class="goal-name">Home Down Payment</div>
+                    <div class="goal-sub">AED 60k of AED 200k</div>
+                  </div>
+                </div>
+                <div class="goal-pct">30%</div>
+              </div>
+              <div class="goal-track"><div class="goal-prog" style="background:linear-gradient(90deg,#25c47e,#2ed88e)" data-w="30%"></div></div>
+            </div>
+
+            <div class="goal-item">
+              <div class="goal-head">
+                <div class="goal-info">
+                  <div class="goal-icon" style="background:#eff6ff;"><span class="material-icons" style="font-size:18px;color:#00538A;">flight</span></div>
+                  <div>
+                    <div class="goal-name">Europe Trip</div>
+                    <div class="goal-sub">AED 8k of AED 12k</div>
+                  </div>
+                </div>
+                <div class="goal-pct">67%</div>
+              </div>
+              <div class="goal-track"><div class="goal-prog" style="background:linear-gradient(90deg,#00538A,#2ed88e)" data-w="67%"></div></div>
+            </div>
+
+            <div class="goal-item">
+              <div class="goal-head">
+                <div class="goal-info">
+                  <div class="goal-icon" style="background:#fef3c7;"><span class="material-icons" style="font-size:18px;color:#d97706;">laptop</span></div>
+                  <div>
+                    <div class="goal-name">New Laptop</div>
+                    <div class="goal-sub">AED 5.5k of AED 7k</div>
+                  </div>
+                </div>
+                <div class="goal-pct">79%</div>
+              </div>
+              <div class="goal-track"><div class="goal-prog" style="background:linear-gradient(90deg,#f59e0b,#2ed88e)" data-w="79%"></div></div>
+            </div>
+          </div>
+
+          <!-- Exchange Rates -->
+          <div style="padding:1.25rem 1.75rem;">
+            <div class="rd-ph" style="margin-bottom:.875rem;">
+              <div class="rd-ph-left">
+                <span class="rd-ph-title">Exchange Rates</span>
+              </div>
+              <div class="rate-live">
+                <div class="rate-live-dot"></div>
+                <span>Live</span>
+              </div>
+            </div>
+
+            <div class="rate-row">
+              <span class="rate-pair">AED / USD</span>
+              <div><div class="rate-val">0.2723</div><div class="rate-change rc-pos">▲ +0.01%</div></div>
+            </div>
+            <div class="rate-row">
+              <span class="rate-pair">AED / EUR</span>
+              <div><div class="rate-val">0.2500</div><div class="rate-change rc-neg">▼ −0.05%</div></div>
+            </div>
+            <div class="rate-row">
+              <span class="rate-pair">AED / GBP</span>
+              <div><div class="rate-val">0.2134</div><div class="rate-change rc-pos">▲ +0.03%</div></div>
+            </div>
+            <div class="rate-row">
+              <span class="rate-pair">AED / INR</span>
+              <div><div class="rate-val">22.640</div><div class="rate-change rc-pos">▲ +0.08%</div></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /rd-mid -->
+
+      <!-- ── ROW 3: CHARTS + OFFER ── -->
+      <div class="rd-bottom">
+
+        <!-- Monthly Income -->
+        <div class="rd-panel rd-reveal rd-d5">
+          <div class="rd-ph" style="margin-bottom:.5rem;">
+          </div>
+          <div style="font-size:.9rem;font-weight:600;color:var(--az-navy);margin-bottom:.25rem;">Monthly Income</div>
+          <div class="bp-val" id="incVal">AED 18,500</div>
+          <div class="bp-sub">
+            <span class="bp-badge pos">+12% vs May</span>
+            Salary + freelance
+          </div>
+          <div class="mini-bars">
+            <div class="mb-col"><div class="mb-bar" style="--bh:43px;background:#86efac;animation-delay:.10s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:48px;background:#4ade80;animation-delay:.18s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:45px;background:#22c55e;animation-delay:.26s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:50px;background:#16a34a;animation-delay:.34s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:50px;background:#15803d;animation-delay:.42s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:56px;background:#2ed88e;animation-delay:.50s"></div></div>
+          </div>
+          <div class="chart-x">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span style="color:var(--az-green);font-weight:700;">Jun</span>
+          </div>
+        </div>
+
+        <!-- Monthly Expenses -->
+        <div class="rd-panel rd-reveal rd-d5">
+          <div class="rd-ph" style="margin-bottom:.5rem;">
+          </div>
+          <div style="font-size:.9rem;font-weight:600;color:var(--az-navy);margin-bottom:.25rem;">Monthly Expenses</div>
+          <div class="bp-val">AED 12,340</div>
+          <div class="bp-sub">
+            <span class="bp-badge neg">+8% vs May</span>
+            Travel spike this month
+          </div>
+          <div class="mini-bars">
+            <div class="mb-col"><div class="mb-bar" style="--bh:44px;background:#fca5a5;animation-delay:.10s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:47px;background:#f87171;animation-delay:.18s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:44px;background:#ef4444;animation-delay:.26s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:51px;background:#dc2626;animation-delay:.34s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:52px;background:#b91c1c;animation-delay:.42s"></div></div>
+            <div class="mb-col"><div class="mb-bar" style="--bh:56px;background:#ef4444;animation-delay:.50s"></div></div>
+          </div>
+          <div class="chart-x">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span style="color:#c62828;font-weight:700;">Jun</span>
+          </div>
+        </div>
+
+        <!-- Offer Card -->
+        <div class="rd-panel rd-reveal rd-d6" style="background:#f8fafc;">
+          <div class="rd-ph" style="margin-bottom:.5rem;">
+          </div>
+          <div class="offer-card">
+            <div>
+              <div class="offer-badge"><span class="material-icons" style="font-size:13px;vertical-align:middle;">auto_awesome</span> For you</div>
+              <div class="offer-title">Earn 5.5% p.a. on your idle balance</div>
+              <div class="offer-desc">Your current account holds AED 84,200 earning nothing. Move it to azentio Smart Savings and start earning today — no lock-in, withdraw anytime.</div>
+            </div>
+            <div class="offer-cta">
+              <span class="offer-cta-lbl">Move to savings</span>
+              <div class="offer-cta-arrow">
+                <span class="material-icons offer-cta-arrow-icon">arrow_forward</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /rd-bottom -->
+
+      <!-- ── STATUS STRIP ── -->
+      <div class="rd-status">
+        <div class="ss-item">
+          <div class="ss-dot" style="background:#1a9e63;box-shadow:0 0 5px #1a9e63;"></div>
+          <span class="ss-lbl">All systems</span>
+          <span class="ss-val">operational</span>
+        </div>
+        <div class="ss-item">
+          <div class="ss-dot" style="background:var(--az-green);"></div>
+          <span class="ss-lbl">Last sync</span>
+          <span class="ss-val">just now</span>
+        </div>
+        <div class="ss-item">
+          <div class="ss-dot" style="background:var(--az-blue);"></div>
+          <span class="ss-lbl">SWIFT</span>
+          <span class="ss-val">MT · ISO 20022</span>
+        </div>
+        <div class="ss-item" style="margin-left:auto;">
+          <span class="ss-clock" id="ssClock">—</span>
+        </div>
+      </div>
+
+    </div><!-- /rd-wrap -->
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/shared.js"></script>
+<script>
+// ── Clock ──
+function tick() {
+  const n = new Date();
+  const t = n.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const el = document.getElementById('ssClock');
+  if (el) el.textContent = t + ' · GST+4';
+}
+tick(); setInterval(tick, 1000);
+
+// ── Balance toggle ──
+let balVisible = true;
+function toggleBalance() {
+  balVisible = !balVisible;
+  const el  = document.getElementById('balAmount');
+  const ico = document.getElementById('eyeIcon');
+  if (!el || !ico) return;
+  el.textContent  = balVisible ? 'AED 248,350.00' : 'AED ••• ••• ••';
+  ico.textContent = balVisible ? 'visibility' : 'visibility_off';
+}
+
+// ── Transaction tabs ──
+function setTab(el) {
+  document.querySelectorAll('.txn-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+// ── Spending period tabs ──
+function setSpendTab(el) {
+  document.querySelectorAll('.spend-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+// ── Animate bars & goal progress on load ──
+setTimeout(function() {
+  document.querySelectorAll('.hbar-fill[data-w], .goal-prog[data-w]').forEach(function(el) {
+    el.style.width = el.dataset.w;
+  });
+}, 450);
+
+// ── Sidebar search ──
+function sbFilter(val) {
+  var q = val.trim().toLowerCase();
+  var clear = document.getElementById('sbSearchClear');
+  if (clear) clear.style.display = q ? 'flex' : 'none';
+
+  if (!q) {
+    document.querySelectorAll('.sb-item').forEach(function(el) { el.style.display = ''; });
+    document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+      var orig = el.getAttribute('data-sb-orig');
+      el.style.display = orig !== null ? orig : 'none';
+      el.removeAttribute('data-sb-orig');
+    });
+    document.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(el) {
+      el.style.display = '';
+    });
+    return;
+  }
+
+  document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+    if (!el.hasAttribute('data-sb-orig')) {
+      el.setAttribute('data-sb-orig', el.style.display || 'none');
+    }
+  });
+
+  document.querySelectorAll('.sb-item').forEach(function(btn) {
+    var label = (btn.dataset.label || btn.textContent).trim().toLowerCase();
+    var parentMatch = label.includes(q);
+    var oc = btn.getAttribute('onclick') || '';
+    var m = oc.match(/toggleSub\(['"](\w+)['"]/);
+    var sub = m ? document.getElementById(m[1]) : null;
+
+    if (parentMatch) {
+      btn.style.display = '';
+      if (sub) {
+        sub.style.display = '';
+        sub.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(si) { si.style.display = ''; });
+        sub.querySelectorAll('.sb-sub3').forEach(function(s3) { s3.style.display = ''; });
+      }
+    } else {
+      var anySubMatch = false;
+      if (sub) {
+        sub.querySelectorAll('.sb-sub-item').forEach(function(si) {
+          var match = si.textContent.trim().toLowerCase().includes(q);
+          si.style.display = match ? '' : 'none';
+          if (match) anySubMatch = true;
+        });
+        sub.querySelectorAll('.sb-sub2-hdr').forEach(function(hdr) {
+          var s3 = hdr.nextElementSibling;
+          if (!s3) return;
+          var s3Match = false;
+          s3.querySelectorAll('.sb-sub3-item').forEach(function(si) {
+            var match = si.textContent.trim().toLowerCase().includes(q);
+            si.style.display = match ? '' : 'none';
+            if (match) s3Match = true;
+          });
+          hdr.style.display = s3Match ? '' : 'none';
+          s3.style.display = s3Match ? '' : 'none';
+          if (s3Match) anySubMatch = true;
+        });
+      }
+      btn.style.display = anySubMatch ? '' : 'none';
+      if (sub) sub.style.display = anySubMatch ? '' : 'none';
+    }
+  });
+}
+
+function sbClearSearch() {
+  var inp = document.getElementById('sbSearch');
+  if (inp) { inp.value = ''; sbFilter(''); inp.focus(); }
+}
+</script>
+</body>
+</html>
