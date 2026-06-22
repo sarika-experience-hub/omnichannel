@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <link rel="stylesheet" href="css/flag-icons.min.css"/>
@@ -235,11 +235,13 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 </style>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
   <div class="hdr-logo" id="hdrLogo">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
@@ -269,8 +271,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
       </div>
     </div>
-    <img src="images/user_s.png" class="hdr-avatar" alt="User profile" onerror="this.style.display='none'"/>
-    <a href="login.html" class="btn-logout" style="text-decoration:none">Logout</a>
+    <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
   </div>
 </header>
 
@@ -312,7 +313,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
       <div class="az-form-area">
 
         <nav class="az-breadcrumb">
-          <a href="#">Home</a><span class="az-bc-sep">›</span>
+          <a href="dashboard.html">Home</a><span class="az-bc-sep">›</span>
           <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
           <span>Identification Details</span>
         </nav>

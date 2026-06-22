@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Corporate Dashboard · Checker</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    /* ── Design tokens ─────────────────────────────────── */
+    :root {
+      --mk-bg:          #e8f0fe;
+      --mk-color:       #1a56db;
+      --mk-border:      #bfcffe;
+      --mk-grad-a:      #0f2d6b;
+      --mk-grad-b:      #1d4ed8;
+      --ck-bg:          #fff3e0;
+      --ck-color:       #c45e00;
+      --ck-border:      #fcd9a0;
+      --ck-icon-bg:     #fde8c0;
+      --ck-grad-a:      #16303d;
+      --ck-grad-b:      #7c3800;
+      --sla-safe-bg:    #e6f9f0;
+      --sla-safe-fg:    #1a9e63;
+      --sla-warn-bg:    #fff8e1;
+      --sla-warn-fg:    #b35a00;
+      --sla-crit-bg:    #fdecea;
+      --sla-crit-fg:    #c62828;
+      --sb-pending-bg:  #fff8e1;
+      --sb-pending-fg:  #b35a00;
+      --sb-approved-bg: #e6f9f0;
+      --sb-approved-fg: #1a9e63;
+      --sb-returned-bg: #f3e8ff;
+      --sb-returned-fg: #6b21a8;
+      --sb-submit-bg:   #e8f4fd;
+      --sb-submit-fg:   #0071bc;
+      --row-crit-bg:    #fff8f8;
+      --row-warn-bg:    #fffdf5;
+    }
+
+    /* ── Layout grids ──────────────────────────────────── */
+    .cg-4     { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1rem; }
+    .cg-right { display: grid; grid-template-columns: 1fr 340px; gap: 1rem; margin-bottom: 1rem; }
+
+    /* ── Stat cards ────────────────────────────────────── */
+    .stat-card {
+      background: #fff; border: 1px solid var(--az-border);
+      border-radius: .75rem; padding: 1.25rem 1.25rem 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      box-shadow: 0 1px 4px rgba(22,48,61,.05); transition: box-shadow .15s;
+    }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(22,48,61,.1); }
+    .stat-card-hdr { display: flex; align-items: flex-start; justify-content: space-between; }
+    .sc-icon {
+      width: 40px; height: 40px; border-radius: .5rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sc-icon svg { width: 20px; height: 20px; }
+    .sc-icon-ck   { background: var(--ck-icon-bg); color: var(--ck-color); }
+    .sc-icon-ok   { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .sc-icon-warn { background: var(--sla-warn-bg); color: var(--sla-warn-fg); }
+    .sc-icon-err  { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .sc-badge { font-size: .6875rem; font-weight: 600; padding: .2rem .5rem; border-radius: 20px; }
+    .badge-up   { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .badge-warn { background: var(--sla-warn-bg); color: var(--sla-warn-fg); }
+    .badge-down { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .badge-info { background: var(--sb-submit-bg); color: var(--sb-submit-fg); }
+    .sc-label   { font-size: .8125rem; color: var(--az-muted); }
+    .sc-value   { font-size: 1.5rem; font-weight: 700; color: var(--az-navy); line-height: 1.1; }
+    .sc-value-crit { color: var(--sla-crit-fg); }
+    .sc-sub     { font-size: .75rem; color: var(--az-muted); }
+
+    /* ── Stat card alert state ─────────────────────────── */
+    .stat-card-alert {
+      border-color: #f5aaaa;
+      background: linear-gradient(135deg, #fff 60%, var(--sla-crit-bg));
+    }
+
+    /* ── Dash panel card ───────────────────────────────── */
+    .dash-card {
+      background: #fff; border: 1px solid var(--az-border);
+      border-radius: .75rem; box-shadow: 0 1px 4px rgba(22,48,61,.05); overflow: hidden;
+    }
+    .dc-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--az-border);
+    }
+    .dc-title {
+      font-size: .9375rem; font-weight: 600; color: var(--az-navy);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .dc-title svg { width: 17px; height: 17px; opacity: .65; }
+    .dc-body  { padding: 1.25rem; }
+    .dc-link  { font-size: .8125rem; color: var(--az-blue); font-weight: 500; text-decoration: none; }
+    .dc-link:hover { text-decoration: underline; }
+
+    /* ── Welcome bar ───────────────────────────────────── */
+    .welcome-bar {
+      border-radius: .75rem; padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; color: #fff;
+    }
+    .wb-checker { background: linear-gradient(135deg, var(--ck-grad-a) 0%, var(--ck-grad-b) 100%); }
+    .wb-left h2 { font-size: 1.1rem; font-weight: 600; margin: 0 0 .25rem; color: #fff; }
+    .wb-left p  { font-size: .8125rem; color: rgba(255,255,255,.7); margin: 0; }
+    .wb-right   { display: flex; gap: .625rem; align-items: center; }
+    .btn-quick {
+      display: flex; align-items: center; gap: .375rem;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; border-radius: .5rem; padding: .4375rem .875rem;
+      font-size: .8125rem; font-weight: 500; cursor: pointer;
+      transition: background .15s; text-decoration: none;
+    }
+    .btn-quick:hover { background: rgba(255,255,255,.22); color: #fff; }
+    .btn-quick svg { width: 14px; height: 14px; }
+    .btn-qp { background: var(--az-green); border-color: var(--az-green); color: var(--az-navy); font-weight: 700; }
+    .btn-qp:hover { background: var(--az-green-hover); color: var(--az-navy); }
+    .btn-switch {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.35);
+      color: #fff; border-radius: .5rem; padding: .4375rem .875rem;
+      font-size: .8125rem; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: .375rem; transition: background .15s;
+    }
+    .btn-switch:hover { background: rgba(255,255,255,.25); }
+
+    /* ── Role pill (header) ────────────────────────────── */
+    .role-pill {
+      display: flex; align-items: center; gap: .375rem;
+      font-size: .75rem; font-weight: 600; padding: .25rem .75rem;
+      border-radius: 20px; border: 1px solid; cursor: pointer; transition: opacity .15s;
+      white-space: nowrap;
+    }
+    .role-pill-mk { background: var(--mk-bg); color: var(--mk-color); border-color: var(--mk-border); }
+    .role-pill-ck { background: var(--ck-bg); color: var(--ck-color); border-color: var(--ck-border); }
+    .role-pill:hover { opacity: .8; }
+    .rp-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .rp-pulse { animation: rpulse 2s infinite; }
+    @keyframes rpulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    /* ── Bulk action bar ───────────────────────────────── */
+    .bulk-bar {
+      display: none; align-items: center; justify-content: space-between;
+      padding: .75rem 1.25rem;
+      background: var(--az-navy); border-radius: .5rem .5rem 0 0;
+      border: 1px solid var(--az-navy); border-bottom: none; margin-bottom: -2px;
+      position: relative; z-index: 1;
+    }
+    .bulk-bar.visible { display: flex; }
+    .bulk-bar-left {
+      display: flex; align-items: center; gap: .75rem;
+      font-size: .8125rem; color: rgba(255,255,255,.8);
+    }
+    .bulk-bar-left strong { color: #fff; font-size: .9rem; }
+    .bulk-bar-btns { display: flex; gap: .5rem; align-items: center; }
+    .btn-bulk-approve {
+      background: var(--az-green); color: var(--az-navy); border: none;
+      border-radius: .375rem; padding: .375rem .875rem;
+      font-size: .8125rem; font-weight: 700; cursor: pointer; transition: background .12s;
+    }
+    .btn-bulk-approve:hover { background: var(--az-green-hover); }
+    .btn-bulk-return {
+      background: rgba(255,255,255,.12); color: #fff;
+      border: 1px solid rgba(255,255,255,.3); border-radius: .375rem;
+      padding: .375rem .875rem; font-size: .8125rem; font-weight: 600;
+      cursor: pointer; transition: background .12s;
+    }
+    .btn-bulk-return:hover { background: rgba(255,255,255,.2); }
+    .btn-bulk-cancel {
+      background: none; border: none; color: rgba(255,255,255,.6);
+      padding: .375rem .5rem; font-size: .8125rem; cursor: pointer;
+    }
+    .bulk-divider { width: 1px; height: 20px; background: rgba(255,255,255,.2); }
+
+    /* ── Filter tabs ───────────────────────────────────── */
+    .filter-tabs { display: flex; gap: .375rem; flex-wrap: wrap; padding: .75rem 1.25rem; }
+    .ftab {
+      background: #f0f4f6; border: 1px solid var(--az-border);
+      border-radius: 20px; padding: .25rem .875rem;
+      font-size: .75rem; font-weight: 500; color: var(--az-navy);
+      cursor: pointer; transition: all .12s; display: flex; align-items: center; gap: .375rem;
+    }
+    .ftab:hover { border-color: #c8d0d8; }
+    .ftab.active { background: var(--az-navy); color: #fff; border-color: var(--az-navy); }
+    .ftab-count { font-size: .6875rem; font-weight: 700; padding: 0 .375rem; border-radius: 20px; background: rgba(0,0,0,.1); }
+    .ftab.active .ftab-count { background: rgba(255,255,255,.25); }
+    .ftab-crit { border-color: #f5aaaa !important; color: var(--sla-crit-fg) !important; }
+    .ftab-crit.active { background: var(--sla-crit-fg) !important; border-color: var(--sla-crit-fg) !important; color: #fff !important; }
+    .ftab-crit.active .ftab-count { background: rgba(255,255,255,.25); color: #fff; }
+    .ftab-crit:not(.active) .ftab-count { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+
+    /* ── Priority queue table ──────────────────────────── */
+    .pq-table { width: 100%; border-collapse: collapse; }
+    .pq-table th {
+      font-size: .7rem; font-weight: 700; color: var(--az-muted);
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: .5rem .875rem; border-bottom: 1px solid var(--az-border); text-align: left;
+      white-space: nowrap; background: #fafbfc;
+    }
+    .pq-table th:first-child { padding-left: 1.25rem; width: 44px; }
+    .pq-table td {
+      padding: .875rem .875rem; font-size: .8125rem;
+      border-bottom: 1px solid #f5f7f9; color: var(--az-navy); vertical-align: middle;
+    }
+    .pq-table td:first-child { padding-left: 1.25rem; }
+    .pq-table tr:last-child td { border-bottom: none; }
+    .pq-table tr.row-crit { background: var(--row-crit-bg); }
+    .pq-table tr.row-crit td { border-left: none; }
+    .pq-table tr.row-warn { background: var(--row-warn-bg); }
+    .pq-table tr.row-crit:first-child td:first-child { border-left: 3px solid var(--sla-crit-fg); }
+    .pq-table tr:hover td { background: #fafcfd; }
+    .pq-table tr.row-crit:hover td { background: #fff0f0; }
+
+    /* Priority stripe — inject via ::before on td */
+    .pq-table tbody tr td.pq-priority-cell { padding: 0; width: 4px; min-width: 4px; }
+    .pq-stripe { display: block; width: 4px; height: 100%; min-height: 54px; border-radius: 2px; }
+    .pq-stripe-crit { background: var(--sla-crit-fg); }
+    .pq-stripe-warn { background: var(--sla-warn-fg); }
+    .pq-stripe-safe { background: var(--az-border); }
+
+    /* Checkbox */
+    .pq-chk { width: 16px; height: 16px; accent-color: var(--az-navy); cursor: pointer; }
+
+    /* Type icon */
+    .pq-type-ico {
+      width: 36px; height: 36px; border-radius: .5rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pq-type-ico svg { width: 17px; height: 17px; }
+    .pq-ico-transfer { background: var(--sb-submit-bg); color: var(--sb-submit-fg); }
+    .pq-ico-bulk     { background: var(--mk-bg); color: var(--mk-color); }
+    .pq-ico-tf       { background: #f3e8ff; color: #6b21a8; }
+    .pq-ico-internal { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .pq-ico-card     { background: #f0f4f6; color: var(--az-muted); }
+
+    /* Transaction cell */
+    .pq-txn-cell { display: flex; align-items: center; gap: .625rem; }
+    .pq-txn-name { font-size: .8125rem; font-weight: 600; color: var(--az-navy); }
+    .pq-txn-ref  { font-size: .75rem; color: var(--az-muted); }
+    .pq-maker-chip {
+      display: inline-flex; align-items: center; gap: .25rem;
+      background: #f0f4f6; border-radius: 20px; padding: .15rem .5rem;
+      font-size: .6875rem; color: var(--az-muted);
+    }
+    .pq-maker-chip svg { width: 10px; height: 10px; }
+
+    /* SLA badge */
+    .sla-badge {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .6875rem; font-weight: 600; padding: .25rem .5rem; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .sla-safe { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .sla-warn { background: var(--sla-warn-bg); color: var(--sla-warn-fg); }
+    .sla-crit { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .sla-dot  { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .sla-crit .sla-dot { animation: rpulse 1.2s infinite; }
+
+    /* Status pill */
+    .status-pill { font-size: .6875rem; font-weight: 600; padding: .2rem .5rem; border-radius: 20px; display: inline-block; }
+    .sp-approved { background: var(--sb-approved-bg); color: var(--sb-approved-fg); }
+    .sp-returned { background: var(--sb-returned-bg); color: var(--sb-returned-fg); }
+
+    /* Action buttons */
+    .btn-approve {
+      background: var(--sla-safe-bg); color: var(--sla-safe-fg); border: none;
+      border-radius: .375rem; padding: .3rem .75rem; font-size: .8125rem; font-weight: 600;
+      cursor: pointer; transition: background .12s; white-space: nowrap;
+    }
+    .btn-approve:hover { background: #c8f1de; }
+    .btn-return {
+      background: var(--sla-warn-bg); color: var(--sla-warn-fg); border: none;
+      border-radius: .375rem; padding: .3rem .75rem; font-size: .8125rem; font-weight: 600;
+      cursor: pointer; transition: background .12s; white-space: nowrap;
+    }
+    .btn-return:hover { background: #f5d88a; }
+    .btn-view {
+      background: none; border: 1px solid var(--az-border); border-radius: .375rem;
+      padding: .3rem .75rem; font-size: .8125rem; color: var(--az-navy);
+      cursor: pointer; transition: all .12s; white-space: nowrap;
+    }
+    .btn-view:hover { border-color: var(--az-blue); color: var(--az-blue); }
+    .action-btns { display: flex; gap: .375rem; }
+
+    /* Amount column */
+    .amt-col { font-weight: 600; white-space: nowrap; }
+
+    /* ── Recently actioned list ────────────────────────── */
+    .ra-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .75rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .ra-item:last-child { border-bottom: none; }
+    .ra-ico {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem;
+    }
+    .ra-ico svg { width: 14px; height: 14px; }
+    .ra-ico-ok  { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .ra-ico-ret { background: var(--sb-returned-bg); color: var(--sb-returned-fg); }
+    .ra-body    { flex: 1; min-width: 0; }
+    .ra-title   { font-size: .8125rem; font-weight: 500; color: var(--az-navy); }
+    .ra-sub     { font-size: .75rem; color: var(--az-muted); margin-top: .125rem; }
+    .ra-right   { display: flex; flex-direction: column; align-items: flex-end; gap: .25rem; flex-shrink: 0; }
+    .ra-amt     { font-size: .8125rem; font-weight: 600; color: var(--az-navy); }
+    .ra-time    { font-size: .75rem; color: var(--az-muted); white-space: nowrap; }
+
+    /* ── Approval insights ─────────────────────────────── */
+    .insight-donut-wrap {
+      display: flex; flex-direction: column; align-items: center; padding: .5rem 0 .75rem;
+    }
+    .insight-legend { width: 100%; margin-top: .75rem; }
+    .il-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .375rem 0; font-size: .8125rem; border-bottom: 1px solid #f5f7f9;
+    }
+    .il-item:last-child { border-bottom: none; }
+    .il-left { display: flex; align-items: center; gap: .5rem; }
+    .il-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .il-name { color: var(--az-navy); }
+    .il-val  { font-weight: 700; color: var(--az-navy); }
+    .insight-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: .5rem; padding: .75rem 1.25rem 1.25rem;
+      border-top: 1px solid var(--az-border);
+    }
+    .is-item { text-align: center; padding: .625rem .5rem; border: 1px solid var(--az-border); border-radius: .5rem; }
+    .is-val  { font-size: 1.1rem; font-weight: 700; color: var(--az-navy); }
+    .is-lbl  { font-size: .7rem; color: var(--az-muted); margin-top: .2rem; }
+    .is-val-ok  { color: var(--sla-safe-fg); }
+    .is-val-ck  { color: var(--ck-color); }
+
+    /* ── Overdue alert banner ──────────────────────────── */
+    .overdue-banner {
+      background: var(--sla-crit-bg); border: 1px solid #f5aaaa;
+      border-radius: .625rem; padding: .75rem 1.25rem;
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1rem;
+    }
+    .overdue-banner-ico {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--sla-crit-fg); color: #fff;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .overdue-banner-ico svg { width: 18px; height: 18px; }
+    .overdue-banner-body { flex: 1; }
+    .overdue-banner-title { font-size: .875rem; font-weight: 700; color: var(--sla-crit-fg); }
+    .overdue-banner-sub   { font-size: .8125rem; color: var(--az-muted); }
+    .btn-overdue-action {
+      background: var(--sla-crit-fg); color: #fff; border: none;
+      border-radius: .5rem; padding: .4375rem .875rem;
+      font-size: .8125rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+    }
+
+    /* ── Role-switch modal ─────────────────────────────── */
+    .rm-overlay {
+      position: fixed; inset: 0; background: rgba(22,48,61,.5);
+      z-index: 2000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .rm-overlay.open { opacity: 1; pointer-events: all; }
+    .rm-modal {
+      background: #fff; border-radius: 1rem; width: 460px; max-width: calc(100vw - 2rem);
+      box-shadow: 0 24px 64px rgba(22,48,61,.2);
+      transform: translateY(14px) scale(.97); transition: transform .22s;
+    }
+    .rm-overlay.open .rm-modal { transform: translateY(0) scale(1); }
+    .rm-hdr {
+      padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--az-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .rm-title { font-size: 1rem; font-weight: 700; color: var(--az-navy); }
+    .rm-close {
+      background: none; border: none; cursor: pointer; color: var(--az-muted);
+      padding: .25rem; border-radius: .375rem; transition: background .12s;
+    }
+    .rm-close:hover { background: #f0f4f6; }
+    .rm-body  { padding: 1.25rem 1.5rem; }
+    .rm-step  { display: none; }
+    .rm-step.active { display: block; }
+    .rm-lbl   { font-size: .8125rem; font-weight: 600; color: var(--az-navy); margin-bottom: .5rem; display: block; }
+    .rm-cards { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1.25rem; }
+    .rm-card {
+      border: 2px solid var(--az-border); border-radius: .75rem;
+      padding: 1rem; cursor: pointer; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: .5rem; transition: all .15s;
+    }
+    .rm-card:hover:not(.rm-current) { border-color: #c8d0d8; background: #fafcfd; }
+    .rm-card.rm-selected.rm-maker   { border-color: var(--mk-color); background: var(--mk-bg); }
+    .rm-card.rm-selected.rm-checker { border-color: var(--ck-color); background: var(--ck-bg); }
+    .rm-card.rm-current { opacity: .45; cursor: default; }
+    .rm-card-ico { width: 48px; height: 48px; border-radius: .75rem; display: flex; align-items: center; justify-content: center; }
+    .rm-card-ico.rm-maker   { background: var(--mk-bg);  color: var(--mk-color); }
+    .rm-card-ico.rm-checker { background: var(--ck-bg);  color: var(--ck-color); }
+    .rm-card-ico svg { width: 24px; height: 24px; }
+    .rm-card-name  { font-size: .9375rem; font-weight: 700; color: var(--az-navy); }
+    .rm-card-desc  { font-size: .75rem; color: var(--az-muted); line-height: 1.4; }
+    .rm-card-badge { font-size: .6875rem; font-weight: 600; padding: .15rem .5rem; border-radius: 20px; }
+    .rm-card-badge.rm-maker   { background: var(--mk-bg); color: var(--mk-color); }
+    .rm-card-badge.rm-checker { background: var(--ck-bg); color: var(--ck-color); }
+    .rm-fld {
+      width: 100%; border: 1px solid var(--az-border); border-radius: .5rem;
+      padding: .625rem .875rem; font-size: .875rem; color: var(--az-navy);
+      background: #fff; transition: border-color .12s;
+    }
+    .rm-fld:focus { border-color: var(--az-blue); outline: none; }
+    .rm-group { margin-bottom: 1rem; }
+    .rm-footer {
+      padding: 1rem 1.5rem; border-top: 1px solid var(--az-border);
+      display: flex; gap: .625rem; justify-content: flex-end;
+    }
+    .btn-rm-cancel {
+      background: none; border: 1px solid var(--az-border); border-radius: .5rem;
+      padding: .5rem 1.25rem; font-size: .875rem; color: var(--az-navy); cursor: pointer;
+    }
+    .btn-rm-cancel:hover { border-color: var(--az-navy); }
+    .btn-rm-confirm {
+      background: var(--ck-color); color: #fff; border: none;
+      border-radius: .5rem; padding: .5rem 1.5rem;
+      font-size: .875rem; font-weight: 600; cursor: pointer; transition: background .12s;
+    }
+    .btn-rm-confirm:hover { background: #a04d00; }
+    .rm-success { text-align: center; padding: 1.5rem 1rem; }
+    .rm-success-ico {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--sla-safe-bg); color: var(--sla-safe-fg);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;
+    }
+    .rm-success-ico svg { width: 30px; height: 30px; }
+    .rm-success h3 { font-size: 1.125rem; font-weight: 700; color: var(--az-navy); margin-bottom: .375rem; }
+    .rm-success p  { font-size: .875rem; color: var(--az-muted); }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 1199px) {
+      .cg-4 { grid-template-columns: repeat(2,1fr); }
+      .cg-right { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 767px) {
+      .cg-4 { grid-template-columns: 1fr 1fr; }
+      .wb-right { display: none; }
+      .action-btns .btn-view { display: none; }
+    }
+    @media (max-width: 479px) {
+      .cg-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt=""/></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" style="position:relative">
+        <img src="images/icons/notification.svg" width="18" height="18" alt=""/>
+        <span class="notif-dot">12</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span><a href="#" class="notif-clear-all">Clear all</a></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">REF-BP-2026-0412 SLA overdue – bulk payment awaiting approval</div><div class="notif-time">2 hrs ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">REF-IT-2026-0390 SLA overdue – international transfer</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">5 new items added to approval queue</div><div class="notif-time">3 hrs ago</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt=""/></button>
+    <button class="hdr-icon-btn" title="Help"><img src="images/icons/information.svg" width="18" height="18" alt=""/></button>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <!-- Role pill -->
+    <button class="role-pill role-pill-ck" onclick="openRoleModal()" title="Current role: Checker. Click to switch." aria-label="Checker Role">
+      <span class="rp-dot rp-pulse"></span>
+      Checker Role
+      <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+    </button>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Layla Hassan</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>25 May, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>08:50</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">layla.hassan</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Company:</span><span class="av-detail-val">Al-Noor Trading LLC</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Role:</span><span class="av-detail-val">Checker</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+    <button class="sb-item active-section" data-label="Dashboard" onclick="location.href='dashboard.html'"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none"><a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a><button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer<span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div></div>
+    <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a></div>
+    <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><img src="images/icons/trade_finance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="services-e-statement-request.html" class="sb-sub-item">eStatement Request</a><a href="chequebook-request.html" class="sb-sub-item">Chequebook Request</a></div>
+    <button class="sb-item" data-label="Corporate Reports"><span class="sb-icon"><img src="images/icons/corporate_end_user.svg" width="18" height="18" alt=""/></span><span class="sb-label">Corporate Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc">
+      <a href="dashboard.html">Home</a><span class="sep">&#8250;</span>
+      <a href="#">Corporate Dashboard</a><span class="sep">&#8250;</span>
+      <span class="cur">Checker View</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.875rem">
+      <h1 class="page-title">Corporate Dashboard</h1>
+      <div style="display:flex;gap:.625rem;align-items:center">
+        <a href="corporate-dashboard-maker.html" class="btn-open-account" style="text-decoration:none;display:flex;align-items:center;gap:.375rem">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          Switch to Maker
+        </a>
+      </div>
+    </div>
+
+    <!-- Welcome bar -->
+    <div class="welcome-bar wb-checker">
+      <div class="wb-left">
+        <h2>Good morning, Layla</h2>
+        <p>Monday, 26 May 2026 &nbsp;&middot;&nbsp; Checker Role &nbsp;&middot;&nbsp; Al-Noor Trading LLC &nbsp;&middot;&nbsp; <strong style="color:rgba(255,180,100,.9)">2 items SLA overdue</strong></p>
+      </div>
+      <div class="wb-right">
+        <button class="btn-quick btn-qp" onclick="bulkApproveAll()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Approve Selected
+        </button>
+        <button class="btn-switch" onclick="openRoleModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          Switch to Maker
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 1: Stat cards -->
+    <div class="cg-4">
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-ck">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <span class="sc-badge badge-warn">Requires Action</span>
+        </div>
+        <div class="sc-label">Pending My Review</div>
+        <div class="sc-value">12</div>
+        <div class="sc-sub">USD 1.8M total value</div>
+      </div>
+
+      <div class="stat-card stat-card-alert">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-err">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <span class="sc-badge badge-down">Critical</span>
+        </div>
+        <div class="sc-label">SLA Overdue</div>
+        <div class="sc-value sc-value-crit">2</div>
+        <div class="sc-sub">Immediate action required</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-ok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <span class="sc-badge badge-up">+3 this hour</span>
+        </div>
+        <div class="sc-label">Approved Today</div>
+        <div class="sc-value">7</div>
+        <div class="sc-sub">USD 485,000 value cleared</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          </div>
+          <span class="sc-badge badge-info">Sent for correction</span>
+        </div>
+        <div class="sc-label">Returned Today</div>
+        <div class="sc-value">3</div>
+        <div class="sc-sub">Awaiting maker correction</div>
+      </div>
+    </div>
+
+    <!-- SLA Overdue alert banner -->
+    <div class="overdue-banner">
+      <div class="overdue-banner-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="overdue-banner-body">
+        <div class="overdue-banner-title">2 items have exceeded their SLA deadline</div>
+        <div class="overdue-banner-sub">REF-BP-2026-0412 (overdue by 2h) and REF-IT-2026-0390 (overdue by 45m) require immediate review.</div>
+      </div>
+      <button class="btn-overdue-action" onclick="filterQueue('overdue',document.querySelector('.ftab-crit'))">Review Overdue Items</button>
+    </div>
+
+    <!-- Row 2: Priority Queue -->
+    <div class="dash-card" style="margin-bottom:1rem">
+      <div class="dc-hdr">
+        <div class="dc-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Approval Queue
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <span class="sc-badge badge-warn" style="font-size:.75rem">12 Pending</span>
+          <a href="transfer-pending-list.html" class="dc-link">View all &rsaquo;</a>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <button class="ftab active" onclick="filterQueue('all',this)">All <span class="ftab-count">12</span></button>
+        <button class="ftab ftab-crit" onclick="filterQueue('overdue',this)">SLA Overdue <span class="ftab-count">2</span></button>
+        <button class="ftab" onclick="filterQueue('high',this)">High Value <span class="ftab-count">4</span></button>
+        <button class="ftab" onclick="filterQueue('transfer',this)">Transfers <span class="ftab-count">5</span></button>
+        <button class="ftab" onclick="filterQueue('bulk',this)">Bulk Payments <span class="ftab-count">3</span></button>
+      </div>
+
+      <!-- Bulk action bar -->
+      <div class="bulk-bar" id="bulkBar">
+        <div class="bulk-bar-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <strong id="bulkCount">0</strong> items selected
+        </div>
+        <div class="bulk-bar-btns">
+          <button class="btn-bulk-approve" onclick="confirmBulkApprove()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" style="margin-right:.25rem"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve All
+          </button>
+          <button class="btn-bulk-return" onclick="confirmBulkReturn()">Return All</button>
+          <div class="bulk-divider"></div>
+          <button class="btn-bulk-cancel" onclick="clearSelection()">Clear selection</button>
+        </div>
+      </div>
+
+      <!-- Queue table -->
+      <div style="overflow-x:auto">
+        <table class="pq-table" id="queueTable">
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="pq-chk" id="selectAll" onchange="toggleSelectAll(this)" title="Select all"/></th>
+              <th></th><!-- priority stripe -->
+              <th>Transaction</th>
+              <th>Maker</th>
+              <th>Accounts</th>
+              <th>Amount</th>
+              <th>SLA Remaining</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- OVERDUE rows -->
+            <tr class="row-crit" data-type="bulk" data-priority="overdue">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-crit"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-bulk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">Bulk Payment – May Salaries</div>
+                    <div class="pq-txn-ref">REF-BP-2026-0412 &nbsp;&middot;&nbsp; 156 records</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Ahmed Al-Farsi</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Today 09:15</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8001</div><div class="pq-txn-ref">Payroll account</div></td>
+              <td class="amt-col">USD 287,400.00</td>
+              <td><span class="sla-badge sla-crit"><span class="sla-dot"></span>Overdue &middot; 2h ago</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="row-crit" data-type="transfer" data-priority="overdue">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-crit"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-transfer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">International Transfer</div>
+                    <div class="pq-txn-ref">REF-IT-2026-0390 &nbsp;&middot;&nbsp; BNP Paris</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sarah Chen</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Yesterday 17:10</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8003 &rsaquo; FR76...</div><div class="pq-txn-ref">SWIFT: BNPAFRPP</div></td>
+              <td class="amt-col">EUR 150,000.00</td>
+              <td><span class="sla-badge sla-crit"><span class="sla-dot"></span>Overdue &middot; 45m ago</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- WARNING rows -->
+            <tr class="row-warn" data-type="transfer" data-priority="high">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-warn"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-transfer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">Local Transfer</div>
+                    <div class="pq-txn-ref">REF-LT-2026-0411 &nbsp;&middot;&nbsp; Al Fardan Exchange</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Ahmed Al-Farsi</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Today 08:42</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8001</div><div class="pq-txn-ref">Local bank</div></td>
+              <td class="amt-col">AED 12,500.00</td>
+              <td><span class="sla-badge sla-warn"><span class="sla-dot"></span>1h 20m left</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="row-warn" data-type="transfer" data-priority="high">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-warn"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-tf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">LC Amendment</div>
+                    <div class="pq-txn-ref">REF-LC-2026-0409 &nbsp;&middot;&nbsp; Trade Finance</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Omar Hassan</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Yesterday 14:22</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8000</div><div class="pq-txn-ref">Trade Finance LC</div></td>
+              <td class="amt-col">USD 500,000.00</td>
+              <td><span class="sla-badge sla-warn"><span class="sla-dot"></span>1h 45m left</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- NORMAL rows -->
+            <tr data-type="transfer" data-priority="normal">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-safe"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-internal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">Internal Transfer</div>
+                    <div class="pq-txn-ref">REF-IN-2026-0415 &nbsp;&middot;&nbsp; Own accounts</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sarah Chen</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Today 10:30</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8002 &rsaquo; IBAN-8004</div><div class="pq-txn-ref">Same entity</div></td>
+              <td class="amt-col">USD 50,000.00</td>
+              <td><span class="sla-badge sla-safe"><span class="sla-dot"></span>4h 30m left</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr data-type="bulk" data-priority="normal">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-safe"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-bulk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">Bulk Payment – Vendor June</div>
+                    <div class="pq-txn-ref">REF-BP-2026-0420 &nbsp;&middot;&nbsp; 38 records</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Khalid Ibrahim</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Today 11:05</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8001</div><div class="pq-txn-ref">Vendor account</div></td>
+              <td class="amt-col">USD 94,300.00</td>
+              <td><span class="sla-badge sla-safe"><span class="sla-dot"></span>6h 10m left</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr data-type="transfer" data-priority="normal">
+              <td><input type="checkbox" class="pq-chk row-chk" onchange="updateBulkBar()"/></td>
+              <td class="pq-priority-cell"><span class="pq-stripe pq-stripe-safe"></span></td>
+              <td>
+                <div class="pq-txn-cell">
+                  <div class="pq-type-ico pq-ico-internal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+                  <div>
+                    <div class="pq-txn-name">Term Deposit Opening</div>
+                    <div class="pq-txn-ref">REF-TD-2026-0416 &nbsp;&middot;&nbsp; 90-day term</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pq-maker-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Ahmed Al-Farsi</div>
+                <div class="pq-txn-ref" style="margin-top:.25rem">Today 07:55</div>
+              </td>
+              <td><div class="pq-txn-name">IBAN-8000</div><div class="pq-txn-ref">90-day deposit</div></td>
+              <td class="amt-col">AED 200,000.00</td>
+              <td><span class="sla-badge sla-safe"><span class="sla-dot"></span>8h left</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-return">Return</button>
+                  <button class="btn-view">View</button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Row 3: Recently actioned + Insights -->
+    <div class="cg-right">
+
+      <!-- Recently actioned -->
+      <div class="dash-card">
+        <div class="dc-hdr">
+          <div class="dc-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Recently Actioned
+          </div>
+          <a href="#" class="dc-link">Full audit &rsaquo;</a>
+        </div>
+        <div class="dc-body" style="padding:.75rem 1.25rem">
+          <div class="ra-item">
+            <div class="ra-ico ra-ico-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div class="ra-body">
+              <div class="ra-title">Approved: Internal Transfer</div>
+              <div class="ra-sub">REF-IN-2026-0408 &nbsp;&middot;&nbsp; Ahmed Al-Farsi</div>
+            </div>
+            <div class="ra-right">
+              <div class="ra-amt">USD 100,000</div>
+              <div class="ra-time">14:22 today</div>
+            </div>
+          </div>
+          <div class="ra-item">
+            <div class="ra-ico ra-ico-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div class="ra-body">
+              <div class="ra-title">Approved: Bulk Payment</div>
+              <div class="ra-sub">REF-BP-2026-0399 &nbsp;&middot;&nbsp; Khalid Ibrahim</div>
+            </div>
+            <div class="ra-right">
+              <div class="ra-amt">USD 92,000</div>
+              <div class="ra-time">13:45 today</div>
+            </div>
+          </div>
+          <div class="ra-item">
+            <div class="ra-ico ra-ico-ret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></div>
+            <div class="ra-body">
+              <div class="ra-title">Returned: LC Request</div>
+              <div class="ra-sub">REF-TF-2026-0402 &nbsp;&middot;&nbsp; "Documents incomplete"</div>
+            </div>
+            <div class="ra-right">
+              <div class="ra-amt">USD 500,000</div>
+              <div class="ra-time">11:30 today</div>
+            </div>
+          </div>
+          <div class="ra-item">
+            <div class="ra-ico ra-ico-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div class="ra-body">
+              <div class="ra-title">Approved: Local Transfer</div>
+              <div class="ra-sub">REF-LT-2026-0407 &nbsp;&middot;&nbsp; Ahmed Al-Farsi</div>
+            </div>
+            <div class="ra-right">
+              <div class="ra-amt">AED 8,500</div>
+              <div class="ra-time">10:15 today</div>
+            </div>
+          </div>
+          <div class="ra-item">
+            <div class="ra-ico ra-ico-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div class="ra-body">
+              <div class="ra-title">Approved: International Transfer</div>
+              <div class="ra-sub">REF-IT-2026-0405 &nbsp;&middot;&nbsp; Sarah Chen</div>
+            </div>
+            <div class="ra-right">
+              <div class="ra-amt">EUR 22,000</div>
+              <div class="ra-time">09:00 today</div>
+            </div>
+          </div>
+          <div class="ra-item">
+            <div class="ra-ico ra-ico-ret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></div>
+            <div class="ra-body">
+              <div class="ra-title">Returned: Bulk Payment</div>
+              <div class="ra-sub">REF-BP-2026-0395 &nbsp;&middot;&nbsp; "Amount mismatch"</div>
+            </div>
+            <div class="ra-right">
+              <div class="ra-amt">USD 187,000</div>
+              <div class="ra-time">08:30 today</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval Insights -->
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="dash-card">
+          <div class="dc-hdr">
+            <div class="dc-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Today's Insights
+            </div>
+          </div>
+          <div class="dc-body" style="padding:.75rem 1.25rem 1rem">
+            <div class="insight-donut-wrap">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <defs>
+                  <filter id="ds2" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity=".08"/>
+                  </filter>
+                </defs>
+                <!-- Background ring -->
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#f0f4f6" stroke-width="16"/>
+                <!-- Approved: 70% = 237.6 of 339.3 -->
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#2ed88e" stroke-width="16"
+                  stroke-dasharray="238 101" stroke-dashoffset="85" stroke-linecap="butt"/>
+                <!-- Returned: 20% = 67.9 -->
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#f59e0b" stroke-width="16"
+                  stroke-dasharray="68 271" stroke-dashoffset="-153" stroke-linecap="butt"/>
+                <!-- Pending: 10% = 33.9 -->
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#0071bc" stroke-width="16"
+                  stroke-dasharray="34 305" stroke-dashoffset="-221" stroke-linecap="butt"/>
+                <text x="70" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#16303d">70%</text>
+                <text x="70" y="80" text-anchor="middle" font-size="9" fill="#707070">Approval Rate</text>
+              </svg>
+              <div class="insight-legend">
+                <div class="il-item">
+                  <div class="il-left"><div class="il-dot" style="background:#2ed88e"></div><div class="il-name">Approved</div></div>
+                  <div class="il-val">7</div>
+                </div>
+                <div class="il-item">
+                  <div class="il-left"><div class="il-dot" style="background:#f59e0b"></div><div class="il-name">Returned</div></div>
+                  <div class="il-val">3</div>
+                </div>
+                <div class="il-item">
+                  <div class="il-left"><div class="il-dot" style="background:#0071bc"></div><div class="il-name">Pending</div></div>
+                  <div class="il-val">12</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="insight-stats">
+            <div class="is-item">
+              <div class="is-val is-val-ok">10</div>
+              <div class="is-lbl">Reviewed</div>
+            </div>
+            <div class="is-item">
+              <div class="is-val is-val-ck">28m</div>
+              <div class="is-lbl">Avg. Response</div>
+            </div>
+            <div class="is-item">
+              <div class="is-val">70%</div>
+              <div class="is-lbl">Approval Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Makers activity summary -->
+        <div class="dash-card">
+          <div class="dc-hdr">
+            <div class="dc-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Active Makers
+            </div>
+          </div>
+          <div class="dc-body" style="padding:.75rem 1.25rem">
+            <div class="ra-item" style="padding:.5rem 0">
+              <div class="ra-ico ra-ico-ok" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div class="ra-body"><div class="ra-title">Ahmed Al-Farsi</div><div class="ra-sub">4 submissions today</div></div>
+              <div class="ra-right"><span class="status-pill sp-approved" style="font-size:.65rem">Active</span></div>
+            </div>
+            <div class="ra-item" style="padding:.5rem 0">
+              <div class="ra-ico ra-ico-ok" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div class="ra-body"><div class="ra-title">Sarah Chen</div><div class="ra-sub">2 submissions today</div></div>
+              <div class="ra-right"><span class="status-pill sp-approved" style="font-size:.65rem">Active</span></div>
+            </div>
+            <div class="ra-item" style="padding:.5rem 0;border-bottom:none">
+              <div class="ra-ico ra-ico-ok" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div class="ra-body"><div class="ra-title">Khalid Ibrahim</div><div class="ra-sub">1 submission today</div></div>
+              <div class="ra-right"><span class="status-pill sp-approved" style="font-size:.65rem">Active</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2026. All Rights Reserved &nbsp;<a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████ ROLE SWITCH MODAL ████ -->
+<div class="rm-overlay" id="roleModal" role="dialog" aria-modal="true" aria-labelledby="rmTitle">
+  <div class="rm-modal">
+    <div class="rm-hdr">
+      <div class="rm-title" id="rmTitle">Switch Role</div>
+      <button class="rm-close" onclick="closeRoleModal()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="rm-body">
+      <!-- Step 1: Select role -->
+      <div class="rm-step active" id="rmStep1">
+        <p style="font-size:.8125rem;color:var(--az-muted);margin-bottom:1.25rem">You are currently logged in as <strong style="color:var(--ck-color)">Checker</strong>. Select a role to switch to:</p>
+        <div class="rm-cards">
+          <div class="rm-card rm-maker" id="rmCardMaker" onclick="selectRole('maker')">
+            <div class="rm-card-ico rm-maker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div class="rm-card-name">Maker</div>
+            <div class="rm-card-desc">Create and submit transactions for approval</div>
+            <span class="rm-card-badge rm-maker">8 drafts pending</span>
+          </div>
+          <div class="rm-card rm-current rm-checker" id="rmCardChecker">
+            <div class="rm-card-ico rm-checker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="rm-card-name">Checker</div>
+            <div class="rm-card-desc">Review and approve submitted transactions</div>
+            <span class="rm-card-badge rm-checker">Current Role</span>
+          </div>
+        </div>
+        <div class="rm-group">
+          <label class="rm-lbl">Reason for switching role</label>
+          <select class="rm-fld" id="rmReason">
+            <option value="">Select reason...</option>
+            <option>Acting maker – regular maker absent</option>
+            <option>Authorized dual-role session</option>
+            <option>Correction required on submission</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="rm-group" id="rmOtherGroup" style="display:none">
+          <label class="rm-lbl">Additional notes</label>
+          <input class="rm-fld" type="text" id="rmOtherNote" placeholder="Describe reason..."/>
+        </div>
+      </div>
+      <!-- Step 2: Confirm -->
+      <div class="rm-step" id="rmStep2">
+        <div style="text-align:center;padding:.75rem 0 1.25rem">
+          <div style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1rem">
+            <div style="text-align:center">
+              <div class="rm-card-ico rm-checker" style="margin:0 auto .375rem;width:44px;height:44px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div style="font-size:.75rem;color:var(--az-muted)">From</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--ck-color)">Checker</div>
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--az-muted)" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            <div style="text-align:center">
+              <div class="rm-card-ico rm-maker" style="margin:0 auto .375rem;width:44px;height:44px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </div>
+              <div style="font-size:.75rem;color:var(--az-muted)">To</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--mk-color)">Maker</div>
+            </div>
+          </div>
+          <p style="font-size:.8125rem;color:var(--az-muted);margin-bottom:1.25rem">Confirm switching to Maker role. This action will be logged for audit purposes.</p>
+        </div>
+        <div class="rm-group">
+          <label class="rm-lbl">Enter your PIN to confirm</label>
+          <input class="rm-fld" type="password" id="rmPin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric"/>
+        </div>
+      </div>
+      <!-- Step 3: Success -->
+      <div class="rm-step" id="rmStep3">
+        <div class="rm-success">
+          <div class="rm-success-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Role Switched Successfully</h3>
+          <p>You are now in <strong>Maker</strong> mode. Redirecting to maker dashboard...</p>
+        </div>
+      </div>
+    </div>
+    <div class="rm-footer" id="rmFooter">
+      <button class="btn-rm-cancel" onclick="closeRoleModal()">Cancel</button>
+      <button class="btn-rm-confirm" id="rmConfirmBtn" onclick="rmNext()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+  /* ── Role switch modal ── */
+  var rmCurrentStep = 1, selectedRole = null;
+  function openRoleModal() {
+    rmCurrentStep = 1; selectedRole = null;
+    ['rmStep1','rmStep2','rmStep3'].forEach(function(id,i){ document.getElementById(id).classList.toggle('active', i===0); });
+    document.getElementById('rmFooter').style.display = 'flex';
+    document.getElementById('rmConfirmBtn').textContent = 'Continue';
+    document.getElementById('roleModal').classList.add('open');
+  }
+  function closeRoleModal() { document.getElementById('roleModal').classList.remove('open'); }
+  function selectRole(role) {
+    selectedRole = role;
+    document.querySelectorAll('.rm-card:not(.rm-current)').forEach(function(c){ c.classList.remove('rm-selected'); });
+    document.getElementById('rmCard' + role.charAt(0).toUpperCase() + role.slice(1)).classList.add('rm-selected');
+  }
+  function rmNext() {
+    if (rmCurrentStep === 1) {
+      if (!selectedRole) { alert('Please select a role to switch to.'); return; }
+      if (!document.getElementById('rmReason').value) { alert('Please select a reason.'); return; }
+      document.getElementById('rmStep1').classList.remove('active');
+      document.getElementById('rmStep2').classList.add('active');
+      document.getElementById('rmConfirmBtn').textContent = 'Confirm Switch';
+      rmCurrentStep = 2;
+    } else if (rmCurrentStep === 2) {
+      var pin = document.getElementById('rmPin').value;
+      if (pin.length < 4) { alert('Please enter your 4-digit PIN.'); return; }
+      document.getElementById('rmStep2').classList.remove('active');
+      document.getElementById('rmStep3').classList.add('active');
+      document.getElementById('rmFooter').style.display = 'none';
+      rmCurrentStep = 3;
+      setTimeout(function(){ window.location.href = 'corporate-dashboard-maker.html'; }, 2000);
+    }
+  }
+  document.getElementById('rmReason').addEventListener('change', function(){
+    document.getElementById('rmOtherGroup').style.display = (this.value === 'Other') ? 'block' : 'none';
+  });
+  document.getElementById('roleModal').addEventListener('click', function(e){ if(e.target===this) closeRoleModal(); });
+
+  /* ── Bulk selection ── */
+  function updateBulkBar() {
+    var checked = document.querySelectorAll('.row-chk:checked').length;
+    var bar = document.getElementById('bulkBar');
+    bar.classList.toggle('visible', checked > 0);
+    document.getElementById('bulkCount').textContent = checked;
+    document.getElementById('selectAll').indeterminate = checked > 0 && checked < document.querySelectorAll('.row-chk').length;
+    document.getElementById('selectAll').checked = checked === document.querySelectorAll('.row-chk').length;
+  }
+  function toggleSelectAll(master) {
+    document.querySelectorAll('.row-chk').forEach(function(chk){ chk.checked = master.checked; });
+    updateBulkBar();
+  }
+  function clearSelection() {
+    document.querySelectorAll('.row-chk, #selectAll').forEach(function(c){ c.checked = false; c.indeterminate = false; });
+    document.getElementById('bulkBar').classList.remove('visible');
+  }
+  function confirmBulkApprove() {
+    var n = document.querySelectorAll('.row-chk:checked').length;
+    if (confirm('Approve ' + n + ' selected item(s)?')) { clearSelection(); }
+  }
+  function confirmBulkReturn() {
+    var n = document.querySelectorAll('.row-chk:checked').length;
+    if (confirm('Return ' + n + ' selected item(s) to maker?')) { clearSelection(); }
+  }
+  function bulkApproveAll() {
+    document.querySelectorAll('.row-chk').forEach(function(c){ c.checked = true; });
+    updateBulkBar();
+  }
+
+  /* ── Queue filter ── */
+  function filterQueue(type, btn) {
+    document.querySelectorAll('#queueTable tbody tr').forEach(function(r){
+      var show = type === 'all' ||
+                 (type === 'overdue' && r.dataset.priority === 'overdue') ||
+                 (type === 'high' && (r.dataset.priority === 'overdue' || r.dataset.priority === 'high')) ||
+                 r.dataset.type === type;
+      r.style.display = show ? '' : 'none';
+    });
+    if (btn) {
+      document.querySelectorAll('.ftab').forEach(function(t){ t.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+  }
+</script>
+</body>
+</html>

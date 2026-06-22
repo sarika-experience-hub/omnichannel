@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Corporate Dashboard · Maker</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    /* ── Design tokens ─────────────────────────────────── */
+    :root {
+      --mk-bg:          #e8f0fe;
+      --mk-color:       #1a56db;
+      --mk-border:      #bfcffe;
+      --mk-icon-bg:     #dce9fd;
+      --mk-grad-a:      #0f2d6b;
+      --mk-grad-b:      #1d4ed8;
+      --ck-bg:          #fff3e0;
+      --ck-color:       #c45e00;
+      --ck-border:      #fcd9a0;
+      --ck-grad-a:      #16303d;
+      --ck-grad-b:      #5a2200;
+      --sla-safe-bg:    #e6f9f0;
+      --sla-safe-fg:    #1a9e63;
+      --sla-warn-bg:    #fff8e1;
+      --sla-warn-fg:    #b35a00;
+      --sla-crit-bg:    #fdecea;
+      --sla-crit-fg:    #c62828;
+      --sb-pending-bg:  #fff8e1;
+      --sb-pending-fg:  #b35a00;
+      --sb-approved-bg: #e6f9f0;
+      --sb-approved-fg: #1a9e63;
+      --sb-returned-bg: #f3e8ff;
+      --sb-returned-fg: #6b21a8;
+      --sb-draft-bg:    #f0f4f6;
+      --sb-draft-fg:    #707070;
+      --sb-submit-bg:   #e8f4fd;
+      --sb-submit-fg:   #0071bc;
+    }
+
+    /* ── Layout grids ──────────────────────────────────── */
+    .cg-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1rem; }
+    .cg-main { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .cg-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+
+    /* ── Stat cards ────────────────────────────────────── */
+    .stat-card {
+      background: #fff; border: 1px solid var(--az-border);
+      border-radius: .75rem; padding: 1.25rem 1.25rem 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      box-shadow: 0 1px 4px rgba(22,48,61,.05); transition: box-shadow .15s;
+    }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(22,48,61,.1); }
+    .stat-card-hdr { display: flex; align-items: flex-start; justify-content: space-between; }
+    .sc-icon {
+      width: 40px; height: 40px; border-radius: .5rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sc-icon svg { width: 20px; height: 20px; }
+    .sc-icon-mk  { background: var(--mk-icon-bg); color: var(--mk-color); }
+    .sc-icon-ok  { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .sc-icon-warn { background: var(--sla-warn-bg); color: var(--sla-warn-fg); }
+    .sc-icon-err  { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .sc-badge {
+      font-size: .6875rem; font-weight: 600; padding: .2rem .5rem; border-radius: 20px;
+    }
+    .badge-up   { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .badge-warn { background: var(--sla-warn-bg); color: var(--sla-warn-fg); }
+    .badge-down { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .badge-info { background: var(--sb-submit-bg); color: var(--sb-submit-fg); }
+    .badge-mk   { background: var(--mk-bg); color: var(--mk-color); }
+    .sc-label { font-size: .8125rem; color: var(--az-muted); }
+    .sc-value { font-size: 1.5rem; font-weight: 700; color: var(--az-navy); line-height: 1.1; }
+    .sc-sub   { font-size: .75rem; color: var(--az-muted); }
+
+    /* ── Dash panel card ───────────────────────────────── */
+    .dash-card {
+      background: #fff; border: 1px solid var(--az-border);
+      border-radius: .75rem; box-shadow: 0 1px 4px rgba(22,48,61,.05); overflow: hidden;
+    }
+    .dc-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--az-border);
+    }
+    .dc-title {
+      font-size: .9375rem; font-weight: 600; color: var(--az-navy);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .dc-title svg { width: 17px; height: 17px; opacity: .65; }
+    .dc-body  { padding: 1.25rem; }
+    .dc-link  { font-size: .8125rem; color: var(--az-blue); font-weight: 500; text-decoration: none; }
+    .dc-link:hover { text-decoration: underline; }
+
+    /* ── Welcome bar ───────────────────────────────────── */
+    .welcome-bar {
+      border-radius: .75rem; padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; color: #fff;
+    }
+    .wb-maker { background: linear-gradient(135deg, var(--mk-grad-a) 0%, var(--mk-grad-b) 100%); }
+    .wb-left h2 { font-size: 1.1rem; font-weight: 600; margin: 0 0 .25rem; color: #fff; }
+    .wb-left p  { font-size: .8125rem; color: rgba(255,255,255,.7); margin: 0; }
+    .wb-right   { display: flex; gap: .625rem; align-items: center; }
+    .btn-quick {
+      display: flex; align-items: center; gap: .375rem;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; border-radius: .5rem; padding: .4375rem .875rem;
+      font-size: .8125rem; font-weight: 500; cursor: pointer;
+      transition: background .15s; text-decoration: none;
+    }
+    .btn-quick:hover { background: rgba(255,255,255,.22); color: #fff; }
+    .btn-quick svg { width: 14px; height: 14px; }
+    .btn-qp { background: var(--az-green); border-color: var(--az-green); color: var(--az-navy); font-weight: 700; }
+    .btn-qp:hover { background: var(--az-green-hover); color: var(--az-navy); }
+    .btn-switch {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.35);
+      color: #fff; border-radius: .5rem; padding: .4375rem .875rem;
+      font-size: .8125rem; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: .375rem; transition: background .15s;
+    }
+    .btn-switch:hover { background: rgba(255,255,255,.25); }
+
+    /* ── Role pill (header) ────────────────────────────── */
+    .role-pill {
+      display: flex; align-items: center; gap: .375rem;
+      font-size: .75rem; font-weight: 600; padding: .25rem .75rem;
+      border-radius: 20px; border: 1px solid; cursor: pointer; transition: opacity .15s;
+      white-space: nowrap;
+    }
+    .role-pill-mk { background: var(--mk-bg); color: var(--mk-color); border-color: var(--mk-border); }
+    .role-pill-ck { background: var(--ck-bg); color: var(--ck-color); border-color: var(--ck-border); }
+    .role-pill:hover { opacity: .8; }
+    .rp-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .rp-pulse { animation: rpulse 2s infinite; }
+    @keyframes rpulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+    /* ── Workflow Pipeline ─────────────────────────────── */
+    .pipeline-wrap { padding: 1rem 1.25rem 1.25rem; }
+    .pipeline { display: flex; align-items: stretch; gap: 0; }
+    .ps {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      border: 1px solid var(--az-border); border-radius: .625rem;
+      padding: 1rem .75rem; background: #f9fbfc;
+      text-align: center; transition: all .15s; cursor: pointer;
+    }
+    .ps:hover { border-color: #c8d0d8; box-shadow: 0 2px 8px rgba(22,48,61,.07); }
+    .ps-icon {
+      width: 36px; height: 36px; border-radius: .5rem;
+      display: flex; align-items: center; justify-content: center; margin-bottom: .5rem;
+    }
+    .ps-icon svg { width: 18px; height: 18px; }
+    .ps-count { font-size: 1.625rem; font-weight: 700; color: var(--az-navy); line-height: 1; }
+    .ps-label { font-size: .75rem; font-weight: 600; color: var(--az-navy); margin-top: .25rem; }
+    .ps-sub   { font-size: .6875rem; color: var(--az-muted); margin-top: .125rem; }
+    .ps-draft .ps-icon { background: #f0f4f6; color: var(--az-muted); }
+    .ps-submitted .ps-icon { background: var(--sb-submit-bg); color: var(--sb-submit-fg); }
+    .ps-submitted { border-color: var(--mk-border); background: var(--mk-bg); }
+    .ps-submitted .ps-count { color: var(--mk-color); }
+    .ps-review .ps-icon { background: var(--sla-warn-bg); color: var(--sla-warn-fg); }
+    .ps-review { border-color: #f5c96a; background: var(--sla-warn-bg); }
+    .ps-review .ps-count { color: var(--sla-warn-fg); }
+    .ps-approved .ps-icon { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .ps-approved { border-color: #a8e6c8; background: var(--sla-safe-bg); }
+    .ps-approved .ps-count { color: var(--sla-safe-fg); }
+    .ps-returned .ps-icon { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .ps-returned { border-color: #f5aaaa; background: var(--sla-crit-bg); }
+    .ps-returned .ps-count { color: var(--sla-crit-fg); }
+    .pa {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 .5rem; color: var(--az-border); flex-shrink: 0;
+    }
+    .pa svg { width: 16px; height: 16px; }
+    .pipeline-fork { display: flex; flex-direction: column; flex: 1; gap: .5rem; }
+    .pipeline-fork .ps { flex: 1; }
+
+    /* ── Filter tabs ───────────────────────────────────── */
+    .filter-tabs { display: flex; gap: .375rem; flex-wrap: wrap; padding: .75rem 1.25rem; }
+    .ftab {
+      background: #f0f4f6; border: 1px solid var(--az-border);
+      border-radius: 20px; padding: .25rem .875rem;
+      font-size: .75rem; font-weight: 500; color: var(--az-navy);
+      cursor: pointer; transition: all .12s;
+      display: flex; align-items: center; gap: .375rem;
+    }
+    .ftab:hover { border-color: #c8d0d8; }
+    .ftab.active { background: var(--az-navy); color: #fff; border-color: var(--az-navy); }
+    .ftab-count {
+      font-size: .6875rem; font-weight: 700; padding: 0 .375rem;
+      border-radius: 20px; background: rgba(0,0,0,.1);
+    }
+    .ftab.active .ftab-count { background: rgba(255,255,255,.25); }
+
+    /* ── Submissions table ─────────────────────────────── */
+    .corp-table { width: 100%; border-collapse: collapse; }
+    .corp-table th {
+      font-size: .7rem; font-weight: 700; color: var(--az-muted);
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: .5rem .875rem; border-bottom: 1px solid var(--az-border); text-align: left;
+    }
+    .corp-table td {
+      padding: .75rem .875rem; font-size: .8125rem;
+      border-bottom: 1px solid #f5f7f9; color: var(--az-navy); vertical-align: middle;
+    }
+    .corp-table tr:last-child td { border-bottom: none; }
+    .corp-table tr:hover td { background: #fafcfd; }
+    .txn-cell { display: flex; align-items: center; gap: .625rem; }
+    .txn-ico {
+      width: 32px; height: 32px; border-radius: .5rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .txn-ico svg { width: 16px; height: 16px; }
+    .txn-ico-transfer  { background: var(--sb-submit-bg); color: var(--sb-submit-fg); }
+    .txn-ico-bulk      { background: var(--mk-bg); color: var(--mk-color); }
+    .txn-ico-tf        { background: #f3e8ff; color: #6b21a8; }
+    .txn-ico-returned  { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .txn-name { font-size: .8125rem; font-weight: 500; color: var(--az-navy); }
+    .txn-ref  { font-size: .75rem; color: var(--az-muted); }
+    .status-pill {
+      font-size: .6875rem; font-weight: 600; padding: .2rem .5rem;
+      border-radius: 20px; display: inline-block; white-space: nowrap;
+    }
+    .sp-pending  { background: var(--sb-pending-bg); color: var(--sb-pending-fg); }
+    .sp-approved { background: var(--sb-approved-bg); color: var(--sb-approved-fg); }
+    .sp-returned { background: var(--sb-returned-bg); color: var(--sb-returned-fg); }
+    .sp-draft    { background: var(--sb-draft-bg);    color: var(--sb-draft-fg); }
+    .sp-submit   { background: var(--sb-submit-bg);   color: var(--sb-submit-fg); }
+    .btn-tbl {
+      background: none; border: 1px solid var(--az-border);
+      border-radius: .375rem; padding: .2rem .5rem;
+      font-size: .75rem; color: var(--az-navy); cursor: pointer; transition: all .12s;
+    }
+    .btn-tbl:hover { border-color: var(--az-blue); color: var(--az-blue); }
+    .btn-tbl-warn { border-color: #f5c96a; color: var(--sla-warn-fg); }
+    .btn-tbl-warn:hover { background: var(--sla-warn-bg); }
+    .amt-col { font-weight: 600; }
+
+    /* ── Drafts panel ──────────────────────────────────── */
+    .draft-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .75rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .draft-item:last-child { border-bottom: none; }
+    .draft-ico {
+      width: 34px; height: 34px; border-radius: .5rem;
+      background: #f0f4f6; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .draft-ico svg { width: 15px; height: 15px; color: var(--az-muted); }
+    .draft-body { flex: 1; min-width: 0; }
+    .draft-title { font-size: .8125rem; font-weight: 500; color: var(--az-navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .draft-sub   { font-size: .75rem; color: var(--az-muted); }
+    .draft-btns  { display: flex; gap: .375rem; flex-shrink: 0; }
+    .btn-resume {
+      background: none; border: 1px solid var(--az-border); border-radius: .375rem;
+      padding: .2rem .5rem; font-size: .75rem; color: var(--az-navy); cursor: pointer; transition: all .12s;
+    }
+    .btn-resume:hover { border-color: var(--az-blue); color: var(--az-blue); }
+    .btn-del {
+      background: none; border: 1px solid #fccfcc; border-radius: .375rem;
+      padding: .2rem .5rem; font-size: .75rem; color: var(--sla-crit-fg); cursor: pointer;
+    }
+    .btn-del:hover { background: var(--sla-crit-bg); }
+
+    /* ── Activity feed ─────────────────────────────────── */
+    .act-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .625rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .act-item:last-child { border-bottom: none; }
+    .act-ico {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem;
+    }
+    .act-ico svg { width: 14px; height: 14px; }
+    .act-ico-sub  { background: var(--mk-bg); color: var(--mk-color); }
+    .act-ico-ok   { background: var(--sla-safe-bg); color: var(--sla-safe-fg); }
+    .act-ico-ret  { background: var(--sla-crit-bg); color: var(--sla-crit-fg); }
+    .act-ico-drft { background: #f0f4f6; color: var(--az-muted); }
+    .act-body  { flex: 1; min-width: 0; }
+    .act-title { font-size: .8125rem; font-weight: 500; color: var(--az-navy); }
+    .act-sub   { font-size: .75rem; color: var(--az-muted); margin-top: .1rem; }
+    .act-time  { font-size: .75rem; color: var(--az-muted); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── Upcoming payments ─────────────────────────────── */
+    .upc-item {
+      display: flex; align-items: center; gap: .875rem;
+      padding: .75rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .upc-item:last-child { border-bottom: none; }
+    .upc-date {
+      min-width: 44px; height: 44px; border-radius: .5rem;
+      background: #f0f4f6; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .upc-day   { font-size: .9375rem; font-weight: 700; color: var(--az-navy); line-height: 1; }
+    .upc-mon   { font-size: .6rem; color: var(--az-muted); text-transform: uppercase; letter-spacing: .04em; }
+    .upc-info  { flex: 1; min-width: 0; }
+    .upc-title { font-size: .8125rem; font-weight: 500; color: var(--az-navy); }
+    .upc-sub   { font-size: .75rem; color: var(--az-muted); }
+    .upc-amt   { font-size: .875rem; font-weight: 700; color: var(--az-navy); white-space: nowrap; }
+    .upc-date-alert { background: var(--sla-warn-bg); }
+    .upc-date-alert .upc-day,
+    .upc-date-alert .upc-mon { color: var(--sla-warn-fg); }
+
+    /* ── Role-switch modal ─────────────────────────────── */
+    .rm-overlay {
+      position: fixed; inset: 0; background: rgba(22,48,61,.5);
+      z-index: 2000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .rm-overlay.open { opacity: 1; pointer-events: all; }
+    .rm-modal {
+      background: #fff; border-radius: 1rem; width: 460px; max-width: calc(100vw - 2rem);
+      box-shadow: 0 24px 64px rgba(22,48,61,.2);
+      transform: translateY(14px) scale(.97); transition: transform .22s;
+    }
+    .rm-overlay.open .rm-modal { transform: translateY(0) scale(1); }
+    .rm-hdr {
+      padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--az-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .rm-title { font-size: 1rem; font-weight: 700; color: var(--az-navy); }
+    .rm-close {
+      background: none; border: none; cursor: pointer; color: var(--az-muted);
+      padding: .25rem; border-radius: .375rem; transition: background .12s;
+    }
+    .rm-close:hover { background: #f0f4f6; }
+    .rm-body  { padding: 1.25rem 1.5rem; }
+    .rm-step  { display: none; }
+    .rm-step.active { display: block; }
+    .rm-lbl   { font-size: .8125rem; font-weight: 600; color: var(--az-navy); margin-bottom: .5rem; display: block; }
+    .rm-cards { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1.25rem; }
+    .rm-card {
+      border: 2px solid var(--az-border); border-radius: .75rem;
+      padding: 1rem; cursor: pointer; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      transition: all .15s;
+    }
+    .rm-card:hover:not(.rm-current) { border-color: #c8d0d8; background: #fafcfd; }
+    .rm-card.rm-selected.rm-maker  { border-color: var(--mk-color); background: var(--mk-bg); }
+    .rm-card.rm-selected.rm-checker { border-color: var(--ck-color); background: var(--ck-bg); }
+    .rm-card.rm-current { opacity: .45; cursor: default; }
+    .rm-card-ico {
+      width: 48px; height: 48px; border-radius: .75rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rm-card-ico.rm-maker   { background: var(--mk-bg); color: var(--mk-color); }
+    .rm-card-ico.rm-checker { background: var(--ck-bg); color: var(--ck-color); }
+    .rm-card-ico svg { width: 24px; height: 24px; }
+    .rm-card-name { font-size: .9375rem; font-weight: 700; color: var(--az-navy); }
+    .rm-card-desc { font-size: .75rem; color: var(--az-muted); line-height: 1.4; }
+    .rm-card-badge { font-size: .6875rem; font-weight: 600; padding: .15rem .5rem; border-radius: 20px; }
+    .rm-card-badge.rm-maker   { background: var(--mk-bg); color: var(--mk-color); }
+    .rm-card-badge.rm-checker { background: var(--ck-bg); color: var(--ck-color); }
+    .rm-fld {
+      width: 100%; border: 1px solid var(--az-border); border-radius: .5rem;
+      padding: .625rem .875rem; font-size: .875rem; color: var(--az-navy);
+      background: #fff; transition: border-color .12s;
+    }
+    .rm-fld:focus { border-color: var(--az-blue); outline: none; }
+    .rm-group { margin-bottom: 1rem; }
+    .rm-footer {
+      padding: 1rem 1.5rem; border-top: 1px solid var(--az-border);
+      display: flex; gap: .625rem; justify-content: flex-end;
+    }
+    .btn-rm-cancel {
+      background: none; border: 1px solid var(--az-border); border-radius: .5rem;
+      padding: .5rem 1.25rem; font-size: .875rem; color: var(--az-navy); cursor: pointer;
+    }
+    .btn-rm-cancel:hover { border-color: var(--az-navy); }
+    .btn-rm-confirm {
+      background: var(--mk-color); color: #fff; border: none;
+      border-radius: .5rem; padding: .5rem 1.5rem;
+      font-size: .875rem; font-weight: 600; cursor: pointer; transition: background .12s;
+    }
+    .btn-rm-confirm:hover { background: #1446b5; }
+    .rm-success { text-align: center; padding: 1.5rem 1rem; }
+    .rm-success-ico {
+      width: 60px; height: 60px; border-radius: 50%; background: var(--sla-safe-bg);
+      color: var(--sla-safe-fg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;
+    }
+    .rm-success-ico svg { width: 30px; height: 30px; }
+    .rm-success h3 { font-size: 1.125rem; font-weight: 700; color: var(--az-navy); margin-bottom: .375rem; }
+    .rm-success p  { font-size: .875rem; color: var(--az-muted); }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 1199px) {
+      .cg-4 { grid-template-columns: repeat(2, 1fr); }
+      .cg-main, .cg-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 767px) {
+      .cg-4 { grid-template-columns: 1fr 1fr; }
+      .wb-right { display: none; }
+      .pipeline { flex-direction: column; }
+    }
+    @media (max-width: 479px) {
+      .cg-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt=""/></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" style="position:relative">
+        <img src="images/icons/notification.svg" width="18" height="18" alt=""/>
+        <span class="notif-dot">3</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span><a href="#" class="notif-clear-all">Clear all</a></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Submission REF-LC-2026-0405 returned by checker</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Bulk payment REF-BP-2026-0399 approved</div><div class="notif-time">3 hrs ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Scheduled transfer for 28 May due tomorrow</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt=""/></button>
+    <button class="hdr-icon-btn" title="Help"><img src="images/icons/information.svg" width="18" height="18" alt=""/></button>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <!-- Role pill -->
+    <button class="role-pill role-pill-mk" onclick="openRoleModal()" title="Current role: Maker. Click to switch." aria-label="Maker Role">
+      <span class="rp-dot rp-pulse"></span>
+      Maker Role
+      <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+    </button>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Ahmed Al-Farsi</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>25 May, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:05</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">ahmed.alfarsi</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Company:</span><span class="av-detail-val">Al-Noor Trading LLC</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Role:</span><span class="av-detail-val">Maker</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+    <button class="sb-item active-section" data-label="Dashboard" onclick="location.href='dashboard.html'"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none"><a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a><button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer<span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div><a href="transfer-list.html" class="sb-sub-item">Transfer List</a><button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment<span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div></div>
+    <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a></div>
+    <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a></div>
+    <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><img src="images/icons/trade_finance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="services-e-statement-request.html" class="sb-sub-item">eStatement Request</a><a href="chequebook-request.html" class="sb-sub-item">Chequebook Request</a></div>
+    <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><img src="images/icons/corporate_end_user.svg" width="18" height="18" alt=""/></span><span class="sb-label">Corporate Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc">
+      <a href="dashboard.html">Home</a><span class="sep">&#8250;</span>
+      <a href="#">Corporate Dashboard</a><span class="sep">&#8250;</span>
+      <span class="cur">Maker View</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.875rem">
+      <h1 class="page-title">Corporate Dashboard</h1>
+      <div style="display:flex;gap:.625rem;align-items:center">
+        <a href="corporate-dashboard-checker.html" class="btn-open-account" style="text-decoration:none;display:flex;align-items:center;gap:.375rem">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          Switch to Checker
+        </a>
+      </div>
+    </div>
+
+    <!-- Welcome bar -->
+    <div class="welcome-bar wb-maker">
+      <div class="wb-left">
+        <h2>Good morning, Ahmed</h2>
+        <p>Monday, 26 May 2026 &nbsp;&middot;&nbsp; Maker Role &nbsp;&middot;&nbsp; Al-Noor Trading LLC</p>
+      </div>
+      <div class="wb-right">
+        <a href="transfer-own-accounts.html" class="btn-quick btn-qp" style="text-decoration:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          New Submission
+        </a>
+        <a href="bulk-payment-upload.html" class="btn-quick" style="text-decoration:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Bulk Upload
+        </a>
+        <button class="btn-switch" onclick="openRoleModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          Switch to Checker
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 1: Stat cards -->
+    <div class="cg-4">
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-mk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <span class="sc-badge badge-info">+3 from yesterday</span>
+        </div>
+        <div class="sc-label">Submitted Today</div>
+        <div class="sc-value">8</div>
+        <div class="sc-sub">Across 3 account groups</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="sc-badge badge-warn">Requires Checker Action</span>
+        </div>
+        <div class="sc-label">Awaiting Approval</div>
+        <div class="sc-value">5</div>
+        <div class="sc-sub">3 transfers &nbsp;&middot;&nbsp; 2 bulk payments</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-ok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <span class="sc-badge badge-up">+12% vs last week</span>
+        </div>
+        <div class="sc-label">Approved This Week</div>
+        <div class="sc-value">23</div>
+        <div class="sc-sub">USD 1.4M total value</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-hdr">
+          <div class="sc-icon sc-icon-err">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <span class="sc-badge badge-down">Review comments</span>
+        </div>
+        <div class="sc-label">Returned for Correction</div>
+        <div class="sc-value">2</div>
+        <div class="sc-sub">Checker feedback pending</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Workflow Pipeline -->
+    <div class="dash-card" style="margin-bottom:1rem">
+      <div class="dc-hdr">
+        <div class="dc-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Transaction Workflow
+        </div>
+        <span class="sc-badge badge-info">Live</span>
+      </div>
+      <div class="pipeline-wrap">
+        <div class="pipeline">
+          <div class="ps ps-draft" onclick="filterTable('draft')">
+            <div class="ps-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div class="ps-count">5</div>
+            <div class="ps-label">Drafts</div>
+            <div class="ps-sub">Saved, not submitted</div>
+          </div>
+          <div class="pa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="ps ps-submitted" onclick="filterTable('pending')">
+            <div class="ps-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <div class="ps-count">8</div>
+            <div class="ps-label">Submitted</div>
+            <div class="ps-sub">Sent for approval</div>
+          </div>
+          <div class="pa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="ps ps-review">
+            <div class="ps-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="ps-count">5</div>
+            <div class="ps-label">Under Review</div>
+            <div class="ps-sub">Checker reviewing</div>
+          </div>
+          <div class="pa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="pipeline-fork">
+            <div class="ps ps-approved" onclick="filterTable('approved')" style="margin-bottom:0">
+              <div class="ps-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="ps-count">23</div>
+              <div class="ps-label">Approved</div>
+              <div class="ps-sub">This week</div>
+            </div>
+            <div class="ps ps-returned" onclick="filterTable('returned')">
+              <div class="ps-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+              </div>
+              <div class="ps-count">2</div>
+              <div class="ps-label">Returned</div>
+              <div class="ps-sub">Needs correction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Submissions table + Right panel -->
+    <div class="cg-main">
+
+      <!-- Submissions Table -->
+      <div class="dash-card">
+        <div class="dc-hdr">
+          <div class="dc-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            My Submissions
+          </div>
+          <a href="transfer-pending-list.html" class="dc-link">View all &rsaquo;</a>
+        </div>
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="filterTable('all',this)">All <span class="ftab-count">13</span></button>
+          <button class="ftab" onclick="filterTable('pending',this)">Pending <span class="ftab-count">5</span></button>
+          <button class="ftab" onclick="filterTable('approved',this)">Approved <span class="ftab-count">23</span></button>
+          <button class="ftab" onclick="filterTable('returned',this)">Returned <span class="ftab-count">2</span></button>
+          <button class="ftab" onclick="filterTable('draft',this)">Drafts <span class="ftab-count">5</span></button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="corp-table" id="submissionsTable">
+            <thead>
+              <tr>
+                <th>Transaction</th>
+                <th>Beneficiary / Ref</th>
+                <th>Amount</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-status="pending">
+                <td>
+                  <div class="txn-cell">
+                    <div class="txn-ico txn-ico-bulk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+                    <div><div class="txn-name">Bulk Payment – May Salaries</div><div class="txn-ref">REF-BP-2026-0412</div></div>
+                  </div>
+                </td>
+                <td><div class="txn-name">156 employees</div><div class="txn-ref">IBAN-8001</div></td>
+                <td class="amt-col">USD 287,400.00</td>
+                <td>Today 09:15</td>
+                <td><span class="status-pill sp-pending">Pending Checker</span></td>
+                <td><button class="btn-tbl">View</button></td>
+              </tr>
+              <tr data-status="pending">
+                <td>
+                  <div class="txn-cell">
+                    <div class="txn-ico txn-ico-transfer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+                    <div><div class="txn-name">International Transfer</div><div class="txn-ref">REF-IT-2026-0411</div></div>
+                  </div>
+                </td>
+                <td><div class="txn-name">BNP Paris</div><div class="txn-ref">IBAN-8000 &rsaquo; FR76...</div></td>
+                <td class="amt-col">EUR 45,000.00</td>
+                <td>Today 08:42</td>
+                <td><span class="status-pill sp-pending">Pending Checker</span></td>
+                <td><button class="btn-tbl">View</button></td>
+              </tr>
+              <tr data-status="pending">
+                <td>
+                  <div class="txn-cell">
+                    <div class="txn-ico txn-ico-transfer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+                    <div><div class="txn-name">Local Transfer</div><div class="txn-ref">REF-LT-2026-0410</div></div>
+                  </div>
+                </td>
+                <td><div class="txn-name">Al Fardan Exchange</div><div class="txn-ref">IBAN-8001</div></td>
+                <td class="amt-col">AED 12,500.00</td>
+                <td>Yesterday 16:30</td>
+                <td><span class="status-pill sp-pending">Pending Checker</span></td>
+                <td><button class="btn-tbl">View</button></td>
+              </tr>
+              <tr data-status="approved">
+                <td>
+                  <div class="txn-cell">
+                    <div class="txn-ico txn-ico-transfer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+                    <div><div class="txn-name">Internal Transfer</div><div class="txn-ref">REF-IN-2026-0408</div></div>
+                  </div>
+                </td>
+                <td><div class="txn-name">IBAN-8002</div><div class="txn-ref">Own account</div></td>
+                <td class="amt-col">USD 100,000.00</td>
+                <td>24 May 11:20</td>
+                <td><span class="status-pill sp-approved">Approved</span></td>
+                <td><button class="btn-tbl">Receipt</button></td>
+              </tr>
+              <tr data-status="returned">
+                <td>
+                  <div class="txn-cell">
+                    <div class="txn-ico txn-ico-returned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></div>
+                    <div><div class="txn-name">LC Amendment</div><div class="txn-ref">REF-LC-2026-0405</div></div>
+                  </div>
+                </td>
+                <td><div class="txn-name">Trade Finance</div><div class="txn-ref">IBAN-8000</div></td>
+                <td class="amt-col">USD 500,000.00</td>
+                <td>22 May 09:10</td>
+                <td><span class="status-pill sp-returned">Returned</span></td>
+                <td>
+                  <div style="display:flex;gap:.375rem">
+                    <button class="btn-tbl btn-tbl-warn">Edit &amp; Resubmit</button>
+                    <button class="btn-tbl">Comments</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-status="approved">
+                <td>
+                  <div class="txn-cell">
+                    <div class="txn-ico txn-ico-bulk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+                    <div><div class="txn-name">Bulk Payment – April Salaries</div><div class="txn-ref">REF-BP-2026-0399</div></div>
+                  </div>
+                </td>
+                <td><div class="txn-name">142 employees</div><div class="txn-ref">IBAN-8001</div></td>
+                <td class="amt-col">USD 271,800.00</td>
+                <td>30 Apr 10:05</td>
+                <td><span class="status-pill sp-approved">Approved</span></td>
+                <td><button class="btn-tbl">Receipt</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right panel: Drafts + Activity -->
+      <div style="display:flex;flex-direction:column;gap:1rem">
+
+        <!-- Drafts -->
+        <div class="dash-card">
+          <div class="dc-hdr">
+            <div class="dc-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              My Drafts
+            </div>
+            <a href="#" class="dc-link">View all &rsaquo;</a>
+          </div>
+          <div class="dc-body" style="padding:.75rem 1.25rem">
+            <div class="draft-item">
+              <div class="draft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+              <div class="draft-body">
+                <div class="draft-title">International Transfer – Deutsche Bank</div>
+                <div class="draft-sub">EUR 75,000 &nbsp;&middot;&nbsp; 2 hrs ago</div>
+              </div>
+              <div class="draft-btns">
+                <button class="btn-resume">Resume</button>
+                <button class="btn-del">Del</button>
+              </div>
+            </div>
+            <div class="draft-item">
+              <div class="draft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+              <div class="draft-body">
+                <div class="draft-title">Bulk Payment – June Salaries</div>
+                <div class="draft-sub">Incomplete &nbsp;&middot;&nbsp; Yesterday</div>
+              </div>
+              <div class="draft-btns">
+                <button class="btn-resume">Resume</button>
+                <button class="btn-del">Del</button>
+              </div>
+            </div>
+            <div class="draft-item">
+              <div class="draft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+              <div class="draft-body">
+                <div class="draft-title">Term Deposit Opening</div>
+                <div class="draft-sub">AED 200,000 &nbsp;&middot;&nbsp; 3 days ago</div>
+              </div>
+              <div class="draft-btns">
+                <button class="btn-resume">Resume</button>
+                <button class="btn-del">Del</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity feed -->
+        <div class="dash-card">
+          <div class="dc-hdr">
+            <div class="dc-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Activity Feed
+            </div>
+            <a href="#" class="dc-link">All &rsaquo;</a>
+          </div>
+          <div class="dc-body" style="padding:.75rem 1.25rem">
+            <div class="act-item">
+              <div class="act-ico act-ico-sub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+              <div class="act-body">
+                <div class="act-title">REF-BP-2026-0412 submitted for approval</div>
+                <div class="act-sub">Bulk Payment &nbsp;&middot;&nbsp; USD 287,400</div>
+              </div>
+              <div class="act-time">09:15</div>
+            </div>
+            <div class="act-item">
+              <div class="act-ico act-ico-ret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></div>
+              <div class="act-body">
+                <div class="act-title">REF-LC-2026-0405 returned by checker</div>
+                <div class="act-sub">Incorrect LC amount &nbsp;&middot;&nbsp; Review required</div>
+              </div>
+              <div class="act-time">08:00</div>
+            </div>
+            <div class="act-item">
+              <div class="act-ico act-ico-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+              <div class="act-body">
+                <div class="act-title">REF-IN-2026-0408 approved</div>
+                <div class="act-sub">Internal Transfer &nbsp;&middot;&nbsp; USD 100,000</div>
+              </div>
+              <div class="act-time">24 May</div>
+            </div>
+            <div class="act-item">
+              <div class="act-ico act-ico-drft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+              <div class="act-body">
+                <div class="act-title">Draft created: International Transfer</div>
+                <div class="act-sub">EUR 75,000 &nbsp;&middot;&nbsp; Deutsche Bank</div>
+              </div>
+              <div class="act-time">24 May</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Row 4: Upcoming Payments -->
+    <div class="dash-card" style="margin-bottom:1.5rem">
+      <div class="dc-hdr">
+        <div class="dc-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Upcoming Payments
+        </div>
+        <a href="scheduled-transfers-list.html" class="dc-link">View all &rsaquo;</a>
+      </div>
+      <div class="dc-body" style="padding:.75rem 1.25rem">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+          <div class="upc-item" style="border-bottom:none;border-right:1px solid #f5f7f9;padding-right:1rem">
+            <div class="upc-date upc-date-alert"><div class="upc-day">28</div><div class="upc-mon">May</div></div>
+            <div class="upc-info">
+              <div class="upc-title">Vendor Payment – Al Noor Ltd</div>
+              <div class="upc-sub">IBAN-8001 &nbsp;&middot;&nbsp; 2 days away</div>
+            </div>
+            <div class="upc-amt">USD 45,000</div>
+          </div>
+          <div class="upc-item" style="border-bottom:none;border-right:1px solid #f5f7f9;padding:0 1rem">
+            <div class="upc-date"><div class="upc-day">01</div><div class="upc-mon">Jun</div></div>
+            <div class="upc-info">
+              <div class="upc-title">Monthly Payroll</div>
+              <div class="upc-sub">IBAN-8001 &nbsp;&middot;&nbsp; Bulk payment</div>
+            </div>
+            <div class="upc-amt">USD 287,400</div>
+          </div>
+          <div class="upc-item" style="border-bottom:none;padding-left:1rem">
+            <div class="upc-date"><div class="upc-day">05</div><div class="upc-mon">Jun</div></div>
+            <div class="upc-info">
+              <div class="upc-title">Trade Finance LC Settlement</div>
+              <div class="upc-sub">IBAN-8000 &nbsp;&middot;&nbsp; Trade Finance</div>
+            </div>
+            <div class="upc-amt">USD 500,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2026. All Rights Reserved &nbsp;<a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████ ROLE SWITCH MODAL ████ -->
+<div class="rm-overlay" id="roleModal" role="dialog" aria-modal="true" aria-labelledby="rmTitle">
+  <div class="rm-modal">
+    <div class="rm-hdr">
+      <div class="rm-title" id="rmTitle">Switch Role</div>
+      <button class="rm-close" onclick="closeRoleModal()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="rm-body">
+
+      <!-- Step 1: Select role -->
+      <div class="rm-step active" id="rmStep1">
+        <p style="font-size:.8125rem;color:var(--az-muted);margin-bottom:1.25rem">You are currently logged in as <strong style="color:var(--mk-color)">Maker</strong>. Select a role to switch to:</p>
+        <div class="rm-cards">
+          <div class="rm-card rm-current rm-maker" id="rmCardMaker">
+            <div class="rm-card-ico rm-maker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div class="rm-card-name">Maker</div>
+            <div class="rm-card-desc">Create and submit transactions for approval</div>
+            <span class="rm-card-badge rm-maker">Current Role</span>
+          </div>
+          <div class="rm-card rm-checker" id="rmCardChecker" onclick="selectRole('checker')">
+            <div class="rm-card-ico rm-checker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="rm-card-name">Checker</div>
+            <div class="rm-card-desc">Review and approve submitted transactions</div>
+            <span class="rm-card-badge rm-checker">12 pending</span>
+          </div>
+        </div>
+        <div class="rm-group">
+          <label class="rm-lbl">Reason for switching role</label>
+          <select class="rm-fld" id="rmReason">
+            <option value="">Select reason...</option>
+            <option>Acting checker – regular checker absent</option>
+            <option>Authorized dual-role session</option>
+            <option>Urgent approval required</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="rm-group" id="rmOtherGroup" style="display:none">
+          <label class="rm-lbl">Additional notes</label>
+          <input class="rm-fld" type="text" id="rmOtherNote" placeholder="Describe reason..."/>
+        </div>
+      </div>
+
+      <!-- Step 2: Confirm -->
+      <div class="rm-step" id="rmStep2">
+        <div style="text-align:center;padding:.75rem 0 1.25rem">
+          <div style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1rem">
+            <div style="text-align:center">
+              <div class="rm-card-ico rm-maker" style="margin:0 auto .375rem;width:44px;height:44px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </div>
+              <div style="font-size:.75rem;color:var(--az-muted)">From</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--mk-color)">Maker</div>
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--az-muted)" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            <div style="text-align:center">
+              <div class="rm-card-ico rm-checker" style="margin:0 auto .375rem;width:44px;height:44px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div style="font-size:.75rem;color:var(--az-muted)">To</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--ck-color)">Checker</div>
+            </div>
+          </div>
+          <p style="font-size:.8125rem;color:var(--az-muted);margin-bottom:1.25rem">Confirm switching to Checker role. This action will be logged for audit purposes.</p>
+        </div>
+        <div class="rm-group">
+          <label class="rm-lbl">Enter your PIN to confirm</label>
+          <input class="rm-fld" type="password" id="rmPin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric"/>
+        </div>
+      </div>
+
+      <!-- Step 3: Success -->
+      <div class="rm-step" id="rmStep3">
+        <div class="rm-success">
+          <div class="rm-success-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Role Switched Successfully</h3>
+          <p>You are now in <strong>Checker</strong> mode. Redirecting to checker dashboard...</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="rm-footer" id="rmFooter">
+      <button class="btn-rm-cancel" onclick="closeRoleModal()">Cancel</button>
+      <button class="btn-rm-confirm" id="rmConfirmBtn" onclick="rmNext()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+  var rmCurrentStep = 1;
+  var selectedRole = null;
+
+  function openRoleModal() {
+    rmCurrentStep = 1;
+    selectedRole = null;
+    document.getElementById('rmStep1').classList.add('active');
+    document.getElementById('rmStep2').classList.remove('active');
+    document.getElementById('rmStep3').classList.remove('active');
+    document.getElementById('rmFooter').style.display = 'flex';
+    document.getElementById('rmConfirmBtn').textContent = 'Continue';
+    document.getElementById('roleModal').classList.add('open');
+  }
+  function closeRoleModal() {
+    document.getElementById('roleModal').classList.remove('open');
+  }
+  function selectRole(role) {
+    selectedRole = role;
+    document.querySelectorAll('.rm-card:not(.rm-current)').forEach(function(c){ c.classList.remove('rm-selected'); });
+    document.getElementById('rmCard' + role.charAt(0).toUpperCase() + role.slice(1)).classList.add('rm-selected');
+  }
+  function rmNext() {
+    if (rmCurrentStep === 1) {
+      if (!selectedRole) { alert('Please select a role to switch to.'); return; }
+      if (!document.getElementById('rmReason').value) { alert('Please select a reason.'); return; }
+      document.getElementById('rmStep1').classList.remove('active');
+      document.getElementById('rmStep2').classList.add('active');
+      document.getElementById('rmConfirmBtn').textContent = 'Confirm Switch';
+      rmCurrentStep = 2;
+    } else if (rmCurrentStep === 2) {
+      var pin = document.getElementById('rmPin').value;
+      if (pin.length < 4) { alert('Please enter your 4-digit PIN.'); return; }
+      document.getElementById('rmStep2').classList.remove('active');
+      document.getElementById('rmStep3').classList.add('active');
+      document.getElementById('rmFooter').style.display = 'none';
+      rmCurrentStep = 3;
+      setTimeout(function(){ window.location.href = 'corporate-dashboard-checker.html'; }, 2000);
+    }
+  }
+  document.getElementById('rmReason').addEventListener('change', function(){
+    document.getElementById('rmOtherGroup').style.display = (this.value === 'Other') ? 'block' : 'none';
+  });
+  document.getElementById('roleModal').addEventListener('click', function(e){
+    if (e.target === this) closeRoleModal();
+  });
+
+  function filterTable(status, btn) {
+    var rows = document.querySelectorAll('#submissionsTable tbody tr');
+    rows.forEach(function(r){
+      r.style.display = (status === 'all' || r.dataset.status === status) ? '' : 'none';
+    });
+    if (btn) {
+      document.querySelectorAll('.ftab').forEach(function(t){ t.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+  }
+</script>
+</body>
+</html>

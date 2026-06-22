@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Corporate Banking – Checker Dashboard"/>
+  <title>azentio – Corporate Dashboard (Checker)</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    /* ── Checker design tokens ──────────────────────── */
+    :root {
+      --ck-bg:          #fff3e0;
+      --ck-color:       #c45e00;
+      --ck-border:      #fcd9a0;
+      --ck-icon-bg:     #fde8c0;
+      --ck-grad-a:      #16303d;
+      --ck-grad-b:      #7c3800;
+      --mk-bg:          #e8f0fe;
+      --mk-color:       #1a56db;
+      --mk-border:      #bfcffe;
+      --sla-safe-bg:    #e6f9f0;
+      --sla-safe-fg:    #1a9e63;
+      --sla-warn-bg:    #fff8e1;
+      --sla-warn-fg:    #b35a00;
+      --sla-crit-bg:    #fdecea;
+      --sla-crit-fg:    #c62828;
+      --sb-pending-bg:  #fff8e1;
+      --sb-pending-fg:  #b35a00;
+      --sb-approved-bg: #e6f9f0;
+      --sb-approved-fg: #1a9e63;
+      --sb-returned-bg: #f3e8ff;
+      --sb-returned-fg: #6b21a8;
+      --sb-submit-bg:   #e8f4fd;
+      --sb-submit-fg:   #0071bc;
+      --risk-low-bg:    #e6f9f0;
+      --risk-low-fg:    #1a9e63;
+      --risk-med-bg:    #fff8e1;
+      --risk-med-fg:    #b35a00;
+      --risk-hi-bg:     #fdecea;
+      --risk-hi-fg:     #c62828;
+      --glass-overlay:  rgba(22,48,61,.35);
+      --glass-modal-bg: rgba(255,255,255,.93);
+    }
+
+    /* ── Layout grids ────────────────────────────────── */
+    .cg-4    { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1rem; }
+    .cg-main { display:grid; grid-template-columns:1.7fr 1fr; gap:1rem; margin-bottom:1rem; }
+    @media(max-width:1199px){
+      .cg-4{grid-template-columns:repeat(2,1fr);}
+      .cg-main{grid-template-columns:1fr;}
+    }
+    @media(max-width:767px){ .cg-4{grid-template-columns:1fr 1fr;} }
+    @media(max-width:479px){ .cg-4{grid-template-columns:1fr;} }
+
+    /* ── Page top bar ────────────────────────────────── */
+    .page-top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:.875rem; }
+    .page-title   { font-size:1.1875rem; font-weight:700; color:var(--az-navy); margin:0; }
+    .btn-switch-role { display:flex; align-items:center; gap:.375rem; background:var(--mk-bg); border:1px solid var(--mk-border); color:var(--mk-color); border-radius:.5rem; padding:.4375rem .875rem; font-size:.8125rem; font-weight:600; cursor:pointer; text-decoration:none; transition:background .15s; }
+    .btn-switch-role:hover { background:#d4e3fd; color:var(--mk-color); }
+
+    /* ── Welcome bar ─────────────────────────────────── */
+    .welcome-bar  { border-radius:.75rem; padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; color:#fff; }
+    .wb-checker   { background:linear-gradient(135deg, var(--ck-grad-a) 0%, var(--ck-grad-b) 100%); }
+    .wb-left h2   { font-size:1.1rem; font-weight:600; margin:0 0 .25rem; color:#fff; }
+    .wb-left p    { font-size:.8125rem; color:rgba(255,255,255,.7); margin:0; }
+    .wb-actions   { display:flex; gap:.625rem; align-items:center; flex-wrap:wrap; }
+    .btn-quick    { display:flex; align-items:center; gap:.375rem; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); color:#fff; border-radius:.5rem; padding:.4375rem .875rem; font-size:.8125rem; font-weight:500; cursor:pointer; transition:background .15s; text-decoration:none; }
+    .btn-quick:hover { background:rgba(255,255,255,.22); color:#fff; }
+    .btn-quick svg  { width:14px; height:14px; }
+    .btn-qp         { background:var(--az-green); border-color:var(--az-green); color:var(--az-navy); font-weight:700; }
+    .btn-qp:hover   { background:var(--az-green-hover); color:var(--az-navy); }
+    .btn-switch     { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35); color:#fff; border-radius:.5rem; padding:.4375rem .875rem; font-size:.8125rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:.375rem; }
+
+    /* ── Role pill ───────────────────────────────────── */
+    .role-pill    { display:flex; align-items:center; gap:.375rem; font-size:.75rem; font-weight:600; padding:.25rem .75rem; border-radius:20px; border:1px solid; cursor:pointer; white-space:nowrap; }
+    .role-pill-ck { background:var(--ck-bg); color:var(--ck-color); border-color:var(--ck-border); }
+    .rp-dot       { width:7px; height:7px; border-radius:50%; background:currentColor; }
+    .rp-pulse     { animation:rpulse 1.8s infinite; }
+    @keyframes rpulse { 0%,100%{opacity:1}50%{opacity:.35} }
+
+    /* ── Smart Insights panel (right column) ────────── */
+    .si-panel-hdr { display:flex; align-items:center; justify-content:space-between; padding:.875rem 1.25rem .75rem; background:linear-gradient(135deg, var(--az-navy) 0%, #1a3a6b 100%); border-radius:.75rem .75rem 0 0; }
+    .si-panel-label { display:flex; align-items:center; gap:.375rem; color:var(--az-green); font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+    .si-panel-label svg { width:13px; height:13px; }
+    .si-count { font-size:.65rem; background:rgba(255,255,255,.15); color:#fff; border-radius:20px; padding:.15rem .5rem; font-weight:600; }
+    .si-list { padding:.5rem 0; }
+    .si-item { display:flex; align-items:flex-start; gap:.75rem; padding:.625rem 1.25rem; border-bottom:1px solid #f5f7f9; cursor:pointer; transition:background .12s; }
+    .si-item:last-child { border-bottom:none; }
+    .si-item:hover { background:#f5f8fc; }
+    .si-ico { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .si-ico svg { width:14px; height:14px; }
+    .si-ico-info   { background:var(--sb-submit-bg); color:var(--sb-submit-fg); }
+    .si-ico-ok     { background:var(--sla-safe-bg); color:var(--sla-safe-fg); }
+    .si-ico-warn   { background:var(--sla-warn-bg); color:var(--sla-warn-fg); }
+    .si-ico-crit   { background:var(--sla-crit-bg); color:var(--sla-crit-fg); }
+    .si-body { flex:1; min-width:0; }
+    .si-title { font-size:.8125rem; font-weight:600; color:var(--az-navy); }
+    .si-sub   { font-size:.72rem; color:var(--az-muted); margin-top:.1rem; }
+
+    /* ── Stat cards ──────────────────────────────────── */
+    .stat-card { background:#fff; border:1px solid var(--az-border); border-radius:.75rem; padding:1.25rem 1.25rem 1rem; display:flex; flex-direction:column; gap:.375rem; box-shadow:0 1px 4px rgba(22,48,61,.05); transition:box-shadow .15s; }
+    .stat-card:hover { box-shadow:0 4px 12px rgba(22,48,61,.1); }
+    .stat-card-alert { border-color:#f5aaaa; background:linear-gradient(135deg,#fff 60%,var(--sla-crit-bg)); }
+    .stat-card-header { display:flex; align-items:flex-start; justify-content:space-between; }
+    .stat-card-icon   { width:40px; height:40px; border-radius:.5rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .stat-card-icon svg { width:20px; height:20px; }
+    .stat-card-badge  { font-size:.6875rem; font-weight:600; padding:.2rem .5rem; border-radius:20px; }
+    .badge-ck   { background:var(--ck-icon-bg); color:var(--ck-color); }
+    .badge-safe { background:var(--sla-safe-bg); color:var(--sla-safe-fg); }
+    .badge-warn { background:var(--sla-warn-bg); color:var(--sla-warn-fg); }
+    .badge-crit { background:var(--sla-crit-bg); color:var(--sla-crit-fg); }
+    .stat-card-label  { font-size:.8125rem; color:var(--az-muted); font-weight:400; }
+    .stat-card-value  { font-size:1.4rem; font-weight:700; color:var(--az-navy); line-height:1.2; }
+    .sparkline  { width:100%; height:30px; overflow:visible; }
+    .spark-trend { display:flex; align-items:center; justify-content:space-between; margin-top:.25rem; font-size:.7rem; color:var(--az-muted); }
+
+    /* ── Dash card ───────────────────────────────────── */
+    .dash-card { background:#fff; border:1px solid var(--az-border); border-radius:.75rem; box-shadow:0 1px 4px rgba(22,48,61,.05); overflow:hidden; margin-bottom:1rem; }
+    .dash-card-hdr { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--az-border); }
+    .dash-card-title { font-size:.9375rem; font-weight:600; color:var(--az-navy); display:flex; align-items:center; gap:.5rem; }
+    .dash-card-title svg { width:16px; height:16px; opacity:.65; }
+    .dash-card-link { font-size:.8125rem; color:var(--az-blue); font-weight:500; text-decoration:none; white-space:nowrap; }
+    .dash-card-link:hover { text-decoration:underline; }
+
+    /* ── Filter tabs ─────────────────────────────────── */
+    .filter-tabs { display:flex; gap:.375rem; padding:1rem 1.25rem .75rem; flex-wrap:wrap; }
+    .ftab { background:#f0f4f6; border:1px solid var(--az-border); border-radius:20px; padding:.25rem .875rem; font-size:.75rem; font-weight:500; color:var(--az-navy); cursor:pointer; transition:all .12s; }
+    .ftab.active,.ftab:hover { background:var(--az-navy); color:#fff; border-color:var(--az-navy); }
+    .ftab-count { font-size:.65rem; background:rgba(0,0,0,.12); border-radius:20px; padding:1px 5px; margin-left:3px; }
+    .ftab.active .ftab-count { background:rgba(255,255,255,.2); }
+
+    /* ── Batch toolbar ───────────────────────────────── */
+    .batch-toolbar { display:none; align-items:center; gap:.75rem; padding:.625rem 1.25rem; background:var(--az-navy); border-radius:.5rem; margin:.5rem 1.25rem; }
+    .batch-toolbar.show { display:flex; }
+    .batch-sel-count { font-size:.8125rem; font-weight:600; color:#fff; flex:1; }
+    .btn-batch { display:flex; align-items:center; gap:.375rem; border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); color:#fff; border-radius:.375rem; padding:.3rem .75rem; font-size:.8125rem; font-weight:600; cursor:pointer; transition:background .12s; }
+    .btn-batch:hover { background:rgba(255,255,255,.2); }
+    .btn-batch-approve { background:var(--az-green); border-color:var(--az-green); color:var(--az-navy); }
+    .btn-batch-approve:hover { background:var(--az-green-hover); color:var(--az-navy); }
+    .btn-batch-return { background:var(--sla-crit-bg); border-color:#f5aaaa; color:var(--sla-crit-fg); }
+    .btn-batch-return:hover { background:#fad4d4; }
+
+    /* ── Approval queue table ────────────────────────── */
+    .aq-table { width:100%; border-collapse:collapse; }
+    .aq-table th { font-size:.72rem; font-weight:600; color:var(--az-muted); text-transform:uppercase; letter-spacing:.04em; padding:.5rem .75rem; border-bottom:1px solid var(--az-border); text-align:left; white-space:nowrap; }
+    .aq-table td { padding:.65rem .75rem; font-size:.8125rem; border-bottom:1px solid #f5f7f9; color:var(--az-navy); vertical-align:middle; }
+    .aq-table tr:last-child td { border-bottom:none; }
+    .aq-table tr:hover td { background:#fafcfd; }
+    .aq-table input[type=checkbox] { accent-color:var(--az-navy); width:15px; height:15px; cursor:pointer; }
+
+    /* Group row */
+    .aq-group-row td { background:#f5f8fc; font-size:.75rem; font-weight:700; color:var(--az-navy); padding:.45rem .75rem; cursor:pointer; border-bottom:1px solid var(--az-border); user-select:none; }
+    .aq-group-row:hover td { background:#eef3fa; }
+    .aq-group-chevron { transition:transform .18s; display:inline-block; }
+    .aq-group-row.collapsed .aq-group-chevron { transform:rotate(-90deg); }
+
+    /* Maker reputation */
+    .maker-rep { display:flex; flex-direction:column; }
+    .maker-name { font-size:.8125rem; font-weight:600; color:var(--az-navy); }
+    .maker-rate { font-size:.7rem; color:var(--az-muted); margin-top:.1rem; display:flex; align-items:center; gap:.25rem; }
+    .maker-rate-bar { width:42px; height:4px; background:#e0e7ef; border-radius:2px; overflow:hidden; display:inline-block; vertical-align:middle; }
+    .maker-rate-fill { height:100%; border-radius:2px; background:var(--sla-safe-fg); }
+
+    /* Risk badge */
+    .risk-badge { font-size:.6875rem; font-weight:700; padding:.2rem .5rem; border-radius:20px; white-space:nowrap; }
+    .risk-low  { background:var(--risk-low-bg); color:var(--risk-low-fg); }
+    .risk-med  { background:var(--risk-med-bg); color:var(--risk-med-fg); }
+    .risk-hi   { background:var(--risk-hi-bg);  color:var(--risk-hi-fg); }
+
+    /* SLA badge */
+    .sla-badge { font-size:.6875rem; font-weight:600; padding:.2rem .5rem; border-radius:20px; white-space:nowrap; }
+    .sla-safe  { background:var(--sla-safe-bg); color:var(--sla-safe-fg); }
+    .sla-warn  { background:var(--sla-warn-bg); color:var(--sla-warn-fg); }
+    .sla-crit  { background:var(--sla-crit-bg); color:var(--sla-crit-fg); }
+
+    /* Time-in-queue */
+    .tiq { font-size:.8125rem; color:var(--az-navy); white-space:nowrap; }
+    .tiq-warn { color:var(--sla-warn-fg); font-weight:600; }
+    .tiq-crit { color:var(--sla-crit-fg); font-weight:700; }
+
+    /* Status pill */
+    .status-pill { font-size:.6875rem; font-weight:600; padding:.2rem .5rem; border-radius:20px; display:inline-block; white-space:nowrap; }
+    .sp-pending  { background:var(--sb-pending-bg); color:var(--sb-pending-fg); }
+    .sp-approved { background:var(--sb-approved-bg); color:var(--sb-approved-fg); }
+    .sp-returned { background:var(--sb-returned-bg); color:var(--sb-returned-fg); }
+
+    /* Transaction name */
+    .txn-name { font-weight:600; font-size:.8125rem; color:var(--az-navy); }
+    .txn-ref  { font-size:.72rem; color:var(--az-muted); margin-top:.1rem; }
+
+    /* Action icon buttons */
+    .btn-ico { width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border-radius:.375rem; border:1px solid; cursor:pointer; transition:background .12s, border-color .12s; flex-shrink:0; background:none; padding:0; }
+    .btn-ico svg { width:14px; height:14px; pointer-events:none; }
+    .btn-ico-approve { border-color:#a8e6c8; color:var(--sla-safe-fg); background:var(--sla-safe-bg); }
+    .btn-ico-approve:hover { background:#c3f0dc; border-color:#7dd4b0; }
+    .btn-ico-review  { border-color:var(--az-border); color:var(--az-blue); background:#f0f4f6; }
+    .btn-ico-review:hover  { background:#dde8f5; border-color:#b0c8e8; }
+    .btn-ico-return  { border-color:#f5aaaa; color:var(--sla-crit-fg); background:var(--sla-crit-bg); }
+    .btn-ico-return:hover  { background:#fad4d4; border-color:#e87272; }
+    .tbl-actions { display:flex; gap:.375rem; align-items:center; }
+
+    /* Table legend */
+    .tbl-legend { display:flex; align-items:center; gap:1rem; padding:.5rem 1.25rem; border-top:1px dashed var(--az-border); background:#fafcfd; flex-wrap:wrap; }
+    .tbl-legend-item { display:flex; align-items:center; gap:.375rem; font-size:.72rem; color:var(--az-muted); }
+    .tbl-legend-ico  { width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:.3rem; border:1px solid; flex-shrink:0; }
+    .tbl-legend-ico svg { width:11px; height:11px; }
+
+    /* Row highlight states */
+    .row-crit { background:rgba(253,236,234,.4); }
+    .row-warn { background:rgba(255,248,225,.35); }
+
+    /* ── SLA Watch panel ─────────────────────────────── */
+    .sla-item { display:flex; align-items:center; gap:.75rem; padding:.625rem 1.25rem; border-bottom:1px solid #f5f7f9; }
+    .sla-item:last-child { border-bottom:none; }
+    .sla-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .sla-dot-crit { background:var(--sla-crit-fg); }
+    .sla-dot-warn { background:var(--sla-warn-fg); }
+    .sla-dot-safe { background:var(--sla-safe-fg); }
+    .sla-info { flex:1; min-width:0; }
+    .sla-ref  { font-size:.8125rem; font-weight:600; color:var(--az-navy); }
+    .sla-sub  { font-size:.72rem; color:var(--az-muted); }
+    .sla-time { font-size:.8125rem; font-weight:700; white-space:nowrap; }
+    .sla-time-crit { color:var(--sla-crit-fg); }
+    .sla-time-warn { color:var(--sla-warn-fg); }
+    .sla-time-safe { color:var(--sla-safe-fg); }
+
+    /* ── Activity feed ───────────────────────────────── */
+    .act-item  { display:flex; align-items:flex-start; gap:.625rem; padding:.625rem 0; border-bottom:1px solid #f5f7f9; }
+    .act-item:last-child { border-bottom:none; }
+    .act-ico   { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .act-ico svg { width:13px; height:13px; }
+    .act-ico-approved { background:var(--sla-safe-bg); color:var(--sla-safe-fg); }
+    .act-ico-returned { background:var(--sla-crit-bg); color:var(--sla-crit-fg); }
+    .act-ico-pending  { background:var(--sb-pending-bg); color:var(--sb-pending-fg); }
+    .act-ico-esc      { background:var(--sla-crit-bg); color:var(--sla-crit-fg); }
+    .act-body  { flex:1; min-width:0; }
+    .act-title { font-size:.8125rem; font-weight:500; color:var(--az-navy); }
+    .act-time  { font-size:.7rem; color:var(--az-muted); margin-top:.1rem; }
+
+    /* ── Checker metrics mini panel ──────────────────── */
+    .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; padding:1.25rem; }
+    .metric-item  { background:#f9fbfc; border:1px solid var(--az-border); border-radius:.625rem; padding:.875rem; }
+    .metric-val   { font-size:1.375rem; font-weight:700; color:var(--az-navy); line-height:1; }
+    .metric-lbl   { font-size:.75rem; color:var(--az-muted); margin-top:.25rem; }
+    .metric-sub   { font-size:.7rem; margin-top:.25rem; }
+
+    /* ── Role switch modal ───────────────────────────── */
+    .rm-overlay   { position:fixed; inset:0; background:var(--glass-overlay); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:2000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s; }
+    .rm-overlay.open { opacity:1; pointer-events:all; }
+    .rm-modal     { background:var(--glass-modal-bg); backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,.65); border-radius:1rem; width:460px; max-width:calc(100vw - 2rem); box-shadow:0 24px 64px rgba(22,48,61,.2),0 0 0 1px rgba(255,255,255,.4); transform:translateY(14px) scale(.97); transition:transform .22s; }
+    .rm-overlay.open .rm-modal { transform:translateY(0) scale(1); }
+    .rm-hdr       { padding:1.25rem 1.5rem 1rem; border-bottom:1px solid var(--az-border); display:flex; align-items:center; justify-content:space-between; }
+    .rm-title     { font-size:1rem; font-weight:700; color:var(--az-navy); }
+    .rm-close     { background:none; border:none; cursor:pointer; color:var(--az-muted); font-size:1.25rem; line-height:1; padding:.25rem; }
+    .rm-body      { padding:1.25rem 1.5rem; }
+    .rm-step      { display:none; }
+    .rm-step.active { display:block; }
+    .rm-step-label { font-size:.75rem; font-weight:600; color:var(--az-muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem; }
+    .rm-roles     { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+    .rm-role-card { border:2px solid var(--az-border); border-radius:.625rem; padding:1rem; cursor:pointer; transition:all .15s; }
+    .rm-role-card:hover { border-color:var(--az-blue); }
+    .rm-role-card.selected  { border-color:var(--az-blue); background:var(--sb-submit-bg); }
+    .rm-role-card.disabled  { opacity:.5; cursor:not-allowed; }
+    .rm-role-icon { width:36px; height:36px; border-radius:.5rem; display:flex; align-items:center; justify-content:center; margin-bottom:.5rem; }
+    .rm-role-name { font-size:.875rem; font-weight:700; color:var(--az-navy); }
+    .rm-role-desc { font-size:.72rem; color:var(--az-muted); margin-top:.125rem; }
+    .rm-badge     { display:inline-block; background:var(--sla-warn-bg); color:var(--sla-warn-fg); font-size:.65rem; font-weight:700; border-radius:20px; padding:.15rem .45rem; margin-left:.375rem; }
+    .rm-field     { margin-bottom:1rem; }
+    .rm-field label { display:block; font-size:.8125rem; font-weight:600; color:var(--az-navy); margin-bottom:.375rem; }
+    .rm-field select,.rm-field input { width:100%; border:1px solid var(--az-border); border-radius:.5rem; padding:.5rem .75rem; font-size:.8125rem; color:var(--az-navy); background:#fff; }
+    .rm-field select:focus,.rm-field input:focus { outline:none; border-color:var(--az-blue); }
+    .rm-footer    { padding:1rem 1.5rem; border-top:1px solid var(--az-border); display:flex; gap:.625rem; justify-content:flex-end; }
+    .btn-rm-cancel { background:none; border:1px solid var(--az-border); border-radius:.5rem; padding:.5rem 1.25rem; font-size:.8125rem; font-weight:500; color:var(--az-navy); cursor:pointer; }
+    .btn-rm-next   { background:var(--az-blue); border:none; border-radius:.5rem; padding:.5rem 1.25rem; font-size:.8125rem; font-weight:600; color:#fff; cursor:pointer; transition:opacity .15s; }
+    .btn-rm-next:hover { opacity:.88; }
+    .rm-success    { text-align:center; padding:1rem 0; }
+    .rm-success-ico { width:56px; height:56px; border-radius:50%; background:var(--sla-safe-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+    .rm-success-ico svg { width:26px; height:26px; color:var(--sla-safe-fg); }
+    .rm-stepper    { display:flex; gap:.25rem; justify-content:center; margin-bottom:1.25rem; }
+    .rm-step-dot   { width:8px; height:8px; border-radius:50%; background:var(--az-border); transition:background .2s; }
+    .rm-step-dot.active { background:var(--az-blue); }
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img">
+      <svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
+        <g id="logo" transform="translate(0.275 -0.84)">
+          <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+          <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+        </g>
+      </svg>
+    </span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us">
+      <img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+        <img src="images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/>
+        <span class="notif-dot" aria-label="5 notifications">5</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          <a href="#" class="notif-clear-all">Clear all</a>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">REF-BP-2026-0412 awaiting your approval — SLA in 2h</div>
+              <div class="notif-time">10 min ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">REF-IT-2026-0411 submitted for review</div>
+              <div class="notif-time">42 min ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">High-value item REF-LC-2026-0407 needs review</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg">REF-LT-2026-0410 escalated by system</div>
+              <div class="notif-time">Yesterday</div>
+            </div>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support" aria-label="Support">
+      <img src="images/icons/call_us.svg" width="18" height="18" alt="support" loading="lazy"/>
+    </button>
+    <button class="hdr-icon-btn" title="Help" aria-label="Help">
+      <img src="images/icons/information.svg" width="18" height="18" alt="help" loading="lazy"/>
+    </button>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English">
+        <span class="fi fi-us"></span> <span class="lang-txt">ENG</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+      </button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <!-- Role pill -->
+    <button class="role-pill role-pill-ck" onclick="openRoleModal()" title="Switch role" aria-label="Current role: Checker. Click to switch.">
+      <span class="rp-dot rp-pulse"></span>
+      Checker Role
+    </button>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Al-Mansouri</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 May, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:17
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.almansouri</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Company:</span><span class="av-detail-val">Al-Noor Trading LLC</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Role:</span><span class="av-detail-val">Checker</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+            My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+    <button class="sb-item active-section" data-label="Dashboard" onclick="location.href='dashboard.html'"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none">
+      <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+      <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfer <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Account Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a></div>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment <span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div>
+    </div>
+    <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+    <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a><a href="cards-settlement-local.html" class="sb-sub3-item">Local Credit Card Settlement</a></div><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+    <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sCheq','cCheq')"><span class="sb-icon"><img src="images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cCheq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCheq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebooks</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a><a href="chequebook-report.html" class="sb-sub-item">Chequebook Report</a></div>
+    <button class="sb-item" data-label="Remittance" onclick="toggleSub('sRem','cRem')"><span class="sb-icon"><img src="images/icons/remittance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Remittance</span><span class="sb-chevron" id="cRem"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sRem" class="sb-sub" style="display:none"><a href="remittance-intra-bank.html" class="sb-sub-item">Intra Bank Remittance Request</a><a href="remittance-local.html" class="sb-sub-item">Local Remittance Request</a><a href="remittance-international.html" class="sb-sub-item">International Remittance Request</a></div>
+    <button class="sb-item" data-label="Sweeping and Pooling" onclick="toggleSub('sSP','cSP')"><span class="sb-icon"><img src="images/icons/sweeping_and_pooling.svg" width="18" height="18" alt=""/></span><span class="sb-label">Sweeping and Pooling</span><span class="sb-chevron" id="cSP"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSP" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Sweeping and Pooling</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+    <button class="sb-item" data-label="Cash Management" onclick="toggleSub('sCM','cCM')"><span class="sb-icon"><img src="images/icons/cash_management.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cash Management</span><span class="sb-chevron" id="cCM"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCM" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Cash Management</a></div>
+    <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><img src="images/icons/trade_finance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-lg-status.html" class="sb-sub-item">LG Status and Details</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a><a href="tf-ob-status.html" class="sb-sub-item">OB Status and Details</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+    <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><img src="images/icons/corporate_end_user.svg" width="18" height="18" alt=""/></span><span class="sb-label">Corporate End User Management Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc">
+      <a href="dashboard.html">Home</a>
+      <span class="sep">&#8250;</span>
+      <a href="#">Corporate Dashboard</a>
+      <span class="sep">&#8250;</span>
+      <span class="cur">Checker View</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar">
+      <h1 class="page-title">Corporate Dashboard</h1>
+      <a href="#" class="btn-switch-role" onclick="openRoleModal();return false;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Switch to Maker
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+    </div>
+
+    <!-- Welcome bar -->
+    <div class="welcome-bar wb-checker">
+      <div class="wb-left">
+        <h2>Good morning, Sara</h2>
+        <p>Wednesday, 27 May 2026 &nbsp;&middot;&nbsp; Al-Noor Trading LLC &nbsp;&middot;&nbsp; <strong style="color:var(--az-green)">12 items</strong> awaiting your review</p>
+      </div>
+      <div class="wb-actions">
+        <a href="#approvalQueue" class="btn-quick btn-qp" style="text-decoration:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Review Queue
+        </a>
+        <button class="btn-quick" onclick="batchSelectAll()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Batch Approve
+        </button>
+        <a href="#" class="btn-quick" style="text-decoration:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Audit Trail
+        </a>
+        <button class="btn-switch" onclick="openRoleModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Switch Role
+        </button>
+      </div>
+    </div>
+
+
+    <!-- KPI Stat cards -->
+    <div class="cg-4">
+
+      <!-- Pending Review -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" style="background:var(--ck-icon-bg)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--ck-color)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="stat-card-badge badge-ck">Action Needed</span>
+        </div>
+        <div class="stat-card-label">Pending Review</div>
+        <div class="stat-card-value" style="color:var(--ck-color)">12</div>
+        <svg class="sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:var(--ck-color)">
+          <defs><linearGradient id="csg-1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,20 L13,15 L26,22 L40,8 L53,14 L66,5 L80,3 L80,30 L0,30 Z" fill="url(#csg-1)"/>
+          <polyline points="0,20 13,15 26,22 40,8 53,14 66,5 80,3" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="spark-trend"><span>+4 since yesterday</span><span style="color:var(--ck-color);font-weight:600">&#8593;</span></div>
+      </div>
+
+      <!-- Approved Today -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" style="background:var(--sla-safe-bg)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--sla-safe-fg)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <span class="stat-card-badge badge-safe">Today</span>
+        </div>
+        <div class="stat-card-label">Approved Today</div>
+        <div class="stat-card-value" style="color:var(--sla-safe-fg)">7</div>
+        <svg class="sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:var(--sla-safe-fg)">
+          <defs><linearGradient id="csg-2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,22 L13,18 L26,14 L40,10 L53,8 L66,5 L80,3 L80,30 L0,30 Z" fill="url(#csg-2)"/>
+          <polyline points="0,22 13,18 26,14 40,10 53,8 66,5 80,3" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="spark-trend"><span>USD 845K cleared</span><span style="color:var(--sla-safe-fg);font-weight:600">&#8593;</span></div>
+      </div>
+
+      <!-- SLA At Risk -->
+      <div class="stat-card stat-card-alert">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" style="background:var(--sla-crit-bg)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--sla-crit-fg)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span class="stat-card-badge badge-crit">Urgent</span>
+        </div>
+        <div class="stat-card-label">SLA At Risk</div>
+        <div class="stat-card-value" style="color:var(--sla-crit-fg)">3</div>
+        <svg class="sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:var(--sla-crit-fg)">
+          <defs><linearGradient id="csg-3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,14 L13,20 L26,8 L40,16 L53,26 L66,18 L80,10 L80,30 L0,30 Z" fill="url(#csg-3)"/>
+          <polyline points="0,14 13,20 26,8 40,16 53,26 66,18 80,10" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="spark-trend"><span>Breach within 2h</span><span style="color:var(--sla-crit-fg);font-weight:700">!</span></div>
+      </div>
+
+      <!-- Returned -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" style="background:var(--sb-returned-bg)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--sb-returned-fg)" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          </div>
+          <span class="stat-card-badge" style="background:var(--sb-returned-bg);color:var(--sb-returned-fg)">This Week</span>
+        </div>
+        <div class="stat-card-label">Returned for Correction</div>
+        <div class="stat-card-value" style="color:var(--sb-returned-fg)">4</div>
+        <svg class="sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:var(--sb-returned-fg)">
+          <defs><linearGradient id="csg-4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,16 L13,22 L26,12 L40,18 L53,8 L66,14 L80,10 L80,30 L0,30 Z" fill="url(#csg-4)"/>
+          <polyline points="0,16 13,22 26,12 40,18 53,8 66,14 80,10" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="spark-trend"><span>2 resubmitted</span></div>
+      </div>
+
+    </div><!-- /cg-4 -->
+
+    <!-- Main 2-column grid -->
+    <div class="cg-main" id="approvalQueue">
+
+      <!-- LEFT: Approval Queue -->
+      <div class="dash-card" style="margin-bottom:0">
+        <div class="dash-card-hdr">
+          <div class="dash-card-title">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Approval Queue
+            <span style="font-size:.75rem;font-weight:400;color:var(--az-muted);margin-left:.25rem">12 pending</span>
+          </div>
+          <a href="#" class="dash-card-link">View all ›</a>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="filterQueue('all',this)">All<span class="ftab-count">12</span></button>
+          <button class="ftab" onclick="filterQueue('high',this)">High Risk<span class="ftab-count">3</span></button>
+          <button class="ftab" onclick="filterQueue('sla',this)">SLA Critical<span class="ftab-count">3</span></button>
+          <button class="ftab" onclick="filterQueue('maker-ahmed',this)">Sarika (3)<span class="ftab-count"></span></button>
+        </div>
+
+        <!-- Batch toolbar -->
+        <div class="batch-toolbar" id="batchToolbar">
+          <span class="batch-sel-count" id="batchCount">0 selected</span>
+          <button class="btn-batch btn-batch-approve" onclick="batchAction('approve')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Approve All
+          </button>
+          <button class="btn-batch btn-batch-return" onclick="batchAction('return')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Return All
+          </button>
+          <button class="btn-batch" onclick="clearSelection()">Clear</button>
+        </div>
+
+        <!-- Queue table -->
+        <div style="overflow-x:auto">
+          <table class="aq-table" id="queueTable">
+            <thead>
+              <tr>
+                <th style="width:32px"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" title="Select all"/></th>
+                <th>Transaction</th>
+                <th>Maker</th>
+                <th>Amount</th>
+                <th>Risk</th>
+                <th>Time in Queue</th>
+                <th>SLA</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- ── Group: Sarika (3 items) ── -->
+              <tr class="aq-group-row" onclick="toggleGroup('grp-ahmed',this)" data-maker="ahmed">
+                <td colspan="8">
+                  <span class="aq-group-chevron">&#9660;</span>
+                  &nbsp; Sarika &nbsp;
+                  <span style="font-weight:400;color:var(--az-muted)">3 items &nbsp;&middot;&nbsp;</span>
+                  <span style="color:var(--sla-safe-fg)">Approval rate: 94%</span>
+                  &nbsp;
+                  <span class="risk-badge risk-low" style="font-size:.65rem">Trusted Maker</span>
+                  &nbsp;
+                  <button class="btn-batch btn-batch-approve" style="padding:.15rem .6rem;font-size:.7rem" onclick="event.stopPropagation();batchApproveGroup('grp-ahmed')">Approve Group</button>
+                </td>
+              </tr>
+              <tr data-group="grp-ahmed" data-status="pending" data-risk="high" data-sla="crit" data-maker="maker-ahmed" class="row-crit">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">Bulk Payment – May Salaries</div>
+                  <div class="txn-ref">REF-BP-2026-0412</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Sarika</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:94%"></span></span>
+                      94% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">USD 287,400</td>
+                <td><span class="risk-badge risk-hi">High</span></td>
+                <td><span class="tiq tiq-crit">4h 12m</span></td>
+                <td><span class="sla-badge sla-crit">1h 52m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-group="grp-ahmed" data-status="pending" data-risk="med" data-sla="warn" data-maker="maker-ahmed">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">International Transfer</div>
+                  <div class="txn-ref">REF-IT-2026-0411</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Sarika</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:94%"></span></span>
+                      94% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">EUR 45,000</td>
+                <td><span class="risk-badge risk-med">Medium</span></td>
+                <td><span class="tiq tiq-warn">2h 35m</span></td>
+                <td><span class="sla-badge sla-warn">3h 25m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-group="grp-ahmed" data-status="pending" data-risk="low" data-sla="safe" data-maker="maker-ahmed">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">Internal Transfer</div>
+                  <div class="txn-ref">REF-IN-2026-0409</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Sarika</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:94%"></span></span>
+                      94% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">AED 75,000</td>
+                <td><span class="risk-badge risk-low">Low</span></td>
+                <td><span class="tiq">4h 08m</span></td>
+                <td><span class="sla-badge sla-safe">6h 52m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ── Group: Fatima Hassan (2 items) ── -->
+              <tr class="aq-group-row" onclick="toggleGroup('grp-fatima',this)" data-maker="other">
+                <td colspan="8">
+                  <span class="aq-group-chevron">&#9660;</span>
+                  &nbsp; Fatima Hassan &nbsp;
+                  <span style="font-weight:400;color:var(--az-muted)">2 items &nbsp;&middot;&nbsp;</span>
+                  <span style="color:var(--sla-warn-fg)">Approval rate: 78%</span>
+                  &nbsp;
+                  <span class="risk-badge risk-med" style="font-size:.65rem">Moderate</span>
+                </td>
+              </tr>
+              <tr data-group="grp-fatima" data-status="pending" data-risk="high" data-sla="crit" data-maker="other" class="row-crit">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">LC Amendment – Import</div>
+                  <div class="txn-ref">REF-LC-2026-0407</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Fatima Hassan</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:78%;background:var(--sla-warn-fg)"></span></span>
+                      78% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">USD 500,000</td>
+                <td><span class="risk-badge risk-hi">High</span></td>
+                <td><span class="tiq tiq-crit">5h 40m</span></td>
+                <td><span class="sla-badge sla-crit">0h 48m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-group="grp-fatima" data-status="pending" data-risk="med" data-sla="warn" data-maker="other" class="row-warn">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">Local Transfer – Vendor</div>
+                  <div class="txn-ref">REF-LT-2026-0410</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Fatima Hassan</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:78%;background:var(--sla-warn-fg)"></span></span>
+                      78% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">AED 12,500</td>
+                <td><span class="risk-badge risk-med">Medium</span></td>
+                <td><span class="tiq tiq-warn">4h 20m</span></td>
+                <td><span class="sla-badge sla-warn">2h 10m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ── Standalone items ── -->
+              <tr class="aq-group-row" onclick="toggleGroup('grp-others',this)" data-maker="other">
+                <td colspan="8">
+                  <span class="aq-group-chevron">&#9660;</span>
+                  &nbsp; Other Makers &nbsp;
+                  <span style="font-weight:400;color:var(--az-muted)">7 items</span>
+                </td>
+              </tr>
+              <tr data-group="grp-others" data-status="pending" data-risk="low" data-sla="safe" data-maker="other">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">Scheduled Int'l Transfer</div>
+                  <div class="txn-ref">REF-ST-2026-0406</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Khalid Al-Rashid</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:88%"></span></span>
+                      88% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">USD 28,000</td>
+                <td><span class="risk-badge risk-low">Low</span></td>
+                <td><span class="tiq">1h 15m</span></td>
+                <td><span class="sla-badge sla-safe">7h 45m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-group="grp-others" data-status="pending" data-risk="low" data-sla="safe" data-maker="other">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">Own Account Transfer</div>
+                  <div class="txn-ref">REF-OA-2026-0403</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Nour Al-Ibrahim</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:91%"></span></span>
+                      91% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">AED 200,000</td>
+                <td><span class="risk-badge risk-low">Low</span></td>
+                <td><span class="tiq">0h 45m</span></td>
+                <td><span class="sla-badge sla-safe">8h 15m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-group="grp-others" data-status="pending" data-risk="med" data-sla="warn" data-maker="other" class="row-warn">
+                <td><input type="checkbox" class="row-check" onchange="updateBatchCount()"/></td>
+                <td>
+                  <div class="txn-name">Letter of Guarantee</div>
+                  <div class="txn-ref">REF-LG-2026-0401</div>
+                </td>
+                <td>
+                  <div class="maker-rep">
+                    <span class="maker-name">Omar Al-Suwaidi</span>
+                    <span class="maker-rate">
+                      <span class="maker-rate-bar"><span class="maker-rate-fill" style="width:72%;background:var(--sla-warn-fg)"></span></span>
+                      72% approval rate
+                    </span>
+                  </div>
+                </td>
+                <td style="font-weight:600">USD 150,000</td>
+                <td><span class="risk-badge risk-med">Medium</span></td>
+                <td><span class="tiq tiq-warn">3h 55m</span></td>
+                <td><span class="sla-badge sla-warn">2h 05m left</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button class="btn-ico btn-ico-approve" title="Approve" aria-label="Approve"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+                    <button class="btn-ico btn-ico-review"  title="View / Review" aria-label="View / Review"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-ico btn-ico-return"  title="Return for correction" aria-label="Return for correction"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <!-- Legend -->
+        <div class="tbl-legend" role="note" aria-label="Action button legend">
+          <span style="font-size:.72rem;font-weight:600;color:var(--az-navy);margin-right:.25rem">Legend:</span>
+          <span class="tbl-legend-item">
+            <span class="tbl-legend-ico" style="border-color:#a8e6c8;background:var(--sla-safe-bg);color:var(--sla-safe-fg)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </span>
+            Approve
+          </span>
+          <span class="tbl-legend-item">
+            <span class="tbl-legend-ico" style="border-color:var(--az-border);background:#f0f4f6;color:var(--az-blue)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+            View / Review
+          </span>
+          <span class="tbl-legend-item">
+            <span class="tbl-legend-ico" style="border-color:#f5aaaa;background:var(--sla-crit-bg);color:var(--sla-crit-fg)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            </span>
+            Return for correction
+          </span>
+        </div>
+      </div><!-- /queue card -->
+
+      <!-- RIGHT column -->
+      <div style="display:flex;flex-direction:column;gap:1rem">
+
+        <!-- Smart Insights panel -->
+        <div class="dash-card" style="margin-bottom:0">
+          <div class="si-panel-hdr">
+            <div class="si-panel-label">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Smart Insights
+            </div>
+            <span class="si-count">4 tips</span>
+          </div>
+          <div class="si-list">
+            <div class="si-item">
+              <div class="si-ico si-ico-info">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+              <div class="si-body">
+                <div class="si-title">3 items from Sarika</div>
+                <div class="si-sub">94% approval rate — consider batch approve</div>
+              </div>
+            </div>
+            <div class="si-item">
+              <div class="si-ico si-ico-crit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="si-body">
+                <div class="si-title">REF-BP-2026-0412 SLA in 1h 52m</div>
+                <div class="si-sub">Bulk salary — 156 employees at risk</div>
+              </div>
+            </div>
+            <div class="si-item">
+              <div class="si-ico si-ico-ok">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              </div>
+              <div class="si-body">
+                <div class="si-title">Your avg review time: 22 min</div>
+                <div class="si-sub">35% faster than team average</div>
+              </div>
+            </div>
+            <div class="si-item">
+              <div class="si-ico si-ico-warn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="si-body">
+                <div class="si-title">2 items idle &gt;4h — escalation risk</div>
+                <div class="si-sub">REF-LT-0410 &amp; REF-IN-0409</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLA Watch -->
+        <div class="dash-card" style="margin-bottom:0">
+          <div class="dash-card-hdr">
+            <div class="dash-card-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              SLA Watch
+            </div>
+            <span style="font-size:.75rem;color:var(--sla-crit-fg);font-weight:600">3 at risk</span>
+          </div>
+
+          <div class="sla-item">
+            <div class="sla-dot sla-dot-crit"></div>
+            <div class="sla-info">
+              <div class="sla-ref">REF-LC-2026-0407</div>
+              <div class="sla-sub">LC Amendment · Fatima Hassan · USD 500K</div>
+            </div>
+            <div class="sla-time sla-time-crit">0:48 left</div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-dot sla-dot-crit"></div>
+            <div class="sla-info">
+              <div class="sla-ref">REF-BP-2026-0412</div>
+              <div class="sla-sub">Bulk Salary · Sarika · USD 287K</div>
+            </div>
+            <div class="sla-time sla-time-crit">1:52 left</div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-dot sla-dot-warn"></div>
+            <div class="sla-info">
+              <div class="sla-ref">REF-LT-2026-0410</div>
+              <div class="sla-sub">Local Transfer · Fatima Hassan · AED 12.5K</div>
+            </div>
+            <div class="sla-time sla-time-warn">2:10 left</div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-dot sla-dot-warn"></div>
+            <div class="sla-info">
+              <div class="sla-ref">REF-LG-2026-0401</div>
+              <div class="sla-sub">Letter of Guarantee · Omar Al-Suwaidi</div>
+            </div>
+            <div class="sla-time sla-time-warn">2:05 left</div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-dot sla-dot-safe"></div>
+            <div class="sla-info">
+              <div class="sla-ref">REF-IT-2026-0411</div>
+              <div class="sla-sub">Int'l Transfer · Sarika · EUR 45K</div>
+            </div>
+            <div class="sla-time sla-time-safe">3:25 left</div>
+          </div>
+        </div>
+
+        <!-- Checker Metrics -->
+        <div class="dash-card" style="margin-bottom:0">
+          <div class="dash-card-hdr">
+            <div class="dash-card-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              My Performance
+            </div>
+            <a href="#" class="dash-card-link">Full report ›</a>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-val" style="color:var(--sla-safe-fg)">97%</div>
+              <div class="metric-lbl">SLA compliance</div>
+              <div class="metric-sub" style="color:var(--sla-safe-fg)">&#8593; vs 91% last month</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-val" style="color:var(--ck-color)">22m</div>
+              <div class="metric-lbl">Avg review time</div>
+              <div class="metric-sub" style="color:var(--sla-safe-fg)">&#8595; 35% faster than team</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-val">134</div>
+              <div class="metric-lbl">Approved this month</div>
+              <div class="metric-sub" style="color:var(--az-muted)">USD 4.2M total</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-val" style="color:var(--sb-returned-fg)">12</div>
+              <div class="metric-lbl">Returned this month</div>
+              <div class="metric-sub" style="color:var(--az-muted)">8.2% return rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity feed -->
+        <div class="dash-card" style="margin-bottom:0">
+          <div class="dash-card-hdr">
+            <div class="dash-card-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Recent Activity
+            </div>
+          </div>
+          <div style="padding:.75rem 1.25rem 1rem">
+
+            <div class="act-item">
+              <div class="act-ico act-ico-approved">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="act-body">
+                <div class="act-title">REF-OA-2026-0402 approved by you</div>
+                <div class="act-time">Today, 08:54 AM</div>
+              </div>
+            </div>
+
+            <div class="act-item">
+              <div class="act-ico act-ico-approved">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="act-body">
+                <div class="act-title">REF-ST-2026-0400 approved by you</div>
+                <div class="act-time">Today, 08:31 AM</div>
+              </div>
+            </div>
+
+            <div class="act-item">
+              <div class="act-ico act-ico-returned">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+              </div>
+              <div class="act-body">
+                <div class="act-title">REF-LT-2026-0398 returned — missing docs</div>
+                <div class="act-time">Yesterday, 04:15 PM</div>
+              </div>
+            </div>
+
+            <div class="act-item">
+              <div class="act-ico act-ico-pending">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+              <div class="act-body">
+                <div class="act-title">REF-BP-2026-0412 submitted by Sarika</div>
+                <div class="act-time">Today, 09:15 AM</div>
+              </div>
+            </div>
+
+            <div class="act-item">
+              <div class="act-ico act-ico-esc">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+              </div>
+              <div class="act-body">
+                <div class="act-title">REF-LC-2026-0407 — SLA alert triggered</div>
+                <div class="act-time">Today, 09:02 AM</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /right column -->
+    </div><!-- /cg-main -->
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="padding:.875rem 1.5rem;border-top:1px solid var(--az-border);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--az-muted);">
+    <span>&copy; 2026 Azentio Software. All rights reserved.</span>
+    <span>Al-Noor Trading LLC &nbsp;&middot;&nbsp; Corporate Internet Banking &nbsp;&middot;&nbsp; Checker Session</span>
+  </footer>
+</div>
+
+<!-- ████ ROLE SWITCH MODAL ████ -->
+<div class="rm-overlay" id="roleModal" role="dialog" aria-modal="true" aria-label="Switch Role">
+  <div class="rm-modal">
+    <div class="rm-hdr">
+      <div class="rm-title">Switch Role</div>
+      <button class="rm-close" onclick="closeRoleModal()" aria-label="Close">&times;</button>
+    </div>
+    <div style="padding:.75rem 1.5rem 0">
+      <div class="rm-stepper">
+        <div class="rm-step-dot active" id="rdot1"></div>
+        <div class="rm-step-dot" id="rdot2"></div>
+        <div class="rm-step-dot" id="rdot3"></div>
+      </div>
+    </div>
+    <div class="rm-body">
+
+      <!-- Step 1 -->
+      <div class="rm-step active" id="rmStep1">
+        <div class="rm-step-label">Step 1 of 3 — Select Role</div>
+        <div class="rm-roles">
+          <!-- Maker (selectable) -->
+          <div class="rm-role-card" id="rmCardMaker" onclick="selectRole('maker')">
+            <div class="rm-role-icon" style="background:var(--mk-bg)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mk-color)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div class="rm-role-name">Maker</div>
+            <div class="rm-role-desc">Create &amp; submit transactions</div>
+          </div>
+          <!-- Checker (current, disabled) -->
+          <div class="rm-role-card disabled" id="rmCardChecker">
+            <div class="rm-role-icon" style="background:var(--ck-bg)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ck-color)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            <div class="rm-role-name">Checker</div>
+            <div class="rm-role-desc">Review &amp; approve transactions<br><span style="font-size:.7rem;color:var(--ck-color);font-weight:600">Current role</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="rm-step" id="rmStep2">
+        <div class="rm-step-label">Step 2 of 3 — Confirm Switch</div>
+        <div class="rm-field">
+          <label for="rmReason">Reason for switching role</label>
+          <select id="rmReason">
+            <option value="">Select a reason…</option>
+            <option>Maker role required for new transaction</option>
+            <option>Authorised dual-role access</option>
+            <option>Delegated maker duty</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="rm-field">
+          <label for="rmPin">Enter your PIN to confirm</label>
+          <input type="password" id="rmPin" maxlength="6" placeholder="••••••" autocomplete="off"/>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="rm-step" id="rmStep3">
+        <div class="rm-success">
+          <div class="rm-success-ico">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--sla-safe-fg)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div style="font-size:1rem;font-weight:700;color:var(--az-navy);margin-bottom:.375rem">Role switched to Maker</div>
+          <div style="font-size:.8125rem;color:var(--az-muted)">Redirecting to Maker Dashboard…</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="rm-footer" id="rmFooter">
+      <button class="btn-rm-cancel" onclick="closeRoleModal()">Cancel</button>
+      <button class="btn-rm-next" id="rmNextBtn" onclick="rmNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+  /* ── Group collapse/expand ──────────────────────── */
+  function toggleGroup(groupId, headerRow) {
+    var rows = document.querySelectorAll('[data-group="' + groupId + '"]');
+    var collapsed = headerRow.classList.toggle('collapsed');
+    rows.forEach(function(r) { r.style.display = collapsed ? 'none' : ''; });
+  }
+
+  /* ── Filter queue ───────────────────────────────── */
+  function filterQueue(type, btn) {
+    var rows = document.querySelectorAll('#queueTable tbody tr:not(.aq-group-row)');
+    var groups = document.querySelectorAll('.aq-group-row');
+    rows.forEach(function(r) {
+      var show = false;
+      if (type === 'all')            show = true;
+      else if (type === 'high')      show = r.dataset.risk === 'high';
+      else if (type === 'sla')       show = r.dataset.sla === 'crit' || r.dataset.sla === 'warn';
+      else if (type === 'maker-ahmed') show = r.dataset.maker === 'maker-ahmed';
+      r.style.display = show ? '' : 'none';
+    });
+    // Show/hide group headers based on visible rows
+    groups.forEach(function(g) {
+      var grpId = null;
+      var visibleRows = 0;
+      // find associated rows
+      var nextRow = g.nextElementSibling;
+      while (nextRow && !nextRow.classList.contains('aq-group-row')) {
+        var grp = nextRow.getAttribute('data-group');
+        if (nextRow.style.display !== 'none') visibleRows++;
+        nextRow = nextRow.nextElementSibling;
+      }
+      g.style.display = (type === 'all' || visibleRows > 0) ? '' : 'none';
+    });
+    if (btn) {
+      document.querySelectorAll('.ftab').forEach(function(t) { t.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+  }
+
+  /* ── Checkbox batch handling ────────────────────── */
+  function updateBatchCount() {
+    var checked = document.querySelectorAll('.row-check:checked').length;
+    document.getElementById('batchCount').textContent = checked + ' selected';
+    document.getElementById('batchToolbar').classList.toggle('show', checked > 0);
+  }
+
+  function toggleSelectAll(cb) {
+    document.querySelectorAll('.row-check').forEach(function(c) {
+      if (c.closest('tr').style.display !== 'none') c.checked = cb.checked;
+    });
+    updateBatchCount();
+  }
+
+  function clearSelection() {
+    document.querySelectorAll('.row-check, #selectAll').forEach(function(c) { c.checked = false; });
+    updateBatchCount();
+  }
+
+  function batchSelectAll() {
+    document.querySelectorAll('.row-check').forEach(function(c) { c.checked = true; });
+    document.getElementById('selectAll').checked = true;
+    updateBatchCount();
+    document.getElementById('approvalQueue').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function batchApproveGroup(groupId) {
+    document.querySelectorAll('[data-group="' + groupId + '"] .row-check').forEach(function(c) { c.checked = true; });
+    updateBatchCount();
+  }
+
+  function batchAction(action) {
+    var n = document.querySelectorAll('.row-check:checked').length;
+    if (n === 0) return;
+    var msg = action === 'approve'
+      ? n + ' item(s) approved successfully.'
+      : n + ' item(s) returned for correction.';
+    alert(msg);
+    clearSelection();
+  }
+
+  /* ── Role switch modal ──────────────────────────── */
+  var rmStep = 1;
+  var selRole = null;
+
+  function openRoleModal() {
+    rmStep = 1; selRole = null;
+    document.getElementById('rmCardMaker').classList.remove('selected');
+    ['rmStep1','rmStep2','rmStep3'].forEach(function(id,i) {
+      document.getElementById(id).classList.toggle('active', i === 0);
+    });
+    ['rdot1','rdot2','rdot3'].forEach(function(id,i) {
+      document.getElementById(id).classList.toggle('active', i === 0);
+    });
+    document.getElementById('rmNextBtn').textContent = 'Next';
+    document.getElementById('rmFooter').style.display = 'flex';
+    var r = document.getElementById('rmReason'); if (r) r.value = '';
+    var p = document.getElementById('rmPin');    if (p) p.value = '';
+    document.getElementById('roleModal').classList.add('open');
+  }
+
+  function closeRoleModal() {
+    document.getElementById('roleModal').classList.remove('open');
+  }
+
+  function selectRole(r) {
+    selRole = r;
+    document.querySelectorAll('.rm-role-card:not(.disabled)').forEach(function(c) { c.classList.remove('selected'); });
+    document.getElementById('rmCardMaker').classList.add('selected');
+  }
+
+  function rmNext() {
+    if (rmStep === 1) {
+      if (!selRole) { alert('Please select a role to switch to.'); return; }
+      rmStep = 2;
+      document.getElementById('rmStep1').classList.remove('active');
+      document.getElementById('rmStep2').classList.add('active');
+      document.getElementById('rdot1').classList.remove('active');
+      document.getElementById('rdot2').classList.add('active');
+      document.getElementById('rmNextBtn').textContent = 'Confirm Switch';
+    } else if (rmStep === 2) {
+      var reason = document.getElementById('rmReason').value;
+      var pin    = document.getElementById('rmPin').value;
+      if (!reason) { alert('Please select a reason for switching.'); return; }
+      if (!pin || pin.length < 4) { alert('Please enter your PIN (min 4 digits).'); return; }
+      rmStep = 3;
+      document.getElementById('rmStep2').classList.remove('active');
+      document.getElementById('rmStep3').classList.add('active');
+      document.getElementById('rdot2').classList.remove('active');
+      document.getElementById('rdot3').classList.add('active');
+      document.getElementById('rmFooter').style.display = 'none';
+      setTimeout(function() { window.location.href = 'corporate-dashboard-maker.html'; }, 2000);
+    }
+  }
+
+  document.getElementById('roleModal').addEventListener('click', function(e) {
+    if (e.target === this) closeRoleModal();
+  });
+</script>
+</body>
+</html>
