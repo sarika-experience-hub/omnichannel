@@ -119,7 +119,14 @@
     </div></div>
 </header>
 <aside class="app-sidebar" id="sidebar">
-  <nav class="sb-nav">
+    <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+<nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
   <button class="sb-item" data-label="Dashboard"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
@@ -159,7 +166,7 @@
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
-    <div class="az-bc"><a href="dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><a href="#">Bulk Payment</a><span class="sep">&#8250;</span><a href="#">Bulk Payment List</a><span class="sep">&#8250;</span><span class="cur">Report Details</span></div>
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><a href="#">Bulk Payment</a><span class="sep">&#8250;</span><a href="#">Bulk Payment List</a><span class="sep">&#8250;</span><span class="cur">Report Details</span></div>
     <h1 class="page-title mb-4">Report Details</h1>
     <div class="content-card mb-4">
       <div class="bulk-row">

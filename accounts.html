@@ -18,6 +18,29 @@
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ── Accounts UX improvements ── */
+.acct-summary-strip{display:flex;flex-wrap:nowrap;gap:.875rem;align-items:center;padding:.5rem .875rem;background:linear-gradient(135deg,#f6f9fc 0%,#eef4f9 100%);border-radius:.625rem;margin-bottom:.75rem;border:1px solid var(--az-border,#e2e8ec);overflow:hidden;}
+.acct-sum-item{display:flex;flex-direction:column;gap:.05rem;flex-shrink:0;}
+.acct-sum-lbl{font-size:.65rem;color:var(--az-muted,#707070);text-transform:uppercase;letter-spacing:.05em;font-weight:500;white-space:nowrap;}
+.acct-sum-val{font-size:.95rem;font-weight:700;color:var(--az-navy,#16303d);line-height:1.2;white-space:nowrap;}
+.acct-sum-sep{width:1px;height:1.75rem;background:var(--az-border,#e2e8ec);flex-shrink:0;}
+.acct-filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;padding-left:.875rem;}
+.acct-filter-btn{font-size:.75rem;padding:.3rem .875rem;border-radius:20px;border:1px solid var(--az-border,#e2e8ec);background:#fff;color:var(--az-navy,#16303d);cursor:pointer;font-family:'Roboto',sans-serif;font-weight:500;transition:all .15s;}
+.acct-filter-btn.active{background:var(--az-navy,#16303d);color:#fff;border-color:var(--az-navy,#16303d);}
+.acct-filter-btn:hover:not(.active){background:#f0f4f8;}
+.acct-row-dimmed{opacity:.5;}
+.copy-iban-btn{background:none;border:none;padding:0 0 0 5px;cursor:pointer;color:var(--az-muted,#707070);vertical-align:middle;line-height:1;position:relative;}
+.copy-iban-btn:hover{color:var(--az-green,#2ed88e);}
+.copy-iban-btn .material-icons{font-size:13px;vertical-align:middle;}
+.copy-tip{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--az-navy,#16303d);color:#fff;font-size:.65rem;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;font-family:'Roboto',sans-serif;}
+.bal-toggle-btn{background:none;border:1.5px solid var(--az-border,#e2e8ec);border-radius:.375rem;cursor:pointer;color:var(--az-muted,#707070);padding:0 .625rem;height:32px;box-sizing:border-box;display:inline-flex;align-items:center;gap:.25rem;font-size:.75rem;font-family:'Roboto',sans-serif;line-height:1;}
+.bal-toggle-btn:hover{color:var(--az-navy,#16303d);border-color:var(--az-navy,#16303d);}
+.bal-toggle-btn .material-icons{font-size:18px;}
+.btn-open-account{background:var(--az-navy,#16303d)!important;color:#fff!important;border:none;border-radius:.5rem;padding:.5rem 1.25rem;font-size:.8125rem;font-weight:600;display:inline-flex;align-items:center;gap:.4rem;text-decoration:none!important;transition:background .2s;letter-spacing:.01em;}
+.btn-open-account:hover{background:#1f4a5e!important;}
+.btn-open-account .material-icons{font-size:17px;}
+</style>
 </head>
 <body>
 <!-- ████ HEADER ████ -->
@@ -148,7 +171,14 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <nav class="sb-nav">
+    <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+<nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
   <button class="sb-item" data-label="Dashboard"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
@@ -191,11 +221,11 @@
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
 <div class="az-bc">
-  <a href="dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Accounts</span>
+  <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Accounts</span>
 </div>
 <div class="page-top-bar">
   <h1 class="page-title">My Accounts</h1>
-  <a href="general-account-opening.html" class="btn-open-account"><img src="images/icons/accounts.svg" width="16" height="16" alt="accounts" loading="lazy"/> Open New General Account</a>
+  <a href="general-account-opening.html" class="btn-open-account"><span class="material-icons">add_circle_outline</span> Open New General Account</a>
 </div>
 <div class="content-card">
   <div class="tabs-header-row">
@@ -204,20 +234,36 @@
       <button class="az-tab" id="tabTermBtn" onclick="switchTab('term')" role="tab" aria-selected="false" aria-controls="tabTerm">Term Deposit Accounts</button>
     </div>
     <div class="d-flex align-items-center gap-2">
+      <button class="bal-toggle-btn" id="balToggleBtn" onclick="toggleBalVisibility()" title="Toggle balance visibility" aria-label="Toggle balance visibility"><span class="material-icons">visibility</span> Balance</button>
       <div class="view-toggle" id="genViewToggle">
-        <button class="view-btn active" id="vCard" onclick="switchView('card')" title="Card View" aria-label="Card view"><img src="images/icons/cards_view.svg" width="18" height="18" alt="cards_view" loading="lazy"/></button>
-        <button class="view-btn" id="vTable" onclick="switchView('table')" title="Table View" aria-label="Table view"><img src="images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/></button>
+        <button class="view-btn active" id="vCard" onclick="switchView('card')" title="Card View" aria-label="Card view"><span class="material-icons" style="font-size:18px;line-height:1;vertical-align:middle;color:#5f6368">grid_view</span></button>
+        <button class="view-btn" id="vTable" onclick="switchView('table')" title="Table View" aria-label="Table view"><span class="material-icons" style="font-size:18px;line-height:1;vertical-align:middle;color:#5f6368">table_rows</span></button>
       </div>
       <div class="view-toggle hidden" id="termViewToggle">
-        <button class="view-btn active" id="vTermCard" onclick="switchTermView('card')" title="Card View" aria-label="Card view"><img src="images/icons/cards_view.svg" width="18" height="18" alt="cards_view" loading="lazy"/></button>
-        <button class="view-btn" id="vTermTable" onclick="switchTermView('table')" title="Table View" aria-label="Table view"><img src="images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/></button>
+        <button class="view-btn active" id="vTermCard" onclick="switchTermView('card')" title="Card View" aria-label="Card view"><span class="material-icons" style="font-size:18px;line-height:1;vertical-align:middle;color:#5f6368">grid_view</span></button>
+        <button class="view-btn" id="vTermTable" onclick="switchTermView('table')" title="Table View" aria-label="Table view"><span class="material-icons" style="font-size:18px;line-height:1;vertical-align:middle;color:#5f6368">table_rows</span></button>
       </div>
     </div>
   </div>
   <!-- General Accounts Tab -->
   <div id="tabGeneral" role="tabpanel" aria-labelledby="tabGenBtn">
     <div class="info-bar"><img src="images/icons/information.svg" width="16" height="16" alt="information" loading="lazy"/> General Accounts List</div>
-    <div id="cardView"><div class="acct-row" id="accRow_gc0">
+    <div class="acct-summary-strip">
+      <div class="acct-sum-item"><span class="acct-sum-lbl">Total Accounts</span><span class="acct-sum-val">5</span></div>
+      <div class="acct-sum-sep"></div>
+      <div class="acct-sum-item"><span class="acct-sum-lbl">Active</span><span class="acct-sum-val" style="color:#15803d">1</span></div>
+      <div class="acct-sum-sep"></div>
+      <div class="acct-sum-item"><span class="acct-sum-lbl">Inactive</span><span class="acct-sum-val" style="color:#707070">1</span></div>
+      <div class="acct-sum-sep"></div>
+      <div class="acct-sum-item"><span class="acct-sum-lbl">Others</span><span class="acct-sum-val" style="color:#b45309">3</span></div>
+    </div>
+    <div class="acct-filter-bar">
+      <button class="acct-filter-btn active" onclick="filterAccounts('all',this)">All (5)</button>
+      <button class="acct-filter-btn" onclick="filterAccounts('active',this)">Active (1)</button>
+      <button class="acct-filter-btn" onclick="filterAccounts('inactive',this)">Inactive (1)</button>
+      <button class="acct-filter-btn" onclick="filterAccounts('others',this)">Others (3)</button>
+    </div>
+    <div id="cardView"><div class="acct-row" id="accRow_gc0" data-status="active">
   <div class="acct-name-col">
     <div class="acct-name">
       <span id="accName_gc0" class="text-truncate">Current Account</span>
@@ -226,7 +272,7 @@
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
   </div>
   <span class="badge-s s-active">Active</span>
-  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000</div></div>
+  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8000')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
   
   <div class="acct-field"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
@@ -257,7 +303,7 @@
 </div>
   </div>
 </div>
-<div class="acct-row" id="accRow_gc1">
+<div class="acct-row acct-row-dimmed" id="accRow_gc1" data-status="inactive">
   <div class="acct-name-col">
     <div class="acct-name">
       <span id="accName_gc1" class="text-truncate">Savings Account</span>
@@ -266,7 +312,7 @@
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
   </div>
   <span class="badge-s s-inactive">Inactive</span>
-  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000</div></div>
+  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8000')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
   
   <div class="acct-field"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
@@ -297,7 +343,7 @@
 </div>
   </div>
 </div>
-<div class="acct-row" id="accRow_gc2">
+<div class="acct-row" id="accRow_gc2" data-status="approved">
   <div class="acct-name-col">
     <div class="acct-name">
       <span id="accName_gc2" class="text-truncate">Salary Account</span>
@@ -306,7 +352,7 @@
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
   </div>
   <span class="badge-s s-approved">Approved</span>
-  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000</div></div>
+  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8000')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
   
   <div class="acct-field"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
@@ -337,7 +383,7 @@
 </div>
   </div>
 </div>
-<div class="acct-row" id="accRow_gc3">
+<div class="acct-row" id="accRow_gc3" data-status="submitted">
   <div class="acct-name-col">
     <div class="acct-name">
       <span id="accName_gc3" class="text-truncate">Joint Account</span>
@@ -346,7 +392,7 @@
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
   </div>
   <span class="badge-s s-pending">Submitted</span>
-  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000</div></div>
+  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8000')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
   
   <div class="acct-field"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
@@ -377,7 +423,7 @@
 </div>
   </div>
 </div>
-<div class="acct-row" id="accRow_gc4">
+<div class="acct-row acct-row-dimmed" id="accRow_gc4" data-status="cancelled">
   <div class="acct-name-col">
     <div class="acct-name">
       <span id="accName_gc4" class="text-truncate">Foreign Currency</span>
@@ -386,7 +432,7 @@
     <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
   </div>
   <span class="badge-s s-cancelled">Cancelled</span>
-  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000</div></div>
+  <div class="acct-field"><div class="lbl">Account Number</div><div class="val">IBAN8000 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8000')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
   
   <div class="acct-field"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
   <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
@@ -427,7 +473,7 @@
 </tr></thead>
 <tbody>
 <tr>
-  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">Current Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-active">Active</span></td>
   <td>IBAN8000</td><td>Current Account</td><td>0.00 USD</td><td>0.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -455,7 +501,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">Savings Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-inactive">Inactive</span></td>
   <td>IBAN8001</td><td>Savings Account</td><td>1,250.00 USD</td><td>1,250.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -483,7 +529,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">Salary Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-approved">Approved</span></td>
   <td>IBAN8002</td><td>Current Account</td><td>3,800.00 USD</td><td>3,600.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -511,7 +557,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">Joint Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-pending">Submitted</span></td>
   <td>IBAN8003</td><td>Current Account</td><td>0.00 USD</td><td>0.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -539,7 +585,7 @@
 </div></div></td>
 </tr>
 <tr>
-  <td><div class="td-name">SARIKA DESAI</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><div class="td-name">Foreign Currency</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
   <td><span class="badge-s s-cancelled">Cancelled</span></td>
   <td>IBAN8004</td><td>Savings Account</td><td>0.00 USD</td><td>0.00 USD</td>
   <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
@@ -862,6 +908,66 @@
   </div>
 </div>
 
+<!-- ████ ACCOUNTS UX JS ████ -->
+<script>
+/* ── Balance visibility toggle (star mask) ── */
+function toggleBalVisibility(){
+  var balVals=[];
+  document.querySelectorAll('.acct-field').forEach(function(f){
+    var lbl=f.querySelector('.lbl');
+    if(lbl&&(lbl.textContent.includes('Balance')||lbl.textContent.includes('Principal'))){
+      var val=f.querySelector('.val');
+      if(val) balVals.push(val);
+    }
+  });
+  var isHiding=balVals.length&&!balVals[0].hasAttribute('data-orig');
+  balVals.forEach(function(val){
+    if(isHiding){
+      val.setAttribute('data-orig',val.textContent.trim());
+      val.textContent='★ ★ ★ ★ ★';
+    } else {
+      val.textContent=val.getAttribute('data-orig')||val.textContent;
+      val.removeAttribute('data-orig');
+    }
+  });
+  var btn=document.getElementById('balToggleBtn');
+  if(btn){var ic=btn.querySelector('.material-icons');
+    if(ic) ic.textContent=isHiding?'visibility_off':'visibility';}
+}
+
+/* ── Status filter chips (card view) ── */
+function filterAccounts(type,btn){
+  document.querySelectorAll('.acct-filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('#cardView .acct-row').forEach(function(row){
+    var st=row.getAttribute('data-status')||'';
+    var show=false;
+    if(type==='all') show=true;
+    else if(type==='active') show=(st==='active');
+    else if(type==='inactive') show=(st==='inactive');
+    else if(type==='others') show=(st!=='active'&&st!=='inactive');
+    row.style.display=show?'':'none';
+  });
+}
+
+/* ── Copy IBAN ── */
+function copyIBAN(btn,iban){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(iban).then(function(){showCopyTip(btn);});
+  } else {
+    var t=document.createElement('textarea');
+    t.value=iban;document.body.appendChild(t);t.select();
+    document.execCommand('copy');document.body.removeChild(t);
+    showCopyTip(btn);
+  }
+}
+function showCopyTip(btn){
+  var tip=btn.querySelector('.copy-tip');
+  if(!tip) return;
+  tip.style.opacity='1';
+  setTimeout(function(){tip.style.opacity='0';},1400);
+}
+</script>
 <!-- Bootstrap JS (local) -->
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/app.js"></script>
