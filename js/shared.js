@@ -144,3 +144,75 @@
   });
 
 })();
+
+/* ── Sidebar search ── */
+function sbFilter(val) {
+  var q = val.trim().toLowerCase();
+  var clear = document.getElementById('sbSearchClear');
+  if (clear) clear.style.display = q ? 'flex' : 'none';
+
+  if (!q) {
+    document.querySelectorAll('.sb-item').forEach(function(el) { el.style.display = ''; });
+    document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+      var orig = el.getAttribute('data-sb-orig');
+      el.style.display = orig !== null ? orig : 'none';
+      el.removeAttribute('data-sb-orig');
+    });
+    document.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(el) {
+      el.style.display = '';
+    });
+    return;
+  }
+
+  document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+    if (!el.hasAttribute('data-sb-orig')) {
+      el.setAttribute('data-sb-orig', el.style.display || 'none');
+    }
+  });
+
+  document.querySelectorAll('.sb-item').forEach(function(btn) {
+    var label = (btn.dataset.label || btn.textContent).trim().toLowerCase();
+    var parentMatch = label.includes(q);
+    var oc = btn.getAttribute('onclick') || '';
+    var m = oc.match(/toggleSub\(['"](\w+)['"]/);
+    var sub = m ? document.getElementById(m[1]) : null;
+
+    if (parentMatch) {
+      btn.style.display = '';
+      if (sub) {
+        sub.style.display = '';
+        sub.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(si) { si.style.display = ''; });
+        sub.querySelectorAll('.sb-sub3').forEach(function(s3) { s3.style.display = ''; });
+      }
+    } else {
+      var anySubMatch = false;
+      if (sub) {
+        sub.querySelectorAll('.sb-sub-item').forEach(function(si) {
+          var match = si.textContent.trim().toLowerCase().includes(q);
+          si.style.display = match ? '' : 'none';
+          if (match) anySubMatch = true;
+        });
+        sub.querySelectorAll('.sb-sub2-hdr').forEach(function(hdr) {
+          var s3 = hdr.nextElementSibling;
+          if (!s3) return;
+          var s3Match = false;
+          s3.querySelectorAll('.sb-sub3-item').forEach(function(si) {
+            var match = si.textContent.trim().toLowerCase().includes(q);
+            si.style.display = match ? '' : 'none';
+            if (match) s3Match = true;
+          });
+          hdr.style.display = s3Match ? '' : 'none';
+          s3.style.display = s3Match ? '' : 'none';
+          if (s3Match) anySubMatch = true;
+        });
+      }
+      btn.style.display = anySubMatch ? '' : 'none';
+      if (sub) sub.style.display = anySubMatch ? '' : 'none';
+    }
+  });
+}
+
+function sbClearSearch() {
+  var inp = document.getElementById('sbSearch');
+  if (inp) { inp.value = ''; sbFilter(''); inp.focus(); }
+}
