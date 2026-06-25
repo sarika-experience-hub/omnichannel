@@ -514,7 +514,6 @@
         <div class="mk-ss-item"><span class="mk-ss-dot" style="background:var(--az-blue)"></span><span class="mk-ss-lbl">Submitted</span><span class="mk-ss-val">8 today · 5 awaiting approval</span></div>
         <div class="mk-ss-item"><span class="mk-ss-dot" style="background:#c62828"></span><span class="mk-ss-lbl">Action Needed</span><span class="mk-ss-val">2 returned for correction</span></div>
         <div class="mk-ss-item"><span class="mk-ss-dot" style="background:#1a9e62"></span><span class="mk-ss-lbl">Approved</span><span class="mk-ss-val">23 this week · USD 1.4M</span></div>
-        <div class="mk-ss-item" style="margin-left:auto;border-right:none"><span class="mk-ss-lbl" id="mkClock" style="font-size:11px;color:var(--az-muted)"></span></div>
       </div>
 
     </div><!-- /mk-wrap -->
@@ -535,16 +534,6 @@
 <script src="js/app.js"></script>
 <script src="js/shared.js"></script>
 <script>
-// ── Clock / greeting ──
-function tick(){
-  var now=new Date();
-  var t=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  var d=now.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
-  var cl=document.getElementById('mkClock');
-  if(cl) cl.textContent=t+' · '+d;
-}
-tick();setInterval(tick,1000);
-
 // ── Count-up animations ──
 var kpis=[
   {id:'kpiInitiated', target:14280000, prefix:'$', compact:true},
