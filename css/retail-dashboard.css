@@ -9,12 +9,12 @@
 .rd-wrap {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  background: #fff;
-  border: 1px solid var(--az-border);
-  border-radius: .875rem;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(22,48,61,.07);
+  gap: 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
   margin: 0 1.75rem 1.5rem;
 }
 
@@ -22,22 +22,29 @@
 .rd-hero {
   display: grid;
   grid-template-columns: 1fr 1fr 300px;
-  border-bottom: 1px solid var(--az-border);
+  gap: 1rem;
+  border-bottom: none;
 }
 .rd-mid {
   display: grid;
   grid-template-columns: 1fr 300px;
-  border-bottom: 1px solid var(--az-border);
+  gap: 1rem;
+  border-bottom: none;
 }
 .rd-bottom {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
 }
 
-/* ── Panel base ── */
+/* ── Panel base — each panel is now its own floating card ── */
 .rd-panel {
-  padding: 1.5rem 1.75rem;
-  border-right: 1px solid var(--az-border);
+  padding: 1.25rem 1.5rem;
+  border-right: none;
+  border: 1px solid var(--az-border);
+  border-radius: .875rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(22,48,61,.06);
   position: relative;
   overflow: hidden;
 }
@@ -126,6 +133,21 @@
   font-size: 12px; color: var(--az-muted);
   letter-spacing: .06em; text-transform: uppercase;
 }
+
+/* ══ CARD CAROUSEL ══ */
+.card-carousel { position: relative; margin-bottom: 1rem; }
+.card-carousel-track { overflow: hidden; }
+.card-carousel-track .debit-card { margin-bottom: 0; display: none; animation: ccFadeIn .3s ease; }
+.card-carousel-track .debit-card.cc-active { display: block; }
+@keyframes ccFadeIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+.card-carousel-dots { display: flex; justify-content: center; gap: .375rem; margin-top: .625rem; }
+.cc-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--az-border); cursor: pointer; padding: 0; transition: background .2s, width .2s; }
+.cc-dot.active { background: var(--az-navy); width: 22px; border-radius: 4px; }
+.cc-arrow { position: absolute; top: 50%; transform: translateY(-60%); background: rgba(255,255,255,.15); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; transition: background .15s; z-index: 2; backdrop-filter: blur(4px); }
+.cc-arrow:hover { background: rgba(255,255,255,.28); }
+.cc-prev { left: .5rem; }
+.cc-next { right: .5rem; }
+.cc-arrow .material-icons { font-size: 18px; }
 
 /* ══ HERO — CARD ══ */
 .debit-card {
