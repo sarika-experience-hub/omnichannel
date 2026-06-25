@@ -137,8 +137,8 @@
 /* ══ CARD CAROUSEL ══ */
 .card-carousel { position: relative; margin-bottom: 1rem; }
 .card-carousel-track { overflow: hidden; }
-.card-carousel-track .debit-card { margin-bottom: 0; display: none; animation: ccFadeIn .3s ease; }
-.card-carousel-track .debit-card.cc-active { display: block; }
+.card-carousel-track .debit-card { margin-bottom: 0; display: none !important; animation: ccFadeIn .3s ease; }
+.card-carousel-track .debit-card.cc-active { display: block !important; }
 @keyframes ccFadeIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
 .card-carousel-dots { display: flex; justify-content: center; gap: .375rem; margin-top: .625rem; }
 .cc-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--az-border); cursor: pointer; padding: 0; transition: background .2s, width .2s; }
