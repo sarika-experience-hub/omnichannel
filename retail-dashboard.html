@@ -273,23 +273,68 @@
             <a href="cards-my-cards.html" class="rd-ph-action">Manage <span class="material-icons">chevron_right</span></a>
           </div>
 
-          <div class="debit-card">
-            <div class="dc-top">
-              <div>
-                <div class="dc-bank">azentio</div>
-                <div class="dc-type">Platinum Visa</div>
+          <!-- Card Carousel -->
+          <div class="card-carousel">
+            <div class="card-carousel-track" id="cardTrack">
+
+              <!-- Card 1: Platinum Visa -->
+              <div class="debit-card" style="background:linear-gradient(135deg,#16303d 0%,#1f4557 60%,#16303d 100%);">
+                <div class="dc-top">
+                  <div><div class="dc-bank">azentio</div><div class="dc-type">Platinum Visa</div></div>
+                  <div class="dc-chip"></div>
+                </div>
+                <div class="dc-number">4532 •••• •••• 7841</div>
+                <div class="dc-bottom">
+                  <div><div class="dc-name">Sarika Desai</div><div class="dc-exp">09 / 27</div></div>
+                  <div class="dc-network">VISA</div>
+                </div>
               </div>
-              <div class="dc-chip"></div>
-            </div>
-            <div class="dc-number">4532 •••• •••• 7841</div>
-            <div class="dc-bottom">
-              <div>
-                <div class="dc-name">Sarika Desai</div>
-                <div class="dc-exp">09 / 27</div>
+
+              <!-- Card 2: Gold Mastercard Credit -->
+              <div class="debit-card" style="background:linear-gradient(135deg,#7c3800 0%,#b35400 55%,#7c3800 100%);">
+                <div class="dc-top">
+                  <div><div class="dc-bank">azentio</div><div class="dc-type">Gold Mastercard</div></div>
+                  <div class="dc-chip"></div>
+                </div>
+                <div class="dc-number">5412 •••• •••• 3290</div>
+                <div class="dc-bottom">
+                  <div><div class="dc-name">Sarika Desai</div><div class="dc-exp">03 / 26</div></div>
+                  <div class="dc-network" style="display:flex;gap:-4px;">
+                    <svg width="28" height="18" viewBox="0 0 28 18" fill="none"><circle cx="10" cy="9" r="9" fill="rgba(255,255,255,0.85)"/><circle cx="18" cy="9" r="9" fill="rgba(255,200,0,0.7)"/></svg>
+                  </div>
+                </div>
               </div>
-              <div class="dc-network">VISA</div>
+
+              <!-- Card 3: Signature Debit -->
+              <div class="debit-card" style="background:linear-gradient(135deg,#0a3d2e 0%,#1a6649 55%,#0a3d2e 100%);">
+                <div class="dc-top">
+                  <div><div class="dc-bank">azentio</div><div class="dc-type">Signature Debit</div></div>
+                  <div class="dc-chip"></div>
+                </div>
+                <div class="dc-number">4916 •••• •••• 5503</div>
+                <div class="dc-bottom">
+                  <div><div class="dc-name">Sarika Desai</div><div class="dc-exp">11 / 28</div></div>
+                  <div class="dc-network">VISA</div>
+                </div>
+              </div>
+
+            </div><!-- /track -->
+
+            <!-- Dots -->
+            <div class="card-carousel-dots">
+              <button class="cc-dot active" onclick="goToCard(0)" aria-label="Card 1"></button>
+              <button class="cc-dot" onclick="goToCard(1)" aria-label="Card 2"></button>
+              <button class="cc-dot" onclick="goToCard(2)" aria-label="Card 3"></button>
             </div>
-          </div>
+
+            <!-- Prev / Next -->
+            <button class="cc-arrow cc-prev" onclick="shiftCard(-1)" aria-label="Previous card">
+              <span class="material-icons">chevron_left</span>
+            </button>
+            <button class="cc-arrow cc-next" onclick="shiftCard(1)" aria-label="Next card">
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </div><!-- /carousel -->
 
           <div class="card-quick-actions">
             <div class="cqa-btn" onclick="location.href='cards-my-cards.html'">
@@ -587,27 +632,6 @@
 
       </div><!-- /rd-bottom -->
 
-      <!-- ── STATUS STRIP ── -->
-      <div class="rd-status">
-        <div class="ss-item">
-          <div class="ss-dot" style="background:#1a9e63;box-shadow:0 0 5px #1a9e63;"></div>
-          <span class="ss-lbl">All systems</span>
-          <span class="ss-val">operational</span>
-        </div>
-        <div class="ss-item">
-          <div class="ss-dot" style="background:var(--az-green);"></div>
-          <span class="ss-lbl">Last sync</span>
-          <span class="ss-val">just now</span>
-        </div>
-        <div class="ss-item">
-          <div class="ss-dot" style="background:var(--az-blue);"></div>
-          <span class="ss-lbl">SWIFT</span>
-          <span class="ss-val">MT · ISO 20022</span>
-        </div>
-        <div class="ss-item" style="margin-left:auto;">
-          <span class="ss-clock" id="ssClock">—</span>
-        </div>
-      </div>
 
     </div><!-- /rd-wrap -->
 
@@ -649,6 +673,15 @@ function toggleBalance() {
   if (!el || !ico) return;
   el.textContent  = balVisible ? 'AED 248,350.00' : 'AED ••• ••• ••';
   ico.textContent = balVisible ? 'visibility' : 'visibility_off';
+  document.querySelectorAll('.bal-stat-val').forEach(function(v) {
+    if (!balVisible) {
+      v.setAttribute('data-orig', v.textContent.trim());
+      v.textContent = '••• •••';
+    } else {
+      v.textContent = v.getAttribute('data-orig') || v.textContent;
+      v.removeAttribute('data-orig');
+    }
+  });
 }
 
 // ── Transaction tabs ──
@@ -669,6 +702,19 @@ setTimeout(function() {
     el.style.width = el.dataset.w;
   });
 }, 450);
+
+// ── Card Carousel ──
+var _ccIdx = 0;
+function goToCard(idx) {
+  var cards = document.querySelectorAll('.card-carousel-track .debit-card');
+  var dots  = document.querySelectorAll('.cc-dot');
+  if (!cards.length) return;
+  _ccIdx = (idx + cards.length) % cards.length;
+  cards.forEach(function(c,i){ c.classList.toggle('cc-active', i === _ccIdx); });
+  dots.forEach(function(d,i){ d.classList.toggle('active', i === _ccIdx); });
+}
+function shiftCard(dir) { goToCard(_ccIdx + dir); }
+document.addEventListener('DOMContentLoaded', function() { goToCard(0); });
 
 // ── Sidebar search ──
 function sbFilter(val) {
