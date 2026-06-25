@@ -568,7 +568,7 @@
 
 /* ── Status strip (mirrors rd-status) ── */
 .mk-status {
-  display: flex; align-items: center;
+  display: grid; grid-template-columns: repeat(4, 1fr); align-items: center;
   padding: 0 1.75rem; height: 36px;
   background: #f8fafc; border-top: 1px solid var(--az-border);
 }
@@ -577,7 +577,7 @@
   padding: 0 1rem; border-right: 1px solid var(--az-border); height: 100%;
 }
 .mk-ss-item:first-child { padding-left: 0; }
-.mk-ss-item:last-child { border-right: none; margin-left: auto; }
+.mk-ss-item:last-child { border-right: none; }
 .mk-ss-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 .mk-ss-lbl { font-size: 11px; color: var(--az-muted); letter-spacing: .05em; }
 .mk-ss-val { font-size: 11px; color: var(--az-navy); font-weight: 600; }
