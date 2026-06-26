@@ -81,52 +81,74 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 /* ── Main ── */
 .az-main { flex:1; min-width:0; display:flex; flex-direction:column; }
 .az-content-wrap { flex:1; display:flex; }
-.az-form-area { flex:1; min-width:0; padding:24px 32px; display:flex; flex-direction:column; }
-.az-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gray-tx); margin-bottom:12px; }
+.az-form-area { flex:1; min-width:0; padding:16px 24px 12px; display:flex; flex-direction:column; }
+.az-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gray-tx); margin-bottom:6px; }
 .az-breadcrumb a { color:var(--green); text-decoration:none; }
 .az-breadcrumb a:hover { text-decoration:underline; }
 .az-bc-sep { color:var(--gray-bd); }
-.az-page-title { font-size:24px; font-weight:700; color:var(--text); margin-bottom:20px; }
+.az-page-title { font-size:20px; font-weight:700; color:var(--text); margin-bottom:12px; }
 
 /* ── Section ── */
-.az-section { margin-bottom:20px; }
-.az-sec-hdr { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1.5px solid var(--gray-bd); cursor:pointer; user-select:none; }
-.az-sec-hdr h2 { font-size:15px; font-weight:700; color:var(--text); }
+.az-section { margin-bottom:4px; }
+.az-sec-hdr { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1.5px solid var(--gray-bd); cursor:pointer; user-select:none; }
+.az-sec-hdr h2 { font-size:12px; font-weight:700; color:var(--gray-tx); letter-spacing:.04em; text-transform:uppercase; }
 .az-sec-hdr .chev { flex-shrink:0; transition:transform var(--tr); }
 .az-section.collapsed .az-sec-hdr .chev { transform:rotate(180deg); }
-.az-sec-body { padding:16px 0 8px; }
+.az-sec-body { padding:10px 0 2px; }
 .az-section.collapsed .az-sec-body { display:none; }
 
 /* ── Form grid ── */
-.frow { display:grid; gap:20px; margin-bottom:20px; }
+.frow { display:grid; gap:14px; margin-bottom:12px; }
 .frow.c2 { grid-template-columns:repeat(2,1fr); max-width:560px; }
-.az-field { display:flex; flex-direction:column; gap:6px; }
-.az-field label { font-size:13px; font-weight:600; color:var(--text); }
+.az-field { display:flex; flex-direction:column; gap:3px; }
+.az-field label { font-size:11.5px; font-weight:600; color:var(--gray-tx); }
+.az-field label .req { color:var(--red); font-size:14px; margin-left:1px; line-height:1; }
 
 /* Input */
-.az-input { height:40px; padding:0 12px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white); transition:border-color var(--tr),box-shadow var(--tr); width:100%; outline:none; font-family:var(--ff); }
+.az-input { height:36px; padding:0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white); transition:border-color var(--tr),box-shadow var(--tr); width:100%; outline:none; font-family:var(--ff); }
 .az-input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
 .az-input.readonly { background:var(--gray-bg); cursor:default; }
 
 /* Select */
-.az-select { height:40px; padding:0 36px 0 12px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 10px) center; -webkit-appearance:none; appearance:none; cursor:pointer; width:100%; outline:none; font-family:var(--ff); transition:border-color var(--tr),box-shadow var(--tr); }
+.az-select { height:36px; padding:0 36px 0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 10px) center; -webkit-appearance:none; appearance:none; cursor:pointer; width:100%; outline:none; font-family:var(--ff); transition:border-color var(--tr),box-shadow var(--tr); }
 .az-select:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
 
 /* Currency amount wrapper */
 .az-currency-wrap { position:relative; display:flex; }
-.az-currency-wrap .az-input { border-radius:0 var(--r) var(--r) 0; border-left:none; flex:1; }
-.az-currency-badge { display:flex; align-items:center; gap:4px; padding:0 14px; background:var(--gray-bg); border:1px solid var(--gray-bd); border-radius:var(--r) 0 0 var(--r); font-size:13px; color:var(--text); font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0; }
-.az-currency-badge svg { width:12px; height:12px; }
+.az-currency-wrap .az-input { border-radius:0 var(--r) var(--r) 0; border-left:none; flex:1; font-weight:600; }
+.az-currency-btn { display:flex; align-items:center; gap:6px; padding:0 12px; background:var(--gray-bg); border:1px solid var(--gray-bd); border-radius:var(--r) 0 0 var(--r); font-size:13px; color:var(--text); font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; min-width:90px; transition:background var(--tr),border-color var(--tr); user-select:none; }
+.az-currency-btn:hover { background:#e8ecef; border-color:#b0b8c1; }
+.az-currency-btn.open { background:#e8f7f0; border-color:var(--green); color:var(--green); }
+.az-currency-btn .cur-flag { font-size:16px; line-height:1; }
+.az-currency-btn .cur-code { font-size:13px; font-weight:700; }
+.az-currency-btn .cur-caret { width:12px; height:12px; margin-left:2px; transition:transform var(--tr); flex-shrink:0; }
+.az-currency-btn.open .cur-caret { transform:rotate(180deg); }
+.az-currency-drop { position:absolute; top:calc(100% + 4px); left:0; min-width:200px; background:var(--white); border:1px solid var(--gray-bd); border-radius:var(--r); box-shadow:0 6px 20px rgba(0,0,0,.13); z-index:100; display:none; overflow:hidden; }
+.az-currency-drop.open { display:block; animation:dropIn .15s ease; }
+@keyframes dropIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+.az-cur-opt { display:flex; align-items:center; gap:10px; padding:9px 14px; cursor:pointer; font-size:13px; color:var(--text); transition:background .1s; border-bottom:1px solid var(--gray-bg); }
+.az-cur-opt:last-child { border-bottom:none; }
+.az-cur-opt:hover { background:#f0faf5; }
+.az-cur-opt.active { background:var(--green-light); font-weight:700; }
+.az-cur-opt .opt-flag { font-size:17px; }
+.az-cur-opt .opt-code { font-weight:700; min-width:38px; }
+.az-cur-opt .opt-name { color:var(--gray-tx); font-size:12px; }
+.az-cur-opt .opt-check { margin-left:auto; color:var(--green); display:none; }
+.az-cur-opt.active .opt-check { display:block; }
+/* Fee info strip */
+.az-fee-info { display:none; margin-top:8px; padding:8px 12px; background:#f0faf5; border:1px solid #c3e6d4; border-radius:var(--r); font-size:12px; color:#1a7a4a; line-height:1.5; }
+.az-fee-info.show { display:flex; align-items:flex-start; gap:8px; }
+.az-fee-info svg { flex-shrink:0; margin-top:1px; }
 
 /* Checkbox */
-.az-check-wrap { display:flex; align-items:center; gap:10px; margin-top:8px; }
+.az-check-wrap { display:flex; align-items:center; gap:10px; margin-top:12px; }
 .az-check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--green); flex-shrink:0; }
 .az-check-wrap label { font-size:13px; cursor:pointer; color:var(--text); }
 .az-check-wrap label a { color:var(--green); text-decoration:none; }
 .az-check-wrap label a:hover { text-decoration:underline; }
 
 /* Bottom bar & Buttons */
-.az-bottom-bar { display:flex; justify-content:flex-end; gap:12px; padding:16px 32px; border-top:1px solid var(--gray-bd); background:var(--white); margin-top:auto; }
+.az-bottom-bar { display:flex; justify-content:flex-end; gap:10px; padding:12px 24px; border-top:1px solid var(--gray-bd); background:var(--white); margin-top:auto; }
 .btn-action { display:inline-flex; align-items:center; justify-content:center; gap:.375rem; border:none; border-radius:.25rem; padding:.5625rem 1.75rem; font-size:.8125rem; font-weight:700; cursor:pointer; text-decoration:none; white-space:nowrap; transition:background .12s,opacity .12s; font-family:var(--ff); }
 .btn-action:disabled { opacity:.6; cursor:not-allowed; }
 .btn-cancel { background:#2ed88e; color:#16303d; }
@@ -183,6 +205,12 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 /* ── Responsive ── */
 @media (max-width:1024px) { .az-right-panel { display:none; } }
 @media (max-width:640px)  { .az-sidebar { display:none; } .frow.c2 { grid-template-columns:1fr; } .az-form-area { padding:16px; } }
+.hdr-hamburger { background:none; border:none; cursor:pointer; padding:.375rem .5rem; display:flex; align-items:center; justify-content:center; border-radius:.375rem; transition:background .12s; color:#16303d; }
+.hdr-hamburger:hover { background:#f0f4f6; }
+.hdr-hamburger .material-icons { font-size:22px; color:#16303d; line-height:1; }
+.hdr-hamburger .icon-collapsed { display:none; }
+.hdr-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
+.hdr-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
 </style>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
@@ -192,7 +220,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
-  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar" onclick="document.getElementById('sidebar').classList.toggle('collapsed');this.classList.toggle('is-collapsed');this.setAttribute('aria-expanded',String(!this.classList.contains('is-collapsed')))"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
   <div class="hdr-logo" id="hdrLogo">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
@@ -230,9 +258,6 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 
   <!-- SIDEBAR -->
   <aside class="az-sidebar" id="sidebar">
-    <button class="az-sb-toggle" id="sbToggle" title="Collapse">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
     <ul class="az-steps">
       <li class="az-step completed">
         <div class="az-step-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -268,6 +293,11 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
           <span>Registration Charges</span>
         </nav>
         <h1 class="az-page-title">Create Online Account</h1>
+        <p style="font-size:12px;color:var(--gray-tx);margin-bottom:14px;display:flex;align-items:center;gap:6px;">
+          <span style="display:inline-flex;align-items:center;gap:3px;"><span style="color:var(--red);font-size:11px;font-weight:700;">*</span> Required fields</span>
+          <span style="color:var(--gray-bd);">·</span>
+          <span>Step <strong style="color:var(--text);">3</strong> of 3</span>
+        </p>
 
         <!-- SECTION: Registration Charges -->
         <div class="az-section">
@@ -279,24 +309,51 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 
             <div class="frow c2">
               <div class="az-field">
-                <label for="from-account">From Account</label>
+                <label for="from-account">From Account <span class="req">*</span></label>
                 <select class="az-select" id="from-account">
-                  <option value="">Select</option>
-                  <option>Savings Account – 0012345890</option>
-                  <option>Current Account – 0098765432</option>
+                  <option value="">Select account</option>
+                  <option value="savings" data-bal="USD 12,430.50" data-type="Savings">Savings Account – 0012345890</option>
+                  <option value="current" data-bal="USD 4,875.00" data-type="Current">Current Account – 0098765432</option>
                 </select>
               </div>
               <div class="az-field">
-                <label for="charges-amount">Charges Amount</label>
-                <div class="az-currency-wrap">
-                  <div class="az-currency-badge">
-                    Currency
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                <label for="charges-amount">Charges Amount <span class="req">*</span></label>
+                <div class="az-currency-wrap" id="currency-wrap">
+                  <button type="button" class="az-currency-btn" id="currency-btn" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="cur-flag" id="cur-flag">🌐</span>
+                    <span class="cur-code" id="cur-code">USD</span>
+                    <svg class="cur-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  <div class="az-currency-drop" id="currency-drop" role="listbox">
+                    <div class="az-cur-opt active" data-code="USD" data-flag="🇺🇸" data-name="US Dollar" data-rate="1" data-fee="15.00" role="option">
+                      <span class="opt-flag">🇺🇸</span><span class="opt-code">USD</span><span class="opt-name">US Dollar</span>
+                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="az-cur-opt" data-code="LBP" data-flag="🇱🇧" data-name="Lebanese Pound" data-rate="89500" data-fee="1342500.00" role="option">
+                      <span class="opt-flag">🇱🇧</span><span class="opt-code">LBP</span><span class="opt-name">Lebanese Pound</span>
+                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="az-cur-opt" data-code="EUR" data-flag="🇪🇺" data-name="Euro" data-rate="0.92" data-fee="13.80" role="option">
+                      <span class="opt-flag">🇪🇺</span><span class="opt-code">EUR</span><span class="opt-name">Euro</span>
+                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="az-cur-opt" data-code="GBP" data-flag="🇬🇧" data-name="British Pound" data-rate="0.79" data-fee="11.85" role="option">
+                      <span class="opt-flag">🇬🇧</span><span class="opt-code">GBP</span><span class="opt-name">British Pound</span>
+                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="az-cur-opt" data-code="SAR" data-flag="🇸🇦" data-name="Saudi Riyal" data-rate="3.75" data-fee="56.25" role="option">
+                      <span class="opt-flag">🇸🇦</span><span class="opt-code">SAR</span><span class="opt-name">Saudi Riyal</span>
+                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
                   </div>
-                  <input class="az-input readonly" type="text" id="charges-amount" readonly>
+                  <input class="az-input" type="text" id="charges-amount" readonly placeholder="Select currency">
+                </div>
+                <div class="az-fee-info" id="fee-info">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span id="fee-info-text">One-time registration fee of USD 15.00 will be debited from your selected account.</span>
                 </div>
               </div>
-            </div>
+            </div><!-- /frow c2 -->
 
             <div class="az-check-wrap">
               <input type="checkbox" id="tc-check">
@@ -309,9 +366,9 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         </div>
 
         <div class="az-bottom-bar">
-          <button class="btn-action btn-cancel" onclick="location.href='login.html'">CANCEL</button>
-          <button class="btn-action btn-save"   onclick="location.href='COA_user_credentials.html'">PREVIOUS</button>
-          <button class="btn-action btn-submit" id="submit-btn" disabled>SUBMIT</button>
+          <button class="btn-action btn-cancel" onclick="location.href='login.html'">Cancel</button>
+          <button class="btn-action btn-save" onclick="location.href='COA_user_credentials.html'" style="display:inline-flex;align-items:center;gap:.375rem;"><svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M19 12H5M12 19l-7-7 7-7'/></svg> Previous</button>
+          <button class="btn-action btn-submit" id="submit-btn" disabled style="min-width:120px;display:inline-flex;align-items:center;gap:.375rem;">Submit <svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg></button>
         </div>
 
       </div><!-- /form-area -->
@@ -408,10 +465,6 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 
 <script>
 (function(){
-  // Sidebar
-  document.getElementById('sbToggle').addEventListener('click',function(){
-    document.getElementById('sidebar').classList.toggle('collapsed');
-  });
 
   // Section headers
   document.querySelectorAll('.az-sec-hdr').forEach(function(h){
@@ -423,7 +476,59 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
     h.addEventListener('click',function(){ h.closest('.sum-sec').classList.toggle('collapsed'); });
   });
 
-  // T&C checkbox gates Submit
+  // ── Currency dropdown ─────────────────────────────────────
+  var curBtn   = document.getElementById('currency-btn');
+  var curDrop  = document.getElementById('currency-drop');
+  var curFlag  = document.getElementById('cur-flag');
+  var curCode  = document.getElementById('cur-code');
+  var amtInput = document.getElementById('charges-amount');
+  var feeInfo  = document.getElementById('fee-info');
+  var feeText  = document.getElementById('fee-info-text');
+  var selCur   = { code:'USD', flag:'🇺🇸', fee:'15.00' };
+
+  curBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var open = curDrop.classList.toggle('open');
+    curBtn.classList.toggle('open', open);
+    curBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  curDrop.querySelectorAll('.az-cur-opt').forEach(function(opt) {
+    opt.addEventListener('click', function() {
+      // Update selection
+      curDrop.querySelectorAll('.az-cur-opt').forEach(function(o){ o.classList.remove('active'); });
+      opt.classList.add('active');
+      selCur = { code: opt.dataset.code, flag: opt.dataset.flag, fee: opt.dataset.fee, name: opt.dataset.name };
+      // Update button
+      curFlag.textContent = selCur.flag;
+      curCode.textContent = selCur.code;
+      // Update amount
+      amtInput.value = Number(selCur.fee).toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+      // Show fee info
+      feeText.textContent = 'One-time registration fee of ' + selCur.code + ' ' + Number(selCur.fee).toLocaleString('en-US',{minimumFractionDigits:2}) + ' will be debited from your selected account.';
+      feeInfo.classList.add('show');
+      // Close dropdown
+      curDrop.classList.remove('open');
+      curBtn.classList.remove('open');
+      curBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', function() {
+    curDrop.classList.remove('open');
+    curBtn.classList.remove('open');
+    curBtn.setAttribute('aria-expanded', 'false');
+  });
+
+  // Pre-select USD on load
+  curFlag.textContent = '🇺🇸';
+  curCode.textContent = 'USD';
+  amtInput.value = '15.00';
+  feeInfo.classList.add('show');
+
+
+  // ── T&C checkbox gates Submit ─────────────────────────────────────
   var tcCheck=document.getElementById('tc-check');
   var submitBtn=document.getElementById('submit-btn');
   tcCheck.addEventListener('change',function(){ submitBtn.disabled=!tcCheck.checked; });
