@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -11,7 +11,6 @@
 :root{
   --green:#2ed88e; --green-h:#25c47e; --navy:#16303d;
   --blue:#0085db; --border:#e2e8ec; --muted:#8a979e;
-  --panel-bg:#edfaf6;
   --hdr-h:56px; --ftr-h:46px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,224 +22,182 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* Header — NOT sticky, NOT fixed */
+/* ── Header ── */
 .l-hdr{
   height:var(--hdr-h);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 1.5rem;background:#fff;
-  border-bottom:1px solid var(--border);
-  position:relative;z-index:10;
+  border-bottom:1px solid var(--border);position:relative;z-index:10;
 }
 .l-logo{display:flex;align-items:center;text-decoration:none}
 .l-logo svg{height:34px;width:auto}
 .l-hdr-right{display:flex;align-items:center;gap:6px}
-
-/* Exact same icon btn as accounts */
-.hdr-icon-btn{
-  background:none;border:none;cursor:pointer;
-  padding:6px;display:flex;align-items:center;
-  position:relative;border-radius:6px;transition:background .12s;
-}
+.hdr-icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center;position:relative;border-radius:6px;transition:background .12s}
 .hdr-icon-btn:hover{background:#f0f4f6}
 .hdr-icon-btn img{width:20px;height:20px}
-.notif-dot{
-  position:absolute;top:4px;right:4px;width:7px;height:7px;
-  background:var(--green);border-radius:50%;border:1.5px solid #fff;
-}
+.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--green);border-radius:50%;border:1.5px solid #fff}
 .hdr-div{width:1px;height:24px;background:var(--border);margin:0 2px}
-
-/* Language */
 .lang-wrap{position:relative}
-.lang-btn{
-  display:flex;align-items:center;gap:5px;
-  background:none;border:none;cursor:pointer;
-  font-family:'Roboto',sans-serif;font-size:13.5px;font-weight:500;
-  color:var(--navy);padding:5px 8px;border-radius:6px;transition:background .12s;
-}
+.lang-btn{display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13.5px;font-weight:500;color:var(--navy);padding:5px 8px;border-radius:6px;transition:background .12s}
 .lang-btn:hover{background:#f0f4f6}
-.lang-menu{
-  position:absolute;top:calc(100% + 6px);right:0;
-  background:#fff;border:1px solid var(--border);
-  border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.14);
-  min-width:120px;padding:4px 0;z-index:2000;
-}
+.lang-menu{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:120px;padding:4px 0;z-index:2000}
 .lang-menu.hidden{display:none!important}
-.lang-opt{
-  display:flex;align-items:center;gap:10px;padding:9px 16px;
-  width:100%;background:none;border:none;cursor:pointer;
-  font-family:'Roboto',sans-serif;font-size:13.5px;
-  color:var(--navy);text-align:left;transition:background .1s;
-}
+.lang-opt{display:flex;align-items:center;gap:10px;padding:9px 16px;width:100%;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13.5px;color:var(--navy);text-align:left;transition:background .1s}
 .lang-opt:hover{background:#f0faf5}
 .lang-opt.active{font-weight:700}
+.fi{width:20px;height:15px;display:inline-block;background-size:cover;background-position:center;border-radius:2px;vertical-align:middle;flex-shrink:0}
+.hidden{display:none!important}
 
-/* Flags */
-.fi{
-  width:20px;height:15px;display:inline-block;
-  background-size:cover;background-position:center;
-  border-radius:2px;vertical-align:middle;flex-shrink:0;
-}
+/* ── Main layout ── */
+.l-main{flex:1;display:flex;height:calc(100vh - var(--hdr-h) - var(--ftr-h));overflow:hidden}
 
-/* Main two-column layout */
-.l-main{
-  flex:1;display:flex;
-  height:calc(100vh - var(--hdr-h) - var(--ftr-h));
-  overflow:hidden;
-}
-
-/* Left hero — photo fills full height, no scroll */
+/* ── Left hero — photo fills full height ── */
 .l-hero{flex:1 1 0;overflow:hidden;position:relative}
-.l-hero img{
-  width:100%;height:100%;
-  object-fit:cover;object-position:center top;display:block;
-}
+.l-hero img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 
-/* Right panel — NO scrollbar, content must fit */
+/* ── Right panel ── */
 .l-panel{
-  width:420px;flex-shrink:0;
-  background:var(--panel-bg);
+  width:420px;flex-shrink:0;background:#f4fdf9;
   display:flex;flex-direction:column;justify-content:center;
-  padding:1.5rem 2rem;
-  overflow:hidden;  /* NO SCROLLBAR */
+  padding:2rem 2.5rem;overflow:hidden;
   border-left:1px solid #cdeade;
 }
 
-/* Form fields — compact spacing to fit without scroll */
-.l-title{
-  font-size:1.2rem;font-weight:700;color:var(--navy);
-  margin-bottom:1.1rem;line-height:1.3;
+/* top label */
+.panel-eyebrow{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--green);margin-bottom:6px;
 }
-.l-title.center{text-align:center}
-.f-grp{margin-bottom:.75rem}
-.f-lbl{
-  display:block;font-size:13px;font-weight:500;
-  color:var(--navy);margin-bottom:4px;
-}
-.f-inp{
-  width:100%;border:1.5px solid #c4d4ce;
-  border-radius:6px;padding:8px 12px;
-  font-family:'Roboto',sans-serif;font-size:13.5px;
-  color:var(--navy);background:#fff;outline:none;
-  transition:border-color .15s,box-shadow .15s;
-}
-.f-inp:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(46,216,142,.1)}
-.f-inp-wrap{position:relative}
-.f-inp-wrap .f-inp{padding-right:40px}
+.panel-eyebrow svg{flex-shrink:0}
 
-/* Eye toggle button */
-.f-eye{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;
-  display:flex;align-items:center;padding:2px;
-  color:var(--green);
-}
-.f-eye svg{display:block}
+.panel-title{font-size:1.35rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
+.panel-sub{font-size:13px;color:var(--muted);margin-bottom:1.75rem;line-height:1.55}
 
-.f-forgot{display:flex;justify-content:flex-end;margin-top:4px}
-.f-link{
-  color:var(--blue);text-decoration:none;font-size:12px;
-  transition:opacity .12s;
+/* ── Fingerprint scanner UI ── */
+.fp-scanner{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  width:160px;height:160px;margin:0 auto 1.5rem;
 }
-.f-link:hover{opacity:.75;text-decoration:underline}
-.f-link-bold{font-weight:700;font-size:12.5px}
-.f-select{
-  width:100%;border:1.5px solid #c4d4ce;
-  border-radius:6px;padding:8px 32px 8px 12px;
-  font-family:'Roboto',sans-serif;font-size:13.5px;
-  color:var(--navy);background:#fff
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E")
-    no-repeat right 10px center;
-  appearance:none;-webkit-appearance:none;
-  outline:none;cursor:pointer;transition:border-color .15s;
+/* pulse rings */
+.fp-ring{
+  position:absolute;border-radius:50%;
+  border:2px solid var(--green);opacity:0;
+  animation:fp-pulse 2.4s ease-out infinite;
 }
-.f-select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(46,216,142,.1)}
+.fp-ring:nth-child(1){width:160px;height:160px;animation-delay:0s}
+.fp-ring:nth-child(2){width:130px;height:130px;animation-delay:.4s}
+.fp-ring:nth-child(3){width:100px;height:100px;animation-delay:.8s}
+@keyframes fp-pulse{
+  0%{opacity:0;transform:scale(.85)}
+  20%{opacity:.5}
+  100%{opacity:0;transform:scale(1)}
+}
+/* scanning state */
+.fp-scanner.scanning .fp-ring{animation-play-state:running}
+.fp-scanner.idle .fp-ring{animation-play-state:paused;opacity:0}
+/* center disc */
+.fp-disc{
+  width:76px;height:76px;border-radius:50%;
+  background:linear-gradient(135deg,#e8faf3 0%,#d0f4e6 100%);
+  border:2px solid #b5e8d0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;
+  transition:background .3s,border-color .3s,box-shadow .3s;
+  box-shadow:0 4px 16px rgba(46,216,142,.2);
+}
+.fp-disc.verified{background:linear-gradient(135deg,#2ed88e,#1db87a);border-color:#1db87a;box-shadow:0 4px 24px rgba(46,216,142,.45)}
+.fp-disc.error{background:linear-gradient(135deg,#fdecea,#fbc4c0);border-color:#f5a9a4;box-shadow:0 4px 16px rgba(211,47,47,.2)}
+.fp-disc svg{transition:opacity .2s}
 
-.f-check-row{
-  display:flex;align-items:center;gap:7px;
-  margin-bottom:.9rem;font-size:13px;
+/* status text */
+.fp-status{
+  text-align:center;margin-bottom:1.5rem;
 }
-.f-check{width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
-
-/* Captcha */
-.captcha-wrap{margin-bottom:.75rem}
-.captcha-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.captcha-btns{display:flex;flex-direction:column;gap:3px}
-.captcha-btn{
-  background:none;border:1px solid var(--border);border-radius:4px;
-  width:27px;height:23px;cursor:pointer;display:flex;
-  align-items:center;justify-content:center;font-size:12px;
-  color:var(--navy);transition:background .1s;
+.fp-status-label{
+  font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px;
+  transition:color .2s;
 }
-.captcha-btn:hover{background:#e0f5ec}
+.fp-status-hint{font-size:12px;color:var(--muted)}
 
-/* Buttons */
-.btn-login{
-  display:block;width:100%;padding:11px;
+/* scan progress bar */
+.fp-progress{
+  width:100%;height:3px;background:#edf2f5;border-radius:2px;
+  margin-bottom:1.5rem;overflow:hidden;
+}
+.fp-progress-bar{
+  height:100%;width:0%;border-radius:2px;
+  background:linear-gradient(90deg,var(--green),#1db87a);
+  transition:width .12s linear;
+}
+
+/* ── Buttons ── */
+.btn-primary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:12px;
   background:var(--navy);color:#fff;border:none;
-  border-radius:6px;font-family:'Roboto',sans-serif;
-  font-size:13.5px;font-weight:700;letter-spacing:.05em;
-  cursor:pointer;margin-bottom:8px;text-align:center;
-  text-decoration:none;transition:background .15s;
+  border-radius:8px;font-family:'Roboto',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:.03em;
+  cursor:pointer;margin-bottom:10px;text-align:center;
+  transition:background .15s,transform .1s,box-shadow .15s;
+  box-shadow:0 2px 8px rgba(22,48,61,.18);
 }
-.btn-login:hover{background:#1e4356;color:#fff}
-.btn-cancel{
-  display:block;width:100%;padding:11px;
-  background:var(--green);color:#fff;border:none;
-  border-radius:6px;font-family:'Roboto',sans-serif;
-  font-size:13.5px;font-weight:700;letter-spacing:.05em;
-  cursor:pointer;margin-bottom:8px;text-align:center;
-  text-decoration:none;transition:background .15s;
+.btn-primary:hover{background:#1e4356;box-shadow:0 4px 16px rgba(22,48,61,.25)}
+.btn-primary:active{transform:translateY(1px)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px;
+  background:#fff;color:var(--navy);
+  border:1.5px solid var(--border);
+  border-radius:8px;font-family:'Roboto',sans-serif;
+  font-size:14px;font-weight:600;
+  cursor:pointer;margin-bottom:10px;
+  transition:background .15s,border-color .15s;text-decoration:none;
 }
-.btn-cancel:hover{background:var(--green-h);color:#fff}
-.btn-useid{
-  display:block;width:100%;padding:11px;
-  background:#6b7c8d;color:#fff;border:none;
-  border-radius:6px;font-family:'Roboto',sans-serif;
-  font-size:13.5px;font-weight:700;letter-spacing:.05em;
-  cursor:pointer;margin-bottom:8px;text-align:center;
-  text-decoration:none;transition:background .15s;
-}
-.btn-useid:hover{background:#5a6a79;color:#fff}
+.btn-secondary:hover{background:#f5f8fa;border-color:#c8d4da;color:var(--navy)}
 
-/* Divider + bottom links */
-.l-divider{height:1px;background:rgba(22,48,61,.2);margin:.9rem 0 .75rem}
+.l-divider{height:1px;background:var(--border);margin:.9rem 0 .75rem;position:relative}
+.l-divider-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:#fff;padding:0 10px;font-size:11px;color:var(--muted);white-space:nowrap;
+}
 .l-links-row{
   display:flex;align-items:center;justify-content:space-between;
-  font-size:12px;gap:6px;flex-wrap:wrap;margin-bottom:4px;
+  font-size:12.5px;color:var(--muted);gap:6px;margin-bottom:6px;
 }
+.f-link{color:var(--blue);text-decoration:none;font-weight:400}
+.f-link:hover{text-decoration:underline}
+.f-link-bold{font-weight:400;font-size:12.5px}
 
-/* Biometric icon — no scroll, fits panel */
-.bio-icon{display:flex;justify-content:center;margin:1rem 0 .6rem}
-.bio-icon img{width:120px;height:120px;object-fit:contain}
-.bio-hint{
-  text-align:center;font-size:13px;color:var(--muted);
-  margin-bottom:1.1rem;line-height:1.6;
-}
-
-/* Success modal */
-.modal-ov{
-  position:fixed;inset:0;background:rgba(0,0,0,.5);
-  z-index:3000;display:flex;align-items:center;justify-content:center;
-}
+/* ── Success modal ── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:3000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
 .modal-ov.hidden{display:none!important}
 .success-card{
-  background:#fff;border-radius:12px;padding:2rem 2.5rem;
-  min-width:300px;max-width:380px;text-align:center;
-  box-shadow:0 16px 48px rgba(0,0,0,.2);
+  background:#fff;border-radius:16px;padding:2.5rem 2.5rem 2rem;
+  min-width:320px;max-width:400px;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  animation:cardIn .25s ease;
 }
-.success-card svg{width:68px;height:68px;margin-bottom:.75rem}
-.success-msg{
-  font-size:1rem;font-weight:500;color:var(--navy);
-  margin-bottom:1.25rem;line-height:1.4;
+@keyframes cardIn{from{opacity:0;transform:scale(.93) translateY(10px)}to{opacity:1;transform:none}}
+.success-ring{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,#e8faf3,#d0f4e6);
+  border:2px solid #b5e8d0;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;
 }
+.success-msg{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.success-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5}
 .btn-ok{
-  padding:10px 48px;background:var(--navy);color:#fff;
-  border:none;border-radius:6px;font-family:'Roboto',sans-serif;
+  padding:11px 48px;background:var(--navy);color:#fff;border:none;
+  border-radius:8px;font-family:'Roboto',sans-serif;
   font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;
+  text-decoration:none;display:inline-block;
 }
-.btn-ok:hover{background:#1e4356}
+.btn-ok:hover{background:#1e4356;color:#fff}
 
-/* Footer */
+/* ── Footer ── */
 .l-footer{
   height:var(--ftr-h);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between;
@@ -250,20 +207,15 @@ body{
 .l-footer a{color:var(--muted);text-decoration:none;margin:0 6px}
 .l-footer a:hover{color:var(--navy)}
 .acc-btns{display:flex;align-items:center;gap:4px}
-.acc-btn{border:1px solid var(--border);background:#fff;border-radius:3px;
-  padding:2px 6px;cursor:pointer;font-size:11px;font-weight:700;
-  font-family:'Roboto',sans-serif}
-.hidden{display:none!important}
+.acc-btn{border:1px solid var(--border);background:#fff;border-radius:3px;padding:2px 6px;cursor:pointer;font-size:11px;font-weight:700;font-family:'Roboto',sans-serif}
 
 /* Responsive */
-@media(max-width:900px){
-  .l-panel{width:360px;padding:1.25rem 1.5rem}
-}
+@media(max-width:900px){.l-panel{width:360px;padding:1.5rem}}
 @media(max-width:680px){
   html,body{overflow:auto}
   .l-main{flex-direction:column;height:auto;overflow:visible}
-  .l-hero{flex:none;height:220px}
-  .l-panel{width:100%;border-left:none;border-top:1px solid var(--border);overflow:auto;padding:1.25rem}
+  .l-hero{flex:none;height:240px;padding:2rem 1.5rem}
+  .l-panel{width:100%;border-left:none;border-top:1px solid var(--border);overflow:auto;padding:1.5rem}
 }
 </style>
   <link rel="stylesheet" href="css/dark.css"/>
@@ -273,44 +225,21 @@ body{
 
 <header class="l-hdr">
   <a class="l-logo" href="login.html" aria-label="azentio home">
-    <svg xmlns="http://www.w3.org/2000/svg" width="130" height="34" viewBox="0 0 152.97 40.623">
-  <g id="logo" transform="translate(0.275 -0.84)">
-    <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12570" data-name="Path 12570" d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12571" data-name="Path 12571" d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12572" data-name="Path 12572" d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12573" data-name="Path 12573" d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12574" data-name="Path 12574" d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12575" data-name="Path 12575" d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path id="Path_12576" data-name="Path 12576" d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
-    <path id="Path_12577" data-name="Path 12577" d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
-  </g>
-</svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="130" height="34" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.3,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg>
   </a>
   <div class="l-hdr-right">
-    <!-- Quick links — same as accounts -->
-    <button class="hdr-icon-btn" title="Quick Links" aria-label="Quick Links">
-      <img src="images/icons/about_us.svg" width="20" height="20" alt="quick links"/>
-    </button>
+    <button class="hdr-icon-btn" title="Quick Links"><img src="images/icons/about_us.svg" width="20" height="20" alt=""/></button>
     <span class="hdr-div"></span>
-    <!-- Notification with green dot -->
-    <button class="hdr-icon-btn" style="position:relative" title="Notifications" aria-label="Notifications">
-      <img src="images/icons/notification.svg" width="20" height="20" alt="notifications"/>
+    <button class="hdr-icon-btn" style="position:relative" title="Notifications">
+      <img src="images/icons/notification.svg" width="20" height="20" alt=""/>
       <span class="notif-dot"></span>
     </button>
-    <!-- Services/support — same as accounts -->
-    <button class="hdr-icon-btn" title="Support" aria-label="Support">
-      <img src="images/icons/services.svg" width="20" height="20" alt="support"/>
-    </button>
-    <!-- Information/help — same as accounts -->
-    <button class="hdr-icon-btn" title="Help" aria-label="Help">
-      <img src="images/icons/information.svg" width="20" height="20" alt="help"/>
-    </button>
+    <button class="hdr-icon-btn" title="Support"><img src="images/icons/services.svg" width="20" height="20" alt=""/></button>
+    <button class="hdr-icon-btn" title="Help"><img src="images/icons/information.svg" width="20" height="20" alt=""/></button>
     <span class="hdr-div"></span>
-    <!-- Language selector -->
     <div class="lang-wrap">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-haspopup="listbox" aria-expanded="false">
-        <span class="fi fi-us" aria-hidden="true"></span>
+        <span class="fi fi-us"></span>
         <span id="langCode">ENG</span>
         <svg width="10" height="6" viewBox="0 0 10 7" fill="none"><path d="M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z" fill="#16303d"/></svg>
       </button>
@@ -324,115 +253,187 @@ body{
 </header>
 
 <main class="l-main">
-  <!-- Left: hero photo -->
+
+  <!-- ── Left hero ── -->
   <div class="l-hero">
     <img src="images/login/about.png" alt="azentio Banking" loading="eager"/>
   </div>
-  <!-- Right: panel -->
+  <!-- ── Right panel ── -->
   <div class="l-panel">
 
-    <h1 class="l-title center">Login with touch ID</h1>
-
-    <div class="bio-icon">
-      <img src="images/login/fingerprint.png"
-           srcset="images/login/fingerprint@2x.png 2x"
-           alt="Touch ID fingerprint scanner"
-           width="120" height="120"/>
+    <div class="panel-eyebrow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Biometric Login
     </div>
-    <p class="bio-hint">Please put your finger on your<br/>device's fingerprint scanner</p>
+    <div class="panel-title">Touch ID Verification</div>
+    <p class="panel-sub">Place your finger on the fingerprint sensor to authenticate securely.</p>
 
-    <button type="button" class="btn-login"
-            onclick="document.getElementById('successModal').classList.remove('hidden')">LOGIN</button>
-    <a class="btn-cancel" href="login.html">CANCEL</a>
+    <!-- Fingerprint scanner -->
+    <div class="fp-scanner idle" id="fpScanner">
+      <div class="fp-ring"></div>
+      <div class="fp-ring"></div>
+      <div class="fp-ring"></div>
+      <div class="fp-disc" id="fpDisc">
+        <!-- fingerprint icon (idle/scanning) -->
+        <svg id="fpIconFp" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2db87a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8.5 2 6 4.5 6 7"/>
+          <path d="M18 7c0-3.3-2.5-5-6-5"/>
+          <path d="M6 12c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+          <path d="M12 12v4"/>
+          <path d="M9 15c0 1.7 1.3 3 3 3s3-1.3 3-3"/>
+          <path d="M7 18c.5 2 2.5 4 5 4s4.5-2 5-4"/>
+          <path d="M5 14c-.3-1-.5-2-.5-3"/>
+        </svg>
+        <!-- checkmark icon (verified, hidden by default) -->
+        <svg id="fpIconOk" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;opacity:0">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Status text -->
+    <div class="fp-status">
+      <div class="fp-status-label" id="fpStatusLabel">Ready to scan</div>
+      <div class="fp-status-hint" id="fpStatusHint">Tap the button below to begin</div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="fp-progress">
+      <div class="fp-progress-bar" id="fpBar"></div>
+    </div>
+
+    <!-- CTA button -->
+    <button class="btn-primary" id="fpBtn" onclick="startScan()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.5 2 6 4.5 6 7"/><path d="M18 7c0-3.3-2.5-5-6-5"/><path d="M6 12c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M12 12v4"/><path d="M9 15c0 1.7 1.3 3 3 3s3-1.3 3-3"/></svg>
+      Scan Fingerprint
+    </button>
 
     <div class="l-divider"></div>
-<div class="l-links-row">
-  <span>Login with
-    <a href="login.html" class="f-link">Username</a>
-    or
-    <a href="login-face-id.html" class="f-link">Face ID</a>
-  </span>
-  <a href="#" class="f-link f-link-bold">Need help?</a>
-</div>
-<div class='l-links-row' style='justify-content:flex-start'><span>No online account ? <a href='#' class='f-link'>create one</a></span></div>
 
-  </div>
+    <div class="l-links-row">
+      <span>Login with <a href="login.html" class="f-link">Username</a> or <a href="login-face-id.html" class="f-link">Face ID</a></span>
+      <a href="#" class="f-link f-link-bold">Need help?</a>
+    </div>
+    <div class="l-links-row" style="justify-content:flex-start">
+      <span>No online account? <a href="#" class="f-link">Create one</a></span>
+    </div>
+
+  </div><!-- /l-panel -->
+
 </main>
 
-<footer class="l-footer">
-  <div>Copyright 2025. All Rights Reserved
-    <a href="#">Terms and conditions</a>
-    <a href="about-app.html" target="_blank">About App</a>
+<!-- ── Success modal ── -->
+<div class="modal-ov hidden" id="successModal">
+  <div class="success-card">
+    <div class="success-ring">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2db87a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="success-msg">Identity Verified</div>
+    <p class="success-sub">Your fingerprint was recognised successfully. You're being signed in.</p>
+    <a href="dashboard.html" class="btn-ok">Go to Dashboard</a>
   </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+</div>
+
+<footer class="l-footer">
+  <div>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Use</a>
+    <a href="#">Security</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span>© 2025 azentio Software</span>
     <div class="acc-btns">
-      <button class="acc-btn">A<sup>-</sup></button>
-      <button class="acc-btn" style="font-size:13px">A</button>
-      <button class="acc-btn">A<sup>+</sup></button>
-      <button class="acc-btn" style="background:#16303d;color:#fff;border-color:#16303d">&#9681;</button>
+      <button class="acc-btn" title="Decrease font size" onclick="adjustFont(-1)">A−</button>
+      <button class="acc-btn" title="Increase font size" onclick="adjustFont(1)">A+</button>
     </div>
   </div>
 </footer>
 
-<div class="modal-ov hidden" id="successModal" role="dialog" aria-modal="true">
-  <div class="success-card">
-    <svg xmlns="http://www.w3.org/2000/svg" width="81" height="81" viewBox="0 0 81 81">
-  <g id="checkmark-circle-outline" transform="translate(-48 -47.5)">
-    <path id="Path_143" data-name="Path 143" d="M189.592,177.312l-3.385-3.481a.728.728,0,0,0-.538-.231.7.7,0,0,0-.538.231l-23.462,23.635-8.538-8.538a.744.744,0,0,0-1.077,0l-3.423,3.423a.766.766,0,0,0,0,1.1L159.4,204.215a3.406,3.406,0,0,0,2.25,1.1,3.569,3.569,0,0,0,2.231-1.058h.019l25.712-25.846a.822.822,0,0,0-.019-1.1Z" transform="translate(-81.092 -101.446)" fill="#5cb85c" stroke="#5cb85c" stroke-width="1"/>
-    <path id="Path_144" data-name="Path 144" d="M88,53.385A34.6,34.6,0,1,1,63.519,63.519,34.386,34.386,0,0,1,88,53.385M88,48a40,40,0,1,0,40,40A39.994,39.994,0,0,0,88,48Z" transform="translate(0.5 0)" fill="#5cb85c" stroke="#5cb85c" stroke-width="1"/>
-  </g>
-</svg>
-    <p class="success-msg">Successfully logged in with touch ID</p>
-    <a class="btn-ok" href="accounts.html">OK</a>
-  </div>
-</div>
-<div id="langBg" class="hidden" onclick="closeLang()"
-     style="position:fixed;inset:0;z-index:1999"></div>
-
 <script>
-function toggleLang() {
-  var m  = document.getElementById('langMenu');
-  var bg = document.getElementById('langBg');
-  var btn = document.getElementById('langBtn');
-  var open = !m.classList.contains('hidden');
-  m.classList.toggle('hidden', open);
-  if(bg) bg.classList.toggle('hidden', open);
-  btn.setAttribute('aria-expanded', String(!open));
+/* ── Language switcher ── */
+function toggleLang(){
+  var m=document.getElementById('langMenu');
+  var b=document.getElementById('langBtn');
+  var open=!m.classList.contains('hidden');
+  m.classList.toggle('hidden',open);
+  b.setAttribute('aria-expanded',String(!open));
 }
-function closeLang() {
-  var m = document.getElementById('langMenu');
-  var bg = document.getElementById('langBg');
-  var btn = document.getElementById('langBtn');
-  if(m)  m.classList.add('hidden');
-  if(bg) bg.classList.add('hidden');
-  if(btn) btn.setAttribute('aria-expanded','false');
+function setLang(code,iso,el){
+  document.getElementById('langCode').textContent=code;
+  document.querySelector('.lang-btn .fi').className='fi fi-'+iso;
+  document.querySelectorAll('.lang-opt').forEach(function(o){o.classList.remove('active')});
+  el.classList.add('active');
+  document.getElementById('langMenu').classList.add('hidden');
+  document.getElementById('langBtn').setAttribute('aria-expanded','false');
 }
-function setLang(code, flagCode, optBtn) {
-  var lc = document.getElementById('langCode');
-  var fi = document.querySelector('#langBtn .fi');
-  if(lc) lc.textContent = code;
-  if(fi) fi.className = 'fi fi-' + flagCode;
-  document.querySelectorAll('.lang-opt').forEach(function(o){
-    o.classList.remove('active');
-  });
-  optBtn.classList.add('active');
-  document.documentElement.setAttribute('dir', code === 'ع' ? 'rtl' : 'ltr');
-  closeLang();
-}
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLang(); });
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.lang-wrap')){
+    document.getElementById('langMenu').classList.add('hidden');
+    document.getElementById('langBtn').setAttribute('aria-expanded','false');
+  }
+});
 
-/* Password toggle */
-function togglePwd(inputId, btn) {
-  var inp = document.getElementById(inputId);
-  if(!inp) return;
-  var show = inp.type === 'password';
-  inp.type = show ? 'text' : 'password';
-  // Swap eye icon
-  var onIcon  = btn.querySelector('.eye-on');
-  var offIcon = btn.querySelector('.eye-off');
-  if(onIcon)  onIcon.style.display  = show ? 'none'  : '';
-  if(offIcon) offIcon.style.display = show ? ''      : 'none';
+/* ── Fingerprint scanner ── */
+var scanning=false;
+var progressInterval=null;
+
+function startScan(){
+  if(scanning) return;
+  scanning=true;
+
+  var scanner=document.getElementById('fpScanner');
+  var disc=document.getElementById('fpDisc');
+  var bar=document.getElementById('fpBar');
+  var btn=document.getElementById('fpBtn');
+  var label=document.getElementById('fpStatusLabel');
+  var hint=document.getElementById('fpStatusHint');
+  var fpFp=document.getElementById('fpIconFp');
+  var fpOk=document.getElementById('fpIconOk');
+
+  // start pulse
+  scanner.classList.remove('idle');
+  scanner.classList.add('scanning');
+  btn.disabled=true;
+  label.textContent='Scanning…';
+  hint.textContent='Keep your finger steady';
+
+  // animate progress bar over 2s
+  var pct=0;
+  progressInterval=setInterval(function(){
+    pct+=2;
+    bar.style.width=Math.min(pct,100)+'%';
+    if(pct>=100){
+      clearInterval(progressInterval);
+      onVerified(scanner,disc,bar,btn,label,hint,fpFp,fpOk);
+    }
+  },40);
+}
+
+function onVerified(scanner,disc,bar,btn,label,hint,fpFp,fpOk){
+  scanner.classList.remove('scanning');
+  scanner.classList.add('idle');
+  disc.classList.add('verified');
+
+  // swap icons
+  fpFp.style.display='none';
+  fpOk.style.display='block';
+  setTimeout(function(){ fpOk.style.opacity='1'; },20);
+
+  label.textContent='Fingerprint Matched';
+  label.style.color='var(--green)';
+  hint.textContent='Identity verified successfully';
+
+  // show modal after short pause
+  setTimeout(function(){
+    document.getElementById('successModal').classList.remove('hidden');
+  },700);
+}
+
+/* ── Accessibility font size ── */
+function adjustFont(delta){
+  var cur=parseFloat(getComputedStyle(document.documentElement).fontSize)||14;
+  document.documentElement.style.fontSize=Math.max(10,Math.min(20,cur+delta))+'px';
 }
 </script>
 </body>

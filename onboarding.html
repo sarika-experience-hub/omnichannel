@@ -265,6 +265,12 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 @media (max-width:1024px) { .az-right-panel { display:none; } }
 @media (max-width:900px)  { .frow.c3 { grid-template-columns:repeat(2,1fr); } }
 @media (max-width:640px)  { .az-sidebar { display:none; } .frow.c3,.frow.c2 { grid-template-columns:1fr; } .az-form-area { padding:16px; } .az-bottom-bar { padding:12px 16px; flex-wrap:wrap; } }
+.hdr-hamburger { background:none; border:none; cursor:pointer; padding:.375rem .5rem; display:flex; align-items:center; justify-content:center; border-radius:.375rem; transition:background .12s; color:#16303d; }
+.hdr-hamburger:hover { background:#f0f4f6; }
+.hdr-hamburger .material-icons { font-size:22px; color:#16303d; line-height:1; }
+.hdr-hamburger .icon-collapsed { display:none; }
+.hdr-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
+.hdr-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
 </style>
 <link rel="stylesheet" href="css/flag-icons.min.css"/>
 <style>
@@ -284,7 +290,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
-  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar" onclick="document.getElementById('sidebar').classList.toggle('collapsed');this.classList.toggle('is-collapsed');this.setAttribute('aria-expanded',String(!this.classList.contains('is-collapsed')))"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
   <div class="hdr-logo">
     <svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623" aria-label="Azentio" role="img">
       <g transform="translate(0.275 -0.84)">
@@ -321,9 +327,6 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 
   <!-- ████ SIDEBAR ████ -->
   <aside class="az-sidebar" id="sidebar" aria-label="Onboarding steps">
-    <button class="az-sb-toggle" id="sbToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
     <ul class="az-steps" id="stepList" role="list">
       <li class="az-step active clickable" data-step="1" role="listitem" aria-current="step">
         <div class="az-step-circle">1</div>
@@ -1470,8 +1473,6 @@ document.querySelectorAll('.az-step').forEach(el => {
 /* ═══════════════════════════════════════════════
    Sidebar collapse
 ═══════════════════════════════════════════════ */
-document.getElementById('sbToggle').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
 /* ═══════════════════════════════════════════════
