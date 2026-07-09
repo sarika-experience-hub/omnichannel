@@ -245,12 +245,13 @@ body {
   font-size: .9375rem; line-height: 1.4;
   transition: background .12s;
   white-space: nowrap;
+  text-decoration: none;
 }
-.sb-item:hover { background: rgba(0,0,0,.06); }
-.sb-item.active-section { background: var(--az-green); color: #fff; border-left-color: var(--az-green); }
-.sb-item.active-section:hover { background: var(--az-green-hover); }
-.sb-item.active-section .sb-icon img { filter: brightness(0) invert(1); }
-.sb-item.active-section .sb-chevron { color: #fff; }
+.sb-item:hover { background: rgba(0,0,0,.06); text-decoration: none; }
+.sb-item.active-section { background: #7ae9bc; color: #16303D; border-left-color: #16303D; font-weight: 600; }
+.sb-item.active-section:hover { background: #5de3b0; }
+.sb-item.active-section .sb-icon img { filter: brightness(0) saturate(100%) invert(16%) sepia(20%) saturate(600%) hue-rotate(165deg) brightness(90%); }
+.sb-item.active-section .sb-chevron { color: #16303D; }
 
 .sb-icon {
   width: 24px; min-width: 24px;
@@ -259,7 +260,7 @@ body {
 }
 .sb-icon img { width: 18px; height: 18px; }
 .sb-icon .material-icons { font-size: 18px; color: #6b7f8c; }
-.sb-item.active-section .sb-icon .material-icons { color: #fff; }
+.sb-item.active-section .sb-icon .material-icons { color: #16303D; }
 .sb-item:hover .sb-icon .material-icons { color: var(--az-navy); }
 .sb-label { flex: 1; overflow: hidden; transition: opacity .15s, max-width .22s; max-width: 180px; white-space: normal; line-height: 1.3; }
 .sb-chevron { display: flex; align-items: center; color: var(--az-muted); padding-right: .625rem; transition: opacity .15s; flex-shrink: 0; margin-top: 3px; }
@@ -334,7 +335,7 @@ body {
   cursor: pointer; white-space: nowrap; text-decoration: none;
   transition: background .12s;
 }
-.btn-open-account:hover { background: #f0faf5; color: var(--az-navy); }
+.btn-open-account:hover { background: #edf6f1; border-color: var(--az-green); color: var(--az-navy); }
 .btn-open-account img { width: 16px; height: 16px; }
 .bill-badge {
   display: inline-flex; align-items: center; justify-content: center;
@@ -368,7 +369,7 @@ body {
   font-family: 'Roboto', sans-serif; font-size: .8125rem; font-weight: 500;
   cursor: pointer; transition: background .12s;
 }
-.btn-locate:hover { background: #f0faf5; }
+.btn-locate:hover { background: #edf6f1; border-color: var(--az-green); }
 .btn-locate img { width: 14px; height: 14px; }
 
 /* ── Content card & tabs ───────────────────────── */
@@ -649,7 +650,7 @@ body {
 
 /* Add beneficiary button */
 .btn-add-ben { display:inline-flex; align-items:center; gap:.4375rem; padding:.4375rem .875rem; border:1.5px solid var(--az-navy); color:var(--az-navy); background:#fff; border-radius:.375rem; font-family:'Roboto',sans-serif; font-size:.8125rem; font-weight:700; cursor:pointer; white-space:nowrap; text-decoration:none; transition:background .12s; }
-.btn-add-ben:hover { background:#f0f4f6; color:var(--az-navy); }
+.btn-add-ben:hover { background:#edf6f1; border-color: var(--az-green); color:var(--az-navy); }
 .btn-add-ben img { width:16px; height:16px; }
 
 /* Success check icon */
@@ -1090,7 +1091,7 @@ body {
 
 /* ── Schedule Transfer button ── */
 .btn-schedule { display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border:1.5px solid var(--az-green);border-radius:.375rem;background:#fff;color:var(--az-navy);font-family:'Roboto',sans-serif;font-size:.8125rem;font-weight:500;cursor:pointer;transition:background .12s; }
-.btn-schedule:hover { background:#edfaf6; }
+.btn-schedule:hover { background:#edf6f1; border-color: var(--az-green); }
 
 /* ── Toggle switch ── */
 .toggle-wrap { display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--az-navy);padding:.375rem 0; }
@@ -1198,15 +1199,15 @@ body {
 
 /* Chequebook Details button (outlined green) */
 .btn-cheq-det { display:inline-block;padding:.3125rem .875rem;border:1.5px solid var(--az-green);color:var(--az-navy);background:#fff;border-radius:1rem;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;transition:background .12s; }
-.btn-cheq-det:hover { background:#edfaf6;color:var(--az-navy); }
+.btn-cheq-det:hover { background:#edf6f1; border-color: var(--az-green); color:var(--az-navy); }
 
 /* Request Chequebook button */
 .btn-req-cheq { display:inline-flex;align-items:center;gap:.4375rem;padding:.4375rem .875rem;border:1.5px solid var(--az-navy);color:var(--az-navy);background:#fff;border-radius:.375rem;font-size:.8125rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .12s; }
-.btn-req-cheq:hover { background:#f0f4f6; }
+.btn-req-cheq:hover { background:#edf6f1; border-color: var(--az-green); }
 
 /* Locate on Map button */
 .btn-locate-map { display:inline-flex;align-items:center;gap:.4375rem;padding:.4375rem .875rem;border:1.5px solid var(--az-green);color:var(--az-navy);background:#fff;border-radius:.375rem;font-size:.8125rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background .12s; }
-.btn-locate-map:hover { background:#edfaf6; }
+.btn-locate-map:hover { background:#edf6f1; border-color: var(--az-green); }
 
 /* Map modal */
 .map-container { width:100%;height:380px;border-radius:.5rem;overflow:hidden;background:#e8f0e9;position:relative; }
@@ -1221,7 +1222,7 @@ body {
 
 /* Report action buttons */
 .btn-rpt { display:inline-flex;align-items:center;gap:.3125rem;padding:.4375rem .875rem;border:1.5px solid var(--az-border);border-radius:.375rem;background:#fff;color:var(--az-navy);font-size:.8125rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background .12s; }
-.btn-rpt:hover { background:#f0f4f6; }
+.btn-rpt:hover { background:#edf6f1; border-color: var(--az-green); }
 .btn-rpt svg { flex-shrink:0; }
 
 /* Chequebook report row */
