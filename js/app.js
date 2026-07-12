@@ -67,18 +67,45 @@ function toggleCtx(id) {
   if (!m) return;
   var hidden = m.classList.contains('hidden');
   closeAllCtx();
-  if (hidden) {
-    m.classList.remove('hidden');
-    /* Flip if overflows viewport right */
-    var rect = m.getBoundingClientRect();
-    if (rect.right > window.innerWidth - 8) {
-      m.style.right = 'auto';
-      m.style.left  = '0';
-    }
+  if (!hidden) return;
+
+  var btn = m.previousElementSibling;
+  var btnRect = btn.getBoundingClientRect();
+
+  /* Use fixed positioning so viewport coordinates are exact */
+  m.style.position = 'fixed';
+  m.style.right    = (window.innerWidth - btnRect.right) + 'px';
+  m.style.left     = 'auto';
+  m.style.top      = (btnRect.bottom + 4) + 'px';
+  m.style.bottom   = 'auto';
+  m.classList.remove('hidden');
+
+  /* Now menu is visible — measure it and flip upward if needed */
+  var mRect = m.getBoundingClientRect();
+  if (mRect.bottom > window.innerHeight - 8) {
+    m.style.top    = 'auto';
+    m.style.bottom = (window.innerHeight - btnRect.top + 4) + 'px';
   }
+
+  var card = m.closest('.acct-row');
+  if (card) card.classList.add('ctx-open');
 }
-function closeCtx(id) { var m = document.getElementById(id); if (m) m.classList.add('hidden'); }
-function closeAllCtx() { document.querySelectorAll('.ctx-menu').forEach(function(m){ m.classList.add('hidden'); }); }
+function closeCtx(id) {
+  var m = document.getElementById(id);
+  if (!m) return;
+  m.classList.add('hidden');
+  m.style.position = ''; m.style.top = ''; m.style.bottom = ''; m.style.left = ''; m.style.right = '';
+  var card = m.closest('.acct-row');
+  if (card) card.classList.remove('ctx-open');
+}
+function closeAllCtx() {
+  document.querySelectorAll('.ctx-menu').forEach(function(m){
+    m.classList.add('hidden');
+    m.style.position = ''; m.style.top = ''; m.style.bottom = ''; m.style.left = ''; m.style.right = '';
+    var card = m.closest('.acct-row');
+    if (card) card.classList.remove('ctx-open');
+  });
+}
 document.addEventListener('click', function(e) { if (!e.target.closest('.ctx-wrap')) closeAllCtx(); });
 
 /* ── Modals ──────────────────────────────────── */
