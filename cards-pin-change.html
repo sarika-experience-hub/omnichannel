@@ -11,6 +11,88 @@
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+<style>
+.pc-wrap { max-width: 480px; }
+
+.pc-form-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* Card selector */
+.pc-sel-label { font-size: .78rem; font-weight: 600; color: var(--az-navy); margin-bottom: .625rem; }
+.pc-card-selector { display: flex; flex-direction: row; gap: .75rem; margin-bottom: 1.5rem; }
+.pc-card-opt {
+  display: flex; align-items: center; gap: .75rem;
+  background: #f8fafc; border: 1.5px solid var(--az-border);
+  border-radius: .625rem; padding: .625rem .875rem;
+  cursor: pointer; text-align: left; width: 100%;
+  transition: border-color .15s, background .15s;
+}
+.pc-card-opt:hover { border-color: #b0bec5; background: #f0f4f7; }
+.pc-card-opt.pc-active { border-color: var(--az-blue); background: #f0f6fc; }
+.pc-card-thumb {
+  width: 52px; height: 34px; border-radius: .375rem; flex-shrink: 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: .3rem .4rem;
+}
+.pc-thumb-bank { font-size: .38rem; font-weight: 700; letter-spacing: .1em; color: rgba(255,255,255,.7); text-transform: uppercase; }
+.pc-thumb-num  { font-size: .5rem; color: rgba(255,255,255,.85); font-family: 'Courier New', monospace; letter-spacing: .08em; }
+.pc-card-info  { flex: 1; }
+.pc-card-name  { font-size: .85rem; font-weight: 600; color: var(--az-navy); }
+.pc-card-sub   { font-size: .7rem; color: var(--az-muted); margin-top: .1rem; }
+.pc-check { font-size: 18px; color: var(--az-border); transition: color .15s; }
+.pc-card-opt.pc-active .pc-check { color: var(--az-blue); }
+
+/* Fields */
+.pc-fields { display: flex; flex-direction: row; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+.pc-field {}
+.pc-label { display: block; font-size: .8rem; font-weight: 600; color: var(--az-navy); margin-bottom: .5rem; }
+
+/* PIN row */
+.pc-pin-row { display: flex; align-items: center; gap: .75rem; }
+.pc-pin-group { display: flex; gap: .5rem; }
+.pc-pin-box {
+  width: 48px; height: 52px;
+  border: 1.5px solid var(--az-border); border-radius: .5rem;
+  text-align: center; font-size: 1.25rem; font-weight: 700;
+  color: var(--az-navy); background: #f8fafc;
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+}
+.pc-pin-box:focus {
+  border-color: var(--az-blue);
+  box-shadow: 0 0 0 3px rgba(0,83,138,.1);
+  background: #fff;
+}
+
+.pc-eye {
+  background: none; border: none; cursor: pointer;
+  color: var(--az-muted); padding: .25rem; line-height: 1;
+  border-radius: .375rem;
+}
+.pc-eye:hover { color: var(--az-navy); }
+.pc-eye .material-icons { font-size: 20px; display: block; }
+
+.pc-forgot { font-size: .72rem; color: var(--az-blue); text-decoration: none; margin-top: .375rem; display: inline-block; }
+.pc-forgot:hover { text-decoration: underline; }
+
+/* Match message */
+.pc-match-msg { display: flex; align-items: center; gap: .25rem; font-size: .75rem; font-weight: 500; margin-top: .375rem; }
+.pc-match-msg .material-icons { font-size: 15px; }
+.pc-match-ok  { color: #1a9e62; }
+.pc-match-err { color: #e53935; }
+
+/* Actions */
+.pc-actions {
+  display: flex; justify-content: flex-end; gap: .75rem;
+  margin-top: 1.5rem;
+}
+</style>
 </head>
 <body>
 
@@ -91,101 +173,101 @@
 
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
+  <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">›</span><a href="cards-my-cards.html">My Cards</a><span class="sep">›</span><span class="cur">Change PIN</span></div>
+  <h1 class="page-title">Change PIN</h1>
 
-    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">›</span><a href="cards-my-cards.html">My Cards</a><span class="sep">›</span><span class="cur">Change Card PIN</span></div>
-    <h1 class="page-title" style="margin-bottom:1.25rem;">Change Card PIN</h1>
+  <div class="pc-wrap">
+    <div class="pc-form-card">
 
-    <!-- Card Strip -->
-    <div class="card-strip" id="cardStrip">
-      <div class="az-card-vis" style="flex-shrink:0;">
-        <span class="az-card-logo">VISA</span>
-        <div class="az-card-num">
-          <span>2345 6789 5432 3749</span>
-          <div class="az-card-num-icons">
-            <button aria-label="Show card number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-            <button aria-label="Copy card number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+      <!-- Card selector -->
+      <div class="pc-sel-label">Select card to change PIN</div>
+      <div class="pc-card-selector">
+        <button class="pc-card-opt pc-active" onclick="pcSelectCard(this)" type="button">
+          <div class="pc-card-thumb" style="background:linear-gradient(135deg,#16303d,#0a1f2e);">
+            <div class="pc-thumb-bank">azentio</div>
+            <div class="pc-thumb-num">···· 7841</div>
           </div>
-        </div>
-        <div class="az-card-expiry">Expiry date 02/30</div>
-        <div class="az-card-holder">Sarika Desai</div>
-        <div class="az-card-footer">
-          <span class="az-card-label">Primary Card</span>
-          <label class="az-toggle"><input type="checkbox" checked/><span class="az-slider"></span></label>
-        </div>
+          <div class="pc-card-info">
+            <div class="pc-card-name">Platinum Visa</div>
+            <div class="pc-card-sub">Primary · Active</div>
+          </div>
+          <span class="pc-check material-icons">check_circle</span>
+        </button>
+        <button class="pc-card-opt" onclick="pcSelectCard(this)" type="button">
+          <div class="pc-card-thumb" style="background:linear-gradient(135deg,#1a4a6b,#0d2d45);">
+            <div class="pc-thumb-bank">azentio</div>
+            <div class="pc-thumb-num">···· 3290</div>
+          </div>
+          <div class="pc-card-info">
+            <div class="pc-card-name">Gold Mastercard</div>
+            <div class="pc-card-sub">Secondary · Active</div>
+          </div>
+          <span class="pc-check material-icons">check_circle</span>
+        </button>
       </div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:flex-start;gap:.625rem;margin-bottom:.75rem;">
-          <div>
-            <div class="card-name">
-              <span>D-Card</span>
-              <button class="edit-name-btn" aria-label="Edit card name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button>
-              <span class="fi fi-us" title="USD"></span>
-              <span style="color:var(--az-muted);font-size:.75rem;display:inline-flex;align-items:center;gap:.25rem;">USD</span>
+
+      <div style="height:1px;background:var(--az-border);margin:1.25rem 0;"></div>
+      <!-- PIN fields -->
+      <div class="pc-fields">
+
+        <div class="pc-field">
+          <label class="pc-label">Current PIN</label>
+          <div class="pc-pin-row">
+            <div class="pc-pin-group" id="pcGrp1">
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="off"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="off"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="off"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="off"/>
             </div>
-            <span class="badge-s s-active" style="margin-top:.375rem;display:inline-block;">Active</span>
+            <button class="pc-eye" onclick="pcToggleVis('pcGrp1',this)" type="button">
+              <span class="material-icons">visibility</span>
+            </button>
+          </div>
+          <a href="cards-pin-reset.html" class="pc-forgot">Forgot PIN?</a>
+        </div>
+
+        <div class="pc-field">
+          <label class="pc-label">New PIN</label>
+          <div class="pc-pin-row">
+            <div class="pc-pin-group" id="pcGrp2">
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+            </div>
+            <button class="pc-eye" onclick="pcToggleVis('pcGrp2',this)" type="button">
+              <span class="material-icons">visibility</span>
+            </button>
           </div>
         </div>
-        <div class="card-strip-fields">
-          <div class="cs-field"><div class="csfl">Available Balance</div><div class="csfv">$8900.00</div></div>
-          <div class="cs-field"><div class="csfl">Applicant Address</div><div class="csfv">Lebanon</div></div>
-          <div class="cs-field"><div class="csfl">Primary Account</div><div class="csfv">3245600678</div></div>
-          <div class="cs-field">
-            <div class="csfl">CVV <button class="info-ico" title="Check your physical card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button></div>
-            <div class="csfv">Check your physical card</div>
+
+        <div class="pc-field">
+          <label class="pc-label">Confirm New PIN</label>
+          <div class="pc-pin-row">
+            <div class="pc-pin-group" id="pcGrp3">
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+              <input type="password" class="pc-pin-box" maxlength="1" inputmode="numeric" autocomplete="new-password" oninput="pcCheckMatch()"/>
+            </div>
+            <button class="pc-eye" onclick="pcToggleVis('pcGrp3',this)" type="button">
+              <span class="material-icons">visibility</span>
+            </button>
           </div>
+          <div class="pc-match-msg" id="pcMatchMsg" style="display:none"></div>
         </div>
+
       </div>
-      <button class="card-strip-chev open" id="stripChev" onclick="toggleStrip()" aria-label="Toggle card details">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
-      </button>
+
+      <div class="pc-actions">
+        <button class="btn-action btn-cancel" onclick="location.href='cards-my-cards.html'">Cancel</button>
+        <button class="btn-action btn-submit" onclick="pcSubmit()">Change PIN</button>
+      </div>
+
     </div>
+  </div>
 
-    <!-- PIN Information -->
-    <div class="form-sec" style="margin-top:1.25rem;">
-      <div class="form-sec-hdr" onclick="toggleSection('secPIN','chevPIN')">
-        <span>PIN Information</span>
-        <svg class="chev open" id="chevPIN" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M18 15l-6-6-6 6"/></svg>
-      </div>
-      <div id="secPIN" class="form-sec-body">
-        <div style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
-          <div>
-            <label class="f-label" style="margin-bottom:.5rem;display:block;">Old PIN</label>
-            <div class="pin-boxes">
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-            </div>
-          </div>
-          <div>
-            <label class="f-label" style="margin-bottom:.5rem;display:block;">New PIN</label>
-            <div class="pin-boxes">
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-            </div>
-          </div>
-          <div>
-            <label class="f-label" style="margin-bottom:.5rem;display:block;">Confirm New PIN</label>
-            <div class="pin-boxes">
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-              <input type="password" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-footer" style="margin-top:1.25rem;">
-      <div style="flex:1;"></div>
-      <button class="btn-action btn-cancel" onclick="location.href='cards-my-cards.html'">CANCEL</button>
-      <button class="btn-action btn-submit" onclick="showSuccess()">SUBMIT</button>
-    </div>
-
-  </main>
+</main>
   <footer class="app-footer">
     <span>Copyright 2025. All Rights Reserved</span>
     <div><a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
@@ -242,11 +324,59 @@
     document.getElementById('successModal').classList.add('hidden');
     location.href = 'cards-my-cards.html';
   }
-  // PIN box auto-advance
-  document.querySelectorAll('.pin-box').forEach((box, i, all) => {
-    box.addEventListener('input', () => { if (box.value && i < all.length - 1) all[i+1].focus(); });
-    box.addEventListener('keydown', e => { if (e.key === 'Backspace' && !box.value && i > 0) all[i-1].focus(); });
+  // PIN auto-advance + backspace
+['pcGrp1','pcGrp2','pcGrp3'].forEach(function(grpId) {
+  var boxes = Array.from(document.querySelectorAll('#' + grpId + ' .pc-pin-box'));
+  boxes.forEach(function(box, i) {
+    box.addEventListener('input', function() {
+      if (this.value && !/^[0-9]$/.test(this.value)) { this.value = ''; return; }
+      if (this.value && i < boxes.length - 1) boxes[i+1].focus();
+    });
+    box.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !this.value && i > 0) boxes[i-1].focus();
+    });
   });
+});
+
+function pcGetPin(grpId) {
+  return Array.from(document.querySelectorAll('#' + grpId + ' .pc-pin-box')).map(function(b){ return b.value; }).join('');
+}
+
+function pcToggleVis(grpId, btn) {
+  var boxes = document.querySelectorAll('#' + grpId + ' .pc-pin-box');
+  var icon  = btn.querySelector('.material-icons');
+  var show  = boxes[0].type === 'password';
+  boxes.forEach(function(b){ b.type = show ? 'text' : 'password'; });
+  icon.textContent = show ? 'visibility_off' : 'visibility';
+}
+
+function pcCheckMatch() {
+  var p2 = pcGetPin('pcGrp2');
+  var p3 = pcGetPin('pcGrp3');
+  var msg = document.getElementById('pcMatchMsg');
+  if (!msg || p3.length === 0) { if (msg) msg.style.display = 'none'; return; }
+  if (p3.length < 4) { msg.style.display = 'none'; return; }
+  msg.style.display = 'flex';
+  if (p2 === p3) { msg.className = 'pc-match-msg pc-match-ok'; msg.innerHTML = '<span class="material-icons">check_circle</span> PINs match'; }
+  else           { msg.className = 'pc-match-msg pc-match-err'; msg.innerHTML = '<span class="material-icons">cancel</span> PINs do not match'; }
+}
+
+function pcSelectCard(btn) {
+  document.querySelectorAll('.pc-card-opt').forEach(function(b){ b.classList.remove('pc-active'); });
+  btn.classList.add('pc-active');
+  // reset all PIN fields on card switch
+  document.querySelectorAll('.pc-pin-box').forEach(function(b){ b.value = ''; b.type = 'password'; });
+  document.querySelectorAll('.pc-eye .material-icons').forEach(function(i){ i.textContent = 'visibility'; });
+  var msg = document.getElementById('pcMatchMsg'); if (msg) msg.style.display = 'none';
+}
+
+function pcSubmit() {
+  var p1 = pcGetPin('pcGrp1'), p2 = pcGetPin('pcGrp2'), p3 = pcGetPin('pcGrp3');
+  if (p1.length < 4) { alert('Please enter your current PIN.'); return; }
+  if (p2.length < 4) { alert('Please enter a new PIN.'); return; }
+  if (p2 !== p3)     { alert('New PIN and confirm PIN do not match.'); return; }
+  document.getElementById('successModal').classList.remove('hidden');
+}
 
 /* Language selector */
 function setHdrLang(code, flagCode, optBtn) {
