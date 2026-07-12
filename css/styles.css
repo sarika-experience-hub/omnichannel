@@ -375,10 +375,10 @@ body {
 /* ── Content card & tabs ───────────────────────── */
 .content-card {
   background: #fff;
-  border: 1px solid var(--az-border);
+  border: none;
   border-radius: .875rem;
   overflow: visible;
-  box-shadow: 0 2px 8px rgba(22,48,61,.06);
+  box-shadow: none;
   margin: 0 0 1.5rem;
 }
 .tabs-header-row { display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem; flex-wrap: wrap; gap: .5rem; border-bottom: 1px solid var(--az-border); }
