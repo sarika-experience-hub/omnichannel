@@ -462,8 +462,17 @@
 .mk-stat-cell {
   padding: .75rem 1.25rem;
   border-right: 1px solid var(--az-border);
+  background: var(--mk-stat-bg, #fafbfc);
+  transition: filter .15s;
 }
 .mk-stat-cell:last-child { border-right: none; }
+.mk-stat-cell:hover { filter: brightness(.97); }
+
+/* Per-card tint colours */
+.mk-stat-cell:nth-child(1) { --mk-stat-bg: #fffbf0; }   /* amber — Awaiting */
+.mk-stat-cell:nth-child(2) { --mk-stat-bg: #fff5f5; }   /* red   — Returned  */
+.mk-stat-cell:nth-child(3) { --mk-stat-bg: #f2fbf6; }   /* green — Approved  */
+.mk-stat-cell:nth-child(4) { --mk-stat-bg: #f0f4f7; }   /* navy  — Drafts    */
 .mk-stat-cell-hdr {
   display: flex; align-items: flex-start; justify-content: space-between;
   margin-bottom: .375rem;
@@ -474,12 +483,13 @@
 }
 .mk-stat-icon svg { width: 16px; height: 16px; }
 .mk-stat-badge {
-  font-size: .625rem; font-weight: 600; padding: .15rem .4rem; border-radius: 20px;
+  font-size: .625rem; font-weight: 700; padding: .15rem .5rem; border-radius: 20px;
+  background: rgba(255,255,255,.75);
 }
-.mk-stat-badge-submit { background: #e8f4fd; color: #0071bc; }
-.mk-stat-badge-warn   { background: #fff8e1; color: #b35a00; }
-.mk-stat-badge-safe   { background: #e6f9f0; color: #1a9e62; }
-.mk-stat-badge-crit   { background: #fdecea; color: #c62828; }
+.mk-stat-badge-submit { color: #0071bc; }
+.mk-stat-badge-warn   { color: #b35a00; }
+.mk-stat-badge-safe   { color: #1a9e62; }
+.mk-stat-badge-crit   { color: #c62828; }
 .mk-stat-label { font-size: .75rem; color: var(--az-muted); margin-bottom: .1rem; }
 .mk-stat-value { font-size: 1.375rem; font-weight: 700; color: var(--az-navy); line-height: 1.2; }
 .mk-sparkline  { width: 100%; height: 22px; overflow: visible; margin-top: .25rem; }
@@ -1189,7 +1199,7 @@
 .mk-btn-qtert:hover { background: #f5f6f8; color: var(--az-navy); }
 
 /* ── In Drafts stat badge ── */
-.mk-stat-badge-draft { background: #eaf0f4; color: #16303d; }
+.mk-stat-badge-draft { background: rgba(255,255,255,.75); color: #16303d; }
 
 /* ── Sortable column headers ── */
 .mk-sort-btn {
