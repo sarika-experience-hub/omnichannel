@@ -139,7 +139,7 @@
   <main class="main-body" role="main">
 
     <!-- Breadcrumb -->
-    <div class="az-bc" style="padding:.375rem 1.75rem 0;margin-top:1.25rem;">
+    <div class="az-bc" style="padding:.375rem 1.75rem 0;margin-top:.625rem;">
       <a href="maker-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">Dashboard</span>
     </div>
 
@@ -190,7 +190,7 @@
       <div class="mk-stat-strip">
 
         <!-- 1: Awaiting Approval (highest priority) -->
-        <div class="mk-stat-cell" onclick="mkStatClick('pending')" style="cursor:pointer" title="View pending approvals">
+        <div class="mk-stat-cell" onclick="mkStatClick('pending')" style="cursor:pointer;background:#fef3c7;" title="View pending approvals">
           <div class="mk-stat-cell-hdr">
             <div class="mk-stat-icon" style="background:#fff8e1">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#b35a00" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -198,7 +198,7 @@
             <span class="mk-stat-badge mk-stat-badge-warn">Pending</span>
           </div>
           <div class="mk-stat-label">Awaiting Approval</div>
-          <div class="mk-stat-value" style="color:#b35a00">5</div>
+          <div class="mk-stat-value" id="mkKpi1" style="color:#b35a00">5</div>
           <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#b35a00">
             <defs><linearGradient id="msg-1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
             <path d="M0,18 L13,10 L26,2 L40,14 L53,6 L66,10 L80,10 L80,30 L0,30 Z" fill="url(#msg-1)"/>
@@ -208,7 +208,7 @@
         </div>
 
         <!-- 2: Returned (critical — action needed) -->
-        <div class="mk-stat-cell mk-stat-cell-urgent" onclick="mkStatClick('returned')" title="Click to review returned transactions">
+        <div class="mk-stat-cell mk-stat-cell-urgent" onclick="mkStatClick('returned')" style="background:#fde8e8;" title="Click to review returned transactions">
           <div class="mk-stat-cell-hdr">
             <div class="mk-stat-icon" style="background:#fdecea">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
@@ -216,7 +216,7 @@
             <span class="mk-stat-badge mk-stat-badge-crit">Action Needed</span>
           </div>
           <div class="mk-stat-label">Returned for Correction</div>
-          <div class="mk-stat-value" style="color:#c62828">2</div>
+          <div class="mk-stat-value" id="mkKpi2" style="color:#c62828">2</div>
           <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#c62828">
             <defs><linearGradient id="msg-2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
             <path d="M0,11 L13,21 L26,4 L40,11 L53,30 L66,21 L80,11 L80,30 L0,30 Z" fill="url(#msg-2)"/>
@@ -226,7 +226,7 @@
         </div>
 
         <!-- 3: Approved This Week -->
-        <div class="mk-stat-cell" onclick="mkStatClick('approved')" style="cursor:pointer" title="View approved transactions">
+        <div class="mk-stat-cell" onclick="mkStatClick('approved')" style="cursor:pointer;background:#d9f5e8;" title="View approved transactions">
           <div class="mk-stat-cell-hdr">
             <div class="mk-stat-icon" style="background:#e6f9f0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#1a9e62" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -234,7 +234,7 @@
             <span class="mk-stat-badge mk-stat-badge-safe">This Week</span>
           </div>
           <div class="mk-stat-label">Approved This Week</div>
-          <div class="mk-stat-value" style="color:#1a9e62">23</div>
+          <div class="mk-stat-value" id="mkKpi3" style="color:#1a9e62">23</div>
           <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#1a9e62">
             <defs><linearGradient id="msg-3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
             <path d="M0,14 L13,10 L26,8 L40,9 L53,5 L66,6 L80,4 L80,30 L0,30 Z" fill="url(#msg-3)"/>
@@ -244,7 +244,7 @@
         </div>
 
         <!-- 4: In Drafts (replaces Submitted Today — shows draft pressure) -->
-        <div class="mk-stat-cell" onclick="mkStatClick('draft')" style="cursor:pointer" title="View drafts">
+        <div class="mk-stat-cell" onclick="mkStatClick('draft')" style="cursor:pointer;background:#dde7f0;" title="View drafts">
           <div class="mk-stat-cell-hdr">
             <div class="mk-stat-icon" style="background:#eaf0f4">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -252,7 +252,7 @@
             <span class="mk-stat-badge mk-stat-badge-draft">Drafts</span>
           </div>
           <div class="mk-stat-label">In Drafts</div>
-          <div class="mk-stat-value" style="color:#16303d">5</div>
+          <div class="mk-stat-value" id="mkKpi4" style="color:#16303d">5</div>
           <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#16303d">
             <defs><linearGradient id="msg-4d" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
             <path d="M0,20 L13,18 L26,14 L40,16 L53,10 L66,13 L80,8 L80,30 L0,30 Z" fill="url(#msg-4d)"/>
@@ -534,39 +534,31 @@
 <script src="js/app.js"></script>
 <script src="js/shared.js"></script>
 <script>
-// ── Count-up animations ──
-var kpis=[
-  {id:'kpiInitiated', target:14280000, prefix:'$', compact:true},
-  {id:'kpiPending',   target:6840000,  prefix:'$', compact:true},
-  {id:'kpiApproved',  target:4,        prefix:'',  suffix:' TXN', compact:false},
-  {id:'kpiMtd',       target:48920000, prefix:'$', compact:true}
-];
-function countUp(el, target, prefix, suffix, compact){
-  suffix=suffix||'';
-  var dur=1300, start=performance.now();
-  function frame(now){
-    var p=Math.min((now-start)/dur,1);
-    var ease=1-Math.pow(1-p,4);
-    var val=target*ease;
-    var display;
-    if(compact){
-      if(val>=1e6) display='$'+(val/1e6).toFixed(1)+'M';
-      else if(val>=1e3) display='$'+(val/1e3).toFixed(0)+'K';
-      else display=prefix+Math.round(val).toLocaleString()+suffix;
-    } else {
-      display=prefix+Math.round(val).toLocaleString()+suffix;
+// ── KPI Count-up animations ──
+(function(){
+  var mkKpis=[
+    {id:'mkKpi1', target:5},
+    {id:'mkKpi2', target:2},
+    {id:'mkKpi3', target:23},
+    {id:'mkKpi4', target:5}
+  ];
+  function countUp(el, target){
+    var dur=1100, start=performance.now();
+    function frame(now){
+      var p=Math.min((now-start)/dur,1);
+      var ease=1-Math.pow(1-p,4);
+      el.textContent=Math.round(target*ease);
+      if(p<1) requestAnimationFrame(frame);
     }
-    el.textContent=display;
-    if(p<1)requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
-}
-setTimeout(function(){
-  kpis.forEach(function(k){
-    var el=document.getElementById(k.id);
-    if(el) countUp(el, k.target, k.prefix, k.suffix||'', k.compact);
-  });
-},300);
+  setTimeout(function(){
+    mkKpis.forEach(function(k){
+      var el=document.getElementById(k.id);
+      if(el) countUp(el, k.target);
+    });
+  },300);
+})();
 
 // ── Limit bars ──
 var limits=[
