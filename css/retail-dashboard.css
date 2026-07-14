@@ -1006,17 +1006,8 @@
   display: inline-block;
   transition: filter .35s ease, opacity .35s ease;
 }
-.bal-amount.bal-hidden {
-  filter: blur(8px);
-  opacity: .35;
-}
-.bal-acc-val {
-  transition: filter .35s ease, opacity .35s ease;
-}
-.bal-acc-val.bal-hidden {
-  filter: blur(6px);
-  opacity: .35;
-}
+.bal-amount.bal-hidden { opacity: .6; letter-spacing: .05em; }
+.bal-acc-val.bal-hidden { opacity: .6; letter-spacing: .05em; }
 
 /* Alert chips — staggered entrance */
 .ab-chip {
