@@ -624,3 +624,25 @@
 .sla-sub  { font-size:.75rem; }
 .act-time { font-size:.75rem; }
 .maker-rate { font-size:.75rem; }
+
+/* ── Mobile / small-tablet breakpoints ── */
+@media (max-width: 767px) {
+  .pg-checker-dashboard .main-body { padding: .625rem .75rem 0; }
+  .welcome-bar { padding: .75rem 1rem; flex-wrap: wrap; gap: .75rem; }
+  .wb-actions { width: 100%; }
+  .ck-status { flex-wrap: wrap; overflow: hidden; }
+  .ck-ss-item:last-child { margin-left: 0; border-left: 1px solid var(--az-border); border-right: none; }
+  .dash-card-hdr { padding: .75rem 1rem; }
+  .filter-tabs { padding: .625rem 1rem .5rem; }
+  .batch-toolbar { flex-wrap: wrap; margin: .375rem 1rem; }
+  .metrics-grid { padding: .875rem 1rem; }
+  /* Approval queue table: horizontal scroll on small screens */
+  .aq-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+@media (max-width: 479px) {
+  .pg-checker-dashboard .main-body { padding: .5rem .5rem 0; }
+  .welcome-bar { padding: .625rem .75rem; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .btn-quick { padding: .375rem .625rem; font-size: .75rem; }
+  .page-top-bar { flex-wrap: wrap; gap: .5rem; }
+}
