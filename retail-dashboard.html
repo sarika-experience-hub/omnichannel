@@ -582,7 +582,8 @@ function tick() {
 }
 tick(); setInterval(tick, 1000);
 
-// ── Balance toggle (blur transition) ──
+// ── Balance toggle (dots) ──
+const DOTS = '••••••';
 let balVisible = true;
 function toggleBalance() {
   balVisible = !balVisible;
@@ -591,19 +592,24 @@ function toggleBalance() {
   const btn = document.getElementById('eyeBtn');
   if (!el || !ico) return;
 
-  // spin effect
   btn.classList.add('eye-spinning');
   setTimeout(function() { btn.classList.remove('eye-spinning'); }, 300);
 
   if (balVisible) {
     el.classList.remove('bal-hidden');
-    document.querySelectorAll('.bal-acc-val').forEach(function(v) { v.classList.remove('bal-hidden'); });
-    setTimeout(function() {
-      countUp(el, 248350.00, 600);
-    }, 100);
+    document.querySelectorAll('.bal-acc-val').forEach(function(v) {
+      v.classList.remove('bal-hidden');
+      v.textContent = v.getAttribute('data-orig') || v.textContent;
+    });
+    setTimeout(function() { countUp(el, 248350.00, 600); }, 100);
   } else {
+    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', el.textContent);
     el.classList.add('bal-hidden');
-    document.querySelectorAll('.bal-acc-val').forEach(function(v) { v.classList.add('bal-hidden'); });
+    el.textContent = DOTS;
+    document.querySelectorAll('.bal-acc-val').forEach(function(v) {
+      v.classList.add('bal-hidden');
+      v.textContent = DOTS;
+    });
   }
   ico.textContent = balVisible ? 'visibility' : 'visibility_off';
 }
