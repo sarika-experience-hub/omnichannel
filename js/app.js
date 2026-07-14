@@ -71,21 +71,30 @@ function toggleCtx(id) {
 
   var btn = m.previousElementSibling;
   var btnRect = btn.getBoundingClientRect();
+  var openUp = !!btn.closest('.ac-card-footer');
 
   /* Use fixed positioning so viewport coordinates are exact */
   m.style.position = 'fixed';
   m.style.right    = (window.innerWidth - btnRect.right) + 'px';
   m.style.left     = 'auto';
-  m.style.top      = (btnRect.bottom + 4) + 'px';
-  m.style.bottom   = 'auto';
-  m.classList.remove('hidden');
 
-  /* Now menu is visible — measure it and flip upward if needed */
-  var mRect = m.getBoundingClientRect();
-  if (mRect.bottom > window.innerHeight - 8) {
+  if (openUp) {
+    /* Footer button — always open upward */
     m.style.top    = 'auto';
     m.style.bottom = (window.innerHeight - btnRect.top + 4) + 'px';
+  } else {
+    m.style.top    = (btnRect.bottom + 4) + 'px';
+    m.style.bottom = 'auto';
+    /* Flip upward if it overflows viewport bottom */
+    m.classList.remove('hidden');
+    var mRect = m.getBoundingClientRect();
+    if (mRect.bottom > window.innerHeight - 8) {
+      m.style.top    = 'auto';
+      m.style.bottom = (window.innerHeight - btnRect.top + 4) + 'px';
+    }
+    m.classList.add('hidden'); /* will be removed below */
   }
+  m.classList.remove('hidden');
 
   var card = m.closest('.acct-row');
   if (card) card.classList.add('ctx-open');
