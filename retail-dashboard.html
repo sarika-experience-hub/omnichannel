@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>azentio – Retail Dashboard</title>
+  <title>azentio – My Banking</title>
   <link rel="stylesheet" href="css/bootstrap.min.css"/>
   <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/flag-icons.min.css"/>
@@ -95,7 +95,7 @@
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
-  <a href="retail-dashboard.html" class="sb-item active-section" data-label="My Overview"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Overview</span></a>
+  <a href="retail-dashboard.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
@@ -130,12 +130,12 @@
 
     <!-- Breadcrumb -->
     <div class="az-bc" style="padding:.375rem 1.75rem 0;margin-top:.625rem;">
-      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Overview</span>
+      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Banking</span>
     </div>
 
     <!-- Page header -->
     <div class="page-top-bar" style="margin-bottom:.75rem;margin-top:0;padding:0 1.75rem;">
-      <h1 class="page-title">My Overview</h1>
+      <h1 class="page-title">My Banking</h1>
       <div style="display:flex;gap:.625rem;">
         <button class="btn-open-account" onclick="location.href='payments-bill-report.html'">
           <span class="material-icons" style="font-size:15px;">receipt_long</span> Pay Bills
@@ -165,6 +165,9 @@
           <div class="ab-chip ab-chip-success"><span class="material-icons">check_circle</span>Salary credited · AED 18,500</div>
         </div>
       </div>
+
+      <!-- ── Left column: actionable ── -->
+      <div class="rd-left">
 
       <!-- ── rd-d1: Total Balance ── -->
       <div class="rd-panel rd-reveal rd-d1" style="padding:0;overflow:hidden;">
@@ -216,241 +219,7 @@
         </div>
       </div>
 
-      <!-- ── rd-d2: Upcoming & Alerts ── -->
-      <div class="rd-panel rd-reveal rd-d2">
-        <div class="rd-ph">
-          <span class="rd-ph-title">Upcoming &amp; Alerts</span>
-          <a href="payments-bill-report.html" class="rd-ph-action">View all <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
-        </div>
-        <div class="ac-alert">
-          <span class="material-icons ac-alert-icon">warning_amber</span>
-          <div class="ac-alert-body">
-            <div class="ac-alert-title">Low balance alert</div>
-            <div class="ac-alert-sub">Current account below AED 10,000 threshold</div>
-          </div>
-          <a href="accounts.html" class="ac-alert-link">View</a>
-        </div>
-        <div class="ac-section-lbl">Upcoming Payments</div>
-        <div class="ac-list">
-          <div class="ac-item">
-            <div class="ac-icon" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;font-size:18px;">bolt</span></div>
-            <div class="ac-body"><div class="ac-name">Electricity (DEWA)</div><div class="ac-due ac-due-urgent">Due in 2 days</div></div>
-            <div class="ac-amt">AED 320</div>
-            <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
-          </div>
-          <div class="ac-item">
-            <div class="ac-icon" style="background:#eef4ff;"><span class="material-icons" style="color:#3d6e82;font-size:18px;">wifi</span></div>
-            <div class="ac-body"><div class="ac-name">Internet · Etisalat</div><div class="ac-due">Due in 5 days</div></div>
-            <div class="ac-amt">AED 250</div>
-            <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
-          </div>
-          <div class="ac-item">
-            <div class="ac-icon" style="background:#f3f0ff;"><span class="material-icons" style="color:#7a6e90;font-size:18px;">credit_card</span></div>
-            <div class="ac-body"><div class="ac-name">Credit Card Bill</div><div class="ac-due">Due Jul 15</div></div>
-            <div class="ac-amt">AED 1,840</div>
-            <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
-          </div>
-        </div>
-        <div class="ac-section-lbl" style="margin-top:.75rem;">Pending Actions</div>
-        <div class="ac-list">
-          <a href="transaction-history.html" class="ac-pending-item">
-            <span class="material-icons" style="font-size:16px;color:#5a7080;">pending_actions</span>
-            <span>3 transactions under review</span>
-            <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
-          </a>
-          <a href="cards-my-cards.html" class="ac-pending-item">
-            <span class="material-icons" style="font-size:16px;color:#5a7080;">credit_card</span>
-            <span>Card PIN change requested</span>
-            <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
-          </a>
-        </div>
-      </div>
 
-      <!-- ── rd-d3: Financial Tips ── -->
-      <div class="rd-panel rd-reveal rd-d3">
-        <div class="rd-ph" style="margin-bottom:.875rem;">
-          <div style="display:flex;align-items:center;gap:.4rem;">
-            <span class="material-icons" style="font-size:18px;color:#d97706;">lightbulb</span>
-            <span class="rd-ph-title">Financial Tips</span>
-          </div>
-          <a href="javascript:;" class="rd-ph-action">View more <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
-        </div>
-        <div class="d7-nudge" style="border-bottom:none;border-radius:.75rem;margin-bottom:.625rem;">
-          <div class="d7-nudge-head">
-            <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">savings</span>
-            <span class="d7-nudge-label">Savings Goal</span>
-          </div>
-          <div class="d7-nudge-text">Set up a recurring transfer of AED 1,000/month to your Emergency Fund to reach your goal 4 months earlier.</div>
-          <a href="transfer-own-accounts.html" class="d7-nudge-cta">Set up auto-transfer <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
-        </div>
-        <div class="d7-nudge" style="border-bottom:none;border-radius:.75rem;margin-bottom:1.25rem;">
-          <div class="d7-nudge-head">
-            <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">trending_up</span>
-            <span class="d7-nudge-label">Investment</span>
-          </div>
-          <div class="d7-nudge-text">A 12-month Fixed Deposit at 5.5% p.a. on your idle AED 22,150 earns AED 1,218 with zero risk.</div>
-          <a href="general-account-opening.html" class="d7-nudge-cta">Open FD <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
-        </div>
-      </div>
-
-      <!-- ── rd-d4: Recent Transactions ── -->
-      <div class="rd-panel rd-reveal rd-d4" style="padding:0;">
-        <div style="padding:1rem 1.25rem .75rem;" class="rd-ph">
-          <span class="rd-ph-title">Recent Transactions</span>
-          <div class="txn-search-inline">
-            <span class="material-icons" style="font-size:15px;color:var(--az-muted);">search</span>
-            <input type="text" class="txn-search-input" placeholder="Search…" oninput="filterTxns(this.value)">
-          </div>
-        </div>
-        <div class="txn-tabs" style="padding:0 1rem;display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;">
-            <div class="txn-tab active" onclick="setTab(this)">All</div>
-            <div class="txn-tab" onclick="setTab(this)">Income</div>
-            <div class="txn-tab" onclick="setTab(this)">Expenses</div>
-            <div class="txn-tab" onclick="setTab(this)">Transfers</div>
-          </div>
-          <a href="transaction-history.html" class="rd-ph-action">View Statement <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
-        </div>
-        <div class="txn-list" id="txnList">
-          <div class="txn-date-group"><span class="txn-date-lbl">Today</span><div class="txn-date-line"></div><span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span></div>
-          <div class="txn-row" data-txn="salary emirates corp income direct deposit">
-            <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
-            <div class="txn-body"><div class="txn-name">Salary · Emirates Corp</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div></div>
-            <div class="txn-right"><div class="txn-amt credit">+AED 18,500</div><div class="txn-when">08:00</div></div>
-          </div>
-          <div class="txn-row" data-txn="noon.com shopping visa contactless">
-            <div class="txn-mono" style="background:#edfaf6;color:#16303d;">N</div>
-            <div class="txn-body"><div class="txn-name">Noon.com</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_bag</span><span>Shopping</span><span class="txn-sep">·</span><span>Visa contactless</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 280</div><div class="txn-when">10:22</div></div>
-          </div>
-          <div class="txn-date-group"><span class="txn-date-lbl">Yesterday</span><div class="txn-date-line"></div><span class="txn-date-total">−AED 1,640</span></div>
-          <div class="txn-row" data-txn="emirates airlines travel flight dxb lhr">
-            <div class="txn-mono" style="background:#eff6ff;color:#00538A;">E</div>
-            <div class="txn-body"><div class="txn-name">Emirates Airlines</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">flight</span><span>Travel</span><span class="txn-sep">·</span><span>DXB → LHR</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 1,200</div><div class="txn-when">14:05</div></div>
-          </div>
-          <div class="txn-row" data-txn="carrefour market groceries dubai mall">
-            <div class="txn-mono" style="background:#fef3c7;color:#d97706;">C</div>
-            <div class="txn-body"><div class="txn-name">Carrefour Market</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_cart</span><span>Groceries</span><span class="txn-sep">·</span><span>Dubai Mall</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 440</div><div class="txn-when">18:30</div></div>
-          </div>
-          <div class="txn-date-group"><span class="txn-date-lbl">Jun 16</span><div class="txn-date-line"></div><span class="txn-date-total">−AED 860</span></div>
-          <div class="txn-row" data-txn="dewa utilities auto-pay">
-            <div class="txn-mono" style="background:#fdecea;color:#c62828;">D</div>
-            <div class="txn-body"><div class="txn-name">DEWA</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">bolt</span><span>Utilities</span><span class="txn-sep">·</span><span>Auto-pay</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 680</div><div class="txn-when">08:00</div></div>
-          </div>
-          <div class="txn-row" data-txn="spotify premium subscription monthly">
-            <div class="txn-mono" style="background:#f3f4f6;color:#707070;">S</div>
-            <div class="txn-body"><div class="txn-name">Spotify Premium</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">music_note</span><span>Subscription</span><span class="txn-sep">·</span><span>Monthly</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 180</div><div class="txn-when">00:00</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── rd-d6: Savings Goals ── -->
-      <div class="rd-panel rd-reveal rd-d6">
-        <div class="rd-ph">
-          <span class="rd-ph-title">Savings Goals</span>
-          <a href="javascript:;" class="rd-ph-action">+ Add Goal</a>
-        </div>
-        <div class="goal-grid">
-          <div class="goal-card">
-            <div class="goal-card-top">
-              <div class="goal-card-icon" style="background:#eef6f1;"><span class="material-icons" style="color:#3d6e82;font-size:18px;">shield</span></div>
-              <div class="goal-card-meta"><div class="goal-card-name">Emergency Fund</div><div class="goal-card-target">Target: Dec 2026</div></div>
-              <div class="goal-badge goal-badge-on">On track</div>
-            </div>
-            <div class="goal-prog-track"><div class="goal-prog" data-w="68%" style="background:#3d6e82;"></div></div>
-            <div class="goal-card-nums"><span class="goal-card-done" data-orig="AED 34,000">AED 34,000</span><span class="goal-card-total">of AED 50,000 · 68%</span></div>
-          </div>
-          <div class="goal-card">
-            <div class="goal-card-top">
-              <div class="goal-card-icon" style="background:#eef1f8;"><span class="material-icons" style="color:#5a5a90;font-size:18px;">home</span></div>
-              <div class="goal-card-meta"><div class="goal-card-name">Home Down Payment</div><div class="goal-card-target">Target: Jun 2028</div></div>
-              <div class="goal-badge goal-badge-on">On track</div>
-            </div>
-            <div class="goal-prog-track"><div class="goal-prog" data-w="40%" style="background:#5a5a90;"></div></div>
-            <div class="goal-card-nums"><span class="goal-card-done" data-orig="AED 120,000">AED 120,000</span><span class="goal-card-total">of AED 300,000 · 40%</span></div>
-          </div>
-          <div class="goal-card">
-            <div class="goal-card-top">
-              <div class="goal-card-icon" style="background:#fff8ee;"><span class="material-icons" style="color:#8a7a5a;font-size:18px;">beach_access</span></div>
-              <div class="goal-card-meta"><div class="goal-card-name">Vacation Fund</div><div class="goal-card-target">Target: Nov 2026</div></div>
-              <div class="goal-badge goal-badge-risk">At risk</div>
-            </div>
-            <div class="goal-prog-track"><div class="goal-prog" data-w="57%" style="background:#8a7a5a;"></div></div>
-            <div class="goal-card-nums"><span class="goal-card-done" data-orig="AED 8,500">AED 8,500</span><span class="goal-card-total">of AED 15,000 · 57%</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── rd-d8: Smart Insights (moved down) ── -->
-      <div class="rd-panel rd-reveal rd-d8">
-        <div class="rd-ph">
-          <span class="rd-ph-title">Smart Insights</span>
-          <div class="rd-d2 sb-month-nav">
-            <button class="sb-month-btn">&#8249;</button>
-            <span class="sb-month-lbl">Jun 2026</span>
-            <button class="sb-month-btn">&#8250;</button>
-          </div>
-        </div>
-        <div class="ins-ie-row">
-          <div class="ins-ie-item">
-            <div class="ins-ie-lbl">Income</div>
-            <div class="ins-ie-amt ins-income">AED 20,500</div>
-            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-income" data-w="100%"></div></div>
-          </div>
-          <div class="ins-ie-divider"></div>
-          <div class="ins-ie-item">
-            <div class="ins-ie-lbl">Expenses</div>
-            <div class="ins-ie-amt ins-expense">AED 11,460</div>
-            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-expense" data-w="56%"></div></div>
-          </div>
-          <div class="ins-ie-divider"></div>
-          <div class="ins-ie-item">
-            <div class="ins-ie-lbl">Saved</div>
-            <div class="ins-ie-amt ins-saved">AED 9,040</div>
-            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-saved" data-w="44%"></div></div>
-          </div>
-        </div>
-        <div class="rd-d2 sb-stack-bar" style="margin-top:.5rem;">
-          <div style="width:33.5%;background:rgba(200,152,152,1);border-radius:3px 0 0 3px;" title="Shopping 33%"></div>
-          <div style="width:22.3%;background:rgba(200,152,152,.78);" title="Food 22%"></div>
-          <div style="width:18.3%;background:rgba(200,152,152,.62);" title="Travel 18%"></div>
-          <div style="width:11.9%;background:rgba(200,152,152,.46);" title="Utilities 12%"></div>
-          <div style="width:8.6%;background:rgba(200,152,152,.32);" title="Health 9%"></div>
-          <div style="width:5.4%;background:rgba(200,152,152,.20);border-radius:0 3px 3px 0;" title="Other 5%"></div>
-        </div>
-        <div class="rd-d2 sb-list" style="margin-top:.625rem;">
-          <div class="sb-row">
-            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">shopping_bag</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Shopping</span><span class="sb-amt">AED 3,840</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,1)" data-w="78%"></div></div></div>
-          </div>
-          <div class="sb-row">
-            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">restaurant</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Food &amp; Dining</span><span class="sb-amt">AED 2,560</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.78)" data-w="52%"></div></div></div>
-          </div>
-          <div class="sb-row">
-            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">flight</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Travel</span><span class="sb-amt">AED 2,100</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.62)" data-w="43%"></div></div></div>
-          </div>
-          <div class="sb-row">
-            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">bolt</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Utilities</span><span class="sb-amt">AED 1,360</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.46)" data-w="28%"></div></div></div>
-          </div>
-        </div>
-        <div class="ins-nudge">
-          <span class="material-icons ins-nudge-icon">lightbulb</span>
-          <div class="ins-nudge-body">
-            <div class="ins-nudge-title">You saved AED 1,200 more than last month</div>
-            <div class="ins-nudge-sub">Reduce dining by 15% to reach your Emergency Fund goal 2 months earlier</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── rd-col3-lower: My Card + Offers ── -->
-      <div class="rd-col3-lower">
       <!-- ── rd-d5: My Cards ── -->
       <div class="rd-panel rd-reveal rd-d5" style="padding:0;overflow:hidden;">
         <div class="rd-ph" style="padding:.875rem 1.25rem .5rem;">
@@ -542,6 +311,210 @@
         </div>
       </div>
 
+      <!-- ── rd-d2: Upcoming & Alerts ── -->
+      <div class="rd-panel rd-reveal rd-d2">
+        <div class="rd-ph">
+          <span class="rd-ph-title">Upcoming &amp; Alerts</span>
+          <a href="payments-bill-report.html" class="rd-ph-action">View all <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
+        </div>
+        <div class="ac-alert">
+          <span class="material-icons ac-alert-icon">warning_amber</span>
+          <div class="ac-alert-body">
+            <div class="ac-alert-title">Low balance alert</div>
+            <div class="ac-alert-sub">Current account below AED 10,000 threshold</div>
+          </div>
+          <a href="accounts.html" class="ac-alert-link">View</a>
+        </div>
+        <div class="ac-cols-wrap">
+          <div class="ac-col">
+            <div class="ac-section-lbl">Upcoming Payments</div>
+            <div class="ac-list">
+              <div class="ac-item">
+                <div class="ac-icon" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;font-size:18px;">bolt</span></div>
+                <div class="ac-body"><div class="ac-name">Electricity (DEWA)</div><div class="ac-due ac-due-urgent">Due in 2 days</div></div>
+                <div class="ac-amt">AED 320</div>
+                <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+              </div>
+              <div class="ac-item">
+                <div class="ac-icon" style="background:#eef4ff;"><span class="material-icons" style="color:#3d6e82;font-size:18px;">wifi</span></div>
+                <div class="ac-body"><div class="ac-name">Internet · Etisalat</div><div class="ac-due">Due in 5 days</div></div>
+                <div class="ac-amt">AED 250</div>
+                <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+              </div>
+              <div class="ac-item" style="border-bottom:none;">
+                <div class="ac-icon" style="background:#f3f0ff;"><span class="material-icons" style="color:#7a6e90;font-size:18px;">credit_card</span></div>
+                <div class="ac-body"><div class="ac-name">Credit Card Bill</div><div class="ac-due">Due Jul 15</div></div>
+                <div class="ac-amt">AED 1,840</div>
+                <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+              </div>
+            </div>
+          </div>
+          <div class="ac-col ac-col-right">
+            <div class="ac-section-lbl">Pending Actions</div>
+            <div class="ac-list">
+              <a href="e-statement-request.html" class="ac-pending-item">
+                <span class="material-icons" style="font-size:16px;color:#d97706;">badge</span>
+                <span>Emirates ID expiring in 15 days — update documents</span>
+                <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
+              </a>
+              <a href="transaction-history.html" class="ac-pending-item">
+                <span class="material-icons" style="font-size:16px;color:#5a7080;">hourglass_top</span>
+                <span>Cheque AED 2,500 deposited — awaiting clearance</span>
+                <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
+              </a>
+              <a href="cards-my-cards.html" class="ac-pending-item">
+                <span class="material-icons" style="font-size:16px;color:#2a7a50;">local_shipping</span>
+                <span>New Platinum Visa card en route · Expected Jul 16</span>
+                <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /rd-left -->
+
+      <!-- ── Right column: info & alerts ── -->
+      <div class="rd-right">
+
+      <!-- ── rd-d4: Recent Transactions ── -->
+      <div class="rd-panel rd-reveal rd-d4" style="padding:0;">
+        <div style="padding:1rem 1.25rem .75rem;" class="rd-ph">
+          <span class="rd-ph-title">Recent Transactions</span>
+          <div class="txn-search-inline">
+            <span class="material-icons" style="font-size:15px;color:var(--az-muted);">search</span>
+            <input type="text" class="txn-search-input" placeholder="Search…" oninput="filterTxns(this.value)">
+          </div>
+        </div>
+        <div class="txn-tabs" style="padding:0 1rem;">
+          <div class="txn-tab active" onclick="setTab(this)">All</div>
+          <div class="txn-tab" onclick="setTab(this)">Income</div>
+          <div class="txn-tab" onclick="setTab(this)">Expenses</div>
+          <div class="txn-tab" onclick="setTab(this)">Transfers</div>
+        </div>
+        <div class="txn-list" id="txnList">
+          <div class="txn-date-group"><span class="txn-date-lbl">Today</span><div class="txn-date-line"></div><span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span></div>
+          <div class="txn-row" data-txn="salary emirates corp income direct deposit">
+            <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
+            <div class="txn-body"><div class="txn-name">Salary · Emirates Corp</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div></div>
+            <div class="txn-right"><div class="txn-amt credit">+AED 18,500</div><div class="txn-when">08:00</div></div>
+          </div>
+          <div class="txn-row" data-txn="noon.com shopping visa contactless">
+            <div class="txn-mono" style="background:#edfaf6;color:#16303d;">N</div>
+            <div class="txn-body"><div class="txn-name">Noon.com</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_bag</span><span>Shopping</span><span class="txn-sep">·</span><span>Visa contactless</span></div></div>
+            <div class="txn-right"><div class="txn-amt debit">−AED 280</div><div class="txn-when">10:22</div></div>
+          </div>
+          <div class="txn-date-group"><span class="txn-date-lbl">Yesterday</span><div class="txn-date-line"></div><span class="txn-date-total">−AED 1,640</span></div>
+          <div class="txn-row" data-txn="emirates airlines travel flight dxb lhr">
+            <div class="txn-mono" style="background:#eff6ff;color:#00538A;">E</div>
+            <div class="txn-body"><div class="txn-name">Emirates Airlines</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">flight</span><span>Travel</span><span class="txn-sep">·</span><span>DXB → LHR</span></div></div>
+            <div class="txn-right"><div class="txn-amt debit">−AED 1,200</div><div class="txn-when">14:05</div></div>
+          </div>
+          <div class="txn-row" data-txn="carrefour market groceries dubai mall">
+            <div class="txn-mono" style="background:#fef3c7;color:#d97706;">C</div>
+            <div class="txn-body"><div class="txn-name">Carrefour Market</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_cart</span><span>Groceries</span><span class="txn-sep">·</span><span>Dubai Mall</span></div></div>
+            <div class="txn-right"><div class="txn-amt debit">−AED 440</div><div class="txn-when">18:30</div></div>
+          </div>
+          <a href="transaction-history.html" class="txn-view-all">View all transactions <span class="material-icons">arrow_forward</span></a>
+        </div>
+      </div>
+
+
+
+
+      <!-- ── rd-d8: Smart Insights (moved down) ── -->
+      <div class="rd-panel rd-reveal rd-d8">
+        <div class="rd-ph">
+          <span class="rd-ph-title">Smart Insights</span>
+          <div class="rd-d2 sb-month-nav">
+            <button class="sb-month-btn">&#8249;</button>
+            <span class="sb-month-lbl">Jun 2026</span>
+            <button class="sb-month-btn">&#8250;</button>
+          </div>
+        </div>
+        <div class="ins-ie-row">
+          <div class="ins-ie-item">
+            <div class="ins-ie-lbl">Income</div>
+            <div class="ins-ie-amt ins-income">AED 20,500</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-income" data-w="100%"></div></div>
+          </div>
+          <div class="ins-ie-divider"></div>
+          <div class="ins-ie-item">
+            <div class="ins-ie-lbl">Expenses</div>
+            <div class="ins-ie-amt ins-expense">AED 11,460</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-expense" data-w="56%"></div></div>
+          </div>
+          <div class="ins-ie-divider"></div>
+          <div class="ins-ie-item">
+            <div class="ins-ie-lbl">Saved</div>
+            <div class="ins-ie-amt ins-saved">AED 9,040</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-saved" data-w="44%"></div></div>
+          </div>
+        </div>
+        <div class="rd-d2 sb-stack-bar" style="margin-top:.5rem;">
+          <div style="width:33.5%;background:rgba(200,152,152,1);border-radius:3px 0 0 3px;" title="Shopping 33%"></div>
+          <div style="width:22.3%;background:rgba(200,152,152,.78);" title="Food 22%"></div>
+          <div style="width:18.3%;background:rgba(200,152,152,.62);" title="Travel 18%"></div>
+          <div style="width:11.9%;background:rgba(200,152,152,.46);" title="Utilities 12%"></div>
+          <div style="width:8.6%;background:rgba(200,152,152,.32);" title="Health 9%"></div>
+          <div style="width:5.4%;background:rgba(200,152,152,.20);border-radius:0 3px 3px 0;" title="Other 5%"></div>
+        </div>
+        <div class="rd-d2 sb-list" style="margin-top:.625rem;">
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">shopping_bag</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Shopping</span><span class="sb-amt">AED 3,840</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,1)" data-w="78%"></div></div></div>
+          </div>
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">restaurant</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Food &amp; Dining</span><span class="sb-amt">AED 2,560</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.78)" data-w="52%"></div></div></div>
+          </div>
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">flight</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Travel</span><span class="sb-amt">AED 2,100</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.62)" data-w="43%"></div></div></div>
+          </div>
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">bolt</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Utilities</span><span class="sb-amt">AED 1,360</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.46)" data-w="28%"></div></div></div>
+          </div>
+        </div>
+        <div class="ins-nudge">
+          <span class="material-icons ins-nudge-icon">lightbulb</span>
+          <div class="ins-nudge-body">
+            <div class="ins-nudge-title">You saved AED 1,200 more than last month</div>
+            <div class="ins-nudge-sub">Reduce dining by 15% to reach your Emergency Fund goal 2 months earlier</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── rd-d3: Financial Tips ── -->
+      <div class="rd-panel rd-reveal rd-d3">
+        <div class="rd-ph" style="margin-bottom:.875rem;">
+          <div style="display:flex;align-items:center;gap:.4rem;">
+            <span class="material-icons" style="font-size:18px;color:#d97706;">lightbulb</span>
+            <span class="rd-ph-title">Financial Tips</span>
+          </div>
+          <a href="javascript:;" class="rd-ph-action">View more <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
+        </div>
+        <div class="d7-nudge" style="border-bottom:none;border-radius:.75rem;margin-bottom:.625rem;">
+          <div class="d7-nudge-head">
+            <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">savings</span>
+            <span class="d7-nudge-label">Savings Goal</span>
+          </div>
+          <div class="d7-nudge-text">Set up a recurring transfer of AED 1,000/month to your Emergency Fund to reach your goal 4 months earlier.</div>
+          <a href="transfer-own-accounts.html" class="d7-nudge-cta">Set up auto-transfer <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
+        </div>
+        <div class="d7-nudge" style="border-bottom:none;border-radius:.75rem;margin-bottom:1.25rem;">
+          <div class="d7-nudge-head">
+            <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">trending_up</span>
+            <span class="d7-nudge-label">Investment</span>
+          </div>
+          <div class="d7-nudge-text">A 12-month Fixed Deposit at 5.5% p.a. on your idle AED 22,150 earns AED 1,218 with zero risk.</div>
+          <a href="general-account-opening.html" class="d7-nudge-cta">Open FD <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
+        </div>
+      </div>
+
+
       <!-- ── rd-d7: Offers ── -->
       <div class="rd-panel rd-reveal rd-d7" style="padding:0;overflow:hidden;">
         <div style="padding:.875rem 1.25rem .5rem;" class="rd-ph">
@@ -576,7 +549,7 @@
           <span class="material-icons offer-tile-arrow" style="color:#aab4ba;">chevron_right</span>
         </a>
       </div>
-      </div><!-- /rd-col3-lower -->
+            </div><!-- /rd-right -->
 
     </div><!-- /rd-wrap -->
 
@@ -870,4 +843,4 @@ function resetPromoTimer() { clearInterval(_promoTimer); _promoTimer = setInterv
 document.addEventListener('DOMContentLoaded', function() { resetPromoTimer(); });
 </script>
 </body>
-</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
