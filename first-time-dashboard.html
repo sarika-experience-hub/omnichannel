@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Welcome</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/first-time-dashboard.css"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="js/theme.js"></script>
+</head>
+<body class="pg-first-time">
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="142 0 22 29" aria-hidden="true">
+        <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/>
+        <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/>
+      </svg>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+        <span class="material-icons-outlined" style="font-size:20px;">notifications</span>
+      </button>
+    </div>
+    <button class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons-outlined" style="font-size:20px;">headset_mic</span></button>
+    <button class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons-outlined" style="font-size:20px;">help_outline</span></button>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sarika Desai</div>
+            <div class="av-drop-login-lbl">Member since</div>
+            <div class="av-drop-login-time"><span class="t-part">Jul 2026</span></div>
+          </div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none"><span class="material-icons">close</span></button>
+  </div>
+  <nav class="sb-nav">
+  <a href="first-time-dashboard.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-own-accounts.html" class="sb-sub-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub-item">International Transfer</a></div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="faq.html" class="sb-sub-item">FAQ</a></div>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc" style="padding:.375rem 1.75rem 0;margin-top:.625rem;">
+      <a href="first-time-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Banking</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.75rem;margin-top:0;padding:0 1.75rem;">
+      <h1 class="page-title">My Banking</h1>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="ft-wrap">
+
+      <!-- ── Welcome Hero ── -->
+      <div class="ft-hero">
+        <div class="ft-hero-left">
+          <div class="ft-hero-icon"><span class="material-icons">waving_hand</span></div>
+          <div class="ft-hero-text">
+            <div class="ft-hero-badge"><span class="material-icons">verified</span> Account Active</div>
+            <div class="ft-hero-title">Welcome to azentio, <span>Sarika!</span></div>
+            <div class="ft-hero-sub">Your account is ready. Complete a few quick steps to unlock the full experience — takes less than 5 minutes.</div>
+          </div>
+        </div>
+        <div class="ft-hero-right">
+          <div class="ft-progress-ring">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle class="ft-ring-bg"   cx="36" cy="36" r="30" stroke-dasharray="188.4" stroke-dashoffset="0"/>
+              <circle class="ft-ring-fill" cx="36" cy="36" r="30" stroke-dasharray="188.4" id="ftRingFill" stroke-dashoffset="188.4"/>
+            </svg>
+            <div class="ft-ring-label">
+              <span class="ft-ring-pct" id="ftRingPct">0%</span>
+              <span class="ft-ring-sub2">done</span>
+            </div>
+          </div>
+          <a href="#gettingStarted" class="ft-hero-cta">
+            <span class="material-icons">rocket_launch</span> Get started
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Left column ── -->
+      <div class="ft-left" id="gettingStarted">
+
+        <!-- Getting Started Checklist -->
+        <div class="ft-panel">
+          <div class="ft-ph">
+            <span class="ft-ph-title">Getting Started</span>
+            <span style="font-size:.72rem;color:var(--az-muted);">3 of 6 steps complete</span>
+          </div>
+
+          <div class="ft-progress-bar-wrap">
+            <div class="ft-progress-meta">
+              <span class="ft-progress-meta-lbl">Setup progress</span>
+              <span class="ft-progress-meta-val">50%</span>
+            </div>
+            <div class="ft-progress-track">
+              <div class="ft-progress-fill" id="ftProgressFill" style="width:0;"></div>
+            </div>
+          </div>
+
+          <div class="ft-steps">
+
+            <!-- Step 1: Done -->
+            <div class="ft-step">
+              <div class="ft-step-icon done"><span class="material-icons">verified_user</span></div>
+              <div class="ft-step-body">
+                <div class="ft-step-title done-txt">Identity verified (KYC)</div>
+                <div class="ft-step-sub">Emirates ID &amp; documents approved</div>
+              </div>
+              <span class="ft-step-done-chip">Done</span>
+            </div>
+
+            <!-- Step 2: Done -->
+            <div class="ft-step">
+              <div class="ft-step-icon done"><span class="material-icons">account_balance</span></div>
+              <div class="ft-step-body">
+                <div class="ft-step-title done-txt">Current account opened</div>
+                <div class="ft-step-sub">Account no. •••• •••• 4821</div>
+              </div>
+              <span class="ft-step-done-chip">Done</span>
+            </div>
+
+            <!-- Step 3: Done -->
+            <div class="ft-step">
+              <div class="ft-step-icon done"><span class="material-icons">lock</span></div>
+              <div class="ft-step-body">
+                <div class="ft-step-title done-txt">Online banking credentials set</div>
+                <div class="ft-step-sub">Username &amp; password configured</div>
+              </div>
+              <span class="ft-step-done-chip">Done</span>
+            </div>
+
+            <!-- Step 4: Urgent -->
+            <div class="ft-step">
+              <div class="ft-step-icon urgent"><span class="material-icons">account_balance_wallet</span></div>
+              <div class="ft-step-body">
+                <div class="ft-step-title">Fund your account</div>
+                <div class="ft-step-sub">Transfer or deposit to activate full features</div>
+              </div>
+              <a href="transfer-own-accounts.html" class="ft-step-action">Fund now</a>
+            </div>
+
+            <!-- Step 5: Pending -->
+            <div class="ft-step">
+              <div class="ft-step-icon pending"><span class="material-icons">credit_card</span></div>
+              <div class="ft-step-body">
+                <div class="ft-step-title">Activate your Visa debit card</div>
+                <div class="ft-step-sub">Card dispatched · Expected in 3–5 days</div>
+              </div>
+              <a href="cards-my-cards.html" class="ft-step-action">Track card</a>
+            </div>
+
+            <!-- Step 6: Pending -->
+            <div class="ft-step">
+              <div class="ft-step-icon pending"><span class="material-icons">group_add</span></div>
+              <div class="ft-step-body">
+                <div class="ft-step-title">Add your first beneficiary</div>
+                <div class="ft-step-sub">Required for transfers &amp; payments</div>
+              </div>
+              <a href="beneficiary-management.html" class="ft-step-action">Add</a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="ft-panel">
+          <div class="ft-ph" style="margin-bottom:.875rem;">
+            <span class="ft-ph-title">Quick Actions</span>
+          </div>
+          <div class="ft-qa-grid">
+            <a href="transfer-own-accounts.html" class="ft-qa-btn">
+              <div class="ft-qa-icon"><span class="material-icons">add_circle</span></div>
+              <span class="ft-qa-lbl">Fund Account</span>
+            </a>
+            <a href="transfer-internal.html" class="ft-qa-btn">
+              <div class="ft-qa-icon"><span class="material-icons">swap_horiz</span></div>
+              <span class="ft-qa-lbl">Transfer</span>
+            </a>
+            <a href="payments-bill-payment.html" class="ft-qa-btn">
+              <div class="ft-qa-icon"><span class="material-icons">receipt_long</span></div>
+              <span class="ft-qa-lbl">Pay Bills</span>
+            </a>
+            <a href="payments-qr-payment.html" class="ft-qa-btn">
+              <div class="ft-qa-icon"><span class="material-icons">qr_code_scanner</span></div>
+              <span class="ft-qa-lbl">Scan QR</span>
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /ft-left -->
+
+      <!-- ── Right column ── -->
+      <div class="ft-right">
+
+        <!-- Account Card -->
+        <div class="ft-panel" style="padding:0;overflow:hidden;">
+          <div class="ft-account-card">
+            <div class="ft-ac-lbl">Current Account</div>
+            <div class="ft-ac-acct">•••• &nbsp;•••• &nbsp;•••• &nbsp;4821</div>
+            <div class="ft-ac-bal-row">
+              <span class="ft-ac-bal-cur">AED</span>
+              <span class="ft-ac-bal-amt">0.00</span>
+            </div>
+            <div class="ft-ac-bal-note">Fund your account to get started</div>
+            <a href="transfer-own-accounts.html" class="ft-ac-fund-btn">
+              <span class="material-icons">add</span> Fund Now
+            </a>
+          </div>
+          <div style="padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:.72rem;color:var(--az-muted);">
+              <span class="material-icons" style="font-size:13px;vertical-align:-2px;color:#aab4ba;">schedule</span>
+              &nbsp;Card arriving in 3–5 days
+            </div>
+            <a href="cards-my-cards.html" style="font-size:.72rem;font-weight:600;color:var(--az-blue);text-decoration:none;">Track <span class="material-icons" style="font-size:12px;vertical-align:-2px;">chevron_right</span></a>
+          </div>
+        </div>
+
+        <!-- Explore Features -->
+        <div class="ft-panel">
+          <div class="ft-ph" style="margin-bottom:.875rem;">
+            <span class="ft-ph-title">Explore azentio</span>
+          </div>
+          <div class="ft-explore-grid">
+            <a href="transfer-own-accounts.html" class="ft-explore-tile">
+              <div class="ft-explore-icon" style="background:#eef4ff;"><span class="material-icons" style="color:#00538A;">swap_horiz</span></div>
+              <div><div class="ft-explore-name">Transfers</div><div class="ft-explore-sub">Local &amp; international</div></div>
+            </a>
+            <a href="payments-bill-payment.html" class="ft-explore-tile">
+              <div class="ft-explore-icon" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;">bolt</span></div>
+              <div><div class="ft-explore-name">Bill Payments</div><div class="ft-explore-sub">DEWA, Etisalat &amp; more</div></div>
+            </a>
+            <a href="cards-credit-request.html" class="ft-explore-tile">
+              <div class="ft-explore-icon" style="background:#f3f0ff;"><span class="material-icons" style="color:#7a6e90;">credit_card</span></div>
+              <div><div class="ft-explore-name">Credit Card</div><div class="ft-explore-sub">Apply for a card</div></div>
+            </a>
+            <a href="term-deposit-account-opening.html" class="ft-explore-tile">
+              <div class="ft-explore-icon" style="background:#e6f9f0;"><span class="material-icons" style="color:#1a9e63;">savings</span></div>
+              <div><div class="ft-explore-name">Fixed Deposit</div><div class="ft-explore-sub">Earn up to 5.5% p.a.</div></div>
+            </a>
+            <a href="financing-facility-request.html" class="ft-explore-tile">
+              <div class="ft-explore-icon" style="background:#fdecea;"><span class="material-icons" style="color:#c62828;">account_balance</span></div>
+              <div><div class="ft-explore-name">Personal Loan</div><div class="ft-explore-sub">Up to AED 500,000</div></div>
+            </a>
+            <a href="branches-atm.html" class="ft-explore-tile">
+              <div class="ft-explore-icon" style="background:#eef1f3;"><span class="material-icons" style="color:#5a7080;">location_on</span></div>
+              <div><div class="ft-explore-name">Branches &amp; ATMs</div><div class="ft-explore-sub">Find near you</div></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tip -->
+        <div class="ft-tip">
+          <span class="material-icons ft-tip-icon">lightbulb</span>
+          <div>
+            <div class="ft-tip-title">Did you know?</div>
+            <div class="ft-tip-body">Setting up an auto-transfer from your current account to a savings account each month is the easiest way to build an emergency fund — even AED 500/month grows to AED 6,000 in a year.</div>
+          </div>
+        </div>
+
+      </div><!-- /ft-right -->
+
+    </div><!-- /ft-wrap -->
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="javascript:;">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+      </div>
+      <button class="dark-toggle" id="darkToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <span class="material-icons-outlined" style="font-size:18px;">dark_mode</span>
+      </button>
+    </div>
+  </footer>
+</div><!-- /app-main -->
+
+<script src="js/app.js"></script>
+<script>
+// ── Animate progress ring on load ──
+(function() {
+  var CIRCUMFERENCE = 188.4;
+  var STEPS_DONE = 3;
+  var STEPS_TOTAL = 6;
+  var pct = STEPS_DONE / STEPS_TOTAL;        // 0.5
+  var offset = CIRCUMFERENCE * (1 - pct);    // 94.2
+
+  setTimeout(function() {
+    var ring = document.getElementById('ftRingFill');
+    var pctEl = document.getElementById('ftRingPct');
+    var fill = document.getElementById('ftProgressFill');
+
+    if (ring) {
+      ring.style.transition = 'stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1)';
+      ring.setAttribute('stroke-dashoffset', offset);
+    }
+    if (pctEl) pctEl.textContent = Math.round(pct * 100) + '%';
+    if (fill) {
+      fill.style.transition = 'width 1.3s cubic-bezier(.22,1,.36,1)';
+      fill.style.width = (pct * 100) + '%';
+    }
+  }, 400);
+})();
+
+// ── Step click — mark done ──
+document.querySelectorAll('.ft-step-action').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    // allow navigation; just visual feedback on hover
+  });
+});
+</script>
+</body>
+</html>

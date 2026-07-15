@@ -137,9 +137,8 @@
     <div class="page-top-bar" style="margin-bottom:.75rem;margin-top:0;padding:0 1.75rem;">
       <h1 class="page-title">My Banking</h1>
       <div style="display:flex;gap:.625rem;">
-        <button class="btn-open-account" onclick="location.href='payments-bill-report.html'">
-          <span class="material-icons" style="font-size:15px;">receipt_long</span> Pay Bills
-          <span class="bill-badge">3</span>
+        <button class="btn-open-account" onclick="location.href='e-statement-request.html'">
+          <span class="material-icons" style="font-size:15px;">download</span> Download Statement
         </button>
         <button class="btn-open-account" onclick="location.href='transfer-own-accounts.html'">
           New Transfer <span class="material-icons" style="font-size:15px;">arrow_forward</span>
@@ -515,41 +514,48 @@
       </div>
 
 
-      <!-- ── rd-d7: Offers ── -->
-      <div class="rd-panel rd-reveal rd-d7" style="padding:0;overflow:hidden;">
-        <div style="padding:.875rem 1.25rem .5rem;" class="rd-ph">
-          <span class="rd-ph-title">Offers for You</span>
-          <a href="javascript:;" class="rd-ph-action">See all <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
+      </div><!-- /rd-right -->
+
+      <!-- ── rd-d7: Offers banner strip — full width ── -->
+      <div class="rd-panel rd-reveal rd-d7 rd-offers-strip">
+        <div class="rd-offers-hdr">
+          <span class="rd-offers-lbl">Personalised Offers</span>
+          <a href="bank-products.html" class="rd-ph-action">See all <span class="material-icons" style="font-size:12px;vertical-align:-2px;">chevron_right</span></a>
         </div>
-        <a href="financing-facility-request.html" class="offer-tile" style="background:#fff;">
-          <div class="offer-tile-icon" style="background:#eef1f3;"><span class="material-icons" style="color:#3d6e82;font-size:20px;">account_balance</span></div>
-          <div class="offer-tile-body">
-            <div class="offer-tile-tag" style="background:#eef1f3;color:#5a7080;">Limited Time</div>
-            <div class="offer-tile-title" style="color:#16303d;">Personal Loan at 3.49% p.a.</div>
-            <div class="offer-tile-sub" style="color:#7a8e98;">Up to AED 500,000 · Instant approval</div>
-          </div>
-          <span class="material-icons offer-tile-arrow" style="color:#aab4ba;">chevron_right</span>
-        </a>
-        <a href="general-account-opening.html" class="offer-tile" style="background:#fff;">
-          <div class="offer-tile-icon" style="background:#eef1f3;"><span class="material-icons" style="color:#3d6e82;font-size:20px;">savings</span></div>
-          <div class="offer-tile-body">
-            <div class="offer-tile-tag" style="background:#eef1f3;color:#5a7080;">Best Rate</div>
-            <div class="offer-tile-title" style="color:#16303d;">5.5% p.a. Fixed Deposit</div>
-            <div class="offer-tile-sub" style="color:#7a8e98;">12-month term · No min. balance</div>
-          </div>
-          <span class="material-icons offer-tile-arrow" style="color:#aab4ba;">chevron_right</span>
-        </a>
-        <a href="cards-my-cards.html" class="offer-tile" style="background:#fff;border-bottom:none;">
-          <div class="offer-tile-icon" style="background:#eef1f3;"><span class="material-icons" style="color:#5a8872;font-size:20px;">credit_card</span></div>
-          <div class="offer-tile-body">
-            <div class="offer-tile-tag" style="background:#eef1f3;color:#5a7080;">Exclusive</div>
-            <div class="offer-tile-title" style="color:#16303d;">10% Cashback on Dining</div>
-            <div class="offer-tile-sub" style="color:#7a8e98;">Gold Mastercard · Valid Jul 2026</div>
-          </div>
-          <span class="material-icons offer-tile-arrow" style="color:#aab4ba;">chevron_right</span>
-        </a>
+        <div class="rd-offers-row">
+
+          <a href="financing-facility-request.html" class="rd-offer-banner" style="--ob-accent:#00538A;">
+            <div class="rd-ob-icon"><span class="material-icons">account_balance</span></div>
+            <div class="rd-ob-body">
+              <div class="rd-ob-tag">Limited Time</div>
+              <div class="rd-ob-title">Personal Loan at 3.49% p.a.</div>
+              <div class="rd-ob-sub">Up to AED 500,000 · Instant approval</div>
+            </div>
+            <span class="rd-ob-cta">Apply <span class="material-icons">arrow_forward</span></span>
+          </a>
+
+          <a href="general-account-opening.html" class="rd-offer-banner" style="--ob-accent:#2a7a50;">
+            <div class="rd-ob-icon"><span class="material-icons">savings</span></div>
+            <div class="rd-ob-body">
+              <div class="rd-ob-tag">Best Rate</div>
+              <div class="rd-ob-title">5.5% p.a. Fixed Deposit</div>
+              <div class="rd-ob-sub">12-month term · No minimum balance</div>
+            </div>
+            <span class="rd-ob-cta">Open <span class="material-icons">arrow_forward</span></span>
+          </a>
+
+          <a href="cards-my-cards.html" class="rd-offer-banner" style="--ob-accent:#7a4a00;">
+            <div class="rd-ob-icon"><span class="material-icons">credit_card</span></div>
+            <div class="rd-ob-body">
+              <div class="rd-ob-tag">Exclusive</div>
+              <div class="rd-ob-title">10% Cashback on Dining</div>
+              <div class="rd-ob-sub">Gold Mastercard · Valid Jul 2026</div>
+            </div>
+            <span class="rd-ob-cta">View <span class="material-icons">arrow_forward</span></span>
+          </a>
+
+        </div>
       </div>
-            </div><!-- /rd-right -->
 
     </div><!-- /rd-wrap -->
 
