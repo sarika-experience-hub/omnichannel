@@ -136,14 +136,9 @@
     <!-- Page header -->
     <div class="page-top-bar" style="margin-bottom:.75rem;margin-top:0;padding:0 1.75rem;">
       <h1 class="page-title">My Banking</h1>
-      <div style="display:flex;gap:.625rem;">
-        <button class="btn-open-account" onclick="location.href='e-statement-request.html'">
-          <span class="material-icons" style="font-size:15px;">download</span> Download Statement
-        </button>
-        <button class="btn-open-account" onclick="location.href='transfer-own-accounts.html'">
-          New Transfer <span class="material-icons" style="font-size:15px;">arrow_forward</span>
-        </button>
-      </div>
+      <button class="btn-open-account" onclick="location.href='transfer-own-accounts.html'">
+        New Transfer <span class="material-icons" style="font-size:15px;">arrow_forward</span>
+      </button>
     </div>
 
     <!-- ══ DASHBOARD ══ -->
@@ -159,9 +154,9 @@
           </div>
         </div>
         <div class="ab-chips">
-          <div class="ab-chip ab-chip-warn"><span class="material-icons">schedule</span>2 bills due this week</div>
-          <div class="ab-chip ab-chip-info"><span class="material-icons">pending_actions</span>3 transactions pending</div>
-          <div class="ab-chip ab-chip-success"><span class="material-icons">check_circle</span>Salary credited · AED 18,500</div>
+          <a href="payments-bill-report.html" class="ab-chip ab-chip-warn"><span class="material-icons">schedule</span>2 bills due this week</a>
+          <a href="transfer-pending-list.html" class="ab-chip ab-chip-info"><span class="material-icons">pending_actions</span>3 payments processing</a>
+          <a href="transaction-history.html" class="ab-chip ab-chip-success"><span class="material-icons">check_circle</span>Salary credited · AED 18,500</a>
         </div>
       </div>
 
@@ -213,7 +208,7 @@
           </div>
           <div class="bal-actions-row">
             <a href="transfer-own-accounts.html" class="bal-action-pill"><span class="material-icons">swap_horiz</span><span>Transfer</span></a>
-            <a href="payments-qr-payment.html"   class="bal-action-pill"><span class="material-icons">qr_code_scanner</span><span>Scan QR</span></a>
+            <a href="general-account-opening.html" class="bal-action-pill"><span class="material-icons">add_card</span><span>Open Account</span></a>
           </div>
         </div>
       </div>
@@ -316,23 +311,14 @@
           <span class="rd-ph-title">Upcoming &amp; Alerts</span>
           <a href="payments-bill-report.html" class="rd-ph-action">View all <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
         </div>
-        <div class="ac-alert">
-          <span class="material-icons ac-alert-icon">warning_amber</span>
-          <div class="ac-alert-body">
-            <div class="ac-alert-title">Low balance alert</div>
-            <div class="ac-alert-sub">Current account below AED 10,000 threshold</div>
-          </div>
-          <a href="accounts.html" class="ac-alert-link">View</a>
-        </div>
-        <div class="ac-cols-wrap">
+<div class="ac-cols-wrap">
           <div class="ac-col">
-            <div class="ac-section-lbl">Upcoming Payments</div>
             <div class="ac-list">
-              <div class="ac-item">
+              <div class="ac-item ac-item-urgent">
                 <div class="ac-icon" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;font-size:18px;">bolt</span></div>
                 <div class="ac-body"><div class="ac-name">Electricity (DEWA)</div><div class="ac-due ac-due-urgent">Due in 2 days</div></div>
                 <div class="ac-amt">AED 320</div>
-                <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+                <a href="payments-bill-report.html" class="ac-pay-btn-urgent">Pay</a>
               </div>
               <div class="ac-item">
                 <div class="ac-icon" style="background:#eef4ff;"><span class="material-icons" style="color:#3d6e82;font-size:18px;">wifi</span></div>
@@ -349,9 +335,17 @@
             </div>
           </div>
           <div class="ac-col ac-col-right">
+            <div class="ac-alert">
+              <span class="material-icons ac-alert-icon">warning_amber</span>
+              <div class="ac-alert-body">
+                <div class="ac-alert-title">Low balance alert</div>
+                <div class="ac-alert-sub">Current account below AED 10,000 threshold</div>
+              </div>
+              <a href="accounts.html" class="ac-alert-link">View</a>
+            </div>
             <div class="ac-section-lbl">Pending Actions</div>
             <div class="ac-list">
-              <a href="e-statement-request.html" class="ac-pending-item">
+              <a href="my-profile.html" class="ac-pending-item">
                 <span class="material-icons" style="font-size:16px;color:#d97706;">badge</span>
                 <span>Emirates ID expiring in 15 days — update documents</span>
                 <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
@@ -378,43 +372,47 @@
 
       <!-- ── rd-d4: Recent Transactions ── -->
       <div class="rd-panel rd-reveal rd-d4" style="padding:0;">
-        <div style="padding:1rem 1.25rem .75rem;" class="rd-ph">
-          <span class="rd-ph-title">Recent Transactions</span>
-          <div class="txn-search-inline">
-            <span class="material-icons" style="font-size:15px;color:var(--az-muted);">search</span>
-            <input type="text" class="txn-search-input" placeholder="Search…" oninput="filterTxns(this.value)">
+        <div style="padding:1rem 1.25rem .75rem;" class="rd-ph txn-ph-row">
+          <div style="display:flex;align-items:center;gap:.625rem;">
+            <span class="rd-ph-title">Recent Transactions</span>
+            <span class="txn-collapsed-chip" id="txnCollapsedChip">4 transactions</span>
           </div>
+          <button class="txn-toggle-btn" id="txnToggleBtn" onclick="toggleTxnCollapse()" title="Expand/collapse transactions" aria-expanded="false">
+            <span class="material-icons txn-toggle-icon" id="txnToggleIcon">expand_more</span>
+          </button>
         </div>
-        <div class="txn-tabs" style="padding:0 1rem;">
-          <div class="txn-tab active" onclick="setTab(this)">All</div>
-          <div class="txn-tab" onclick="setTab(this)">Income</div>
-          <div class="txn-tab" onclick="setTab(this)">Expenses</div>
-          <div class="txn-tab" onclick="setTab(this)">Transfers</div>
-        </div>
-        <div class="txn-list" id="txnList">
-          <div class="txn-date-group"><span class="txn-date-lbl">Today</span><div class="txn-date-line"></div><span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span></div>
-          <div class="txn-row" data-txn="salary emirates corp income direct deposit">
-            <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
-            <div class="txn-body"><div class="txn-name">Salary · Emirates Corp</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div></div>
-            <div class="txn-right"><div class="txn-amt credit">+AED 18,500</div><div class="txn-when">08:00</div></div>
+        <div class="txn-collapse-wrap" id="txnCollapseWrap">
+          <div class="txn-tabs" style="padding:0 1rem;">
+            <div class="txn-tab active" onclick="setTab(this)">All</div>
+            <div class="txn-tab" onclick="setTab(this)">Income</div>
+            <div class="txn-tab" onclick="setTab(this)">Expenses</div>
+            <div class="txn-tab" onclick="setTab(this)">Transfers</div>
           </div>
-          <div class="txn-row" data-txn="noon.com shopping visa contactless">
-            <div class="txn-mono" style="background:#edfaf6;color:#16303d;">N</div>
-            <div class="txn-body"><div class="txn-name">Noon.com</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_bag</span><span>Shopping</span><span class="txn-sep">·</span><span>Visa contactless</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 280</div><div class="txn-when">10:22</div></div>
+          <div class="txn-list" id="txnList">
+            <div class="txn-date-group"><span class="txn-date-lbl">Today</span><div class="txn-date-line"></div><span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span></div>
+            <div class="txn-row" data-txn="salary emirates corp income direct deposit" data-type="income">
+              <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
+              <div class="txn-body"><div class="txn-name">Salary · Emirates Corp</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div></div>
+              <div class="txn-right"><div class="txn-amt credit">+AED 18,500</div><div class="txn-when">08:00</div></div>
+            </div>
+            <div class="txn-row" data-txn="noon.com shopping visa contactless" data-type="expense">
+              <div class="txn-mono" style="background:#edfaf6;color:#16303d;">N</div>
+              <div class="txn-body"><div class="txn-name">Noon.com</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_bag</span><span>Shopping</span><span class="txn-sep">·</span><span>Visa contactless</span></div></div>
+              <div class="txn-right"><div class="txn-amt debit">−AED 280</div><div class="txn-when">10:22</div></div>
+            </div>
+            <div class="txn-date-group"><span class="txn-date-lbl">Yesterday</span><div class="txn-date-line"></div><span class="txn-date-total">−AED 1,640</span></div>
+            <div class="txn-row" data-txn="emirates airlines travel flight dxb lhr" data-type="expense">
+              <div class="txn-mono" style="background:#eff6ff;color:#00538A;">E</div>
+              <div class="txn-body"><div class="txn-name">Emirates Airlines</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">flight</span><span>Travel</span><span class="txn-sep">·</span><span>DXB → LHR</span></div></div>
+              <div class="txn-right"><div class="txn-amt debit">−AED 1,200</div><div class="txn-when">14:05</div></div>
+            </div>
+            <div class="txn-row" data-txn="carrefour market groceries dubai mall" data-type="expense">
+              <div class="txn-mono" style="background:#fef3c7;color:#d97706;">C</div>
+              <div class="txn-body"><div class="txn-name">Carrefour Market</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_cart</span><span>Groceries</span><span class="txn-sep">·</span><span>Dubai Mall</span></div></div>
+              <div class="txn-right"><div class="txn-amt debit">−AED 440</div><div class="txn-when">18:30</div></div>
+            </div>
+            <a href="transaction-history.html" class="txn-view-all">View all transactions <span class="material-icons">arrow_forward</span></a>
           </div>
-          <div class="txn-date-group"><span class="txn-date-lbl">Yesterday</span><div class="txn-date-line"></div><span class="txn-date-total">−AED 1,640</span></div>
-          <div class="txn-row" data-txn="emirates airlines travel flight dxb lhr">
-            <div class="txn-mono" style="background:#eff6ff;color:#00538A;">E</div>
-            <div class="txn-body"><div class="txn-name">Emirates Airlines</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">flight</span><span>Travel</span><span class="txn-sep">·</span><span>DXB → LHR</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 1,200</div><div class="txn-when">14:05</div></div>
-          </div>
-          <div class="txn-row" data-txn="carrefour market groceries dubai mall">
-            <div class="txn-mono" style="background:#fef3c7;color:#d97706;">C</div>
-            <div class="txn-body"><div class="txn-name">Carrefour Market</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_cart</span><span>Groceries</span><span class="txn-sep">·</span><span>Dubai Mall</span></div></div>
-            <div class="txn-right"><div class="txn-amt debit">−AED 440</div><div class="txn-when">18:30</div></div>
-          </div>
-          <a href="transaction-history.html" class="txn-view-all">View all transactions <span class="material-icons">arrow_forward</span></a>
         </div>
       </div>
 
@@ -427,60 +425,60 @@
           <span class="rd-ph-title">Smart Insights</span>
           <div class="rd-d2 sb-month-nav">
             <button class="sb-month-btn">&#8249;</button>
-            <span class="sb-month-lbl">Jun 2026</span>
+            <span class="sb-month-lbl">Jul 2026 <span style="font-size:.68rem;color:var(--az-muted);font-weight:400;">MTD</span></span>
             <button class="sb-month-btn">&#8250;</button>
           </div>
         </div>
         <div class="ins-ie-row">
           <div class="ins-ie-item">
             <div class="ins-ie-lbl">Income</div>
-            <div class="ins-ie-amt ins-income">AED 20,500</div>
+            <div class="ins-ie-amt ins-income">AED 18,500</div>
             <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-income" data-w="100%"></div></div>
           </div>
           <div class="ins-ie-divider"></div>
           <div class="ins-ie-item">
             <div class="ins-ie-lbl">Expenses</div>
-            <div class="ins-ie-amt ins-expense">AED 11,460</div>
-            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-expense" data-w="56%"></div></div>
+            <div class="ins-ie-amt ins-expense">AED 6,480</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-expense" data-w="35%"></div></div>
           </div>
           <div class="ins-ie-divider"></div>
           <div class="ins-ie-item">
             <div class="ins-ie-lbl">Saved</div>
-            <div class="ins-ie-amt ins-saved">AED 9,040</div>
-            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-saved" data-w="44%"></div></div>
+            <div class="ins-ie-amt ins-saved">AED 12,020</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-saved" data-w="65%"></div></div>
           </div>
         </div>
         <div class="rd-d2 sb-stack-bar" style="margin-top:.5rem;">
-          <div style="width:33.5%;background:rgba(200,152,152,1);border-radius:3px 0 0 3px;" title="Shopping 33%"></div>
-          <div style="width:22.3%;background:rgba(200,152,152,.78);" title="Food 22%"></div>
-          <div style="width:18.3%;background:rgba(200,152,152,.62);" title="Travel 18%"></div>
-          <div style="width:11.9%;background:rgba(200,152,152,.46);" title="Utilities 12%"></div>
-          <div style="width:8.6%;background:rgba(200,152,152,.32);" title="Health 9%"></div>
+          <div style="width:33%;background:rgba(200,152,152,1);border-radius:3px 0 0 3px;" title="Shopping 33%"></div>
+          <div style="width:27%;background:rgba(200,152,152,.78);" title="Food 27%"></div>
+          <div style="width:17%;background:rgba(200,152,152,.62);" title="Travel 17%"></div>
+          <div style="width:14%;background:rgba(200,152,152,.46);" title="Utilities 14%"></div>
+          <div style="width:9%;background:rgba(200,152,152,.32);" title="Other 9%"></div>
           <div style="width:5.4%;background:rgba(200,152,152,.20);border-radius:0 3px 3px 0;" title="Other 5%"></div>
         </div>
         <div class="rd-d2 sb-list" style="margin-top:.625rem;">
           <div class="sb-row">
             <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">shopping_bag</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Shopping</span><span class="sb-amt">AED 3,840</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,1)" data-w="78%"></div></div></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Shopping</span><span class="sb-amt">AED 2,150</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,1)" data-w="100%"></div></div></div>
           </div>
           <div class="sb-row">
             <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">restaurant</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Food &amp; Dining</span><span class="sb-amt">AED 2,560</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.78)" data-w="52%"></div></div></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Food &amp; Dining</span><span class="sb-amt">AED 1,720</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.78)" data-w="52%"></div></div></div>
           </div>
           <div class="sb-row">
             <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">flight</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Travel</span><span class="sb-amt">AED 2,100</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.62)" data-w="43%"></div></div></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Travel</span><span class="sb-amt">AED 1,100</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.62)" data-w="43%"></div></div></div>
           </div>
           <div class="sb-row">
             <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">bolt</span></div>
-            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Utilities</span><span class="sb-amt">AED 1,360</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.46)" data-w="28%"></div></div></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Utilities</span><span class="sb-amt">AED 890</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.46)" data-w="28%"></div></div></div>
           </div>
         </div>
         <div class="ins-nudge">
           <span class="material-icons ins-nudge-icon">lightbulb</span>
           <div class="ins-nudge-body">
-            <div class="ins-nudge-title">You saved AED 1,200 more than last month</div>
-            <div class="ins-nudge-sub">Reduce dining by 15% to reach your Emergency Fund goal 2 months earlier</div>
+            <div class="ins-nudge-title">On track — 24 days in, expenses are 35% of income</div>
+            <div class="ins-nudge-sub">Keep spending at this pace and you'll save AED 2,000+ more than last month</div>
           </div>
         </div>
       </div>
@@ -508,7 +506,7 @@
             <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">trending_up</span>
             <span class="d7-nudge-label">Investment</span>
           </div>
-          <div class="d7-nudge-text">A 12-month Fixed Deposit at 5.5% p.a. on your idle AED 22,150 earns AED 1,218 with zero risk.</div>
+          <div class="d7-nudge-text">You have AED 22,150 idle for 60 days; moving it to a fixed deposit could earn AED 1,218.</div>
           <a href="general-account-opening.html" class="d7-nudge-cta">Open FD <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
         </div>
       </div>
@@ -647,10 +645,81 @@ document.addEventListener('click', function(e) {
   setTimeout(function() { r.remove(); }, 500);
 });
 
+// ── Recent Transactions collapse ──
+var _txnExpanded = false;
+function toggleTxnCollapse() {
+  _txnExpanded = !_txnExpanded;
+  var wrap = document.getElementById('txnCollapseWrap');
+  var icon = document.getElementById('txnToggleIcon');
+  var chip = document.getElementById('txnCollapsedChip');
+  var btn  = document.getElementById('txnToggleBtn');
+  if (_txnExpanded) {
+    wrap.style.maxHeight = wrap.scrollHeight + 'px';
+    wrap.style.opacity   = '1';
+    icon.textContent     = 'expand_less';
+    chip.style.display   = 'none';
+    btn.setAttribute('aria-expanded', 'true');
+    wrap.addEventListener('transitionend', function onEnd() {
+      wrap.style.maxHeight = 'none';
+      wrap.removeEventListener('transitionend', onEnd);
+    }, { once: true });
+  } else {
+    wrap.style.maxHeight = wrap.scrollHeight + 'px';
+    requestAnimationFrame(function() {
+      wrap.style.maxHeight = '0';
+      wrap.style.opacity   = '0';
+    });
+    icon.textContent   = 'expand_more';
+    chip.style.display = '';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
 // ── Transaction tabs ──
 function setTab(el) {
   document.querySelectorAll('.txn-tab').forEach(function(t) { t.classList.remove('active'); });
   el.classList.add('active');
+  var filter = el.textContent.trim().toLowerCase(); // all | income | expenses | transfers
+  var typeMap = { 'income': 'income', 'expenses': 'expense', 'transfers': 'transfer' };
+  var wanted  = typeMap[filter] || null; // null = show all
+
+  var rows   = document.querySelectorAll('#txnList .txn-row');
+  var groups = document.querySelectorAll('#txnList .txn-date-group');
+
+  rows.forEach(function(r) {
+    var show = !wanted || r.dataset.type === wanted;
+    r.style.display = show ? '' : 'none';
+  });
+
+  // Hide date-group headers with no visible rows after them
+  groups.forEach(function(g) {
+    var sib = g.nextElementSibling;
+    var hasVisible = false;
+    while (sib && !sib.classList.contains('txn-date-group') && !sib.classList.contains('txn-view-all')) {
+      if (sib.classList.contains('txn-row') && sib.style.display !== 'none') {
+        hasVisible = true; break;
+      }
+      sib = sib.nextElementSibling;
+    }
+    g.style.display = hasVisible ? '' : 'none';
+  });
+
+  // Empty state
+  var list = document.getElementById('txnList');
+  var empty = document.getElementById('txnEmptyState');
+  var anyVisible = Array.from(rows).some(function(r){ return r.style.display !== 'none'; });
+  if (!anyVisible) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.id = 'txnEmptyState';
+      empty.style.cssText = 'text-align:center;padding:1.5rem 1rem;color:#707070;font-size:.82rem;';
+      empty.innerHTML = '<span class="material-icons" style="font-size:2rem;display:block;margin-bottom:.4rem;color:#c8d6de;">inbox</span>No ' + (el.textContent.trim()) + ' transactions this period';
+      list.insertBefore(empty, list.querySelector('.txn-view-all'));
+    }
+    empty.style.display = '';
+  } else {
+    if (empty) empty.style.display = 'none';
+  }
 }
 
 // ── Spending period tabs ──

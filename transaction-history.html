@@ -220,111 +220,151 @@
 </div>
 
 <!-- Summary stats -->
-<div class="th-summary">
-  <div class="th-stat">
+<div class="th-summary" id="thSummary">
+  <div class="th-stat" id="statBoxTotal">
     <span class="th-stat-lbl">Total Transactions</span>
-    <span class="th-stat-val">24</span>
+    <span class="th-stat-val" id="statTotal">24</span>
   </div>
-  <div class="th-stat">
+  <div class="th-stat" id="statBoxCredits">
     <span class="th-stat-lbl">Total Credits</span>
-    <span class="th-stat-val cr">+ AED 42,300.00</span>
+    <span class="th-stat-val cr" id="statCredits">+ AED 42,300.00</span>
   </div>
-  <div class="th-stat">
+  <div class="th-stat" id="statBoxDebits">
     <span class="th-stat-lbl">Total Debits</span>
-    <span class="th-stat-val dr">− AED 18,750.00</span>
+    <span class="th-stat-val dr" id="statDebits">− AED 18,750.00</span>
   </div>
-  <div class="th-stat">
+  <div class="th-stat" id="statBoxOpening">
     <span class="th-stat-lbl">Opening Balance</span>
-    <span class="th-stat-val">AED 225,000.00</span>
+    <span class="th-stat-val" id="statOpening">AED 225,000.00</span>
   </div>
-  <div class="th-stat">
+  <div class="th-stat" id="statBoxClosing">
     <span class="th-stat-lbl">Closing Balance</span>
-    <span class="th-stat-val">AED 248,350.00</span>
+    <span class="th-stat-val" id="statClosing">AED 248,550.00</span>
   </div>
 </div>
 
-<!-- Filters -->
-<div class="txn-filters-card" role="search">
-  <div class="txn-filters-header">
-    <span class="txn-filters-title">Filters</span>
-    <div class="d-flex align-items-center gap-2">
-      <div class="txn-search-wrap">
-        <input type="search" placeholder="Search transactions…" aria-label="Search transactions" id="txnSearch"/>
-        <button type="button" aria-label="Submit search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </button>
-      </div>
-      <button id="filterToggleBtn" onclick="toggleFilters()" type="button" aria-expanded="false" aria-controls="filtersBody" class="filter-expand-btn" title="More filters">
-        More filters &nbsp;<svg id="filterChevron" xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" style="transition:transform .2s" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#0085db"/></svg>
+<!-- Smart Filter Bar -->
+<div class="th-filter-bar">
+
+  <!-- Row 1: Search + Export -->
+  <div class="th-search-row">
+    <div class="th-search-box">
+      <span class="material-icons th-search-ico">search</span>
+      <input type="text" id="thSearch" class="th-search-input" placeholder="Search transactions, merchants, references…" oninput="thDoSearch(this.value)" autocomplete="off"/>
+      <button class="th-search-cls" id="thSearchCls" onclick="thClearSearch()" style="display:none" aria-label="Clear search">
+        <span class="material-icons" style="font-size:16px;">close</span>
+      </button>
+    </div>
+    <button class="th-export-btn" onclick="alert('Export options coming soon')">
+      <span class="material-icons" style="font-size:15px;">download</span> Export
+    </button>
+  </div>
+
+  <!-- Row 2: Date quick-presets -->
+  <div class="th-filter-row">
+    <span class="th-filter-lbl">Period</span>
+    <div class="th-pill-group" id="datePillGroup" role="group" aria-label="Date period">
+      <button class="th-pill" onclick="setDatePill(this,'today')">Today</button>
+      <button class="th-pill" onclick="setDatePill(this,'7d')">Last 7 days</button>
+      <button class="th-pill th-pill-active" onclick="setDatePill(this,'month')">This month</button>
+      <button class="th-pill" onclick="setDatePill(this,'3m')">Last 3 months</button>
+      <button class="th-pill" onclick="setDatePill(this,'6m')">Last 6 months</button>
+      <button class="th-pill th-pill-icon" onclick="setDatePill(this,'custom')">
+        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">date_range</span> Custom range
       </button>
     </div>
   </div>
 
-  <div class="filters-primary">
-    <div class="row g-3 align-items-end">
-      <div class="col-12 col-sm-6 col-md-3">
-        <label class="f-label" for="txnType">Transaction Type</label>
-        <select id="txnType" class="f-input f-select filter-field">
-          <option value="" disabled selected>All Types</option>
-          <option>Credit</option><option>Debit</option><option>Transfer</option>
-        </select>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <label class="f-label" for="txnIdent">Account Identifier</label>
-        <select id="txnIdent" class="f-input f-select filter-field">
-          <option value="" disabled selected>Select</option>
-          <option>IBAN</option><option>Account No.</option>
-        </select>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <label class="f-label" for="refNum">Reference Number</label>
-        <input id="refNum" class="f-input filter-field" placeholder="Enter reference…"/>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3">
+  <!-- Row 3: Transaction type -->
+  <div class="th-filter-row">
+    <span class="th-filter-lbl">Type</span>
+    <div class="th-pill-group" id="typePillGroup" role="group" aria-label="Transaction type">
+      <button class="th-tpill th-tpill-active" onclick="setTypePill(this,'all')">All</button>
+      <button class="th-tpill th-tpill-cr" onclick="setTypePill(this,'credit')">
+        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">south</span> Credits
+      </button>
+      <button class="th-tpill th-tpill-dr" onclick="setTypePill(this,'debit')">
+        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">north</span> Debits
+      </button>
+      <button class="th-tpill th-tpill-tr" onclick="setTypePill(this,'transfer')">
+        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">swap_horiz</span> Transfers
+      </button>
+      <button class="th-tpill" onclick="setTypePill(this,'bills')">
+        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">receipt_long</span> Bill Payments
+      </button>
+    </div>
+  </div>
+
+  <!-- Row 4: More filters toggle + active chips -->
+  <div class="th-filter-bottom">
+    <button class="th-more-btn" id="thMoreBtn" onclick="toggleMoreFilters()">
+      <span class="material-icons" style="font-size:15px;">tune</span>
+      More filters
+      <span class="material-icons" id="thMoreChev" style="font-size:15px;transition:transform .2s;">expand_more</span>
+    </button>
+    <div class="th-active-chips" id="thActiveChips">
+      <span class="th-achip th-achip-date">This month <button onclick="removeActiveChip(this,'date')" aria-label="Remove">&#215;</button></span>
+    </div>
+    <button class="th-reset-lnk" id="thResetLnk" onclick="resetThFilters()" style="display:none">
+      <span class="material-icons" style="font-size:14px;vertical-align:-2px;">refresh</span> Reset all
+    </button>
+  </div>
+
+  <!-- Advanced filters panel -->
+  <div class="th-more-panel" id="thMorePanel" style="display:none">
+    <div class="th-more-grid">
+      <div>
         <label class="f-label">From Date</label>
         <div class="position-relative">
-          <input class="f-input" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
+          <input class="f-input" id="mfFromDate" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
           <span class="cal-icon-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div id="filtersBody" class="filters-extra hidden" aria-hidden="true">
-    <div class="row g-3 align-items-end">
-      <div class="col-12 col-sm-6 col-md-3">
+      <div>
         <label class="f-label">To Date</label>
         <div class="position-relative">
-          <input class="f-input" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
+          <input class="f-input" id="mfToDate" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
           <span class="cal-icon-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
         </div>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <label class="f-label" for="numTxn">Number of Transactions</label>
-        <input id="numTxn" class="f-input filter-field" placeholder="e.g. 25"/>
+      <div>
+        <label class="f-label">Min Amount (AED)</label>
+        <input class="f-input" id="mfMinAmt" type="number" min="0" placeholder="0.00"/>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <label class="f-label" for="minAmt">Min Amount</label>
-        <input id="minAmt" class="f-input filter-field" placeholder="0.00" style="text-align:right"/>
+      <div>
+        <label class="f-label">Max Amount (AED)</label>
+        <input class="f-input" id="mfMaxAmt" type="number" min="0" placeholder="No limit"/>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <label class="f-label" for="maxAmt">Max Amount</label>
-        <input id="maxAmt" class="f-input filter-field" placeholder="0.00" style="text-align:right"/>
+      <div>
+        <label class="f-label">Category</label>
+        <select class="f-input f-select" id="mfCategory">
+          <option value="">All Categories</option>
+          <option>Salary / Income</option>
+          <option>Shopping</option>
+          <option>Food &amp; Dining</option>
+          <option>Travel</option>
+          <option>Bill Payments</option>
+          <option>ATM / Cash</option>
+          <option>International</option>
+          <option>Interest</option>
+        </select>
       </div>
+      <div>
+        <label class="f-label">Sort By</label>
+        <select class="f-input f-select" id="mfSort">
+          <option>Newest first</option>
+          <option>Oldest first</option>
+          <option>Highest amount first</option>
+          <option>Lowest amount first</option>
+        </select>
+      </div>
+    </div>
+    <div class="th-more-actions">
+      <button class="btn-reset" onclick="resetThFilters()">Reset</button>
+      <button class="btn-apply" onclick="applyMoreFilters()">Apply Filters</button>
     </div>
   </div>
 
-  <div class="filters-actions">
-    <a href="accounts.html" id="filterCancelBtn" class="btn-action btn-cancel hidden">CANCEL</a>
-    <button type="button" class="btn-reset" onclick="resetFilter()">RESET</button>
-    <button type="button" class="btn-apply" onclick="applyFilter()">APPLY FILTER</button>
-  </div>
-</div>
-
-<!-- Filter chips -->
-<div class="filter-chips" id="filterChips" role="group" aria-label="Active filters">
-  <div class="filter-chip" id="chip_date">Market Date <button onclick="removeChip('chip_date')" aria-label="Remove filter">&#215;</button></div>
-  <div class="filter-chip" id="chip_ref">Reference <button onclick="removeChip('chip_ref')" aria-label="Remove filter">&#215;</button></div>
 </div>
 
 <!-- Transaction card -->
@@ -622,22 +662,296 @@
 </div>
 <script>
 (function(){
-  var expanded = false;
-  window.toggleFilters = function(){
-    expanded = !expanded;
-    var body = document.getElementById('filtersBody');
-    var btn = document.getElementById('filterToggleBtn');
-    var chev = document.getElementById('filterChevron');
-    var cancel = document.getElementById('filterCancelBtn');
-    body.classList.toggle('hidden', !expanded);
-    body.setAttribute('aria-hidden', String(!expanded));
-    btn.setAttribute('aria-expanded', String(expanded));
-    chev.style.transform = expanded ? 'rotate(180deg)' : 'rotate(0deg)';
-    if(cancel) cancel.classList.toggle('hidden', !expanded);
+
+  // ══ DATA ══════════════════════════════════════
+  // Closing balance is always 248,550 (current live balance)
+  // Opening = Closing − Credits + Debits for each period
+  var CLOSING = 248550;
+
+  var DATE_DATA = {
+    today:  { total:  2, credits:  18500,  debits:    280,  opening: 230330 },
+    '7d':   { total:  7, credits:  19200,  debits:   3850,  opening: 233200 },
+    month:  { total: 24, credits:  42300,  debits:  18750,  opening: 225000 },
+    '3m':   { total: 67, credits:  98500,  debits:  75950,  opening: 226000 },
+    '6m':   { total:142, credits: 186200,  debits: 162650,  opening: 225000 },
+    custom: { total: 24, credits:  42300,  debits:  18750,  opening: 225000 }
   };
-  window.removeChip = function(id){ var el=document.getElementById(id); if(el) el.remove(); };
-  window.resetFilter = function(){ document.querySelectorAll('.filter-field').forEach(function(f){ if(f.tagName==='SELECT') f.selectedIndex=0; else f.value=''; }); };
-  window.applyFilter = function(){};
+  // Type multipliers applied on top of the date data
+  var TYPE_MULT = {
+    all:      { totalPct:1.00, crPct:1.00, drPct:1.00 },
+    credit:   { totalPct:0.38, crPct:1.00, drPct:0.00 },
+    debit:    { totalPct:0.62, crPct:0.00, drPct:1.00 },
+    transfer: { totalPct:0.12, crPct:0.00, drPct:0.27 },
+    bills:    { totalPct:0.17, crPct:0.00, drPct:0.14 }
+  };
+
+  var _curDate = 'month';
+  var _curType = 'all';
+
+  // ══ STAT ANIMATION ════════════════════════════
+  function fmtAED(n) {
+    return 'AED ' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  }
+  function countUp(el, target, prefix, duration) {
+    var start = Date.now();
+    (function step() {
+      var p = Math.min((Date.now() - start) / duration, 1);
+      var ease = 1 - Math.pow(1 - p, 3);
+      var val = Math.round(ease * target);
+      el.textContent = prefix + (target % 1 === 0 ? val.toLocaleString('en-US') : fmtAED(ease * target));
+      if (p < 1) requestAnimationFrame(step);
+    })();
+  }
+  function flashStat(boxId) {
+    var el = document.getElementById(boxId);
+    if (!el) return;
+    el.classList.remove('th-stat-flash');
+    void el.offsetWidth; // reflow
+    el.classList.add('th-stat-flash');
+  }
+
+  function applyStats() {
+    var d = DATE_DATA[_curDate] || DATE_DATA.month;
+    var m = TYPE_MULT[_curType]  || TYPE_MULT.all;
+    var total   = Math.round(d.total   * m.totalPct);
+    var credits = Math.round(d.credits * m.crPct);
+    var debits  = Math.round(d.debits  * m.drPct);
+    var opening = d.opening;
+    var closing = CLOSING;
+
+    var elTotal   = document.getElementById('statTotal');
+    var elCredits = document.getElementById('statCredits');
+    var elDebits  = document.getElementById('statDebits');
+    var elOpening = document.getElementById('statOpening');
+    var elClosing = document.getElementById('statClosing');
+
+    if (elTotal)   { flashStat('statBoxTotal');   countUp(elTotal,   total,                    '',      500); }
+    if (elCredits) { flashStat('statBoxCredits'); countUp(elCredits, credits / 100, '+ ',      600); elCredits.textContent = '+ ' + fmtAED(credits); setTimeout(function(){ elCredits.textContent = '+ ' + fmtAED(credits); }, 650); }
+    if (elDebits)  { flashStat('statBoxDebits');  elDebits.textContent  = '− ' + fmtAED(debits);  }
+    if (elOpening) { flashStat('statBoxOpening'); elOpening.textContent = fmtAED(opening); }
+    if (elClosing) { flashStat('statBoxClosing'); elClosing.textContent = fmtAED(closing); }
+
+    // Proper count-up for currency fields
+    var dur = 550;
+    [
+      { el: elCredits, val: credits, pre: '+ ' },
+      { el: elDebits,  val: debits,  pre: '− ' },
+      { el: elOpening, val: opening, pre: ''   },
+      { el: elClosing, val: closing, pre: ''   }
+    ].forEach(function(cfg) {
+      if (!cfg.el) return;
+      var start = Date.now();
+      (function step() {
+        var p    = Math.min((Date.now() - start) / dur, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        cfg.el.textContent = cfg.pre + fmtAED(ease * cfg.val);
+        if (p < 1) requestAnimationFrame(step);
+      })();
+    });
+    if (elTotal) {
+      var start = Date.now();
+      (function step() {
+        var p    = Math.min((Date.now() - start) / dur, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        elTotal.textContent = Math.round(ease * total);
+        if (p < 1) requestAnimationFrame(step);
+      })();
+    }
+  }
+
+  // ══ MORE FILTERS PANEL ════════════════════════
+  var _mfOpen = false;
+  window.toggleMoreFilters = function() {
+    _mfOpen = !_mfOpen;
+    var panel = document.getElementById('thMorePanel');
+    var chev  = document.getElementById('thMoreChev');
+    panel.style.display = _mfOpen ? 'block' : 'none';
+    chev.style.transform = _mfOpen ? 'rotate(180deg)' : '';
+  };
+
+  // ══ DATE PILLS ════════════════════════════════
+  window.setDatePill = function(btn, preset) {
+    document.querySelectorAll('#datePillGroup .th-pill').forEach(function(b){ b.classList.remove('th-pill-active'); });
+    btn.classList.add('th-pill-active');
+    _curDate = preset;
+    if (preset === 'custom') {
+      // open the More filters panel and highlight date fields
+      if (!_mfOpen) toggleMoreFilters();
+      setTimeout(function() {
+        ['mfFromDate','mfToDate'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.classList.remove('th-field-pulse');
+          void el.offsetWidth;
+          el.classList.add('th-field-pulse');
+          el.addEventListener('animationend', function(){ el.classList.remove('th-field-pulse'); }, { once:true });
+        });
+        var el = document.getElementById('mfFromDate');
+        if (el) el.focus();
+        var panel = document.getElementById('thMorePanel');
+        if (panel) panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      }, 80);
+      updateActiveChip('date', 'Custom range', 'th-achip-date');
+      // don't call applyStats yet — wait for user to apply dates
+      return;
+    }
+    var labels = { today:'Today', '7d':'Last 7 days', month:'This month', '3m':'Last 3 months', '6m':'Last 6 months' };
+    updateActiveChip('date', labels[preset] || preset, 'th-achip-date');
+    applyStats();
+  };
+
+  // ══ TYPE PILLS ════════════════════════════════
+  window.setTypePill = function(btn, type) {
+    document.querySelectorAll('#typePillGroup .th-tpill').forEach(function(b){ b.classList.remove('th-tpill-active'); });
+    btn.classList.add('th-tpill-active');
+    _curType = type;
+    if (type !== 'all') {
+      var labels = { credit:'Credits only', debit:'Debits only', transfer:'Transfers', bills:'Bill Payments' };
+      updateActiveChip('type', labels[type], 'th-achip-type');
+    } else {
+      removeActiveChipById('type');
+    }
+    applyStats();
+  };
+
+  // ══ ACTIVE CHIPS ══════════════════════════════
+  var _activeChips = { date: 'This month' };
+  function updateActiveChip(key, label, cls) { _activeChips[key] = { label:label, cls:cls }; renderActiveChips(); }
+  function removeActiveChipById(key) { delete _activeChips[key]; renderActiveChips(); }
+  window.removeActiveChip = function(btn, key) {
+    delete _activeChips[key];
+    renderActiveChips();
+    if (key === 'date') {
+      _curDate = 'month';
+      document.querySelectorAll('#datePillGroup .th-pill').forEach(function(b){ b.classList.remove('th-pill-active'); });
+      var m = document.querySelector('#datePillGroup .th-pill:nth-child(3)');
+      if (m) m.classList.add('th-pill-active');
+    }
+    if (key === 'type') {
+      _curType = 'all';
+      document.querySelectorAll('#typePillGroup .th-tpill').forEach(function(b){ b.classList.remove('th-tpill-active'); });
+      var a = document.querySelector('#typePillGroup .th-tpill:first-child');
+      if (a) a.classList.add('th-tpill-active');
+    }
+    applyStats();
+  };
+  function renderActiveChips() {
+    var container = document.getElementById('thActiveChips');
+    var resetBtn  = document.getElementById('thResetLnk');
+    if (!container) return;
+    container.innerHTML = '';
+    var keys = Object.keys(_activeChips);
+    keys.forEach(function(k) {
+      var d    = _activeChips[k];
+      var chip = document.createElement('span');
+      chip.className = 'th-achip ' + d.cls;
+      chip.innerHTML = d.label + ' <button onclick="removeActiveChip(this,\'' + k + '\')" aria-label="Remove">&#215;</button>';
+      container.appendChild(chip);
+    });
+    if (resetBtn) resetBtn.style.display = keys.length > 1 ? 'inline-flex' : 'none';
+  }
+
+  // ══ SEARCH ════════════════════════════════════
+  window.thDoSearch = function(val) {
+    var cls = document.getElementById('thSearchCls');
+    if (cls) cls.style.display = val ? 'flex' : 'none';
+    val = val.trim().toLowerCase();
+    document.querySelectorAll('#txnRows .th-row').forEach(function(row) {
+      row.style.display = (!val || row.textContent.toLowerCase().includes(val)) ? '' : 'none';
+    });
+    document.querySelectorAll('#txnRows .th-date-group').forEach(function(grp) {
+      var next = grp.nextElementSibling, hasVisible = false;
+      while (next && !next.classList.contains('th-date-group') && !next.classList.contains('th-pagination')) {
+        if (next.classList.contains('th-row') && next.style.display !== 'none') hasVisible = true;
+        next = next.nextElementSibling;
+      }
+      grp.style.display = hasVisible ? '' : 'none';
+    });
+  };
+  window.thClearSearch = function() {
+    var inp = document.getElementById('thSearch');
+    if (inp) { inp.value = ''; window.thDoSearch(''); inp.focus(); }
+  };
+
+  // ══ RESET ═════════════════════════════════════
+  window.resetThFilters = function() {
+    _curDate = 'month'; _curType = 'all';
+    _activeChips = { date: { label:'This month', cls:'th-achip-date' } };
+    renderActiveChips();
+    document.querySelectorAll('#datePillGroup .th-pill').forEach(function(b){ b.classList.remove('th-pill-active'); });
+    var m = document.querySelector('#datePillGroup .th-pill:nth-child(3)');
+    if (m) m.classList.add('th-pill-active');
+    document.querySelectorAll('#typePillGroup .th-tpill').forEach(function(b){ b.classList.remove('th-tpill-active'); });
+    var a = document.querySelector('#typePillGroup .th-tpill:first-child');
+    if (a) a.classList.add('th-tpill-active');
+    ['mfFromDate','mfToDate','mfMinAmt','mfMaxAmt'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+    ['mfCategory','mfSort'].forEach(function(id){ var el=document.getElementById(id); if(el) el.selectedIndex=0; });
+    thClearSearch();
+    applyStats();
+  };
+
+  // ══ APPLY ADVANCED ════════════════════════════
+  function parseDMY(str) {
+    var p = str.replace(/\s/g,'').split('/');
+    if (p.length !== 3 || p[2].length < 4) return null;
+    var d = new Date(+p[2], +p[1]-1, +p[0]);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function fmtShort(dt) {
+    return dt.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+  }
+
+  window.applyMoreFilters = function() {
+    var fromEl = document.getElementById('mfFromDate');
+    var toEl   = document.getElementById('mfToDate');
+    var cat    = document.getElementById('mfCategory');
+    var min    = document.getElementById('mfMinAmt');
+    var max    = document.getElementById('mfMaxAmt');
+
+    // ── Custom date range ──
+    if (fromEl && toEl && fromEl.value && toEl.value) {
+      var fromDt = parseDMY(fromEl.value);
+      var toDt   = parseDMY(toEl.value);
+      if (fromDt && toDt && toDt >= fromDt) {
+        var days  = Math.round((toDt - fromDt) / 86400000) + 1;
+        var ratio = days / 30; // scale relative to "This month" baseline (30 days)
+        var base  = DATE_DATA.month;
+        DATE_DATA.custom = {
+          total:   Math.max(1, Math.round(base.total   * ratio)),
+          credits: Math.round(base.credits * ratio),
+          debits:  Math.round(base.debits  * ratio),
+          opening: CLOSING - Math.round(base.credits * ratio) + Math.round(base.debits * ratio)
+        };
+        _curDate = 'custom';
+        var rangeLabel = fmtShort(fromDt) + ' – ' + fmtShort(toDt);
+        updateActiveChip('date', rangeLabel, 'th-achip-date');
+        // mark custom pill active
+        document.querySelectorAll('#datePillGroup .th-pill').forEach(function(b){ b.classList.remove('th-pill-active'); });
+        var customPill = document.querySelector('#datePillGroup .th-pill-icon');
+        if (customPill) customPill.classList.add('th-pill-active');
+        applyStats();
+      } else if (fromDt && toDt && toDt < fromDt) {
+        fromEl.classList.add('th-field-error');
+        toEl.classList.add('th-field-error');
+        setTimeout(function(){ fromEl.classList.remove('th-field-error'); toEl.classList.remove('th-field-error'); }, 1500);
+        return; // don't close panel
+      }
+    }
+
+    // ── Other advanced filters → chips ──
+    if (cat && cat.value) updateActiveChip('cat', cat.value, 'th-achip-adv');
+    if (min && min.value && max && max.value) updateActiveChip('amt','AED '+min.value+' – '+max.value,'th-achip-adv');
+    else if (min && min.value) updateActiveChip('amt','Min AED '+min.value,'th-achip-adv');
+    else if (max && max.value) updateActiveChip('amt','Up to AED '+max.value,'th-achip-adv');
+
+    toggleMoreFilters();
+  };
+
+  // ══ INIT ══════════════════════════════════════
+  // initialise active chips render (date chip already set)
+  _activeChips = { date: { label:'This month', cls:'th-achip-date' } };
+  renderActiveChips();
+
 })();
 </script>
   </main>
