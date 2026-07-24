@@ -582,7 +582,7 @@
     grid-template-rows: auto;
     margin: 0 1rem 1rem;
   }
-  .rd-left, .rd-right { grid-column: 1; grid-row: auto; }
+  .rd-left, .rd-right, .rd-d7 { grid-column: 1; grid-row: auto; }
   /* Flatten nested grid in left column */
   .rd-left {
     grid-template-columns: 1fr;
