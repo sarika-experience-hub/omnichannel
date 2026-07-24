@@ -496,3 +496,32 @@ function sbClearSearch() {
   var inp = document.getElementById('sbSearch');
   if (inp) { inp.value = ''; sbFilter(''); inp.focus(); }
 }
+
+/* ── Notification panel: mobile full-screen overlay ── */
+function toggleNotifPanel(e) {
+  if (window.innerWidth > 767) { window.location.href = 'all-notifications.html'; return; }
+  e.preventDefault();
+  e.stopPropagation();
+  var ov = document.getElementById('mobileNotifOverlay');
+  if (!ov) return;
+  var isOpen = ov.style.display === 'flex';
+  isOpen ? closeMobileNotif() : openMobileNotif();
+}
+
+function openMobileNotif() {
+  var ov = document.getElementById('mobileNotifOverlay');
+  if (!ov) return;
+  ov.style.display = 'flex';
+  ov.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileNotif() {
+  var ov = document.getElementById('mobileNotifOverlay');
+  if (!ov) return;
+  ov.style.display = 'none';
+  ov.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function closeNotifPanel() { closeMobileNotif(); }
