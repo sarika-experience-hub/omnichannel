@@ -590,6 +590,8 @@
   .rd-left .rd-d1,
   .rd-left .rd-d5,
   .rd-left .rd-d2 { grid-column: 1; grid-row: auto; }
+  /* Replace vertical divider with horizontal one on mobile */
+  .rd-left .rd-d1 { border-right: none; border-bottom: 1px solid var(--az-border); }
 }
 
 @media (max-width: 767px) {
