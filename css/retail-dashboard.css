@@ -72,6 +72,7 @@
   box-shadow: none;
   overflow: visible;
   gap: 0;
+  align-items: start;
 }
 .rd-left .rd-d1,
 .rd-left .rd-d5,
@@ -80,6 +81,7 @@
   box-shadow: none;
   border-radius: 0;
   background: transparent;
+  align-self: start;
 }
 /* Vertical divider between Balance and My Cards */
 .rd-left .rd-d1 { border-right: 1px solid var(--az-border); }
@@ -927,6 +929,12 @@ a.ab-chip:active { transform: translateY(0); filter: brightness(.88); }
   padding-left: 1rem;
 }
 .ac-col:first-child { padding-right: 1rem; }
+
+@media (max-width: 1100px) {
+  .ac-cols-wrap { grid-template-columns: 1fr; }
+  .ac-col-right { border-left: none; border-top: 1px solid var(--az-border); padding-left: 0; padding-top: .875rem; margin-top: .5rem; }
+  .ac-col:first-child { padding-right: 0; }
+}
 
 /* ══ TRANSACTION SEARCH ══ */
 .txn-search-wrap {

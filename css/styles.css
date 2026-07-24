@@ -960,6 +960,47 @@ body {
   .form-footer .tc { min-width: unset; }
   .btn-action { justify-content: center; }
   .tabs-header-row { padding: 0 .75rem; }
+  /* Mobile header — keep only notifications + avatar */
+  .hdr-right > a.hdr-icon-btn,
+  .hdr-right > .hdr-div,
+  .hdr-right > button.hdr-icon-btn { display: none; }
+  .hdr-avatar { width: 38px; height: 38px; }
+
+  /* ── Notification panel: full-screen overlay on mobile ── */
+  .notif-wrap:hover .notif-dropdown { opacity:0; pointer-events:none; transform:translateY(8px); }
+  .notif-dropdown {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    border-radius: 0; border: none;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .2s;
+    opacity: 1; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  .notif-dropdown.notif-mobile-open {
+    transform: translateY(0);
+    pointer-events: auto; opacity: 1;
+  }
+  .notif-panel-hdr { padding: 1rem 1.25rem .875rem; position: sticky; top: 0; background: #fff; z-index: 2; }
+  .notif-mobile-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: none; border: none; cursor: pointer;
+    color: var(--az-navy); padding: 0; margin-right: .625rem;
+  }
+  .notif-mobile-close .material-icons { font-size: 22px; }
+  .notif-list { flex: 1; }
+  .notif-item { padding: 1rem 1.25rem; }
+  .notif-msg { font-size: .875rem; }
+  .notif-time { font-size: .8rem; }
+  .notif-footer { padding: 1rem 1.25rem 2rem; }
+  .notif-view-all { padding: .75rem; font-size: .9rem; }
+
+  /* Backdrop */
+  .notif-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.4); z-index: 9997;
+  }
+  .notif-backdrop.notif-bd-show { display: block; }
 }
 @media (max-width: 575.98px) {
   .hdr-right { gap: .25rem; }
@@ -1252,11 +1293,33 @@ body {
   opacity:1; pointer-events:auto; transform:translateY(0);
   transition:opacity .15s, transform .15s;
 }
+/* ── Mobile: full-screen overlay (placed after base to win cascade) ── */
+@media (max-width: 767.98px) {
+  .notif-wrap:hover .notif-dropdown,
+  .notif-dropdown {
+    position: fixed !important; inset: 0 !important;
+    width: 100% !important; height: 100% !important;
+    border-radius: 0 !important; border: none !important;
+    transform: translateY(100%) !important;
+    transition: transform .3s cubic-bezier(.4,0,.2,1) !important;
+    opacity: 1 !important; pointer-events: none !important;
+    overflow-y: auto !important;
+    display: flex !important; flex-direction: column !important;
+    z-index: 9999 !important;
+    top: 0 !important; right: 0 !important;
+    box-shadow: none !important;
+  }
+  .notif-dropdown.notif-mobile-open {
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+}
 .notif-panel-hdr {
   display:flex; align-items:center; justify-content:space-between;
   padding:.75rem 1rem .625rem;
   border-bottom:1px solid var(--az-border);
 }
+.notif-mobile-close { display: none; }
 .notif-panel-title { font-weight:700; font-size:.9375rem; color:var(--az-navy); }
 .notif-clear-all { font-size:.8125rem; color:var(--az-green); text-decoration:none; font-weight:500; }
 .notif-clear-all:hover { text-decoration:underline; color:var(--az-green); }
