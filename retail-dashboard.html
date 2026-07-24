@@ -30,11 +30,11 @@
     </a>
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
-      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+      <button class="hdr-icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications" style="position:relative" onclick="toggleNotifPanel(event)">
         <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" aria-label="3 notifications">3</span>
       </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
-        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span><a href="javascript:;" class="notif-clear-all">Clear all</a></div>
+        <div class="notif-panel-hdr"><button class="notif-mobile-close" onclick="closeNotifPanel()" aria-label="Close"><span class="material-icons">arrow_back</span></button><span class="notif-panel-title">Notifications</span><a href="javascript:;" class="notif-clear-all">Clear all</a></div>
         <div class="notif-list">
           <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
           <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Scheduled transfer processed</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
@@ -571,7 +571,7 @@
   </footer>
 </div>
 
-<script src="js/app.js"></script>
+<script src="js/app.js?v=3"></script>
 <script src="js/shared.js"></script>
 <script>
 // ── Clock ──
@@ -920,5 +920,59 @@ function shiftPromo(dir) { goToPromo(_promoIdx + dir); resetPromoTimer(); }
 function resetPromoTimer() { clearInterval(_promoTimer); _promoTimer = setInterval(function(){ goToPromo(_promoIdx + 1); }, 5000); }
 document.addEventListener('DOMContentLoaded', function() { resetPromoTimer(); });
 </script>
+  <div id="notifBackdrop" class="notif-backdrop" onclick="closeNotifPanel()"></div>
+
+  <!-- Mobile notification overlay: lives at body level, no stacking-context issues -->
+
+  <script>
+  /* Inline notif overlay — works even if app.js is cached */
+  (function(){
+    function _openNotif(){
+      var ov=document.getElementById('mobileNotifOverlay');
+      if(!ov)return;
+      ov.style.display='flex';
+      ov.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function _closeNotif(){
+      var ov=document.getElementById('mobileNotifOverlay');
+      if(!ov)return;
+      ov.style.display='none';
+      ov.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+      var btn=document.getElementById('notifBtn');
+      if(btn){
+        btn.removeAttribute('onclick');
+        btn.addEventListener('click',function(e){
+          if(window.innerWidth<=767){e.preventDefault();e.stopPropagation();_openNotif();}
+          else{window.location.href='all-notifications.html';}
+        });
+      }
+      var closeBtn=document.querySelector('#mobileNotifOverlay .notif-panel-hdr button');
+      if(closeBtn) closeBtn.addEventListener('click',_closeNotif);
+      /* expose globally */
+      window.openMobileNotif=_openNotif;
+      window.closeMobileNotif=_closeNotif;
+      window.toggleNotifPanel=function(e){if(e){e.preventDefault();e.stopPropagation();}var ov=document.getElementById('mobileNotifOverlay');if(!ov)return;ov.style.display==='flex'?_closeNotif():_openNotif();};
+    });
+  })();
+  </script>
+  <div id="mobileNotifOverlay" role="dialog" aria-label="Notifications" aria-hidden="true" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#fff;z-index:99999;flex-direction:column;overflow-y:auto;">
+    <div class="notif-panel-hdr" style="position:sticky;top:0;background:#fff;z-index:2;">
+      <button onclick="closeMobileNotif()" aria-label="Close" style="background:none;border:none;cursor:pointer;color:#16303d;padding:0;margin-right:.625rem;display:inline-flex;align-items:center;"><span class="material-icons" style="font-size:22px;">arrow_back</span></button>
+      <span class="notif-panel-title">Notifications</span>
+      <a href="javascript:;" class="notif-clear-all">Clear all</a>
+    </div>
+    <div class="notif-list" style="flex:1;">
+      <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Scheduled transfer processed</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Card statement ready for download</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Emirates ID expires in 15 days — upload renewal</div><div class="notif-time">Today</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">DEWA bill due in 2 days — AED 320</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+    </div>
+    <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+  </div>
 </body>
 </html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
