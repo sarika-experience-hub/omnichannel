@@ -11,7 +11,8 @@
   <link rel="stylesheet" href="css/styles.css"/>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/retail-dashboard.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
 </head>
 <body>
 
@@ -220,44 +221,45 @@
         <!-- Card view -->
         <div id="debitCardView">
 
-          <!-- Card 1: Active / Primary -->
+          <!-- Card 1: Active / Primary — Platinum Visa -->
           <div class="card-row" id="debitRow0">
-            <div class="az-card-vis">
-              <span class="az-card-logo">VISA</span>
-              <div class="az-card-num">
-                <span id="debitNum0">2345 6789 5432 3749</span>
-                <div class="az-card-num-icons">
-                  <button onclick="toggleCardNum('debitNum0','debitEye0')" aria-label="Toggle card number visibility">
-                    <svg id="debitEye0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  </button>
-                  <button aria-label="Copy card number">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                  </button>
-                </div>
+            <div class="mc-card">
+              <div class="mc-card-top">
+                <div><div class="mc-bank">azentio</div><div class="mc-type">Platinum Visa</div></div>
+                <span class="mc-status-chip mc-status-active">ACTIVE</span>
               </div>
-              <div class="az-card-expiry">Expiry date 02/30</div>
-              <div class="az-card-holder">Sarika Desai</div>
-              <div class="az-card-footer">
-                <span class="az-card-label">Primary Card</span>
+              <div class="mc-mid">
+                <div class="mc-chip"></div>
+                <div class="mc-num" id="debitNum0" data-masked="•••• •••• •••• 7841" data-full="5321 4892 6614 7841" data-pan-visible="0">•••• •••• •••• 7841</div>
               </div>
+              <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                <span class="material-icons-outlined" style="font-size:15px;">visibility</span>
+              </button>
+              <div class="mc-card-bot">
+                <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">09 / 27</div></div>
+                <div class="mc-brand-visa">VISA</div>
+              </div>
+              <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
             </div>
             <div class="card-row-mid">
               <div class="card-name-col">
                 <div class="card-name" id="debitNameWrap0">
-                  <span id="debitNameTxt0">D-Card</span>
+                  <span id="debitNameTxt0">Platinum Visa</span>
                   <button class="edit-name-btn" onclick="startCardEdit('debit',0)" aria-label="Edit card name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
-                  <span class="fi fi-us" title="USD"></span>
-                  <span class="card-curr" style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;">USD</span>
                 </div>
-                <span class="badge-s s-active" style="margin-top:.375rem;display:inline-block;">Active</span>
+                <div style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;margin-bottom:.25rem;">
+                  <span class="fi fi-ae" title="AED"></span> AED
+                </div>
+                <span class="badge-s s-active" style="display:block;">Active</span>
               </div>
               <div class="card-field">
                 <div class="cl">Account Number</div>
-                <div class="cv">3245600678</div>
+                <div class="cv">····4200</div>
               </div>
               <div class="card-field">
                 <div class="cl">Expiry Date</div>
-                <div class="cv">02/30</div>
+                <div class="cv">09/27</div>
               </div>
               <div class="card-field">
                 <div class="cl">CVV</div>
@@ -286,41 +288,45 @@
             </div>
           </div>
 
-          <!-- Card 2: Replaced / Supplementary -->
+          <!-- Card 2: Supplementary — Platinum Visa -->
           <div class="card-row" id="debitRow1">
-            <div class="az-card-vis az-card-vis-blue">
-              <span class="az-card-logo">VISA</span>
-              <div class="az-card-num">
-                <span>&#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; 3749</span>
-                <div class="az-card-num-icons">
-                  <button aria-label="Show card number">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  </button>
-                </div>
+            <div class="mc-card" style="background:linear-gradient(135deg,#2a4060 0%,#172840 100%);">
+              <div class="mc-card-top">
+                <div><div class="mc-bank">azentio</div><div class="mc-type">Platinum Visa · Supplementary</div></div>
+                <span class="mc-status-chip mc-status-active">ACTIVE</span>
               </div>
-              <div class="az-card-expiry">Expiry date 02/30</div>
-              <div class="az-card-holder">Sarika Desai</div>
-              <div class="az-card-footer">
-                <span class="az-card-label">Supplementary Card</span>
+              <div class="mc-mid">
+                <div class="mc-chip"></div>
+                <div class="mc-num" id="debitNum1" data-masked="•••• •••• •••• 7842" data-full="5321 4892 6614 7842" data-pan-visible="0">•••• •••• •••• 7842</div>
               </div>
+              <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                <span class="material-icons-outlined" style="font-size:15px;">visibility</span>
+              </button>
+              <div class="mc-card-bot">
+                <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">09 / 27</div></div>
+                <div class="mc-brand-visa">VISA</div>
+              </div>
+              <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
             </div>
             <div class="card-row-mid">
               <div class="card-name-col">
                 <div class="card-name">
-                  <span>D-Card</span>
+                  <span>Platinum Visa (Supp.)</span>
                   <button class="edit-name-btn" onclick="startCardEdit('debit',1)" aria-label="Edit card name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
-                  <span class="fi fi-us" title="USD"></span>
-                  <span class="card-curr" style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;">USD</span>
                 </div>
-                <span class="badge-s s-replaced" style="margin-top:.375rem;display:inline-block;">Replaced</span>
+                <div style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;margin-bottom:.25rem;">
+                  <span class="fi fi-ae" title="AED"></span> AED
+                </div>
+                <span class="badge-s s-replaced" style="display:block;">Supplementary</span>
               </div>
               <div class="card-field">
                 <div class="cl">Account Number</div>
-                <div class="cv">3245600678</div>
+                <div class="cv">····4200</div>
               </div>
               <div class="card-field">
                 <div class="cl">Expiry Date</div>
-                <div class="cv">02/30</div>
+                <div class="cv">09/27</div>
               </div>
               <div class="card-field">
                 <div class="cl">CVV</div>
@@ -369,13 +375,13 @@
                   <div style="display:flex;align-items:center;gap:.625rem;">
                     <div class="card-thumb"></div>
                     <div>
-                      <div class="td-name">D-Card <button class="edit-name-btn" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button></div>
-                      <div class="td-curr"><span class="fi fi-us"></span> USD</div>
+                      <div class="td-name">Platinum Visa <button class="edit-name-btn" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button></div>
+                      <div class="td-curr"><span class="fi fi-ae"></span> AED</div>
                     </div>
                   </div>
                 </td>
                 <td><span class="badge-s s-active">Active</span></td>
-                <td>3245600678</td>
+                <td>····4200</td>
                 <td>Check your physical card</td>
                 <td>
                   <div class="td-actions">
@@ -400,13 +406,13 @@
                   <div style="display:flex;align-items:center;gap:.625rem;">
                     <div class="card-thumb"></div>
                     <div>
-                      <div class="td-name">D-Card <button class="edit-name-btn" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button></div>
-                      <div class="td-curr"><span class="fi fi-us"></span> USD</div>
+                      <div class="td-name">Platinum Visa (Supp.) <button class="edit-name-btn" aria-label="Edit"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button></div>
+                      <div class="td-curr"><span class="fi fi-ae"></span> AED</div>
                     </div>
                   </div>
                 </td>
-                <td><span class="badge-s s-active">Active</span></td>
-                <td>3245600678</td>
+                <td><span class="badge-s s-replaced">Supplementary</span></td>
+                <td>····4200</td>
                 <td>Check your physical card</td>
                 <td>
                   <div class="td-actions">
@@ -437,49 +443,54 @@
         <div class="info-bar"><img src="images/icons/information.svg" width="16" height="16" alt=""/> My Credit Cards</div>
 
         <div id="creditCardView">
-          <!-- Credit card row with expandable details -->
+          <!-- Credit card row with expandable details — Gold Mastercard -->
           <div class="card-row" id="creditRow0" style="flex-wrap:wrap;align-items:flex-start;">
-            <div class="az-card-vis">
-              <span class="az-card-logo">VISA</span>
-              <div class="az-card-num">
-                <span>2345 6789 5432 3749</span>
-                <div class="az-card-num-icons">
-                  <button aria-label="Toggle card number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                  <button aria-label="Copy card number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-                </div>
+            <div class="mc-card" style="background:linear-gradient(135deg,#1a4a6b 0%,#0d2d45 100%);">
+              <div class="mc-card-top">
+                <div><div class="mc-bank">azentio</div><div class="mc-type">Gold Mastercard</div></div>
+                <span class="mc-status-chip mc-status-active">ACTIVE</span>
               </div>
-              <div class="az-card-expiry">Expiry date 02/30</div>
-              <div class="az-card-holder">Sarika Desai</div>
-              <div class="az-card-footer">
-                <span class="az-card-label">Primary Card</span>
+              <div class="mc-mid">
+                <div class="mc-chip"></div>
+                <div class="mc-num" id="creditNum0" data-masked="•••• •••• •••• 3290" data-full="8412 5573 9901 3290" data-pan-visible="0">•••• •••• •••• 3290</div>
               </div>
+              <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                <span class="material-icons-outlined" style="font-size:15px;">visibility</span>
+              </button>
+              <div class="mc-card-bot">
+                <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">12 / 26</div></div>
+                <div class="mc-brand-mc"></div>
+              </div>
+              <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
             </div>
             <div class="card-row-mid" style="align-items:flex-start;">
               <div class="card-name-col">
                 <div class="card-name">
-                  <span>Visa Classic</span>
+                  <span>Gold Mastercard</span>
                   <button class="edit-name-btn" aria-label="Edit card name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
-                  <span class="fi fi-us" title="USD"></span>
-                  <span class="card-curr" style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;">USD</span>
                 </div>
-                <span class="badge-s s-active" style="margin-top:.375rem;display:inline-block;">Active</span>
+                <div style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;margin-bottom:.25rem;">
+                  <span class="fi fi-ae" title="AED"></span> AED
+                </div>
+                <span class="badge-s s-active" style="display:block;">Active</span>
               </div>
               <!-- Expanded credit card details grid -->
               <div class="card-dtl-grid" style="flex:1;min-width:280px;">
                 <div class="cf"><div class="cl">Card Type</div><div class="cv">Primary</div></div>
-                <div class="cf"><div class="cl">Settlement Account</div><div class="cv">3245600678</div></div>
-                <div class="cf"><div class="cl">Withdrawal Limit</div><div class="cv">100,000 USD</div></div>
+                <div class="cf"><div class="cl">Settlement Account</div><div class="cv">····4200</div></div>
+                <div class="cf"><div class="cl">Withdrawal Limit</div><div class="cv">AED 50,000</div></div>
                 <div class="cf" style="display:flex;flex-direction:column;align-items:flex-end;"><a href="transaction-history.html" class="btn-txn">Transaction History</a></div>
-                <div class="cf"><div class="cl">POS Limit</div><div class="cv">50,000 USD</div></div>
-                <div class="cf"><div class="cl">Remaining POS Limit</div><div class="cv">50,000 USD</div></div>
+                <div class="cf"><div class="cl">POS Limit</div><div class="cv">AED 25,000</div></div>
+                <div class="cf"><div class="cl">Remaining POS Limit</div><div class="cv">AED 25,000</div></div>
                 <div class="cf"><div class="cl">Payment Percentage</div><div class="cv">100%</div></div>
                 <div class="cf"><div class="cl">Billing Cycle</div><div class="cv">25th of month</div></div>
-                <div class="cf"><div class="cl">Outstanding Balance</div><div class="cv">0.00 USD</div></div>
-                <div class="cf"><div class="cl">Expiry Date</div><div class="cv">02/30</div></div>
-                <div class="cf"><div class="cl">Applicant Address</div><div class="cv">123 Main Street</div></div>
-                <div class="cf"><div class="cl">Available Balance</div><div class="cv">100,000 USD</div></div>
-                <div class="cf"><div class="cl">Remaining Withdrawal Limit</div><div class="cv">100,000 USD</div></div>
-                <div class="cf"><div class="cl">Loyalty Points</div><div class="cv">1,250 pts</div></div>
+                <div class="cf"><div class="cl">Outstanding Balance</div><div class="cv">AED 0.00</div></div>
+                <div class="cf"><div class="cl">Expiry Date</div><div class="cv">12/26</div></div>
+                <div class="cf"><div class="cl">Applicant Address</div><div class="cv">123 Main Street, Dubai</div></div>
+                <div class="cf"><div class="cl">Available Balance</div><div class="cv">AED 50,000</div></div>
+                <div class="cf"><div class="cl">Remaining Withdrawal Limit</div><div class="cv">AED 50,000</div></div>
+                <div class="cf"><div class="cl">Loyalty Points</div><div class="cv">3,840 pts</div></div>
               </div>
             </div>
             <div class="card-row-actions">
@@ -639,9 +650,28 @@
 
   function toggleCardNum(spanId, eyeId) {
     const span = document.getElementById(spanId);
-    const full = '2345 6789 5432 3749';
-    const masked = '•••• •••• •••• 3749';
-    span.textContent = span.textContent.includes('•') ? full : masked;
+    if (!span) return;
+    const isHidden = span.dataset.panVisible !== '1';
+    span.textContent = isHidden ? span.dataset.full : span.dataset.masked;
+    span.dataset.panVisible = isHidden ? '1' : '0';
+  }
+
+  function mcTogglePan(btn) {
+    var card = btn.closest('.mc-card');
+    if (!card) return;
+    var numEl = card.querySelector('.mc-num');
+    if (!numEl) return;
+    var icon = btn.querySelector('.material-icons-outlined');
+    var isHidden = numEl.dataset.panVisible !== '1';
+    if (isHidden) {
+      numEl.textContent = numEl.dataset.full;
+      numEl.dataset.panVisible = '1';
+      if (icon) icon.textContent = 'visibility_off';
+    } else {
+      numEl.textContent = numEl.dataset.masked;
+      numEl.dataset.panVisible = '0';
+      if (icon) icon.textContent = 'visibility';
+    }
   }
 
   function startCardEdit(type, idx) {
@@ -665,9 +695,7 @@
     if (!wrap) return;
     wrap.id = type + 'NameWrap' + idx;
     wrap.innerHTML = '<span id="' + type + 'NameTxt' + idx + '">' + name + '</span>'
-      + '<button class="edit-name-btn" onclick="startCardEdit(\'' + type + '\',' + idx + ')" aria-label="Edit card name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button>'
-      + '<span class="fi fi-us" title="USD"></span>'
-      + '<span class="card-curr" style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;">USD</span>';
+      + '<button class="edit-name-btn" onclick="startCardEdit(\'' + type + '\',' + idx + ')" aria-label="Edit card name"><img src="images/icons/edit.svg" width="12" height="12" alt="edit"/></button>';
     wrap.className = 'card-name';
   }
 
