@@ -97,7 +97,7 @@
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
   <a href="retail-dashboard.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
     <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
@@ -141,7 +141,7 @@
           <span class="material-icons ab-greet-icon">wb_sunny</span>
           <div>
             <div class="ab-greet-name">Good morning, Sarika</div>
-            <div class="ab-greet-sub">Wednesday, 8 Jul 2026 &nbsp;·&nbsp; Here's what needs your attention</div>
+            <div class="ab-greet-sub" id="abDate">Here's what needs your attention</div>
           </div>
         </div>
         <div class="ab-chips">
@@ -538,7 +538,7 @@
             <span class="rd-ob-cta">Open <span class="material-icons">arrow_forward</span></span>
           </a>
 
-          <a href="offer-dining-cashback.html" class="rd-offer-banner" style="--ob-accent:#7a4a00;">
+          <a href="offer-dining-cashback.html" class="rd-offer-banner" style="--ob-accent:#1a9e63;">
             <div class="rd-ob-icon"><span class="material-icons">credit_card</span></div>
             <div class="rd-ob-body">
               <div class="rd-ob-tag">Exclusive</div>
@@ -557,7 +557,7 @@
 
   <!-- Footer -->
   <footer class="app-footer" role="contentinfo">
-    <div>Copyright 2025. All Rights Reserved <a href="javascript:;">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div>Copyright <span id="ftYear"></span>. All Rights Reserved <a href="javascript:;">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
     <div class="d-flex align-items-center gap-2">
       <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
       <div class="acc-btns">
@@ -573,6 +573,16 @@
 <script src="js/app.js?v=3"></script>
 <script src="js/shared.js"></script>
 <script>
+// ── Dynamic greeting date & copyright year ──
+(function() {
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+  var abDate = document.getElementById('abDate');
+  if (abDate) abDate.textContent = dateStr + '  ·  Here’s what needs your attention';
+  var ftYear = document.getElementById('ftYear');
+  if (ftYear) ftYear.textContent = now.getFullYear();
+})();
+
 // ── Clock ──
 function tick() {
   const n = new Date();
