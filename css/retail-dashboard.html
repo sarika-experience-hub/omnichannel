@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – My Banking</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/retail-dashboard.css"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="js/theme.js"></script>
+</head>
+<body class="pg-retail-dashboard">
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="142 0 22 29" aria-hidden="true">
+        <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/>
+        <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/>
+      </svg>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications" style="position:relative" onclick="toggleNotifPanel(event)">
+        <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" aria-label="3 notifications">3</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><button class="notif-mobile-close" onclick="closeNotifPanel()" aria-label="Close"><span class="material-icons">arrow_back</span></button><span class="notif-panel-title">Notifications</span><a href="javascript:;" class="notif-clear-all">Clear all</a></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Scheduled transfer processed</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Card statement ready for download</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons-outlined" style="font-size:20px;">headset_mic</span></button>
+    <button class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons-outlined" style="font-size:20px;">help_outline</span></button>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sarika Desai</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>22 Nov, 2025</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>14.06</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sarika.desai</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">Sarika Desai A.</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div>
+</nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc" style="padding:.375rem 1.75rem 0;margin-top:.625rem;">
+      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Banking</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.75rem;margin-top:0;padding:0 1.75rem;">
+      <h1 class="page-title">My Banking</h1>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="rd-wrap">
+
+      <!-- ── rd-d0: Smart Alert Bar ── -->
+      <div class="rd-panel rd-reveal rd-d0 rd-alert-bar">
+        <div class="ab-greeting">
+          <span class="material-icons ab-greet-icon">wb_sunny</span>
+          <div>
+            <div class="ab-greet-name">Good morning, Sarika</div>
+            <div class="ab-greet-sub">Wednesday, 8 Jul 2026 &nbsp;·&nbsp; Here's what needs your attention</div>
+          </div>
+        </div>
+        <div class="ab-chips">
+          <a href="payments-bill-report.html" class="ab-chip ab-chip-warn"><span class="material-icons">schedule</span>2 bills due this week</a>
+          <a href="transfer-pending-list.html" class="ab-chip ab-chip-info"><span class="material-icons">pending_actions</span>3 payments processing</a>
+          <a href="transfer-receipt.html" class="ab-chip ab-chip-success"><span class="material-icons">check_circle</span>Salary credited · AED 18,500</a>
+        </div>
+      </div>
+
+      <!-- ── Left column: actionable ── -->
+      <div class="rd-left">
+
+      <!-- ── rd-d1: Total Balance ── -->
+      <div class="rd-panel rd-reveal rd-d1" style="padding:0;overflow:hidden;">
+        <div class="bal-dark-top">
+          <div class="bal-top-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:.35rem;">
+                <div class="bal-lbl">Total Balance</div>
+                <button class="eye-btn-w" id="eyeBtn" onclick="toggleBalance()" title="Show/hide balance">
+                  <span class="material-icons" id="eyeIcon">visibility</span>
+                </button>
+              </div>
+              <div class="bal-sublbl"><span class="bal-dot"></span>All accounts · Live</div>
+            </div>
+            <a href="accounts.html" class="bal-see-all">Accounts <span class="material-icons">chevron_right</span></a>
+          </div>
+          <div class="bal-amount-row">
+            <span class="bal-currency-sym">AED</span>
+            <span class="bal-amount" id="balAmount">248,350.00</span>
+          </div>
+          <div class="bal-change">
+            <span class="material-icons">trending_up</span>
+            +AED 4,200 &nbsp;·&nbsp; +1.7% this month
+          </div>
+        </div>
+        <div class="bal-body">
+          <div class="bal-acc-row">
+            <a href="accounts.html" class="bal-acc-item">
+              <div><div class="bal-acc-lbl">Current</div><div class="bal-acc-val" data-orig="AED 84,200">AED 84,200</div></div>
+            </a>
+            <div class="bal-acc-divider"></div>
+            <a href="accounts.html" class="bal-acc-item">
+              <div><div class="bal-acc-lbl">Savings</div><div class="bal-acc-val" data-orig="AED 142,000">AED 142,000</div></div>
+            </a>
+            <div class="bal-acc-divider"></div>
+            <a href="accounts.html" class="bal-acc-item">
+              <div><div class="bal-acc-lbl">Fixed Dep.</div><div class="bal-acc-val" data-orig="AED 22,150">AED 22,150</div></div>
+            </a>
+          </div>
+          <div class="bal-cashflow">
+            <span class="material-icons bal-cf-icon">trending_flat</span>
+            <span class="bal-cf-lbl">Next 7 days</span>
+            <span class="bal-cf-val">−AED 2,100 estimated outflow</span>
+          </div>
+          <div class="bal-actions-row">
+            <a href="transfer-own-accounts.html" class="bal-action-pill">Transfer</a>
+            <a href="term-deposit-account-opening.html" class="bal-action-pill">Open Fixed Deposit</a>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── rd-d5: My Cards ── -->
+      <div class="rd-panel rd-reveal rd-d5" style="padding:0;overflow:hidden;">
+        <div class="rd-ph" style="padding:1.25rem 1.25rem .5rem;">
+          <span class="rd-ph-title">My Cards</span>
+          <a href="cards-my-cards.html" class="rd-ph-action">Card controls <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
+        </div>
+
+        <!-- Carousel -->
+        <div class="mc-carousel-wrap">
+          <div class="mc-viewport">
+            <div class="mc-track" id="cardCarouselTrack">
+
+              <!-- Card 1 -->
+              <div class="mc-slide">
+                <div class="mc-card">
+                  <div class="mc-card-top">
+                    <div><div class="mc-bank">azentio</div><div class="mc-type">Platinum Visa</div></div>
+                    <span class="mc-status-chip mc-status-active">ACTIVE</span>
+                  </div>
+                  <div class="mc-mid">
+                    <div class="mc-chip"></div>
+                    <div class="mc-num" data-masked="532 &nbsp;····&nbsp; 7841" data-full="5321 4892 6614 7841">532 &nbsp;····&nbsp; 7841</div>
+                  </div>
+                  <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                    <span class="material-icons-outlined" style="font-size:16px;">visibility</span>
+                  </button>
+                  <div class="mc-card-bot">
+                    <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                    <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">09 / 27</div></div>
+                    <div class="mc-brand-visa">VISA</div>
+                  </div>
+                  <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="mc-slide">
+                <div class="mc-card" style="background:linear-gradient(135deg,#1a4a6b 0%,#0d2d45 100%);">
+                  <div class="mc-card-top">
+                    <div><div class="mc-bank">azentio</div><div class="mc-type">Gold Mastercard</div></div>
+                    <span class="mc-status-chip mc-status-active">ACTIVE</span>
+                  </div>
+                  <div class="mc-mid">
+                    <div class="mc-chip"></div>
+                    <div class="mc-num" data-masked="841 &nbsp;····&nbsp; 3290" data-full="8412 5573 9901 3290">841 &nbsp;····&nbsp; 3290</div>
+                  </div>
+                  <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                    <span class="material-icons-outlined" style="font-size:16px;">visibility</span>
+                  </button>
+                  <div class="mc-card-bot">
+                    <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                    <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">12 / 26</div></div>
+                    <div class="mc-brand-mc"></div>
+                  </div>
+                  <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="mc-dots">
+            <span class="cc-dot active" onclick="goToCard(0)"></span>
+            <span class="cc-dot" onclick="goToCard(1)"></span>
+          </div>
+        </div>
+
+        <!-- Balance + usage -->
+        <div class="mc-balance-section">
+          <div class="mc-balance-row">
+            <div><div class="mc-bal-lbl">Available</div><div class="mc-bal-amt" id="mcBalAmt">AED 8,240</div></div>
+            <div style="text-align:right"><div class="mc-bal-lbl">Spent this month</div><div class="mc-bal-spent" id="mcBalSpent">AED 4,230</div></div>
+          </div>
+          <div class="mc-usage-track"><div class="mc-usage-fill" id="mcUsageFill" style="width:34%"></div></div>
+          <div class="mc-usage-lbl" id="mcUsageLbl">34% of AED 12,470 limit used</div>
+        </div>
+
+        <!-- Circular action pills -->
+        <div class="mc-pills">
+          <a href="cards-my-cards.html" class="mc-pill">
+            <span class="material-icons">receipt_long</span>
+            <span class="mc-pill-lbl">Details</span>
+          </a>
+          <button class="mc-pill" id="mcFreezeBtn" onclick="mcToggleFreeze()">
+            <span class="material-icons">block</span>
+            <span class="mc-pill-lbl">Block Card</span>
+          </button>
+          <a href="cards-pin-change.html" class="mc-pill">
+            <span class="material-icons">pin</span>
+            <span class="mc-pill-lbl">PIN</span>
+          </a>
+          <button class="mc-pill" onclick="alert('Manage card')">
+            <span class="material-icons">tune</span>
+            <span class="mc-pill-lbl">Manage</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── rd-d2: Upcoming & Alerts ── -->
+      <div class="rd-panel rd-reveal rd-d2">
+        <div class="rd-ph">
+          <span class="rd-ph-title">Upcoming &amp; Alerts</span>
+          
+        </div>
+<div class="ac-cols-wrap">
+          <div class="ac-col">
+            <div class="ac-list">
+              <div class="ac-item ac-item-urgent">
+                <div class="ac-icon" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;font-size:18px;">bolt</span></div>
+                <div class="ac-body"><div class="ac-name">Electricity (DEWA)</div><div class="ac-due ac-due-urgent">Due in 2 days</div></div>
+                <div class="ac-amt">AED 320</div>
+                <a href="payments-bill-report.html" class="ac-pay-btn-urgent">Pay</a>
+              </div>
+              <div class="ac-item">
+                <div class="ac-icon" style="background:#eef4ff;"><span class="material-icons" style="color:#3d6e82;font-size:18px;">wifi</span></div>
+                <div class="ac-body"><div class="ac-name">Internet · Etisalat</div><div class="ac-due">Due in 5 days</div></div>
+                <div class="ac-amt">AED 250</div>
+                <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+              </div>
+              <div class="ac-item" style="border-bottom:none;">
+                <div class="ac-icon" style="background:#f3f0ff;"><span class="material-icons" style="color:#7a6e90;font-size:18px;">credit_card</span></div>
+                <div class="ac-body"><div class="ac-name">Credit Card Bill</div><div class="ac-due">Due Jul 15</div></div>
+                <div class="ac-amt">AED 1,840</div>
+                <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+              </div>
+            </div>
+          </div>
+          <div class="ac-col ac-col-right">
+            <div class="ac-alert" style="display:none;">
+              <span class="material-icons ac-alert-icon">warning_amber</span>
+              <div class="ac-alert-body">
+                <div class="ac-alert-title">Low balance alert</div>
+                <div class="ac-alert-sub">Current account below AED 10,000 threshold</div>
+              </div>
+              <a href="accounts.html" class="ac-alert-link">View</a>
+            </div>
+            <div class="ac-section-lbl">Pending Actions</div>
+            <div class="ac-list">
+              <a href="my-profile.html" class="ac-pending-item">
+                <span class="material-icons" style="font-size:16px;color:#d97706;">badge</span>
+                <span>Emirates ID expiring in 15 days — update documents</span>
+                <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
+              </a>
+              <div class="ac-pending-item" style="cursor:default;">
+                <span class="material-icons" style="font-size:16px;color:#5a7080;">hourglass_top</span>
+                <span>Cheque AED 2,500 deposited — awaiting clearance</span>
+              </div>
+              <a href="cards-my-cards.html" class="ac-pending-item">
+                <span class="material-icons" style="font-size:16px;color:#2a7a50;">local_shipping</span>
+                <span>New Platinum Visa card en route · Expected Jul 16</span>
+                <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /rd-left -->
+
+      <!-- ── Right column: info & alerts ── -->
+      <div class="rd-right">
+
+      <!-- ── rd-d4: Recent Transactions ── -->
+      <div class="rd-panel rd-reveal rd-d4" style="padding:0;">
+        <div style="padding:1rem 1.25rem .75rem;" class="rd-ph txn-ph-row">
+          <div style="display:flex;align-items:center;gap:.625rem;">
+            <span class="rd-ph-title">Recent Transactions</span>
+            <span class="txn-collapsed-chip" id="txnCollapsedChip">4 transactions</span>
+          </div>
+          <button class="txn-toggle-btn" id="txnToggleBtn" onclick="toggleTxnCollapse()" title="Expand/collapse transactions" aria-expanded="false">
+            <span class="material-icons txn-toggle-icon" id="txnToggleIcon">expand_more</span>
+          </button>
+        </div>
+        <div class="txn-collapse-wrap" id="txnCollapseWrap">
+          <div class="txn-tabs" style="padding:0 1rem;">
+            <div class="txn-tab active" onclick="setTab(this)">All</div>
+            <div class="txn-tab" onclick="setTab(this)">Income</div>
+            <div class="txn-tab" onclick="setTab(this)">Expenses</div>
+            <div class="txn-tab" onclick="setTab(this)">Transfers</div>
+          </div>
+          <div class="txn-list" id="txnList">
+            <div class="txn-date-group"><span class="txn-date-lbl">Today</span><div class="txn-date-line"></div><span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span></div>
+            <div class="txn-row" data-txn="salary emirates corp income direct deposit" data-type="income" onclick="location.href='transfer-receipt.html'" style="cursor:pointer;">
+              <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
+              <div class="txn-body"><div class="txn-name">Salary · Emirates Corp</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div></div>
+              <div class="txn-right"><div class="txn-amt credit">+AED 18,500</div><div class="txn-when">08:00</div></div>
+            </div>
+            <div class="txn-row" data-txn="noon.com shopping visa contactless" data-type="expense">
+              <div class="txn-mono" style="background:#edfaf6;color:#16303d;">N</div>
+              <div class="txn-body"><div class="txn-name">Noon.com</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_bag</span><span>Shopping</span><span class="txn-sep">·</span><span>Visa contactless</span></div></div>
+              <div class="txn-right"><div class="txn-amt debit">−AED 280</div><div class="txn-when">10:22</div></div>
+            </div>
+            <div class="txn-date-group"><span class="txn-date-lbl">Yesterday</span><div class="txn-date-line"></div><span class="txn-date-total">−AED 1,640</span></div>
+            <div class="txn-row" data-txn="emirates airlines travel flight dxb lhr" data-type="expense">
+              <div class="txn-mono" style="background:#eff6ff;color:#00538A;">E</div>
+              <div class="txn-body"><div class="txn-name">Emirates Airlines</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">flight</span><span>Travel</span><span class="txn-sep">·</span><span>DXB → LHR</span></div></div>
+              <div class="txn-right"><div class="txn-amt debit">−AED 1,200</div><div class="txn-when">14:05</div></div>
+            </div>
+            <div class="txn-row" data-txn="carrefour market groceries dubai mall" data-type="expense">
+              <div class="txn-mono" style="background:#fef3c7;color:#d97706;">C</div>
+              <div class="txn-body"><div class="txn-name">Carrefour Market</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">shopping_cart</span><span>Groceries</span><span class="txn-sep">·</span><span>Dubai Mall</span></div></div>
+              <div class="txn-right"><div class="txn-amt debit">−AED 440</div><div class="txn-when">18:30</div></div>
+            </div>
+            <a href="transaction-history.html" class="txn-view-all">View all transactions <span class="material-icons">arrow_forward</span></a>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- ── rd-d8: Smart Insights (moved down) ── -->
+      <div class="rd-panel rd-reveal rd-d8">
+        <div class="rd-ph">
+          <span class="rd-ph-title">Smart Insights</span>
+          <div class="rd-d2 sb-month-nav">
+            <button class="sb-month-btn">&#8249;</button>
+            <span class="sb-month-lbl">Jul 2026 <span style="font-size:.68rem;color:var(--az-muted);font-weight:400;">MTD</span></span>
+            <button class="sb-month-btn">&#8250;</button>
+          </div>
+        </div>
+        <div class="ins-ie-row">
+          <div class="ins-ie-item">
+            <div class="ins-ie-lbl">Income</div>
+            <div class="ins-ie-amt ins-income">AED 18,500</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-income" data-w="100%"></div></div>
+          </div>
+          <div class="ins-ie-divider"></div>
+          <div class="ins-ie-item">
+            <div class="ins-ie-lbl">Expenses</div>
+            <div class="ins-ie-amt ins-expense">AED 6,480</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-expense" data-w="35%"></div></div>
+          </div>
+          <div class="ins-ie-divider"></div>
+          <div class="ins-ie-item">
+            <div class="ins-ie-lbl">Saved</div>
+            <div class="ins-ie-amt ins-saved">AED 12,020</div>
+            <div class="ins-bar-track"><div class="ins-bar-fill ins-bar-saved" data-w="65%"></div></div>
+          </div>
+        </div>
+        <div class="rd-d2 sb-stack-bar" style="margin-top:.5rem;">
+          <div style="width:33%;background:rgba(200,152,152,1);border-radius:3px 0 0 3px;" title="Shopping 33%"></div>
+          <div style="width:27%;background:rgba(200,152,152,.78);" title="Food 27%"></div>
+          <div style="width:17%;background:rgba(200,152,152,.62);" title="Travel 17%"></div>
+          <div style="width:14%;background:rgba(200,152,152,.46);" title="Utilities 14%"></div>
+          <div style="width:9%;background:rgba(200,152,152,.32);" title="Other 9%"></div>
+          <div style="width:5.4%;background:rgba(200,152,152,.20);border-radius:0 3px 3px 0;" title="Other 5%"></div>
+        </div>
+        <div class="rd-d2 sb-list" style="margin-top:.625rem;">
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">shopping_bag</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Shopping</span><span class="sb-amt">AED 2,150</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,1)" data-w="100%"></div></div></div>
+          </div>
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">restaurant</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Food &amp; Dining</span><span class="sb-amt">AED 1,720</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.78)" data-w="52%"></div></div></div>
+          </div>
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">flight</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Travel</span><span class="sb-amt">AED 1,100</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.62)" data-w="43%"></div></div></div>
+          </div>
+          <div class="sb-row">
+            <div class="sb-icon" style="background:#f5ecec;"><span class="material-icons" style="color:#c89898;font-size:17px;">bolt</span></div>
+            <div class="sb-info"><div class="sb-meta"><span class="sb-cat">Utilities</span><span class="sb-amt">AED 890</span></div><div class="sb-track"><div class="sb-fill" style="background:rgba(200,152,152,.46)" data-w="28%"></div></div></div>
+          </div>
+        </div>
+        <div class="ins-nudge">
+          <span class="material-icons ins-nudge-icon">lightbulb</span>
+          <div class="ins-nudge-body">
+            <div class="ins-nudge-title">On track — 24 days in, expenses are 35% of income</div>
+            <div class="ins-nudge-sub">Keep spending at this pace and you'll save AED 2,000+ more than last month</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── rd-d3: Financial Tips ── -->
+      <div class="rd-panel rd-reveal rd-d3">
+        <div class="rd-ph" style="margin-bottom:.875rem;">
+          <div style="display:flex;align-items:center;gap:.4rem;">
+            <span class="material-icons" style="font-size:18px;color:#d97706;">lightbulb</span>
+            <span class="rd-ph-title">Financial Tips</span>
+          </div>
+          <a href="javascript:;" class="rd-ph-action">View more <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
+        </div>
+        <div class="d7-nudge" style="border-bottom:none;border-radius:.75rem;margin-bottom:.625rem;">
+          <div class="d7-nudge-head">
+            <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">savings</span>
+            <span class="d7-nudge-label">Savings Goal</span>
+          </div>
+          <div class="d7-nudge-text">Set up a recurring transfer of AED 1,000/month to your Emergency Fund to reach your goal 4 months earlier.</div>
+          <a href="transfer-own-accounts.html" class="d7-nudge-cta">Set up auto-transfer <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
+        </div>
+        <div class="d7-nudge" style="border-bottom:none;border-radius:.75rem;margin-bottom:1.25rem;">
+          <div class="d7-nudge-head">
+            <span class="material-icons d7-nudge-icon" style="color:#2a7a50;">trending_up</span>
+            <span class="d7-nudge-label">Investment</span>
+          </div>
+          <div class="d7-nudge-text">You have AED 22,150 idle for 60 days; moving it to a fixed deposit could earn AED 1,218.</div>
+          <a href="term-deposit-account-opening.html?amount=22150&tenure=60&rate=5.50&earnings=1218" class="d7-nudge-cta">Open FD <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
+        </div>
+      </div>
+
+
+      </div><!-- /rd-right -->
+
+      <!-- ── rd-d7: Offers banner strip — full width ── -->
+      <div class="rd-panel rd-reveal rd-d7 rd-offers-strip">
+        <div class="rd-offers-hdr">
+          <span class="rd-offers-lbl">Personalised Offers</span>
+          
+        </div>
+        <div class="rd-offers-row">
+
+          <a href="financing-facility-request.html" class="rd-offer-banner" style="--ob-accent:#00538A;">
+            <div class="rd-ob-icon"><span class="material-icons">account_balance</span></div>
+            <div class="rd-ob-body">
+              <div class="rd-ob-tag">Limited Time</div>
+              <div class="rd-ob-title">Personal Loan at 3.49% p.a.</div>
+              <div class="rd-ob-sub">Up to AED 500,000 · Instant approval</div>
+            </div>
+            <span class="rd-ob-cta">Apply <span class="material-icons">arrow_forward</span></span>
+          </a>
+
+          <a href="term-deposit-account-opening.html" class="rd-offer-banner" style="--ob-accent:#2a7a50;">
+            <div class="rd-ob-icon"><span class="material-icons">savings</span></div>
+            <div class="rd-ob-body">
+              <div class="rd-ob-tag">Best Rate</div>
+              <div class="rd-ob-title">5.5% p.a. Fixed Deposit</div>
+              <div class="rd-ob-sub">12-month term · No minimum balance</div>
+            </div>
+            <span class="rd-ob-cta">Open <span class="material-icons">arrow_forward</span></span>
+          </a>
+
+          <a href="offer-dining-cashback.html" class="rd-offer-banner" style="--ob-accent:#7a4a00;">
+            <div class="rd-ob-icon"><span class="material-icons">credit_card</span></div>
+            <div class="rd-ob-body">
+              <div class="rd-ob-tag">Exclusive</div>
+              <div class="rd-ob-title">10% Cashback on Dining</div>
+              <div class="rd-ob-sub">Gold Mastercard · Valid till Dec 2026</div>
+            </div>
+            <span class="rd-ob-cta">View <span class="material-icons">arrow_forward</span></span>
+          </a>
+
+        </div>
+      </div>
+
+    </div><!-- /rd-wrap -->
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="javascript:;">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="js/app.js?v=3"></script>
+<script src="js/shared.js"></script>
+<script>
+// ── Clock ──
+function tick() {
+  const n = new Date();
+  const t = n.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const el = document.getElementById('ssClock');
+  if (el) el.textContent = t + ' · GST+4';
+}
+tick(); setInterval(tick, 1000);
+
+// ── Balance toggle (dots) ──
+const DOTS = '••••••';
+let balVisible = true;
+function toggleBalance() {
+  balVisible = !balVisible;
+  const el  = document.getElementById('balAmount');
+  const ico = document.getElementById('eyeIcon');
+  const btn = document.getElementById('eyeBtn');
+  if (!el || !ico) return;
+
+  btn.classList.add('eye-spinning');
+  setTimeout(function() { btn.classList.remove('eye-spinning'); }, 300);
+
+  if (balVisible) {
+    el.classList.remove('bal-hidden');
+    document.querySelectorAll('.bal-acc-val').forEach(function(v) {
+      v.classList.remove('bal-hidden');
+      v.textContent = v.getAttribute('data-orig') || v.textContent;
+    });
+    setTimeout(function() { countUp(el, 248350.00, 600); }, 100);
+  } else {
+    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', el.textContent);
+    el.classList.add('bal-hidden');
+    el.textContent = DOTS;
+    document.querySelectorAll('.bal-acc-val').forEach(function(v) {
+      v.classList.add('bal-hidden');
+      v.textContent = DOTS;
+    });
+  }
+  ico.textContent = balVisible ? 'visibility' : 'visibility_off';
+}
+
+// ── Balance count-up ──
+function countUp(el, target, duration) {
+  const start = Date.now();
+  const startVal = 0;
+  function step() {
+    const progress = Math.min((Date.now() - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const val = startVal + (target - startVal) * ease;
+    el.textContent = val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ── Ripple on action pills ──
+document.addEventListener('click', function(e) {
+  const pill = e.target.closest('.bal-action-pill');
+  if (!pill) return;
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const rect = pill.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - rect.left - size/2) + 'px;top:' + (e.clientY - rect.top - size/2) + 'px;';
+  pill.appendChild(r);
+  setTimeout(function() { r.remove(); }, 500);
+});
+
+// ── Recent Transactions collapse ──
+var _txnExpanded = false;
+function toggleTxnCollapse() {
+  _txnExpanded = !_txnExpanded;
+  var wrap = document.getElementById('txnCollapseWrap');
+  var icon = document.getElementById('txnToggleIcon');
+  var chip = document.getElementById('txnCollapsedChip');
+  var btn  = document.getElementById('txnToggleBtn');
+  if (_txnExpanded) {
+    wrap.style.maxHeight = wrap.scrollHeight + 'px';
+    wrap.style.opacity   = '1';
+    icon.textContent     = 'expand_less';
+    chip.style.display   = 'none';
+    btn.setAttribute('aria-expanded', 'true');
+    wrap.addEventListener('transitionend', function onEnd() {
+      wrap.style.maxHeight = 'none';
+      wrap.removeEventListener('transitionend', onEnd);
+    }, { once: true });
+  } else {
+    wrap.style.maxHeight = wrap.scrollHeight + 'px';
+    requestAnimationFrame(function() {
+      wrap.style.maxHeight = '0';
+      wrap.style.opacity   = '0';
+    });
+    icon.textContent   = 'expand_more';
+    chip.style.display = '';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+// ── Transaction tabs ──
+function setTab(el) {
+  document.querySelectorAll('.txn-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var filter = el.textContent.trim().toLowerCase(); // all | income | expenses | transfers
+  var typeMap = { 'income': 'income', 'expenses': 'expense', 'transfers': 'transfer' };
+  var wanted  = typeMap[filter] || null; // null = show all
+
+  var rows   = document.querySelectorAll('#txnList .txn-row');
+  var groups = document.querySelectorAll('#txnList .txn-date-group');
+
+  rows.forEach(function(r) {
+    var show = !wanted || r.dataset.type === wanted;
+    r.style.display = show ? '' : 'none';
+  });
+
+  // Hide date-group headers with no visible rows after them
+  groups.forEach(function(g) {
+    var sib = g.nextElementSibling;
+    var hasVisible = false;
+    while (sib && !sib.classList.contains('txn-date-group') && !sib.classList.contains('txn-view-all')) {
+      if (sib.classList.contains('txn-row') && sib.style.display !== 'none') {
+        hasVisible = true; break;
+      }
+      sib = sib.nextElementSibling;
+    }
+    g.style.display = hasVisible ? '' : 'none';
+  });
+
+  // Empty state
+  var list = document.getElementById('txnList');
+  var empty = document.getElementById('txnEmptyState');
+  var anyVisible = Array.from(rows).some(function(r){ return r.style.display !== 'none'; });
+  if (!anyVisible) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.id = 'txnEmptyState';
+      empty.style.cssText = 'text-align:center;padding:1.5rem 1rem;color:#707070;font-size:.82rem;';
+      empty.innerHTML = '<span class="material-icons" style="font-size:2rem;display:block;margin-bottom:.4rem;color:#c8d6de;">inbox</span>No ' + (el.textContent.trim()) + ' transactions this period';
+      list.insertBefore(empty, list.querySelector('.txn-view-all'));
+    }
+    empty.style.display = '';
+  } else {
+    if (empty) empty.style.display = 'none';
+  }
+}
+
+// ── Spending period tabs ──
+function setSpendTab(el) {
+  document.querySelectorAll('.spend-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+// ── Animate bars & goal progress on load ──
+setTimeout(function() {
+  document.querySelectorAll('.hbar-fill[data-w], .sb-fill[data-w], .goal-prog[data-w], .ins-bar-fill[data-w]').forEach(function(el) {
+    el.style.width = el.dataset.w;
+  });
+}, 450);
+
+// ── Balance count-up on page load ──
+setTimeout(function() {
+  const el = document.getElementById('balAmount');
+  if (el) countUp(el, 248350.00, 900);
+}, 600);
+
+// ── Transaction search ──
+function filterTxns(q) {
+  q = (q || '').trim().toLowerCase();
+  document.querySelectorAll('#txnList .txn-row').forEach(function(row) {
+    var text = (row.getAttribute('data-txn') || '') + ' ' + row.textContent.toLowerCase();
+    row.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+  // hide date groups with no visible rows
+  document.querySelectorAll('#txnList .txn-date-group').forEach(function(grp) {
+    var next = grp.nextElementSibling;
+    var hasVisible = false;
+    while (next && !next.classList.contains('txn-date-group')) {
+      if (next.classList.contains('txn-row') && next.style.display !== 'none') hasVisible = true;
+      next = next.nextElementSibling;
+    }
+    grp.style.display = hasVisible ? '' : 'none';
+  });
+}
+
+// ── Card Carousel ──
+var _ccIdx = 0;
+function goToCard(idx) {
+  var cards = document.querySelectorAll('.card-carousel-track .debit-card');
+  var dots  = document.querySelectorAll('.cc-dot');
+  if (!cards.length) return;
+  _ccIdx = (idx + cards.length) % cards.length;
+  cards.forEach(function(c,i){ c.classList.toggle('cc-active', i === _ccIdx); });
+  dots.forEach(function(d,i){ d.classList.toggle('active', i === _ccIdx); });
+}
+function shiftCard(dir) { goToCard(_ccIdx + dir); }
+document.addEventListener('DOMContentLoaded', function() { goToCard(0); });
+
+// ── Sidebar search ──
+function sbFilter(val) {
+  var q = val.trim().toLowerCase();
+  var clear = document.getElementById('sbSearchClear');
+  if (clear) clear.style.display = q ? 'flex' : 'none';
+
+  if (!q) {
+    document.querySelectorAll('.sb-item').forEach(function(el) { el.style.display = ''; });
+    document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+      var orig = el.getAttribute('data-sb-orig');
+      el.style.display = orig !== null ? orig : 'none';
+      el.removeAttribute('data-sb-orig');
+    });
+    document.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(el) {
+      el.style.display = '';
+    });
+    return;
+  }
+
+  document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+    if (!el.hasAttribute('data-sb-orig')) {
+      el.setAttribute('data-sb-orig', el.style.display || 'none');
+    }
+  });
+
+  document.querySelectorAll('.sb-item').forEach(function(btn) {
+    var label = (btn.dataset.label || btn.textContent).trim().toLowerCase();
+    var parentMatch = label.includes(q);
+    var oc = btn.getAttribute('onclick') || '';
+    var m = oc.match(/toggleSub\(['"](\w+)['"]/);
+    var sub = m ? document.getElementById(m[1]) : null;
+
+    if (parentMatch) {
+      btn.style.display = '';
+      if (sub) {
+        sub.style.display = '';
+        sub.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(si) { si.style.display = ''; });
+        sub.querySelectorAll('.sb-sub3').forEach(function(s3) { s3.style.display = ''; });
+      }
+    } else {
+      var anySubMatch = false;
+      if (sub) {
+        sub.querySelectorAll('.sb-sub-item').forEach(function(si) {
+          var match = si.textContent.trim().toLowerCase().includes(q);
+          si.style.display = match ? '' : 'none';
+          if (match) anySubMatch = true;
+        });
+        sub.querySelectorAll('.sb-sub2-hdr').forEach(function(hdr) {
+          var s3 = hdr.nextElementSibling;
+          if (!s3) return;
+          var s3Match = false;
+          s3.querySelectorAll('.sb-sub3-item').forEach(function(si) {
+            var match = si.textContent.trim().toLowerCase().includes(q);
+            si.style.display = match ? '' : 'none';
+            if (match) s3Match = true;
+          });
+          hdr.style.display = s3Match ? '' : 'none';
+          s3.style.display = s3Match ? '' : 'none';
+          if (s3Match) anySubMatch = true;
+        });
+      }
+      btn.style.display = anySubMatch ? '' : 'none';
+      if (sub) sub.style.display = anySubMatch ? '' : 'none';
+    }
+  });
+}
+
+function sbClearSearch() {
+  var inp = document.getElementById('sbSearch');
+  if (inp) { inp.value = ''; sbFilter(''); inp.focus(); }
+}
+
+// ── My Cards carousel ──
+var _cardIdx = 0;
+var _mcData = [
+  { avail:'AED 8,240', spent:'AED 4,230', pct:34, limit:'AED 12,470' },
+  { avail:'AED 5,810', spent:'AED 2,190', pct:27, limit:'AED 8,000'  }
+];
+function goToCard(idx) {
+  var slides = document.querySelectorAll('#cardCarouselTrack > div');
+  var dots   = document.querySelectorAll('.cc-dot');
+  if (!slides.length) return;
+  _cardIdx = (idx + slides.length) % slides.length;
+  document.getElementById('cardCarouselTrack').style.transform = 'translateX(-' + (_cardIdx * 100) + '%)';
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === _cardIdx); });
+  var d = _mcData[_cardIdx] || _mcData[0];
+  var ba = document.getElementById('mcBalAmt');
+  var bs = document.getElementById('mcBalSpent');
+  var uf = document.getElementById('mcUsageFill');
+  var ul = document.getElementById('mcUsageLbl');
+  if (ba) ba.textContent = d.avail;
+  if (bs) bs.textContent = d.spent;
+  if (uf) uf.style.width = d.pct + '%';
+  if (ul) ul.textContent = d.pct + '% of ' + d.limit + ' limit used';
+  // sync freeze button state
+  var cards = document.querySelectorAll('#cardCarouselTrack .mc-card');
+  var frozen = cards[_cardIdx] && cards[_cardIdx].classList.contains('mc-frozen');
+  var fb = document.getElementById('mcFreezeBtn');
+  if (fb) {
+    fb.classList.toggle('mc-pill-active', frozen);
+    var icon = fb.querySelector('.material-icons');
+    var lbl  = fb.querySelector('.mc-pill-lbl');
+    if (icon) icon.textContent = frozen ? 'lock_open' : 'ac_unit';
+    if (lbl)  lbl.textContent  = frozen ? 'Unblock Card' : 'Block Card';
+  }
+}
+function shiftCard(dir) { goToCard(_cardIdx + dir); }
+function mcToggleFreeze() {
+  /* Show confirmation modal — do NOT act instantly */
+  var cards  = document.querySelectorAll('#cardCarouselTrack .mc-card');
+  var card   = cards[_cardIdx];
+  if (!card) return;
+  var frozen = card.classList.contains('mc-frozen');
+  var action = frozen ? 'Unblock Card' : 'Block Card';
+  var cardName = (card.querySelector('.mc-card-num') || {}).textContent || 'this card';
+  var mo = document.getElementById('freezeConfirmModal');
+  if (!mo) return;
+  document.getElementById('freezeModalTitle').textContent  = action;
+  document.getElementById('freezeModalBody').textContent   = action === 'Block Card'
+    ? 'Blocking will prevent all transactions on ' + cardName + '. You can unblock it at any time.'
+    : 'Unblocking will restore all transactions on ' + cardName + '.';
+  document.getElementById('freezeModalConfirm').textContent = action;
+  document.getElementById('freezeModalConfirm').style.background = action === 'Block Card' ? '#b91c1c' : '#16303d';
+  mo.classList.remove('hidden');
+}
+
+function mcTogglePan(btn) {
+  var card = btn.closest('.mc-card');
+  if (!card) return;
+  var numEl = card.querySelector('.mc-num');
+  if (!numEl) return;
+  var icon = btn.querySelector('.material-icons-outlined');
+  var isHidden = numEl.dataset.panVisible !== '1';
+  if (isHidden) {
+    numEl.innerHTML = numEl.dataset.full;
+    numEl.dataset.panVisible = '1';
+    if (icon) icon.textContent = 'visibility_off';
+    btn.setAttribute('aria-label', 'Hide card number');
+  } else {
+    numEl.innerHTML = numEl.dataset.masked;
+    numEl.dataset.panVisible = '0';
+    if (icon) icon.textContent = 'visibility';
+    btn.setAttribute('aria-label', 'Show card number');
+  }
+}
+
+function mcDoFreeze() {
+  /* Called only after user confirms */
+  document.getElementById('freezeConfirmModal').classList.add('hidden');
+  var cards = document.querySelectorAll('#cardCarouselTrack .mc-card');
+  var card  = cards[_cardIdx];
+  if (!card) return;
+  var frozen = card.classList.toggle('mc-frozen');
+  var chip   = card.querySelector('.mc-status-chip');
+  if (chip) { chip.textContent = frozen ? 'BLOCKED' : 'ACTIVE'; chip.className = 'mc-status-chip ' + (frozen ? 'mc-status-frozen' : 'mc-status-active'); }
+  var fb = document.getElementById('mcFreezeBtn');
+  if (fb) {
+    fb.classList.toggle('mc-pill-active', frozen);
+    var icon = fb.querySelector('.material-icons');
+    var lbl  = fb.querySelector('.mc-pill-lbl');
+    if (icon) icon.textContent = frozen ? 'lock_open' : 'ac_unit';
+    if (lbl)  lbl.textContent  = frozen ? 'Unblock Card' : 'Block Card';
+  }
+}
+
+// ── Financial Tips carousel ──
+var _tipIdx = 0;
+function goToTip(idx) {
+  var cards = document.querySelectorAll('#tipCards .tip-card');
+  var dots  = document.querySelectorAll('.tip-dot');
+  if (!cards.length) return;
+  _tipIdx = (idx + cards.length) % cards.length;
+  cards.forEach(function(c, i) { c.classList.toggle('tip-active', i === _tipIdx); });
+  dots.forEach(function(d, i) { d.classList.toggle('tip-dot-active', i === _tipIdx); });
+}
+function nextTip(e) { if (e) e.preventDefault(); goToTip(_tipIdx + 1); }
+
+// ── Promo banner ──
+var _promoIdx = 0, _promoTimer;
+function goToPromo(idx) {
+  var cards = document.querySelectorAll('.promo-card');
+  var dots  = document.querySelectorAll('.promo-dot');
+  if (!cards.length) return;
+  _promoIdx = (idx + cards.length) % cards.length;
+  document.getElementById('promoTrack').style.transform = 'translateX(-' + (_promoIdx * 100) + '%)';
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === _promoIdx); });
+}
+function shiftPromo(dir) { goToPromo(_promoIdx + dir); resetPromoTimer(); }
+function resetPromoTimer() { clearInterval(_promoTimer); _promoTimer = setInterval(function(){ goToPromo(_promoIdx + 1); }, 5000); }
+document.addEventListener('DOMContentLoaded', function() { resetPromoTimer(); });
+</script>
+
+  <!-- ── Freeze / Unfreeze confirmation modal ── -->
+  <div id="freezeConfirmModal" class="modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="freezeModalTitle" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="az-modal modal-sm" style="max-width:400px;">
+      <div class="modal-title" id="freezeModalTitle" style="display:flex;align-items:center;gap:.5rem;">
+        <span class="material-icons" style="color:#b91c1c;font-size:20px;">block</span>
+        Block Card
+      </div>
+      <p id="freezeModalBody" style="font-size:.875rem;color:#707070;margin:.75rem 0 1.5rem;line-height:1.55;"></p>
+      <div style="display:flex;justify-content:flex-end;gap:.75rem;">
+        <button class="btn-action btn-cancel" onclick="document.getElementById('freezeConfirmModal').classList.add('hidden')">Cancel</button>
+        <button class="btn-action btn-submit" id="freezeModalConfirm" onclick="mcDoFreeze()">Block Card</button>
+      </div>
+    </div>
+  </div>
+  <div id="notifBackdrop" class="notif-backdrop" onclick="closeNotifPanel()"></div>
+
+  <!-- Mobile notification overlay: lives at body level, no stacking-context issues -->
+
+  <script>
+  /* Inline notif overlay — works even if app.js is cached */
+  (function(){
+    function _openNotif(){
+      var ov=document.getElementById('mobileNotifOverlay');
+      if(!ov)return;
+      ov.style.display='flex';
+      ov.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function _closeNotif(){
+      var ov=document.getElementById('mobileNotifOverlay');
+      if(!ov)return;
+      ov.style.display='none';
+      ov.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+      var btn=document.getElementById('notifBtn');
+      if(btn){
+        btn.removeAttribute('onclick');
+        btn.addEventListener('click',function(e){
+          if(window.innerWidth<=767){e.preventDefault();e.stopPropagation();_openNotif();}
+          else{window.location.href='all-notifications.html';}
+        });
+      }
+      var closeBtn=document.querySelector('#mobileNotifOverlay .notif-panel-hdr button');
+      if(closeBtn) closeBtn.addEventListener('click',_closeNotif);
+      /* expose globally */
+      window.openMobileNotif=_openNotif;
+      window.closeMobileNotif=_closeNotif;
+      window.toggleNotifPanel=function(e){if(e){e.preventDefault();e.stopPropagation();}var ov=document.getElementById('mobileNotifOverlay');if(!ov)return;ov.style.display==='flex'?_closeNotif():_openNotif();};
+    });
+  })();
+  </script>
+  <div id="mobileNotifOverlay" role="dialog" aria-label="Notifications" aria-hidden="true" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#fff;z-index:99999;flex-direction:column;overflow-y:auto;">
+    <div class="notif-panel-hdr" style="position:sticky;top:0;background:#fff;z-index:2;">
+      <button onclick="closeMobileNotif()" aria-label="Close" style="background:none;border:none;cursor:pointer;color:#16303d;padding:0;margin-right:.625rem;display:inline-flex;align-items:center;"><span class="material-icons" style="font-size:22px;">arrow_back</span></button>
+      <span class="notif-panel-title">Notifications</span>
+      <a href="javascript:;" class="notif-clear-all">Clear all</a>
+    </div>
+    <div class="notif-list" style="flex:1;">
+      <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Scheduled transfer processed</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Card statement ready for download</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Emirates ID expires in 15 days — upload renewal</div><div class="notif-time">Today</div></div><span class="notif-ind"></span></div>
+      <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">DEWA bill due in 2 days — AED 320</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+    </div>
+    <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+  </div>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
