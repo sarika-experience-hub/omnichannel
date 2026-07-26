@@ -166,25 +166,38 @@
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
-    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><a href="#">Transfer List</a><span class="sep">&#8250;</span><span class="cur">Transaction Receipt</span></div>
-    <h1 class="page-title mb-4">Transaction Receipt</h1>
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="retail-dashboard.html">Dashboard</a><span class="sep">&#8250;</span><span class="cur">Salary Credit Receipt</span></div>
+    <h1 class="page-title mb-4">Salary Credit Receipt</h1>
+
+    <!-- Success banner -->
+    <div style="display:flex;align-items:center;gap:.75rem;background:#e6f9f0;border:1px solid #a3e6c8;border-radius:.625rem;padding:.875rem 1.25rem;margin-bottom:1.25rem;">
+      <span class="material-icons" style="color:#1a9e63;font-size:28px;">check_circle</span>
+      <div>
+        <div style="font-weight:700;font-size:1rem;color:#0f6e56;">Salary Credited Successfully</div>
+        <div style="font-size:.8125rem;color:#1a9e63;margin-top:.15rem;">AED 18,500.00 has been credited to your Current Account</div>
+      </div>
+    </div>
+
     <div class="content-card">
       <div class="receipt-meta-card">
-        <div class="receipt-meta-item"><div class="rv">Local Transfer</div><div class="rl">Type of Transfer</div></div>
-        <div class="receipt-meta-item"><div class="rv">#537</div><div class="rl">Transaction Number</div></div>
-        <span class="badge-s s-active">Approved</span>
+        <div class="receipt-meta-item"><div class="rv">Salary Credit</div><div class="rl">Transaction Type</div></div>
+        <div class="receipt-meta-item"><div class="rv">#TXN-2026-07283</div><div class="rl">Reference Number</div></div>
+        <span class="badge-s s-active">Credited</span>
       </div>
       <div class="px-3 py-2">
-        <div class="receipt-body-row"><strong>Transferred From:</strong><span>Central Bank Of Iraq</span></div>
-        <div class="receipt-body-row"><strong>Transferred To:</strong><span></span></div>
-        <div class="receipt-body-row"><strong>Amount:</strong><span>1000IQD</span></div>
-        <div class="receipt-body-row"><strong>Purpose:</strong><span>Salary Jan 2025</span></div>
+        <div class="receipt-body-row"><strong>Credited From:</strong><span>Emirates Corporation LLC</span></div>
+        <div class="receipt-body-row"><strong>Credited To:</strong><span>My Current Account &nbsp;····&nbsp; 4200</span></div>
+        <div class="receipt-body-row"><strong>Amount:</strong><span style="font-weight:700;color:#1a9e63;">AED 18,500.00</span></div>
+        <div class="receipt-body-row"><strong>Description:</strong><span>July 2026 Salary</span></div>
+        <div class="receipt-body-row"><strong>Date &amp; Time:</strong><span>27 Jul 2026, 09:14 AM</span></div>
+        <div class="receipt-body-row"><strong>Value Date:</strong><span>27 Jul 2026</span></div>
+        <div class="receipt-body-row"><strong>Sender Bank:</strong><span>Emirates NBD Bank</span></div>
+        <div class="receipt-body-row"><strong>Closing Balance:</strong><span>AED 84,200.00</span></div>
       </div>
     </div>
     <div class="form-footer" style="justify-content:flex-end;margin-top:1rem">
-      <a href="transfer-list.html" class="btn-action btn-cancel">CANCEL</a>
-      <button class="btn-send-self">SEND TO SELF</button>
-      <button class="btn-export">EXPORT</button>
+      <a href="retail-dashboard.html" class="btn-action btn-cancel">Back to Dashboard</a>
+      <button class="btn-export" onclick="window.print()">Download Receipt</button>
     </div>
   </main>
   <footer class="app-footer" role="contentinfo">

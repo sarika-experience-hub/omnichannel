@@ -147,7 +147,7 @@
         <div class="ab-chips">
           <a href="payments-bill-report.html" class="ab-chip ab-chip-warn"><span class="material-icons">schedule</span>2 bills due this week</a>
           <a href="transfer-pending-list.html" class="ab-chip ab-chip-info"><span class="material-icons">pending_actions</span>3 payments processing</a>
-          <a href="transaction-history.html" class="ab-chip ab-chip-success"><span class="material-icons">check_circle</span>Salary credited · AED 18,500</a>
+          <a href="transfer-receipt.html" class="ab-chip ab-chip-success"><span class="material-icons">check_circle</span>Salary credited · AED 18,500</a>
         </div>
       </div>
 
@@ -226,14 +226,17 @@
                   </div>
                   <div class="mc-mid">
                     <div class="mc-chip"></div>
-                    <div class="mc-num">532 &nbsp;····&nbsp; 7841</div>
+                    <div class="mc-num" data-masked="532 &nbsp;····&nbsp; 7841" data-full="5321 4892 6614 7841">532 &nbsp;····&nbsp; 7841</div>
                   </div>
+                  <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                    <span class="material-icons-outlined" style="font-size:16px;">visibility</span>
+                  </button>
                   <div class="mc-card-bot">
                     <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
                     <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">09 / 27</div></div>
                     <div class="mc-brand-visa">VISA</div>
                   </div>
-                  <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Frozen</span></div>
+                  <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
                 </div>
               </div>
 
@@ -246,14 +249,17 @@
                   </div>
                   <div class="mc-mid">
                     <div class="mc-chip"></div>
-                    <div class="mc-num">841 &nbsp;····&nbsp; 3290</div>
+                    <div class="mc-num" data-masked="841 &nbsp;····&nbsp; 3290" data-full="8412 5573 9901 3290">841 &nbsp;····&nbsp; 3290</div>
                   </div>
+                  <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                    <span class="material-icons-outlined" style="font-size:16px;">visibility</span>
+                  </button>
                   <div class="mc-card-bot">
                     <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
                     <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">12 / 26</div></div>
                     <div class="mc-brand-mc"></div>
                   </div>
-                  <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Frozen</span></div>
+                  <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
                 </div>
               </div>
 
@@ -282,8 +288,8 @@
             <span class="mc-pill-lbl">Details</span>
           </a>
           <button class="mc-pill" id="mcFreezeBtn" onclick="mcToggleFreeze()">
-            <span class="material-icons">ac_unit</span>
-            <span class="mc-pill-lbl">Freeze</span>
+            <span class="material-icons">block</span>
+            <span class="mc-pill-lbl">Block Card</span>
           </button>
           <a href="cards-pin-change.html" class="mc-pill">
             <span class="material-icons">pin</span>
@@ -300,7 +306,7 @@
       <div class="rd-panel rd-reveal rd-d2">
         <div class="rd-ph">
           <span class="rd-ph-title">Upcoming &amp; Alerts</span>
-          <a href="payments-bill-report.html" class="rd-ph-action">View all <span class="material-icons" style="font-size:13px;vertical-align:-2px;">chevron_right</span></a>
+          
         </div>
 <div class="ac-cols-wrap">
           <div class="ac-col">
@@ -326,7 +332,7 @@
             </div>
           </div>
           <div class="ac-col ac-col-right">
-            <div class="ac-alert">
+            <div class="ac-alert" style="display:none;">
               <span class="material-icons ac-alert-icon">warning_amber</span>
               <div class="ac-alert-body">
                 <div class="ac-alert-title">Low balance alert</div>
@@ -341,11 +347,10 @@
                 <span>Emirates ID expiring in 15 days — update documents</span>
                 <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
               </a>
-              <a href="transaction-history.html" class="ac-pending-item">
+              <div class="ac-pending-item" style="cursor:default;">
                 <span class="material-icons" style="font-size:16px;color:#5a7080;">hourglass_top</span>
                 <span>Cheque AED 2,500 deposited — awaiting clearance</span>
-                <span class="material-icons" style="font-size:16px;color:#aab4ba;margin-left:auto;">chevron_right</span>
-              </a>
+              </div>
               <a href="cards-my-cards.html" class="ac-pending-item">
                 <span class="material-icons" style="font-size:16px;color:#2a7a50;">local_shipping</span>
                 <span>New Platinum Visa card en route · Expected Jul 16</span>
@@ -381,7 +386,7 @@
           </div>
           <div class="txn-list" id="txnList">
             <div class="txn-date-group"><span class="txn-date-lbl">Today</span><div class="txn-date-line"></div><span class="txn-date-total">+AED 18,500 &nbsp; −AED 280</span></div>
-            <div class="txn-row" data-txn="salary emirates corp income direct deposit" data-type="income">
+            <div class="txn-row" data-txn="salary emirates corp income direct deposit" data-type="income" onclick="location.href='transfer-receipt.html'" style="cursor:pointer;">
               <div class="txn-mono" style="background:#e6f9f0;color:#1a9e63;">S</div>
               <div class="txn-body"><div class="txn-name">Salary · Emirates Corp</div><div class="txn-sub"><span class="material-icons" style="font-size:13px;vertical-align:middle;">work</span><span>Income</span><span class="txn-sep">·</span><span>Direct Deposit</span></div></div>
               <div class="txn-right"><div class="txn-amt credit">+AED 18,500</div><div class="txn-when">08:00</div></div>
@@ -498,7 +503,7 @@
             <span class="d7-nudge-label">Investment</span>
           </div>
           <div class="d7-nudge-text">You have AED 22,150 idle for 60 days; moving it to a fixed deposit could earn AED 1,218.</div>
-          <a href="general-account-opening.html" class="d7-nudge-cta">Open FD <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
+          <a href="term-deposit-account-opening.html?amount=22150&tenure=60&rate=5.50&earnings=1218" class="d7-nudge-cta">Open FD <span class="material-icons" style="font-size:13px;margin-left:.2rem;">arrow_forward</span></a>
         </div>
       </div>
 
@@ -509,7 +514,7 @@
       <div class="rd-panel rd-reveal rd-d7 rd-offers-strip">
         <div class="rd-offers-hdr">
           <span class="rd-offers-lbl">Personalised Offers</span>
-          <a href="bank-products.html" class="rd-ph-action">See all <span class="material-icons" style="font-size:12px;vertical-align:-2px;">chevron_right</span></a>
+          
         </div>
         <div class="rd-offers-row">
 
@@ -523,7 +528,7 @@
             <span class="rd-ob-cta">Apply <span class="material-icons">arrow_forward</span></span>
           </a>
 
-          <a href="general-account-opening.html" class="rd-offer-banner" style="--ob-accent:#2a7a50;">
+          <a href="term-deposit-account-opening.html" class="rd-offer-banner" style="--ob-accent:#2a7a50;">
             <div class="rd-ob-icon"><span class="material-icons">savings</span></div>
             <div class="rd-ob-body">
               <div class="rd-ob-tag">Best Rate</div>
@@ -533,12 +538,12 @@
             <span class="rd-ob-cta">Open <span class="material-icons">arrow_forward</span></span>
           </a>
 
-          <a href="cards-my-cards.html" class="rd-offer-banner" style="--ob-accent:#7a4a00;">
+          <a href="offer-dining-cashback.html" class="rd-offer-banner" style="--ob-accent:#7a4a00;">
             <div class="rd-ob-icon"><span class="material-icons">credit_card</span></div>
             <div class="rd-ob-body">
               <div class="rd-ob-tag">Exclusive</div>
               <div class="rd-ob-title">10% Cashback on Dining</div>
-              <div class="rd-ob-sub">Gold Mastercard · Valid Jul 2026</div>
+              <div class="rd-ob-sub">Gold Mastercard · Valid till Dec 2026</div>
             </div>
             <span class="rd-ob-cta">View <span class="material-icons">arrow_forward</span></span>
           </a>
@@ -867,24 +872,65 @@ function goToCard(idx) {
     var icon = fb.querySelector('.material-icons');
     var lbl  = fb.querySelector('.mc-pill-lbl');
     if (icon) icon.textContent = frozen ? 'lock_open' : 'ac_unit';
-    if (lbl)  lbl.textContent  = frozen ? 'Unfreeze'  : 'Freeze';
+    if (lbl)  lbl.textContent  = frozen ? 'Unblock Card' : 'Block Card';
   }
 }
 function shiftCard(dir) { goToCard(_cardIdx + dir); }
 function mcToggleFreeze() {
+  /* Show confirmation modal — do NOT act instantly */
+  var cards  = document.querySelectorAll('#cardCarouselTrack .mc-card');
+  var card   = cards[_cardIdx];
+  if (!card) return;
+  var frozen = card.classList.contains('mc-frozen');
+  var action = frozen ? 'Unblock Card' : 'Block Card';
+  var cardName = (card.querySelector('.mc-card-num') || {}).textContent || 'this card';
+  var mo = document.getElementById('freezeConfirmModal');
+  if (!mo) return;
+  document.getElementById('freezeModalTitle').textContent  = action;
+  document.getElementById('freezeModalBody').textContent   = action === 'Block Card'
+    ? 'Blocking will prevent all transactions on ' + cardName + '. You can unblock it at any time.'
+    : 'Unblocking will restore all transactions on ' + cardName + '.';
+  document.getElementById('freezeModalConfirm').textContent = action;
+  document.getElementById('freezeModalConfirm').style.background = action === 'Block Card' ? '#b91c1c' : '#16303d';
+  mo.classList.remove('hidden');
+}
+
+function mcTogglePan(btn) {
+  var card = btn.closest('.mc-card');
+  if (!card) return;
+  var numEl = card.querySelector('.mc-num');
+  if (!numEl) return;
+  var icon = btn.querySelector('.material-icons-outlined');
+  var isHidden = numEl.dataset.panVisible !== '1';
+  if (isHidden) {
+    numEl.innerHTML = numEl.dataset.full;
+    numEl.dataset.panVisible = '1';
+    if (icon) icon.textContent = 'visibility_off';
+    btn.setAttribute('aria-label', 'Hide card number');
+  } else {
+    numEl.innerHTML = numEl.dataset.masked;
+    numEl.dataset.panVisible = '0';
+    if (icon) icon.textContent = 'visibility';
+    btn.setAttribute('aria-label', 'Show card number');
+  }
+}
+
+function mcDoFreeze() {
+  /* Called only after user confirms */
+  document.getElementById('freezeConfirmModal').classList.add('hidden');
   var cards = document.querySelectorAll('#cardCarouselTrack .mc-card');
   var card  = cards[_cardIdx];
   if (!card) return;
   var frozen = card.classList.toggle('mc-frozen');
   var chip   = card.querySelector('.mc-status-chip');
-  if (chip) { chip.textContent = frozen ? 'FROZEN' : 'ACTIVE'; chip.className = 'mc-status-chip ' + (frozen ? 'mc-status-frozen' : 'mc-status-active'); }
+  if (chip) { chip.textContent = frozen ? 'BLOCKED' : 'ACTIVE'; chip.className = 'mc-status-chip ' + (frozen ? 'mc-status-frozen' : 'mc-status-active'); }
   var fb = document.getElementById('mcFreezeBtn');
   if (fb) {
     fb.classList.toggle('mc-pill-active', frozen);
     var icon = fb.querySelector('.material-icons');
     var lbl  = fb.querySelector('.mc-pill-lbl');
     if (icon) icon.textContent = frozen ? 'lock_open' : 'ac_unit';
-    if (lbl)  lbl.textContent  = frozen ? 'Unfreeze'  : 'Freeze';
+    if (lbl)  lbl.textContent  = frozen ? 'Unblock Card' : 'Block Card';
   }
 }
 
@@ -914,6 +960,21 @@ function shiftPromo(dir) { goToPromo(_promoIdx + dir); resetPromoTimer(); }
 function resetPromoTimer() { clearInterval(_promoTimer); _promoTimer = setInterval(function(){ goToPromo(_promoIdx + 1); }, 5000); }
 document.addEventListener('DOMContentLoaded', function() { resetPromoTimer(); });
 </script>
+
+  <!-- ── Freeze / Unfreeze confirmation modal ── -->
+  <div id="freezeConfirmModal" class="modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="freezeModalTitle" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="az-modal modal-sm" style="max-width:400px;">
+      <div class="modal-title" id="freezeModalTitle" style="display:flex;align-items:center;gap:.5rem;">
+        <span class="material-icons" style="color:#b91c1c;font-size:20px;">block</span>
+        Block Card
+      </div>
+      <p id="freezeModalBody" style="font-size:.875rem;color:#707070;margin:.75rem 0 1.5rem;line-height:1.55;"></p>
+      <div style="display:flex;justify-content:flex-end;gap:.75rem;">
+        <button class="btn-action btn-cancel" onclick="document.getElementById('freezeConfirmModal').classList.add('hidden')">Cancel</button>
+        <button class="btn-action btn-submit" id="freezeModalConfirm" onclick="mcDoFreeze()">Block Card</button>
+      </div>
+    </div>
+  </div>
   <div id="notifBackdrop" class="notif-backdrop" onclick="closeNotifPanel()"></div>
 
   <!-- Mobile notification overlay: lives at body level, no stacking-context issues -->

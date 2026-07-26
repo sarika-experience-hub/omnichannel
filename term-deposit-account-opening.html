@@ -222,6 +222,15 @@
   </div>
   <div class="gao-card-body" id="secTermDet">
 
+    <!-- Smart Insights pre-fill banner (shown only when arriving from dashboard nudge) -->
+    <div id="prefillBanner" style="display:none;align-items:center;gap:.75rem;background:#e6f9f0;border:1px solid #a3e6c8;border-radius:.625rem;padding:.75rem 1.125rem;margin-bottom:1rem;">
+      <span class="material-icons" style="color:#1a9e63;flex-shrink:0;">auto_awesome</span>
+      <div style="flex:1;font-size:.8125rem;color:#0f6e56;">
+        <strong>Pre-filled from Smart Insights.</strong> Based on your AED 22,150 idle balance, a 60-day deposit at 5.50% p.a. could earn you <strong>AED 1,218</strong>.
+      </div>
+      <button onclick="document.getElementById('prefillBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:#1a9e63;padding:0;font-size:18px;line-height:1;" aria-label="Dismiss">&#215;</button>
+    </div>
+
     <div class="gao-note">
       <span class="material-icons">info</span>
       Select your deposit type and tenure. Interest rate is auto-populated based on the selected tenure.
@@ -238,18 +247,19 @@
           <label class="f-label" for="tAcctType">Account Type <span style="color:#c62828">*</span></label>
           <select id="tAcctType" class="f-input f-select">
             <option value="" disabled selected>Select account type</option>
-            <option>Standard Term Deposit</option>
-            <option>Islamic Term Deposit</option>
+            <option value="standard">Standard Term Deposit</option>
+            <option value="islamic">Islamic Term Deposit</option>
           </select>
         </div>
         <div class="col-12 col-md-4">
           <label class="f-label" for="tenure">Tenure <span style="color:#c62828">*</span></label>
-          <select id="tenure" class="f-input f-select">
+          <select id="tenure" class="f-input f-select" onchange="updateRateFromTenure(this.value)">
             <option value="" disabled selected>Select tenure</option>
-            <option>3 Months</option>
-            <option>6 Months</option>
-            <option>12 Months</option>
-            <option>24 Months</option>
+            <option value="60">60 Days</option>
+            <option value="90">3 Months</option>
+            <option value="180">6 Months</option>
+            <option value="365">12 Months</option>
+            <option value="730">24 Months</option>
           </select>
         </div>
         <div class="col-12 col-md-4">
@@ -259,7 +269,7 @@
         <div class="col-12 col-md-4">
           <label class="f-label">Maturity Date</label>
           <div class="position-relative">
-            <input class="f-input" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
+            <input id="maturityDate" class="f-input" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
             <span class="cal-icon-btn" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </span>
@@ -281,8 +291,8 @@
         <div class="col-12 col-md-4">
           <label class="f-label">Opening Balance <span style="color:#c62828">*</span></label>
           <div class="f-currency">
-            <span class="fp">USD</span>
-            <input placeholder="0.00" style="text-align:right"/>
+            <span class="fp">AED</span>
+            <input id="openingBalance" placeholder="0.00" style="text-align:right"/>
           </div>
         </div>
       </div>
@@ -464,5 +474,74 @@
 <!-- Application logic -->
 <script src="js/app.js"></script>
 <script src="js/shared.js"></script>
+
+<script>
+/* ── Rate table by tenure value (days) ── */
+var TENURE_RATES = { '60': '5.50', '90': '4.25', '180': '4.75', '365': '5.50', '730': '5.25' };
+
+function updateRateFromTenure(val) {
+  var rateEl = document.getElementById('interestRate');
+  if (!rateEl) return;
+  var rate = TENURE_RATES[val] || '';
+  rateEl.value = rate ? rate + '% p.a.' : '';
+
+  /* recalculate maturity date */
+  var days = parseInt(val, 10);
+  if (!isNaN(days)) {
+    var mat = new Date();
+    mat.setDate(mat.getDate() + days);
+    var dd = String(mat.getDate()).padStart(2,'0');
+    var mm = String(mat.getMonth()+1).padStart(2,'0');
+    var yyyy = mat.getFullYear();
+    var matEl = document.getElementById('maturityDate');
+    if (matEl) matEl.value = dd + ' / ' + mm + ' / ' + yyyy;
+  }
+}
+
+/* ── Pre-fill from URL query params ── */
+document.addEventListener('DOMContentLoaded', function () {
+  var p = new URLSearchParams(window.location.search);
+  var amount   = p.get('amount');
+  var tenure   = p.get('tenure');
+  var rate     = p.get('rate');
+  var earnings = p.get('earnings');
+
+  if (!amount && !tenure) return; /* no params → normal page load */
+
+  /* Show context banner */
+  var banner = document.getElementById('prefillBanner');
+  if (banner) banner.style.display = 'flex';
+
+  /* Account type → Standard */
+  var acctType = document.getElementById('tAcctType');
+  if (acctType) acctType.value = 'standard';
+
+  /* Tenure */
+  if (tenure) {
+    var tenureEl = document.getElementById('tenure');
+    if (tenureEl) tenureEl.value = tenure;
+    updateRateFromTenure(tenure);
+  }
+
+  /* Override rate if explicitly passed */
+  if (rate) {
+    var rateEl = document.getElementById('interestRate');
+    if (rateEl) rateEl.value = rate + '% p.a.';
+  }
+
+  /* Opening balance */
+  if (amount) {
+    var balEl = document.getElementById('openingBalance');
+    if (balEl) {
+      var num = parseFloat(amount);
+      balEl.value = isNaN(num) ? amount : num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+  }
+
+  /* Scroll to / highlight the Deposit Details card */
+  var card = document.getElementById('cardTermDet');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+</script>
 </body>
 </html>

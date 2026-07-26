@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – 10% Cashback on Dining</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    /* ── Offer hero ── */
+    .offer-hero {
+      background: linear-gradient(135deg, #0a5c3a 0%, #1a9e63 55%, #2ed88e 100%);
+      border-radius: .875rem;
+      padding: 2rem 2rem 1.5rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .offer-hero::before {
+      content: '';
+      position: absolute;
+      right: -40px; top: -40px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+    .offer-hero::after {
+      content: '';
+      position: absolute;
+      right: 60px; bottom: -60px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+    }
+    .offer-hero-badge {
+      display: inline-flex; align-items: center; gap: .375rem;
+      background: rgba(255,255,255,.2);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 2rem;
+      padding: .25rem .875rem;
+      font-size: .75rem; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; margin-bottom: .875rem;
+    }
+    .offer-hero-badge .material-icons { font-size: 14px; }
+    .offer-hero-pct {
+      font-size: 3.25rem; font-weight: 800; line-height: 1;
+      letter-spacing: -.02em; margin-bottom: .25rem;
+    }
+    .offer-hero-pct span { font-size: 1.5rem; font-weight: 700; }
+    .offer-hero-title {
+      font-size: 1.125rem; font-weight: 600; margin-bottom: .5rem;
+    }
+    .offer-hero-sub {
+      font-size: .8125rem; opacity: .85; margin-bottom: 1.25rem;
+    }
+    .offer-hero-pill {
+      display: inline-flex; align-items: center; gap: .3rem;
+      background: rgba(0,0,0,.2); border-radius: 2rem;
+      padding: .25rem .75rem; font-size: .75rem; font-weight: 500;
+    }
+    .offer-hero-pill .material-icons { font-size: 14px; }
+
+    /* ── Offer icon card ── */
+    .offer-icon-wrap {
+      position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: .75rem;
+      width: 72px; height: 72px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1;
+    }
+    .offer-icon-wrap .material-icons { font-size: 38px; color: #fff; }
+
+    /* ── Offer info grid ── */
+    .offer-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+      background: var(--az-border);
+      border: 1px solid var(--az-border);
+      border-radius: .625rem;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .offer-info-cell {
+      background: var(--card-bg, #fff);
+      padding: .875rem 1rem;
+    }
+    .offer-info-cell .oic-lbl {
+      font-size: .6875rem; color: var(--az-muted); text-transform: uppercase;
+      letter-spacing: .04em; font-weight: 600; margin-bottom: .25rem;
+    }
+    .offer-info-cell .oic-val {
+      font-size: .9375rem; font-weight: 700; color: var(--az-navy);
+    }
+    .offer-info-cell .oic-note {
+      font-size: .75rem; color: var(--az-muted); margin-top: .125rem;
+    }
+
+    /* ── Section card ── */
+    .offer-section {
+      background: var(--card-bg, #fff);
+      border: 1px solid var(--az-border);
+      border-radius: .625rem;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .offer-section h3 {
+      font-size: .9375rem; font-weight: 700; color: var(--az-navy);
+      margin: 0 0 .875rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .offer-section h3 .material-icons { font-size: 18px; color: #1a9e63; }
+
+    /* ── How it works steps ── */
+    .hiw-steps { display: flex; flex-direction: column; gap: .75rem; }
+    .hiw-step {
+      display: flex; align-items: flex-start; gap: .875rem;
+    }
+    .hiw-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #e6f9f2; color: #1a9e63;
+      font-size: .8125rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hiw-text { font-size: .875rem; color: #333; padding-top: .3rem; line-height: 1.5; }
+
+    /* ── Eligible cards ── */
+    .eligible-card-chip {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #e6f9f2; border: 1px solid #a3e6c8;
+      border-radius: 2rem; padding: .3rem .875rem;
+      font-size: .8125rem; font-weight: 600; color: #0a5c3a;
+      margin: .25rem .25rem .25rem 0;
+    }
+    .eligible-card-chip .material-icons { font-size: 15px; }
+
+    /* ── Terms ── */
+    .terms-list { padding-left: 1.125rem; margin: 0; }
+    .terms-list li {
+      font-size: .8125rem; color: #555; margin-bottom: .5rem; line-height: 1.55;
+    }
+
+    /* ── CTA footer ── */
+    .offer-cta-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--card-bg, #fff);
+      border: 1px solid var(--az-border);
+      border-radius: .625rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1.25rem;
+      gap: 1rem;
+    }
+    .offer-cta-bar .cta-note {
+      font-size: .8125rem; color: var(--az-muted);
+    }
+    .offer-cta-bar .cta-note strong { color: var(--az-navy); }
+    .btn-offer-activate {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #1a9e63; color: #fff;
+      border: none; border-radius: .5rem;
+      padding: .625rem 1.375rem;
+      font-size: .875rem; font-weight: 600; cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .btn-offer-activate:hover { background: #157a50; }
+    .btn-offer-activate .material-icons { font-size: 17px; }
+
+    /* ── Category icons ── */
+    .cat-icons { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .375rem; }
+    .cat-icon-item {
+      display: flex; flex-direction: column; align-items: center; gap: .3rem;
+    }
+    .cat-icon-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #e6f9f2;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cat-icon-circle .material-icons { font-size: 20px; color: #1a9e63; }
+    .cat-icon-lbl { font-size: .6875rem; color: #555; text-align: center; }
+
+    @media (max-width: 600px) {
+      .offer-info-grid { grid-template-columns: repeat(2,1fr); }
+      .offer-icon-wrap { display: none; }
+      .offer-hero-pct { font-size: 2.5rem; }
+      .offer-cta-bar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          <a href="#" class="notif-clear-all">Clear all</a>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <button class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/services.svg" width="18" height="18" alt="support" loading="lazy"/></button>
+    <button class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="help" loading="lazy"/></button>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SD</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SD</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sarika Desai</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>22 Nov,2025</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>14.06</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sarika.desai</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF Name:</span><span class="av-detail-val">Sarika Desai A.</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sarika</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<aside class="app-sidebar" id="sidebar">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none"><span class="material-icons">close</span></button>
+  </div>
+  <nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+    <button class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></button>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none">
+      <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+      <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+    </div>
+    <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a></div>
+    <button class="sb-item active-section" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+  </nav>
+</aside>
+
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="retail-dashboard.html">My Banking</a><span class="sep">&#8250;</span><span class="cur">10% Cashback on Dining</span></div>
+    <h1 class="page-title mb-4">Offer Details</h1>
+
+    <!-- Hero banner -->
+    <div class="offer-hero">
+      <div class="offer-hero-badge"><span class="material-icons">star</span>Exclusive for Gold Mastercard</div>
+      <div class="offer-hero-pct"><span>Up to</span> 10%</div>
+      <div class="offer-hero-title">Cashback on Dining</div>
+      <div class="offer-hero-sub">Earn 10% cashback every time you dine at partner restaurants across the UAE. Credited directly to your card account.</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <div class="offer-hero-pill"><span class="material-icons">calendar_today</span>Valid: Jul 1 – Dec 31, 2026</div>
+        <div class="offer-hero-pill"><span class="material-icons">account_balance_wallet</span>Max cashback: AED 200/month</div>
+      </div>
+      <div class="offer-icon-wrap">
+        <span class="material-icons">restaurant</span>
+      </div>
+    </div>
+
+    <!-- Key metrics -->
+    <div class="offer-info-grid">
+      <div class="offer-info-cell">
+        <div class="oic-lbl">Cashback Rate</div>
+        <div class="oic-val">10%</div>
+        <div class="oic-note">On dining spends</div>
+      </div>
+      <div class="offer-info-cell">
+        <div class="oic-lbl">Max Cashback</div>
+        <div class="oic-val">AED 200</div>
+        <div class="oic-note">Per calendar month</div>
+      </div>
+      <div class="offer-info-cell">
+        <div class="oic-lbl">Min. Spend</div>
+        <div class="oic-val">AED 100</div>
+        <div class="oic-note">Per transaction</div>
+      </div>
+    </div>
+
+    <!-- Eligible categories -->
+    <div class="offer-section">
+      <h3><span class="material-icons">restaurant_menu</span>Eligible Dining Categories</h3>
+      <div class="cat-icons">
+        <div class="cat-icon-item">
+          <div class="cat-icon-circle"><span class="material-icons">restaurant</span></div>
+          <div class="cat-icon-lbl">Restaurants</div>
+        </div>
+        <div class="cat-icon-item">
+          <div class="cat-icon-circle"><span class="material-icons">local_cafe</span></div>
+          <div class="cat-icon-lbl">Cafés</div>
+        </div>
+        <div class="cat-icon-item">
+          <div class="cat-icon-circle"><span class="material-icons">fastfood</span></div>
+          <div class="cat-icon-lbl">Fast Food</div>
+        </div>
+        <div class="cat-icon-item">
+          <div class="cat-icon-circle"><span class="material-icons">bakery_dining</span></div>
+          <div class="cat-icon-lbl">Bakeries</div>
+        </div>
+        <div class="cat-icon-item">
+          <div class="cat-icon-circle"><span class="material-icons">local_bar</span></div>
+          <div class="cat-icon-lbl">Lounges</div>
+        </div>
+        <div class="cat-icon-item">
+          <div class="cat-icon-circle"><span class="material-icons">room_service</span></div>
+          <div class="cat-icon-lbl">Room Service</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eligible cards -->
+    <div class="offer-section">
+      <h3><span class="material-icons">credit_card</span>Eligible Cards</h3>
+      <div>
+        <span class="eligible-card-chip"><span class="material-icons">credit_card</span>Gold Mastercard ····&nbsp;7841</span>
+        <span class="eligible-card-chip" style="background:#f0f4ff;border-color:#b8ccf5;color:#16303d;"><span class="material-icons">credit_card</span>Platinum Visa (if held)</span>
+      </div>
+      <p style="font-size:.8125rem;color:var(--az-muted);margin-top:.75rem;margin-bottom:0;">Cashback is credited to the card used for the eligible transaction. Cannot be combined with other cashback offers.</p>
+    </div>
+
+    <!-- How it works -->
+    <div class="offer-section">
+      <h3><span class="material-icons">info</span>How It Works</h3>
+      <div class="hiw-steps">
+        <div class="hiw-step">
+          <div class="hiw-num">1</div>
+          <div class="hiw-text">Pay at any eligible dining outlet using your Gold Mastercard ending ····7841.</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">2</div>
+          <div class="hiw-text">The transaction must be a minimum of AED 100 to qualify for cashback.</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">3</div>
+          <div class="hiw-text">10% cashback is automatically calculated and credited to your card account within 5–7 business days.</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">4</div>
+          <div class="hiw-text">Maximum cashback earned is capped at AED 200 per calendar month across all dining transactions.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T&C -->
+    <div class="offer-section">
+      <h3><span class="material-icons">gavel</span>Terms &amp; Conditions</h3>
+      <ul class="terms-list">
+        <li>Offer is valid from 1 July 2026 to 31 December 2026 for eligible Gold Mastercard holders.</li>
+        <li>Cashback applies only to transactions categorised as dining (MCC 5812, 5813, 5814) by the merchant.</li>
+        <li>Minimum transaction amount of AED 100 per purchase is required to earn cashback.</li>
+        <li>Cashback is capped at AED 200 per month regardless of total spend.</li>
+        <li>Cashback will be credited within 5–7 working days of the qualifying transaction.</li>
+        <li>This offer cannot be combined with any other cashback, reward point, or promotional offer.</li>
+        <li>The bank reserves the right to reverse cashback in case of refunds or disputed transactions.</li>
+        <li>Offer is subject to change or withdrawal without prior notice at the bank's discretion.</li>
+        <li>Only transactions made within the UAE are eligible. International dining transactions do not qualify.</li>
+        <li>For queries, contact customer support at 800-AZENTIO or visit your nearest branch.</li>
+      </ul>
+    </div>
+
+    <!-- CTA bar -->
+    <div class="offer-cta-bar">
+      <div class="cta-note">
+        <strong>Already enrolled.</strong> Use your Gold Mastercard at any dining outlet to start earning cashback automatically.
+      </div>
+      <div style="display:flex;gap:.625rem;flex-wrap:wrap;">
+        <a href="retail-dashboard.html" class="btn-action btn-cancel" style="white-space:nowrap;">Back to My Banking</a>
+        <button class="btn-offer-activate" onclick="alert('You are already enrolled in this offer. Use your Gold Mastercard at any dining outlet to earn cashback.')">
+          <span class="material-icons">check_circle</span>Enrolled
+        </button>
+      </div>
+    </div>
+
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn">A<sup>-</sup></button><button class="acc-btn">A</button><button class="acc-btn">A<sup>+</sup></button>
+        <button class="acc-btn" style="background:var(--az-navy);color:#fff">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
