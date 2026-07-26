@@ -1274,6 +1274,14 @@ a.ab-chip:active { transform: translateY(0); filter: brightness(.88); }
   background: linear-gradient(135deg, #c8922a, #f0c862, #c8922a);
   border-radius: 4px;
 }
+.mc-eye-btn {
+  background: rgba(255,255,255,.15); border: none; border-radius: 50%;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #fff; padding: 0; flex-shrink: 0;
+  transition: background .15s;
+}
+.mc-eye-btn:hover { background: rgba(255,255,255,.28); }
+.mc-eye-btn .material-icons-outlined { font-size: 15px; }
 .mc-num {
   font-size: .8rem; font-weight: 500; letter-spacing: .16em;
   opacity: .88; font-family: 'Courier New', monospace;
