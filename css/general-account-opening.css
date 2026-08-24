@@ -1,0 +1,146 @@
+/* ══════════════════════════════════════════
+   GENERAL ACCOUNT OPENING — standalone CSS
+══════════════════════════════════════════ */
+
+/* ── Step progress bar ── */
+.gao-steps {
+  display: flex; align-items: flex-start; gap: 0;
+  margin-bottom: 1.75rem;
+  counter-reset: step;
+}
+.gao-step {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  position: relative; text-align: center;
+}
+.gao-step:not(:last-child)::after {
+  content: '';
+  position: absolute; top: 16px; left: 50%; width: 100%;
+  height: 2px; background: var(--az-border); z-index: 0;
+}
+.gao-step.done:not(:last-child)::after { background: var(--az-green); }
+.gao-step-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8125rem; font-weight: 700; z-index: 1;
+  border: 2px solid var(--az-border);
+  background: #fff; color: var(--az-muted);
+  transition: all .2s;
+}
+.gao-step.active .gao-step-dot {
+  background: var(--az-blue); border-color: var(--az-blue); color: #fff;
+}
+.gao-step.done .gao-step-dot {
+  background: var(--az-green); border-color: var(--az-green); color: #fff;
+}
+.gao-step-lbl {
+  font-size: .72rem; color: var(--az-muted); margin-top: .4rem;
+  font-weight: 500; white-space: nowrap;
+}
+.gao-step.active .gao-step-lbl { color: var(--az-navy); font-weight: 700; }
+.gao-step.done .gao-step-lbl { color: var(--az-green); }
+
+/* ── Section card ── */
+.gao-card {
+  background: #fff;
+  border: 1px solid var(--az-border);
+  border-radius: .75rem;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 4px rgba(22,48,61,.05);
+}
+.gao-card-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .875rem 1.25rem;
+  background: #f5f6f8;
+  border-bottom: 1px solid var(--az-border);
+  cursor: pointer; user-select: none;
+}
+.gao-card-hdr:hover { background: #ecedf1; }
+.gao-hdr-left { display: flex; align-items: center; gap: .75rem; }
+.gao-step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--az-blue); color: #fff;
+  font-size: .75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.gao-card-title {
+  font-size: .9375rem; font-weight: 500; color: var(--az-navy);
+}
+.gao-card-subtitle {
+  font-size: .8rem; color: var(--az-muted); margin-left: .25rem;
+}
+.gao-chev {
+  width: 14px; height: 14px; transition: transform .2s; flex-shrink: 0;
+  color: var(--az-muted);
+}
+.gao-card.collapsed .gao-chev { transform: rotate(-90deg); }
+.gao-card-body {
+  padding: 1.25rem;
+}
+
+/* ── Field divider label ── */
+.gao-field-group {
+  margin-bottom: 1.25rem;
+}
+.gao-field-group-lbl {
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--az-muted);
+  margin-bottom: .75rem; padding-bottom: .4rem;
+  border-bottom: 1px solid #f1f5f8;
+}
+
+/* ── Opening balance toggle row ── */
+.gao-toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .875rem 1rem;
+  background: #f6f7f9; border: 1px solid var(--az-border);
+  border-radius: .5rem; margin-bottom: 1rem;
+}
+.gao-toggle-info { display: flex; flex-direction: column; gap: .125rem; }
+.gao-toggle-title { font-size: .875rem; font-weight: 500; color: var(--az-navy); }
+.gao-toggle-desc { font-size: .75rem; color: var(--az-muted); }
+
+/* ── Balance fields panel ── */
+.gao-bal-panel {
+  background: #f6f7f9; border: 1px solid var(--az-border);
+  border-radius: .5rem; padding: 1rem;
+  margin-top: .25rem;
+}
+
+/* ── Branch locator button ── */
+.gao-locate-btn {
+  display: inline-flex; align-items: center; gap: .375rem;
+  background: none; border: 1.5px solid var(--az-blue);
+  color: var(--az-blue); border-radius: .375rem;
+  padding: .4375rem 1rem; font-size: .8125rem; font-weight: 600;
+  cursor: pointer; font-family: 'Roboto', sans-serif;
+  transition: background .15s, color .15s; margin-top: 1.5rem;
+}
+.gao-locate-btn:hover { background: var(--az-blue); color: #fff; }
+.gao-locate-btn .material-icons { font-size: 16px; }
+
+/* ── Info note ── */
+.gao-note {
+  display: flex; align-items: flex-start; gap: .5rem;
+  background: #f0f4f8; border: 1px solid #d0d8e4;
+  border-radius: .5rem; padding: .75rem 1rem;
+  font-size: .8125rem; color: var(--az-navy); margin-bottom: 1rem;
+}
+.gao-note .material-icons { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Form footer ── */
+.gao-footer {
+  background: #fff; border: 1px solid var(--az-border);
+  border-radius: .75rem; padding: 1rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem;
+}
+.gao-footer-left {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .8125rem; color: var(--az-navy);
+}
+.gao-footer-left input[type="checkbox"] { accent-color: var(--az-green); width: 15px; height: 15px; cursor: pointer; }
+.gao-footer-left a { color: var(--az-blue); font-weight: 500; text-decoration: none; }
+.gao-footer-left a:hover { text-decoration: underline; }
+.gao-footer-right { display: flex; align-items: center; gap: .625rem; }

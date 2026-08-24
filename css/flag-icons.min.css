@@ -1,0 +1,36 @@
+/*
+ * azentio Flag Icons — self-contained local version
+ * Inline SVG flags for currencies used in the application
+ */
+.fi {
+  display: inline-block;
+  width: 1.333em;
+  height: 1em;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 2px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-size: inherit;
+}
+
+.fi-us { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23B22234%22%2F%3E%3Crect%20y%3D%222.31%22%20width%3D%2260%22%20height%3D%222.31%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20y%3D%226.92%22%20width%3D%2260%22%20height%3D%222.31%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20y%3D%2211.54%22%20width%3D%2260%22%20height%3D%222.31%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20y%3D%2216.15%22%20width%3D%2260%22%20height%3D%222.31%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20y%3D%2220.77%22%20width%3D%2260%22%20height%3D%222.31%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20y%3D%2225.38%22%20width%3D%2260%22%20height%3D%222.31%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20width%3D%2224%22%20height%3D%2216.15%22%20fill%3D%22%233C3B6E%22%2F%3E%3Ctext%20x%3D%222%22%20y%3D%2214%22%20font-size%3D%2210%22%20fill%3D%22%23fff%22%3E%E2%98%85%3C%2Ftext%3E%3C%2Fsvg%3E"); }
+.fi-gb { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23012169%22%2F%3E%3Cpath%20d%3D%22M0%2C0L60%2C30M60%2C0L0%2C30%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%2F%3E%3Cpath%20d%3D%22M0%2C0L60%2C30M60%2C0L0%2C30%22%20stroke%3D%22%23C8102E%22%20stroke-width%3D%224%22%2F%3E%3Cpath%20d%3D%22M30%2C0v30M0%2C15h60%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22%2F%3E%3Cpath%20d%3D%22M30%2C0v30M0%2C15h60%22%20stroke%3D%22%23C8102E%22%20stroke-width%3D%226%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-eu { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23003399%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2220%22%20text-anchor%3D%22middle%22%20font-size%3D%2214%22%20fill%3D%22%23FFCC00%22%3E%E2%98%85%E2%98%85%E2%98%85%3C%2Ftext%3E%3C%2Fsvg%3E"); }
+.fi-ae { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2210%22%20fill%3D%22%2300732F%22%2F%3E%3Crect%20y%3D%2210%22%20width%3D%2260%22%20height%3D%2210%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20y%3D%2220%22%20width%3D%2260%22%20height%3D%2210%22%20fill%3D%22%23000%22%2F%3E%3Crect%20width%3D%2220%22%20height%3D%2230%22%20fill%3D%22%23FF0000%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-sa { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23006C35%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2220%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%23fff%22%3E%D8%A7%D9%84%D9%85%D9%85%D9%84%D9%83%D8%A9%3C%2Ftext%3E%3C%2Fsvg%3E"); }
+.fi-mr { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23006233%22%2F%3E%3Crect%20width%3D%2260%22%20height%3D%224%22%20fill%3D%22%23FFD700%22%2F%3E%3Crect%20y%3D%2226%22%20width%3D%2260%22%20height%3D%224%22%20fill%3D%22%23FFD700%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2218%22%20text-anchor%3D%22middle%22%20font-size%3D%2210%22%20fill%3D%22%23FFD700%22%3E%E2%98%BD%3C%2Ftext%3E%3C%2Fsvg%3E"); }
+.fi-un { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%234B92DB%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2220%22%20text-anchor%3D%22middle%22%20font-size%3D%2212%22%20fill%3D%22%23fff%22%3E%F0%9F%8C%90%3C%2Ftext%3E%3C%2Fsvg%3E"); }
+.fi-qa { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%238D1B3D%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-kw { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23007A3D%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-bh { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23CE1126%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-om { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23DB0000%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-jo { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%2300693E%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-eg { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23C09300%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-ch { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23FF0000%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-jp { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23BC002D%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-cn { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23DE2910%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-in { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2260%22%20height%3D%2230%22%20fill%3D%22%23FF9933%22%2F%3E%3C%2Fsvg%3E"); }
+.fi-fr { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2060%2030%22%3E%3Crect%20width%3D%2220%22%20height%3D%2230%22%20fill%3D%22%23002395%22%2F%3E%3Crect%20x%3D%2220%22%20width%3D%2220%22%20height%3D%2230%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20x%3D%2240%22%20width%3D%2220%22%20height%3D%2230%22%20fill%3D%22%23ED2939%22%2F%3E%3C%2Fsvg%3E"); }

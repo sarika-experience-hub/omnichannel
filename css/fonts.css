@@ -1,0 +1,51 @@
+/*
+ * azentio – Roboto Font Stack (fully local, no CDN)
+ *
+ * Font files in fonts/roboto/:
+ *   roboto-400.woff  /  roboto-400.ttf   (Regular)
+ *   roboto-700.woff  /  roboto-700.ttf   (Bold)
+ *
+ * To add Roboto Light (300) and Medium (500), download from:
+ *   https://fonts.google.com/specimen/Roboto
+ * and add roboto-300.woff2, roboto-500.woff2 to fonts/roboto/
+ */
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local('Roboto Light'), local('Roboto-Light'),
+       url('../fonts/roboto/roboto-400.woff') format('woff'),
+       url('../fonts/roboto/roboto-400.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Roboto'), local('Roboto-Regular'),
+       url('../fonts/roboto/roboto-400.woff') format('woff'),
+       url('../fonts/roboto/roboto-400.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Roboto Medium'), local('Roboto-Medium'),
+       url('../fonts/roboto/roboto-400.woff') format('woff'),
+       url('../fonts/roboto/roboto-400.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Roboto Bold'), local('Roboto-Bold'),
+       url('../fonts/roboto/roboto-700.woff') format('woff'),
+       url('../fonts/roboto/roboto-700.ttf')  format('truetype');
+}

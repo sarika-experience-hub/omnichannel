@@ -1,0 +1,759 @@
+/* ═══════════════════════════════════════════════
+   azentio – Dark Theme
+   Applied when <html class="dark"> is present.
+   ═══════════════════════════════════════════════ */
+
+/* ── CSS variable overrides ─────────────────── */
+html.dark {
+  --az-green:       #2ed88e;
+  --az-green-hover: #25c47e;
+  --az-navy:        #d0dde5;
+  --az-blue:        #4da6ff;
+  --az-muted:       #7a8f9a;
+  --az-placeholder: #4a6070;
+  --az-border:      #243545;
+  --az-sidebar-bg:  #162530;
+  color-scheme: dark;
+}
+
+/* ── Base ───────────────────────────────────── */
+html.dark body {
+  background: #0d1b24;
+  color: #d0dde5;
+}
+
+/* ── Header ─────────────────────────────────── */
+html.dark .app-hdr {
+  background: #111f2b;
+  border-bottom-color: #243545;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+html.dark .hdr-icon-btn:hover { background: #1e3040; }
+html.dark .hdr-icon-btn img   { filter: brightness(0) invert(1); opacity: .85; }
+html.dark .hdr-icon-btn:hover img { opacity: 1; }
+html.dark .hdr-logo-svg svg path:not([fill="#2ed88e"]) {
+  fill:   #d0dde5;
+  stroke: #d0dde5;
+}
+html.dark .hdr-lang:hover     { background: #1e3040; }
+html.dark .hdr-lang-drop {
+  background: #162530;
+  border-color: #243545;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+html.dark .hdr-lang-opt       { color: #d0dde5; }
+html.dark .hdr-lang-opt:hover { background: #1e3a2e; }
+html.dark .hdr-lang-opt.active{ background: #1a3328; }
+html.dark .hdr-div            { background: #243545; }
+html.dark .hdr-avatar         { border-color: #243545; }
+
+/* ── Sidebar ─────────────────────────────────── */
+html.dark .app-sidebar,
+html.dark .prelogin-sidebar {
+  background: #111f2b;
+  border-right-color: #243545;
+}
+html.dark .sb-item            { color: #d0dde5; }
+html.dark .sb-item:hover      { background: rgba(255,255,255,.06); }
+html.dark .sb-icon img        { filter: brightness(0) invert(1); opacity: .75; }
+html.dark .sb-item:hover .sb-icon img          { opacity: 1; }
+html.dark .sb-item.active-section .sb-icon img { filter: brightness(0) saturate(100%) invert(72%) sepia(60%) saturate(450%) hue-rotate(103deg) brightness(95%); opacity: 1; }
+html.dark .sb-sub-item        { color: #a0b4bf; }
+html.dark .sb-sub-item:hover  { background: rgba(255,255,255,.06); }
+html.dark .sb-sub             { background: #0d1b24; }
+html.dark .sb-collapse-btn {
+  background: #162530;
+  border-color: #243545;
+}
+html.dark .sb-collapse-btn:hover { background: #1e3040; }
+html.dark .sidebar-divider    { border-color: #243545; }
+
+/* ── Main content area ───────────────────────── */
+html.dark .az-content,
+html.dark main,
+html.dark .app-main { background: #0d1b24; }
+
+/* ── Cards & panels ──────────────────────────── */
+html.dark .az-card,
+html.dark .az-panel,
+html.dark .az-widget {
+  background: #162530;
+  border-color: #243545;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+html.dark .az-card-head,
+html.dark .az-card-header { border-bottom-color: #243545; }
+
+/* ── Page header / breadcrumb ────────────────── */
+html.dark .pg-hdr,
+html.dark .page-header    { border-bottom-color: #243545; }
+
+/* ── Tables ──────────────────────────────────── */
+html.dark .az-table,
+html.dark table           { color: #d0dde5; }
+html.dark .az-table thead th,
+html.dark table thead th  {
+  background: #162530;
+  border-bottom-color: #243545;
+  color: #7a8f9a;
+}
+html.dark .az-table tbody tr,
+html.dark table tbody tr  { border-bottom-color: #1e3040; }
+html.dark .az-table tbody tr:hover,
+html.dark table tbody tr:hover { background: #1a2e3c; }
+html.dark .az-table-wrap  { border-color: #243545; }
+html.dark .tbl-scroll-wrap{ border-color: #243545; }
+
+/* ── Forms ───────────────────────────────────── */
+html.dark .f-group label,
+html.dark .form-label     { color: #a0b4bf; }
+html.dark .f-input,
+html.dark .form-control,
+html.dark .form-select,
+html.dark select,
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="password"],
+html.dark input[type="number"],
+html.dark input[type="tel"],
+html.dark input[type="date"],
+html.dark textarea {
+  background: #162530 !important;
+  border-color: #243545 !important;
+  color: #d0dde5 !important;
+}
+html.dark .f-input:focus,
+html.dark .form-control:focus { border-color: #2ed88e !important; }
+html.dark .f-currency input,
+html.dark .f-currency         { background: #162530 !important; border-color: #243545 !important; }
+html.dark .f-currency input   { color: #d0dde5 !important; }
+html.dark .f-prefix,
+html.dark .input-prefix,
+html.dark .input-group-text   { background: #1e3040 !important; border-color: #243545 !important; color: #7a8f9a !important; }
+html.dark input:not([class])  { background: #162530 !important; color: #d0dde5 !important; border-color: #243545 !important; }
+html.dark .f-select,
+html.dark select {
+  background: #162530 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E") no-repeat right 10px center !important;
+}
+html.dark .f-hint          { color: #4a6070; }
+html.dark .f-error         { color: #ff6b6b; }
+
+/* ── Buttons ─────────────────────────────────── */
+html.dark .btn-action.btn-cancel,
+html.dark .btn-secondary  {
+  background: #1e3040;
+  border-color: #243545;
+  color: #d0dde5;
+}
+html.dark .btn-action.btn-cancel:hover { background: #243a50; }
+
+/* ── Tabs ────────────────────────────────────── */
+html.dark .az-tabs,
+html.dark .modal-tabs      { border-bottom-color: #243545; }
+html.dark .az-tab,
+html.dark .m-tab           { color: #7a8f9a; border-color: transparent; }
+html.dark .az-tab:hover,
+html.dark .m-tab:hover     { color: #d0dde5; background: #1e3040; }
+html.dark .az-tab.active,
+html.dark .m-tab.active    { color: #2ed88e; border-bottom-color: #2ed88e; background: none; }
+
+/* ── Badges / chips ──────────────────────────── */
+html.dark .badge-success   { background: #1a3328; color: #2ed88e; }
+html.dark .badge-warning   { background: #332a14; color: #f5a623; }
+html.dark .badge-error,
+html.dark .badge-danger    { background: #3a1a1a; color: #ff6b6b; }
+html.dark .badge-info      { background: #142440; color: #4da6ff; }
+html.dark .badge-neutral   { background: #1e3040; color: #a0b4bf; }
+
+/* ── Modals ──────────────────────────────────── */
+html.dark .az-modal        {
+  background: #162530;
+  border-color: #243545;
+  box-shadow: 0 24px 64px rgba(0,0,0,.7);
+}
+html.dark .modal-title     { color: #d0dde5; border-bottom-color: #243545; }
+html.dark .modal-close     { color: #7a8f9a; }
+html.dark .modal-close:hover { color: #d0dde5; background: #1e3040; }
+html.dark .modal-ov        { background: rgba(0,0,0,.7); }
+
+/* ── Notifications panel ─────────────────────── */
+html.dark .notif-dropdown  {
+  background: #162530;
+  border-color: #243545;
+}
+html.dark .notif-head,
+html.dark .notif-footer    { border-color: #243545; }
+html.dark .notif-item      { border-bottom-color: #1e3040; }
+html.dark .notif-item:hover{ background: #1a2e3c; }
+html.dark .notif-item.unread{ background: #142035; }
+
+/* ── Avatar dropdown ─────────────────────────── */
+html.dark .avatar-dropdown {
+  background: #162530;
+  border-color: #243545;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+html.dark .av-drop-top     { border-bottom-color: #243545; }
+html.dark .av-drop-details { border-bottom-color: #243545; }
+html.dark .av-detail-lbl   { color: #7a8f9a; }
+html.dark .av-nav-link     { color: #d0dde5; }
+html.dark .av-nav-link:hover{ background: #1e3040; }
+
+/* ── Footer ──────────────────────────────────── */
+html.dark .app-footer {
+  background: #111f2b;
+  border-top-color: #243545;
+  color: #7a8f9a;
+}
+html.dark .app-footer a    { color: #7a8f9a; }
+html.dark .acc-btn {
+  background: #1e3040;
+  border-color: #243545;
+  color: #d0dde5;
+}
+html.dark .acc-btn:hover   { background: #243a50; }
+html.dark .acc-btn-theme   { background: #243545 !important; color: #2ed88e !important; }
+
+/* ── Misc components ─────────────────────────── */
+html.dark .az-divider,
+html.dark hr               { border-color: #243545; }
+html.dark .lp-divider      { background: #243545; }
+html.dark .section-tag     { background: #1a3328; color: #2ed88e; }
+html.dark .feat-card {
+  background: #162530;
+  border-color: #243545;
+}
+html.dark .svc-card {
+  background: #162530;
+  border-color: #243545;
+  color: #d0dde5;
+}
+html.dark .svc-card:hover  { border-color: #2ed88e; }
+
+/* ── Prelogin / landing header ───────────────── */
+html.dark .lp-hdr {
+  background: #111f2b;
+  border-bottom-color: #243545;
+}
+html.dark .lp-nav-link     { color: #a0b4bf; }
+html.dark .lp-nav-link:hover,
+html.dark .lp-nav-link.active { color: #2ed88e; }
+html.dark .lp-topbar       { background: #0d1b24; }
+html.dark .btn-login {
+  border-color: #243545;
+  color: #d0dde5;
+}
+html.dark .btn-login:hover { background: #1e3040; }
+
+/* ── Sections ────────────────────────────────── */
+html.dark .section         { background: #0d1b24; }
+html.dark .section-alt     { background: #111f2b; }
+html.dark .section-title   { color: #d0dde5; }
+html.dark .section-sub     { color: #7a8f9a; }
+
+/* ── Context menus ───────────────────────────── */
+html.dark .ctx-menu {
+  background: #162530;
+  border-color: #243545;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+html.dark .ctx-item        { color: #d0dde5; }
+html.dark .ctx-item:hover  { background: #1e3040; }
+
+/* ── Accordions ──────────────────────────────── */
+html.dark .acc-card        { border-color: #243545; }
+html.dark .acc-hdr         { background: #162530; }
+html.dark .acc-hdr:hover   { background: #1a2e3c; }
+html.dark .acc-hdr.open    { background: #1a3328; }
+html.dark .acc-body        { border-top-color: #243545; background: #162530; }
+
+/* ── Transfer / payment option cards ────────── */
+html.dark .tx-opt {
+  background: #162530;
+  border-color: #243545;
+  color: #d0dde5;
+}
+html.dark .tx-opt:hover    { border-color: #2ed88e; background: #1a3328; }
+html.dark .tx-opt.sel      { border-color: #2ed88e; background: #1a3328; }
+html.dark .tx-title        { color: #d0dde5; }
+html.dark .tx-sub          { color: #7a8f9a; }
+html.dark .tx-icon         { background: #1e3040; }
+
+/* ── Filter bar ──────────────────────────────── */
+html.dark .filter-bar,
+html.dark .pg-filter       { background: #162530; border-color: #243545; }
+html.dark .filter-field    { background: #0d1b24; border-color: #243545; color: #d0dde5; }
+
+/* ── List / record rows (all listing pages) ─────── */
+/* cheques, cards, beneficiaries, facilities, favourites, reports */
+html.dark .cheq-row,
+html.dark .cheq-rpt-row,
+html.dark .card-row,
+html.dark .ben-row,
+html.dark .fac-row,
+html.dark .fav-row,
+html.dark .sec-card,
+html.dark .lov-item,
+html.dark .ie-wrap          { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .cheq-row:hover,
+html.dark .cheq-rpt-row:hover,
+html.dark .card-row:hover,
+html.dark .ben-row:hover,
+html.dark .fac-row:hover,
+html.dark .fav-row:hover,
+html.dark .lov-item:hover   { background: #1a2e3c !important; }
+
+/* card details inside card-row */
+html.dark .card-name,
+html.dark .card-curr,
+html.dark .card-field,
+html.dark .fav-name,
+html.dark .fav-field        { color: #d0dde5 !important; }
+html.dark .card-row-mid,
+html.dark .card-dtl-grid    { color: #a0b4bf !important; }
+
+/* tabs header row */
+html.dark .tabs-header-row  { background: #162530 !important; border-color: #243545 !important; }
+
+/* search / filter bars on report pages */
+html.dark .search-bar-wrap,
+html.dark .rpt-search-wrap  { background: #162530 !important; border-color: #243545 !important; }
+
+
+html.dark .tr-row,
+html.dark .tr-row-inner,
+html.dark .tr-panel,
+html.dark .list-row,
+html.dark .bulk-row         { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .tr-row:hover,
+html.dark .tr-row-inner:hover,
+html.dark .list-row:hover,
+html.dark .bulk-row:hover   { background: #1a2e3c !important; }
+html.dark .tr-row-data,
+html.dark .tr-row-line2,
+html.dark .tr-sub           { color: #7a8f9a !important; }
+html.dark .tr-title         { color: #d0dde5 !important; }
+html.dark .tr-ref,
+html.dark .tr-f             { color: #a0b4bf !important; }
+
+/* ── Transaction history ─────────────────────── */
+html.dark .txn-filters-header,
+html.dark .txn-search-wrap,
+html.dark .filters-primary,
+html.dark .filters-extra,
+html.dark .filters-actions  { background: #162530 !important; border-color: #243545 !important; }
+html.dark .txn-list          { background: #0d1b24 !important; }
+html.dark .txn-row           { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .txn-row:hover     { background: #1a2e3c !important; }
+html.dark .txn-date,
+html.dark .txn-desc,
+html.dark .txn-ref,
+html.dark .txn-col           { color: #d0dde5 !important; }
+html.dark .txn-amount-cr     { color: #2ed88e !important; }
+html.dark .txn-amount-dr     { color: #ff6b6b !important; }
+html.dark .chip,
+html.dark .filter-chip       { background: #1e3040 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .notif-view-all    { background: #162530 !important; color: #2ed88e !important; }
+
+/* ── Account / content cards ─────────────────── */
+html.dark .content-card,
+html.dark .info-bar,
+html.dark .detail-card,
+html.dark .pg-card        { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .acct-row       { background: #1a2e3c !important; border-color: #243545 !important; }
+html.dark .acct-row:hover { background: #1e3545 !important; }
+html.dark .acct-name,
+html.dark .acct-field label,
+html.dark .acct-label     { color: #7a8f9a !important; }
+html.dark .acct-field-val,
+html.dark .acct-value     { color: #d0dde5 !important; }
+
+/* ── Buttons (app-specific white/outline) ────── */
+html.dark .btn-open-account,
+html.dark .btn-txn,
+html.dark .view-btn,
+html.dark .btn-req-cheq,
+html.dark .btn-cheq-det,
+html.dark .btn-request-card,
+html.dark .btn-add-ben,
+html.dark .btn-view-details,
+html.dark .btn-settle,
+html.dark .btn-more,
+html.dark .btn-task,
+html.dark .btn-save        { background: #1e3040 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .btn-open-account:hover,
+html.dark .btn-txn:hover,
+html.dark .view-btn:hover,
+html.dark .btn-req-cheq:hover,
+html.dark .btn-cheq-det:hover,
+html.dark .btn-request-card:hover,
+html.dark .btn-add-ben:hover,
+html.dark .btn-view-details:hover,
+html.dark .btn-settle:hover,
+html.dark .btn-more:hover,
+html.dark .btn-task:hover,
+html.dark .btn-save:hover  { background: #243a50 !important; }
+html.dark .btn-task-approve{ background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .btn-task-reject { background: #3a1a1a !important; border-color: #ff6b6b !important; color: #ff6b6b !important; }
+html.dark .btn-task-gray,
+html.dark .btn-task-update { background: #1e3040 !important; border-color: #243545 !important; color: #a0b4bf !important; }
+
+/* ── Avatar dropdown inner elements ─────────── */
+html.dark .av-drop-top    { background: #1a2e3c !important; border-bottom-color: #243545 !important; }
+html.dark .av-drop-name   { color: #d0dde5 !important; }
+html.dark .av-nav-icon    { background: #1e3040 !important; }
+
+/* ── Page / breadcrumb bar ───────────────────── */
+html.dark .pg-head,
+html.dark .breadcrumb-bar { background: #0d1b24 !important; border-bottom-color: #243545 !important; }
+html.dark .breadcrumb-item,
+html.dark .pg-title,
+html.dark .page-title     { color: #d0dde5 !important; }
+html.dark .breadcrumb-sep { color: #4a6070 !important; }
+html.dark .page-top-bar   { border-color: #243545 !important; }
+html.dark .az-bc          { color: #7a8f9a !important; }
+html.dark .az-bc a        { color: #7a8f9a !important; }
+html.dark .az-bc a:hover  { color: #d0dde5 !important; }
+html.dark .az-bc .sep     { color: #243545 !important; }
+html.dark .az-bc .cur     { color: #d0dde5 !important; }
+
+/* ── Tabs strip ──────────────────────────────── */
+html.dark .acct-tabs,
+html.dark .tab-strip       { border-bottom-color: #243545 !important; background: #0d1b24 !important; }
+html.dark .acct-tab,
+html.dark .tab-btn         { color: #7a8f9a !important; }
+html.dark .acct-tab.active,
+html.dark .tab-btn.active  { color: #2ed88e !important; border-bottom-color: #2ed88e !important; }
+
+/* ── View toggle buttons ─────────────────────── */
+html.dark .view-toggle,
+html.dark .view-opts       { background: #162530 !important; border-color: #243545 !important; }
+html.dark .view-opt        { color: #7a8f9a !important; }
+html.dark .view-opt.active { background: #243545 !important; color: #d0dde5 !important; }
+
+/* ── Accordion list header ───────────────────── */
+html.dark .list-header,
+html.dark .section-bar     { background: #162530 !important; border-color: #243545 !important; color: #7a8f9a !important; }
+
+/* ── Trade Finance ───────────────────────────── */
+html.dark .tf-filter-panel,
+html.dark .tf-filter-bar    { background: #162530 !important; border-color: #243545 !important; }
+html.dark .tf-filter-lbl    { color: #7a8f9a !important; }
+html.dark .tf-result-row    { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .tf-result-row:hover { background: #1a2e3c !important; }
+html.dark .tf-result-field  { color: #d0dde5 !important; }
+html.dark .tf-result-ref    { color: #7a8f9a !important; }
+html.dark .tf-modal         { background: #162530 !important; border-color: #243545 !important; }
+html.dark .tf-modal-hdr,
+html.dark .tf-modal-footer  { background: #111f2b !important; border-color: #243545 !important; }
+html.dark .tf-modal-title   { color: #d0dde5 !important; }
+html.dark .tf-modal-backdrop{ background: rgba(0,0,0,.7) !important; }
+html.dark .tf-modal-body    { background: #162530 !important; }
+html.dark .tf-doc-row       { background: #1a2e3c !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .tf-doc-hdr       { background: #111f2b !important; border-color: #243545 !important; color: #7a8f9a !important; }
+html.dark .tf-doc-name      { color: #d0dde5 !important; }
+html.dark .tf-facility-panel,
+html.dark .tf-facility-row  { background: #162530 !important; border-color: #243545 !important; }
+html.dark .tf-facility-cell { background: #1a2e3c !important; }
+html.dark .tf-fac-lbl       { color: #7a8f9a !important; }
+html.dark .tf-fac-val       { color: #d0dde5 !important; }
+html.dark .tf-summary       { background: #162530 !important; border-color: #243545 !important; }
+html.dark .tf-summary-title { color: #7a8f9a !important; }
+html.dark .tf-summary-item  { color: #d0dde5 !important; border-color: #243545 !important; }
+html.dark .tf-step-panel    { background: #162530 !important; border-color: #243545 !important; }
+html.dark .tf-detail-item   { border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .tf-search        { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .sec-body,
+html.dark .main-body        { background: #0d1b24 !important; }
+
+/* ── Prelogin pages ──────────────────────────── */
+html.dark .prelogin-content,
+html.dark .pl-main         { background: #0d1b24 !important; }
+html.dark .pl-card,
+html.dark .info-card       { background: #162530 !important; border-color: #243545 !important; }
+
+/* ── Action panel / listing icon buttons ─────── */
+/* All <img> SVG icons inside action rows, view toggles, edit buttons */
+html.dark .view-btn img,
+html.dark .edit-name-btn img,
+html.dark .btn-open-account img,
+html.dark .btn-add-ben img,
+html.dark .icon-btn img,
+html.dark .row-action img,
+html.dark .action-icon img  { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .view-btn:hover img,
+html.dark .edit-name-btn:hover img,
+html.dark .icon-btn:hover img { opacity: 1; }
+html.dark .view-btn.active img { filter: brightness(0) saturate(100%) invert(72%) sepia(60%) saturate(450%) hue-rotate(103deg) brightness(95%); opacity: 1; }
+
+/* ── Phone / mobile prefix ───────────────────── */
+html.dark .phone-wrap       { background: #162530 !important; border-color: #243545 !important; }
+html.dark .phone-pfx        { background: #1e3040 !important; border-right-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .phone-pfx select { color: #d0dde5 !important; }
+html.dark .az-phone-wrap    { background: #162530 !important; border-color: #243545 !important; }
+html.dark .az-phone-flag    { background: #1e3040 !important; border-right: 1px solid #243545 !important; color: #d0dde5 !important; }
+html.dark .az-phone-wrap input { background: #162530 !important; color: #d0dde5 !important; }
+
+/* ── Amount field / currency dropdown ────────── */
+html.dark .amount-field     { background: #162530 !important; border-color: #243545 !important; }
+html.dark .amount-curr      { background: #1e3040 !important; border-right-color: #243545 !important; color: #d0dde5 !important; }
+/* Remove the generic select arrow override inside amount-curr to prevent double-arrow */
+html.dark .amount-curr select { background: none !important; color: #d0dde5 !important; border: none !important; }
+html.dark .amount-inp       { background: #162530 !important; color: #d0dde5 !important; }
+
+/* ── Attachment / file upload zone ───────────── */
+html.dark .attach-zone      { background: #162530 !important; border-color: #2ed88e !important; }
+html.dark .attach-zone:hover{ background: #1a2e3c !important; }
+html.dark .attach-icon svg  { stroke: #2ed88e !important; }
+html.dark .attach-link      { color: #2ed88e !important; }
+html.dark .attach-zone p,
+html.dark .attach-zone span { color: #7a8f9a !important; }
+
+/* ── Submit / Apply CTA buttons ──────────────── */
+html.dark .btn-submit       { background: #2ed88e !important; color: #16303d !important; }
+html.dark .btn-submit:hover { background: #25c47e !important; color: #16303d !important; }
+html.dark .btn-apply        { background: #1e3040 !important; color: #d0dde5 !important; border: 1px solid #243545 !important; }
+html.dark .btn-apply:hover  { background: #243a50 !important; }
+html.dark .btn-reset        { background: #1e3040 !important; color: #7a8f9a !important; border: 1px solid #243545 !important; }
+
+/* ── Trade Finance wizard left nav ───────────── */
+html.dark .tf-wiz-back      { color: #2ed88e !important; border-bottom-color: #243545 !important; }
+html.dark .tf-wiz-step      { color: #d0dde5 !important; }
+html.dark .tf-wiz-step.active { background: #1a3328 !important; }
+html.dark .tf-wiz-step:not(.active) .tf-wiz-num { background: #243545 !important; color: #7a8f9a !important; }
+html.dark .tf-wiz-lbl       { color: #d0dde5 !important; }
+html.dark .tf-wiz-pct.p100  { background: #1a3328 !important; color: #2ed88e !important; }
+html.dark .tf-wiz-pct.p50   { background: #332a14 !important; color: #f5a623 !important; }
+html.dark .tf-wiz-pct.p0    { background: #1e3040 !important; color: #7a8f9a !important; }
+
+/* ── Dashboard ───────────────────────────────── */
+/* Stat cards (top row) */
+html.dark .stat-card {
+  background: #162530 !important;
+  border-color: #243545 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4) !important;
+}
+html.dark .stat-card-label  { color: #7a8f9a !important; }
+html.dark .stat-card-value  { color: #d0dde5 !important; }
+html.dark .stat-card-sub    { color: #7a8f9a !important; }
+html.dark .stat-card-icon   { background: #1e3040 !important; }
+html.dark .stat-card-badge.badge-up   { background: #1a3328 !important; color: #2ed88e !important; }
+html.dark .stat-card-badge.badge-warn { background: #332a14 !important; color: #f5a623 !important; }
+html.dark .stat-card-badge.badge-info { background: #142440 !important; color: #4da6ff !important; }
+
+/* Dash cards (all widget boxes) */
+html.dark .dash-card {
+  background: #162530 !important;
+  border-color: #243545 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4) !important;
+}
+html.dark .dash-card-hdr    { border-bottom-color: #243545 !important; background: #162530 !important; }
+html.dark .dash-card-title  { color: #d0dde5 !important; }
+html.dark .dash-card-title img { filter: brightness(0) invert(1); opacity: .75; }
+html.dark .dash-card-link   { color: #2ed88e !important; }
+html.dark .dash-card-body   { background: #162530 !important; }
+
+/* Transaction table inside dash-card */
+html.dark .txn-table        { color: #d0dde5 !important; }
+html.dark .txn-table thead tr { background: #111f2b !important; }
+html.dark .txn-table thead th { color: #7a8f9a !important; border-bottom-color: #243545 !important; }
+html.dark .txn-table tbody tr { border-bottom-color: #1e3040 !important; }
+html.dark .txn-table tbody tr:hover { background: #1a2e3c !important; }
+html.dark .txn-table td     { color: #d0dde5 !important; }
+html.dark .txn-ref          { color: #7a8f9a !important; }
+html.dark .txn-debit        { color: #ff6b6b !important; }
+html.dark .txn-credit       { color: #2ed88e !important; }
+html.dark .txn-icon-wrap    { background: #1e3040 !important; }
+html.dark .txn-icon-wrap img { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .badge-txn.completed { background: #1a3328 !important; color: #2ed88e !important; }
+html.dark .badge-txn.pending   { background: #332a14 !important; color: #f5a623 !important; }
+html.dark .badge-txn.failed    { background: #3a1a1a !important; color: #ff6b6b !important; }
+
+/* Approval items */
+html.dark .approval-item    { border-bottom-color: #243545 !important; }
+html.dark .approval-icon    { background: #1e3040 !important; }
+html.dark .approval-icon img { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .approval-title   { color: #d0dde5 !important; }
+html.dark .approval-sub     { color: #7a8f9a !important; }
+html.dark .approval-amount  { color: #d0dde5 !important; }
+html.dark .btn-approve      { background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .btn-approve:hover{ background: #1e3d30 !important; }
+html.dark .btn-reject       { background: #3a1a1a !important; border-color: #ff6b6b !important; color: #ff6b6b !important; }
+html.dark .btn-reject:hover { background: #4a2020 !important; }
+
+/* Draft items */
+html.dark .draft-item       { border-bottom-color: #243545 !important; }
+html.dark .draft-icon       { background: #1e3040 !important; }
+html.dark .draft-icon img   { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .draft-title      { color: #d0dde5 !important; }
+html.dark .draft-sub        { color: #7a8f9a !important; }
+html.dark .btn-draft-edit   { background: #1e3040 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .btn-draft-edit:hover { background: #243a50 !important; }
+
+/* Quick links / shortcut tiles */
+html.dark .quick-link,
+html.dark .shortcut-tile    { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .quick-link:hover,
+html.dark .shortcut-tile:hover { background: #1a2e3c !important; border-color: #2ed88e !important; }
+html.dark .quick-link img,
+html.dark .shortcut-tile img { filter: brightness(0) invert(1); opacity: .8; }
+
+/* Donut / chart area */
+html.dark .chart-legend-label { color: #a0b4bf !important; }
+html.dark .donut-center-label { color: #7a8f9a !important; }
+html.dark .donut-center-val   { color: #d0dde5 !important; }
+
+/* ── Dashboard Custom (widget-based) ────────── */
+/* Toolbar */
+html.dark .dash-toolbar     { background: #111f2b !important; border-bottom-color: #243545 !important; }
+html.dark .dash-title       { color: #d0dde5 !important; }
+html.dark .edit-badge       { background: #1a3328 !important; color: #2ed88e !important; border-color: #2ed88e !important; }
+
+/* Widget boxes */
+html.dark .widget {
+  background: #162530 !important;
+  border-color: #243545 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4) !important;
+}
+html.dark .w-hdr            { background: #162530 !important; border-bottom-color: #243545 !important; }
+html.dark .w-hdr-icon       { filter: brightness(0) invert(1); opacity: .75; }
+html.dark .w-hdr-title      { color: #d0dde5 !important; }
+html.dark .wdrag            { color: #4a6070 !important; }
+html.dark .wbtn             { color: #7a8f9a !important; background: none !important; }
+html.dark .wbtn:hover       { background: #1e3040 !important; color: #d0dde5 !important; }
+html.dark .wbtn.wclose:hover{ background: #3a1a1a !important; color: #ff6b6b !important; }
+html.dark .w-body           { background: #162530 !important; }
+
+/* Stat widgets */
+html.dark .stat-icon        { background: #1e3040 !important; }
+html.dark .stat-icon img    { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .stat-lbl         { color: #7a8f9a !important; }
+html.dark .stat-val         { color: #d0dde5 !important; }
+html.dark .stat-sub         { color: #7a8f9a !important; }
+html.dark .sbadge.sb-blue   { background: #142440 !important; color: #4da6ff !important; }
+html.dark .sbadge.sb-green  { background: #1a3328 !important; color: #2ed88e !important; }
+html.dark .sbadge.sb-warn   { background: #332a14 !important; color: #f5a623 !important; }
+
+/* Chart filter tabs */
+html.dark .chart-filters    { background: transparent !important; }
+html.dark .cf-tab           { background: #162530 !important; border-color: #243545 !important; color: #7a8f9a !important; }
+html.dark .cf-tab.active,
+html.dark .cf-tab:hover     { background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .cf-select        { background: #162530 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+
+/* Approval rows (apv-*) */
+html.dark .apv-row          { border-bottom-color: #243545 !important; }
+html.dark .apv-ico          { background: #1e3040 !important; }
+html.dark .apv-ico img      { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .apv-title        { color: #d0dde5 !important; }
+html.dark .apv-sub          { color: #7a8f9a !important; }
+html.dark .apv-amt          { color: #d0dde5 !important; }
+html.dark .btn-apv.ok       { background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .btn-apv.ok:hover { background: #1e3d30 !important; }
+html.dark .btn-apv.rej      { background: #3a1a1a !important; border-color: #ff6b6b !important; color: #ff6b6b !important; }
+html.dark .btn-apv.rej:hover{ background: #4a2020 !important; }
+
+/* Transaction table (wt) */
+html.dark .wt               { color: #d0dde5 !important; }
+html.dark .wt thead tr      { background: #111f2b !important; }
+html.dark .wt thead th      { color: #7a8f9a !important; border-bottom-color: #243545 !important; }
+html.dark .wt tbody tr      { border-bottom-color: #1e3040 !important; }
+html.dark .wt tbody tr:hover{ background: #1a2e3c !important; }
+html.dark .td-name          { color: #d0dde5 !important; }
+html.dark .td-sub           { color: #7a8f9a !important; }
+html.dark .amt-dr           { color: #ff6b6b !important; }
+html.dark .amt-cr           { color: #2ed88e !important; }
+html.dark .bs.bs-ok         { background: #1a3328 !important; color: #2ed88e !important; }
+html.dark .bs.bs-pend       { background: #332a14 !important; color: #f5a623 !important; }
+html.dark .bs.bs-fail       { background: #3a1a1a !important; color: #ff6b6b !important; }
+html.dark .wt-foot          { border-top-color: #243545 !important; background: #162530 !important; }
+html.dark .wt-foot a        { color: #2ed88e !important; }
+
+/* List rows (drafts, sessions, requests) */
+html.dark .list-ico         { background: #1e3040 !important; }
+html.dark .list-ico img     { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .list-title       { color: #d0dde5 !important; }
+html.dark .list-sub         { color: #7a8f9a !important; }
+html.dark .btn-sm           { background: #1e3040 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .btn-sm:hover     { background: #243a50 !important; }
+
+/* Widget library panel */
+html.dark .wlib-overlay     { background: rgba(0,0,0,.6) !important; }
+html.dark .wlib             { background: #162530 !important; border-left-color: #243545 !important; box-shadow: -8px 0 32px rgba(0,0,0,.5) !important; }
+html.dark .wlib-hdr         { background: #111f2b !important; border-bottom-color: #243545 !important; }
+html.dark .wlib-title       { color: #d0dde5 !important; }
+html.dark .wlib-x           { color: #7a8f9a !important; }
+html.dark .wlib-x:hover     { background: #1e3040 !important; color: #d0dde5 !important; }
+html.dark .wlib-body        { background: #162530 !important; }
+html.dark .wlib-sec         { color: #4a6070 !important; }
+html.dark .wlib-item        { background: #1a2e3c !important; border-color: #243545 !important; }
+html.dark .wlib-item:hover  { border-color: #2ed88e !important; background: #1a3328 !important; }
+html.dark .wlib-item.added  { border-color: #243545 !important; background: #1e3040 !important; opacity: .6; }
+html.dark .wlib-ico         { background: #1e3040 !important; }
+html.dark .wlib-ico img     { filter: brightness(0) invert(1); opacity: .8; }
+html.dark .wlib-name        { color: #d0dde5 !important; }
+html.dark .wlib-desc        { color: #7a8f9a !important; }
+html.dark .wlib-action.wa-add { background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+
+/* Toast */
+html.dark #toast            { background: #1e3040 !important; color: #d0dde5 !important; box-shadow: 0 4px 16px rgba(0,0,0,.5) !important; }
+
+/* ── All Notifications page (np-*) ──────────── */
+html.dark .np-top-bar       { border-bottom-color: #243545 !important; }
+html.dark .np-title         { color: #d0dde5 !important; }
+
+/* Action buttons (Mark all read / Clear all) */
+html.dark .np-btn           { background: #1e3040 !important; border-color: #243545 !important; color: #d0dde5 !important; }
+html.dark .np-btn:hover     { background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .np-btn-mark svg  { color: #2ed88e !important; }
+html.dark .np-btn-clear     { color: #ff6b6b !important; border-color: #3a1a1a !important; }
+html.dark .np-btn-clear:hover { background: #3a1a1a !important; border-color: #ff6b6b !important; color: #ff6b6b !important; }
+
+/* Filter tabs */
+html.dark .np-filter        { background: #1e3040 !important; border-color: #243545 !important; color: #7a8f9a !important; }
+html.dark .np-filter:hover  { border-color: #2ed88e !important; color: #d0dde5 !important; }
+html.dark .np-filter.active { background: #2ed88e !important; border-color: #2ed88e !important; color: #16303d !important; }
+html.dark .np-filter .count { background: #243545 !important; color: #a0b4bf !important; }
+html.dark .np-filter.active .count { background: rgba(0,0,0,.2) !important; color: #16303d !important; }
+
+/* Date group labels */
+html.dark .np-group-label   { color: #4a6070 !important; border-bottom-color: #243545 !important; }
+
+/* Notification rows */
+html.dark .np-row           { background: #162530 !important; border-color: #243545 !important; }
+html.dark .np-row:hover     { background: #1a2e3c !important; box-shadow: 0 2px 8px rgba(0,0,0,.3) !important; }
+html.dark .np-row.np-unread { background: #142035 !important; border-left-color: #2ed88e !important; }
+html.dark .np-row.np-unread:hover { background: #1a2e3c !important; }
+
+/* Notification icons — map each colour to a dark equivalent */
+html.dark .np-icon          { background: #1e3040 !important; }
+html.dark .np-icon-prayer   { background: #1a3328 !important; }
+html.dark .np-icon-prayer svg { color: #2ed88e !important; }
+html.dark .np-icon-invest   { background: #142440 !important; }
+html.dark .np-icon-invest svg { color: #4da6ff !important; }
+html.dark .np-icon-alert    { background: #332a14 !important; }
+html.dark .np-icon-alert svg { color: #f5a623 !important; }
+html.dark .np-icon-transfer { background: #1a2440 !important; }
+html.dark .np-icon-transfer svg { color: #6b9fff !important; }
+html.dark .np-icon-security { background: #3a1a1a !important; }
+html.dark .np-icon-security svg { color: #ff6b6b !important; }
+html.dark .np-icon-account  { background: #1e1e3a !important; }
+html.dark .np-icon-account svg { color: #9b9dff !important; }
+html.dark .np-icon-finance  { background: #162e2a !important; }
+html.dark .np-icon-finance svg { color: #2ed8c0 !important; }
+
+/* Row content */
+html.dark .np-row-title     { color: #d0dde5 !important; }
+html.dark .np-row-body      { color: #7a8f9a !important; }
+html.dark .np-row-time      { color: #4a6070 !important; }
+html.dark .np-row-time svg  { color: #4a6070 !important; }
+
+/* Action buttons (mark read / delete) */
+html.dark .np-act-btn       { background: #1e3040 !important; border-color: #243545 !important; color: #7a8f9a !important; }
+html.dark .np-act-btn:hover { background: #1a3328 !important; border-color: #2ed88e !important; color: #2ed88e !important; }
+html.dark .np-act-btn.del:hover { background: #3a1a1a !important; border-color: #ff6b6b !important; color: #ff6b6b !important; }
+
+/* ── Scrollbars ──────────────────────────────── */
+html.dark ::-webkit-scrollbar        { background: #0d1b24; }
+html.dark ::-webkit-scrollbar-thumb  { background: #243545; border-radius: 4px; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #2ed88e; }

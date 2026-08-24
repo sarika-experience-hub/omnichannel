@@ -1,0 +1,67 @@
+/* azentio DatePicker v2 */
+.az-datepicker-pop {
+  background: #fff;
+  border: 1px solid #e2e8ec;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(22,48,61,.14);
+  padding: 14px;
+  width: 268px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  user-select: none;
+}
+.az-dp-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.az-dp-month {
+  font-weight: 700;
+  color: #16303d;
+  font-size: 13.5px;
+}
+.az-dp-nav {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #16303d;
+  padding: 2px 10px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: background .1s;
+}
+.az-dp-nav:hover { background: #f0faf5; }
+.az-dp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.az-dp-dayname {
+  text-align: center;
+  font-weight: 700;
+  color: #8a979e;
+  padding: 4px 0;
+  font-size: 11px;
+}
+.az-dp-day {
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: #16303d;
+  border: none;
+  background: none;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .1s;
+}
+.az-dp-day:hover { background: #f0faf5; }
+.az-dp-day.selected { background: #2ed88e; color: #fff; font-weight: 700; }
+.az-dp-day.today { background: #edf6ff; color: #0085db; font-weight: 700; }
+.az-dp-day.today.selected { background: #2ed88e; color: #fff; }
