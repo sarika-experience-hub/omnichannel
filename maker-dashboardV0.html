@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Maker Dashboard</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/maker-dashboard.css"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="js/theme.js"></script>
+</head>
+<body class="pg-maker-dashboard">
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></a>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us">
+      <img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+        <img src="images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/>
+        <span class="notif-dot" aria-label="5 notifications">5</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span><a href="#" class="notif-clear-all">Clear all</div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">TXN-2024-01141 approved by Marc K.</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">3 drafts due before cut-off today 17:00</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">TXN-2024-01138 settled — CHF 4,600,000</div><div class="notif-time">Yesterday</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#1a4f72;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#1a4f72;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>18 Jun, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:07</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Role:</span><span class="av-detail-val">Payment Maker · L2</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+  <a href="maker-dashboard.html" class="sb-item active-section" style="text-decoration:none"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+    <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfer <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Account Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment <span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a><a href="cards-settlement-local.html" class="sb-sub3-item">Local Credit Card Settlement</a></div><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sCheq','cCheq')"><span class="sb-icon"><img src="images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cCheq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCheq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebooks</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a><a href="chequebook-report.html" class="sb-sub-item">Chequebook Report</a></div>
+  <button class="sb-item" data-label="Remittance" onclick="toggleSub('sRem','cRem')"><span class="sb-icon"><img src="images/icons/remittance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Remittance</span><span class="sb-chevron" id="cRem"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sRem" class="sb-sub" style="display:none"><a href="remittance-intra-bank.html" class="sb-sub-item">Intra Bank Remittance Request</a><a href="remittance-local.html" class="sb-sub-item">Local Remittance Request</a><a href="remittance-international.html" class="sb-sub-item">International Remittance Request</a></div>
+  <button class="sb-item" data-label="Sweeping and Pooling" onclick="toggleSub('sSP','cSP')"><span class="sb-icon"><img src="images/icons/sweeping_and_pooling.svg" width="18" height="18" alt=""/></span><span class="sb-label">Sweeping and Pooling</span><span class="sb-chevron" id="cSP"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSP" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Sweeping and Pooling</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+  <button class="sb-item" data-label="Cash Management" onclick="toggleSub('sCM','cCM')"><span class="sb-icon"><img src="images/icons/cash_management.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cash Management</span><span class="sb-chevron" id="cCM"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCM" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Cash Management</a></div>
+  <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><img src="images/icons/trade_finance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-lg-status.html" class="sb-sub-item">LG Status and Details</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a><a href="tf-ob-status.html" class="sb-sub-item">OB Status and Details</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+  <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><img src="images/icons/corporate_end_user.svg" width="18" height="18" alt=""/></span><span class="sb-label">Corporate End User Management Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc" style="padding:.375rem 1.75rem 0;margin-top:.625rem;">
+      <a href="maker-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">Dashboard</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.75rem;padding:0 1.75rem;">
+      <h1 class="page-title">Dashboard <span style="display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;background:#e8f4fd;color:#00538A;border:1px solid #b3d4f0;border-radius:2rem;padding:.2rem .65rem;vertical-align:middle;letter-spacing:.03em;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Maker</span></h1>
+      <a href="#" class="mk-switch-role-btn" onclick="openRoleModal();return false;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        Switch to Checker
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="mk-wrap">
+
+      <!-- ── Welcome Bar / Quick Actions ── -->
+      <div class="mk-welcome-bar">
+        <div class="mk-wb-left">
+          <h2 class="mk-wb-title">Good morning, Sara Rahman</h2>
+          <p class="mk-wb-sub">Monday, 24 Jun 2026 &nbsp;&middot;&nbsp; Al-Noor Trading LLC &nbsp;&middot;&nbsp; Last login: Today at 08:47 AM</p>
+          <div class="mk-wb-nudge mk-wb-nudge-urgent" id="mkWbNudge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            2 transactions returned for correction &mdash; <a class="mk-wb-nudge-link" href="#" onclick="mkStatClick('returned');return false;">Review now &rarr;</a>
+          </div>
+          <div class="mk-wb-nudge mk-wb-nudge-clear" id="mkWbNudgeClear" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            All clear &mdash; no action needed today
+          </div>
+        </div>
+        <div class="mk-wb-actions">
+          <a href="transfer-international.html" class="mk-btn-quick mk-btn-qp mk-btn-qp-lg" style="text-decoration:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            New Transaction
+          </a>
+          <a href="bulk-payment-upload.html" class="mk-btn-quick mk-btn-qsec" style="text-decoration:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Bulk Upload
+          </a>
+          <button class="mk-btn-quick mk-btn-qtert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            My Drafts <span style="background:#dde4e8;color:#5a6777;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:4px;font-weight:600">5</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── 4 Stat Boxes ── -->
+      <div class="mk-stat-strip">
+
+        <!-- 1: Awaiting Approval (highest priority) -->
+        <div class="mk-stat-cell" onclick="mkStatClick('pending')" style="cursor:pointer;background:#fef3c7;" title="View pending approvals">
+          <div class="mk-stat-cell-hdr">
+            <div class="mk-stat-icon" style="background:#fff8e1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#b35a00" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span class="mk-stat-badge mk-stat-badge-warn">Pending</span>
+          </div>
+          <div class="mk-stat-label">Awaiting Approval</div>
+          <div class="mk-stat-value" id="mkKpi1" style="color:#b35a00">5</div>
+          <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#b35a00">
+            <defs><linearGradient id="msg-1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,18 L13,10 L26,2 L40,14 L53,6 L66,10 L80,10 L80,30 L0,30 Z" fill="url(#msg-1)"/>
+            <polyline points="0,18 13,10 26,2 40,14 53,6 66,10 80,10" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="mk-spark-trend"><span>3 transfers, 2 bulk</span></div>
+        </div>
+
+        <!-- 2: Returned (critical — action needed) -->
+        <div class="mk-stat-cell mk-stat-cell-urgent" onclick="mkStatClick('returned')" style="background:#fde8e8;" title="Click to review returned transactions">
+          <div class="mk-stat-cell-hdr">
+            <div class="mk-stat-icon" style="background:#fdecea">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            </div>
+            <span class="mk-stat-badge mk-stat-badge-crit">Action Needed</span>
+          </div>
+          <div class="mk-stat-label">Returned for Correction</div>
+          <div class="mk-stat-value" id="mkKpi2" style="color:#c62828">2</div>
+          <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#c62828">
+            <defs><linearGradient id="msg-2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,11 L13,21 L26,4 L40,11 L53,30 L66,21 L80,11 L80,30 L0,30 Z" fill="url(#msg-2)"/>
+            <polyline points="0,11 13,21 26,4 40,11 53,30 66,21 80,11" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="mk-spark-trend"><span>Review comments</span></div>
+        </div>
+
+        <!-- 3: Approved This Week -->
+        <div class="mk-stat-cell" onclick="mkStatClick('approved')" style="cursor:pointer;background:#d9f5e8;" title="View approved transactions">
+          <div class="mk-stat-cell-hdr">
+            <div class="mk-stat-icon" style="background:#e6f9f0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#1a9e62" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <span class="mk-stat-badge mk-stat-badge-safe">This Week</span>
+          </div>
+          <div class="mk-stat-label">Approved This Week</div>
+          <div class="mk-stat-value" id="mkKpi3" style="color:#1a9e62">23</div>
+          <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#1a9e62">
+            <defs><linearGradient id="msg-3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,14 L13,10 L26,8 L40,9 L53,5 L66,6 L80,4 L80,30 L0,30 Z" fill="url(#msg-3)"/>
+            <polyline points="0,14 13,10 26,8 40,9 53,5 66,6 80,4" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="mk-spark-trend"><span>USD 1.4M total</span></div>
+        </div>
+
+        <!-- 4: In Drafts (replaces Submitted Today — shows draft pressure) -->
+        <div class="mk-stat-cell" onclick="mkStatClick('draft')" style="cursor:pointer;background:#dde7f0;" title="View drafts">
+          <div class="mk-stat-cell-hdr">
+            <div class="mk-stat-icon" style="background:#eaf0f4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <span class="mk-stat-badge mk-stat-badge-draft">Drafts</span>
+          </div>
+          <div class="mk-stat-label">In Drafts</div>
+          <div class="mk-stat-value" id="mkKpi4" style="color:#16303d">5</div>
+          <svg class="mk-sparkline" viewBox="0 0 80 30" preserveAspectRatio="none" style="color:#16303d">
+            <defs><linearGradient id="msg-4d" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".2"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,20 L13,18 L26,14 L40,16 L53,10 L66,13 L80,8 L80,30 L0,30 Z" fill="url(#msg-4d)"/>
+            <polyline points="0,20 13,18 26,14 40,16 53,10 66,13 80,8" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="mk-spark-trend"><span>3 transfers, 2 deposits</span></div>
+        </div>
+
+      </div>
+
+      <div class="mk-section-divider"></div>
+
+      <!-- ── My Submissions + Insights/Drafts/Activity ── -->
+      <div class="mk-main-two-col">
+
+        <!-- Left: My Submissions + Upcoming Payments -->
+        <div class="mk-left-col">
+        <div class="mk-panel mk-panel-borderless">
+          <div class="mk-panel-hdr">
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <div class="mk-panel-title"><span class="material-icons">description</span>My Submissions</div>
+              <span class="mk-sub-row-count" id="mkSubRowCount">Showing 6 of 24</span>
+            </div>
+            <div class="mk-sub-search-wrap">
+              <svg class="mk-sub-search-ico" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="search" class="mk-sub-search" id="mkSubSearch" placeholder="Search…" oninput="mkSearchTable(this.value)">
+            </div>
+            <button class="mk-panel-action">View All <span class="material-icons">chevron_right</span></button>
+          </div>
+          <div class="mk-returned-alert" id="mkReturnedAlert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span><strong>2 transactions</strong> returned by checker with comments — action required.</span>
+            <button class="mk-ra-link" onclick="mkStatClick('returned')">Review now →</button>
+            <button class="mk-ra-reviewed" onclick="this.parentElement.style.display='none'">Mark as reviewed</button>
+          </div>
+          <div class="mk-ftab-bar">
+            <button class="mk-ftab active" onclick="mkFilterTable('all',this)">All<span class="mk-ftab-count">13</span></button>
+            <button class="mk-ftab" onclick="mkFilterTable('pending',this)">Pending<span class="mk-ftab-count">5</span></button>
+            <button class="mk-ftab" onclick="mkFilterTable('approved',this)">Approved<span class="mk-ftab-count">23</span></button>
+            <button class="mk-ftab" onclick="mkFilterTable('returned',this)">Returned<span class="mk-ftab-count">2</span></button>
+            <button class="mk-ftab" onclick="mkFilterTable('draft',this)">Drafts<span class="mk-ftab-count">5</span></button>
+          </div>
+          <div class="mk-sub-table-wrap">
+            <table class="mk-sub-table" id="mkSubTable">
+              <thead>
+                <tr>
+                  <th><button class="mk-sort-btn" onclick="mkSortTable(this,0)">Transaction <span class="mk-sort-ico">↕</span></button></th>
+                  <th><button class="mk-sort-btn" onclick="mkSortTable(this,1)">Beneficiary <span class="mk-sort-ico">↕</span></button></th>
+                  <th><button class="mk-sort-btn" onclick="mkSortTable(this,2)">Amount <span class="mk-sort-ico">↕</span></button></th>
+                  <th><button class="mk-sort-btn" onclick="mkSortTable(this,3)">Submitted <span class="mk-sort-ico">↕</span></button></th>
+                  <th><button class="mk-sort-btn" onclick="mkSortTable(this,4)">Status <span class="mk-sort-ico">↕</span></button></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-status="pending">
+                  <td><div class="mk-sub-name">Bulk Payment – May Salaries</div><div class="mk-sub-ref">REF-BP-2026-0412</div></td>
+                  <td style="color:var(--az-muted)">156 employees</td>
+                  <td style="font-weight:600">USD 287,400</td>
+                  <td><span style="color:var(--az-muted)">Today 09:15</span></td>
+                  <td><span class="mk-sp mk-sp-pending">Awaiting Approval</span></td>
+                  <td><div class="mk-tbl-actions"><button class="mk-btn-tbl">View</button><div class="mk-kebab-wrap"><button class="mk-kebab-btn" onclick="mkToggleKebab(this)">⋮</button><div class="mk-kebab-menu"><button class="mk-km-item">Edit</button><button class="mk-km-item">Duplicate</button><button class="mk-km-item mk-km-danger">Cancel</button></div></div></div></td>
+                </tr>
+                <tr data-status="pending">
+                  <td><div class="mk-sub-name">International Transfer</div><div class="mk-sub-ref">REF-IT-2026-0411</div></td>
+                  <td style="color:var(--az-muted)">BNP Paris</td>
+                  <td style="font-weight:600">EUR 45,000</td>
+                  <td><span style="color:var(--az-muted)">Today 08:42</span></td>
+                  <td><span class="mk-sp mk-sp-pending">Awaiting Approval</span></td>
+                  <td><div class="mk-tbl-actions"><button class="mk-btn-tbl">View</button><div class="mk-kebab-wrap"><button class="mk-kebab-btn" onclick="mkToggleKebab(this)">⋮</button><div class="mk-kebab-menu"><button class="mk-km-item">Edit</button><button class="mk-km-item">Duplicate</button><button class="mk-km-item mk-km-danger">Cancel</button></div></div></div></td>
+                </tr>
+                <tr data-status="pending">
+                  <td><div class="mk-sub-name">Local Transfer</div><div class="mk-sub-ref">REF-LT-2026-0410</div></td>
+                  <td style="color:var(--az-muted)">Al Fardan</td>
+                  <td style="font-weight:600">AED 12,500</td>
+                  <td><span style="color:var(--az-muted)">Yesterday</span><div class="mk-sla-age mk-sla-warn">Pending 1 day</div></td>
+                  <td><span class="mk-sp mk-sp-pending">Awaiting Approval</span></td>
+                  <td><div class="mk-tbl-actions"><button class="mk-btn-tbl">View</button><div class="mk-kebab-wrap"><button class="mk-kebab-btn" onclick="mkToggleKebab(this)">⋮</button><div class="mk-kebab-menu"><button class="mk-km-item">Edit</button><button class="mk-km-item">Duplicate</button><button class="mk-km-item mk-km-danger">Cancel</button></div></div></div></td>
+                </tr>
+                <tr data-status="approved">
+                  <td><div class="mk-sub-name">Internal Transfer</div><div class="mk-sub-ref">REF-IN-2026-0408</div></td>
+                  <td style="color:var(--az-muted)">IBAN-8002</td>
+                  <td style="font-weight:600">USD 100,000</td>
+                  <td><span style="color:var(--az-muted)">24 May</span></td>
+                  <td><span class="mk-sp mk-sp-approved">Approved</span></td>
+                  <td><div class="mk-tbl-actions"><button class="mk-btn-tbl">Receipt</button><div class="mk-kebab-wrap"><button class="mk-kebab-btn" onclick="mkToggleKebab(this)">⋮</button><div class="mk-kebab-menu"><button class="mk-km-item">Duplicate</button></div></div></div></td>
+                </tr>
+                <tr data-status="returned" class="mk-row-returned">
+                  <td><div class="mk-sub-name">LC Amendment</div><div class="mk-sub-ref">REF-LC-2026-0405</div></td>
+                  <td style="color:var(--az-muted)">Trade Finance</td>
+                  <td style="font-weight:600">USD 500,000</td>
+                  <td><span style="color:var(--az-muted)">22 May</span><div class="mk-sla-age mk-sla-crit">Pending 2 days</div></td>
+                  <td><span class="mk-sp mk-sp-returned">Returned</span></td>
+                  <td><div class="mk-tbl-actions"><button class="mk-btn-tbl mk-btn-tbl-danger">Edit &amp; Resubmit</button><div class="mk-kebab-wrap"><button class="mk-kebab-btn" onclick="mkToggleKebab(this)">⋮</button><div class="mk-kebab-menu"><button class="mk-km-item">View Comments</button><button class="mk-km-item">Duplicate</button></div></div></div></td>
+                </tr>
+                <tr data-status="approved">
+                  <td><div class="mk-sub-name">Bulk Payment – April Salaries</div><div class="mk-sub-ref">REF-BP-2026-0399</div></td>
+                  <td style="color:var(--az-muted)">142 employees</td>
+                  <td style="font-weight:600">USD 271,800</td>
+                  <td><span style="color:var(--az-muted)">30 Apr</span></td>
+                  <td><span class="mk-sp mk-sp-approved">Approved</span></td>
+                  <td><div class="mk-tbl-actions"><button class="mk-btn-tbl">Receipt</button><div class="mk-kebab-wrap"><button class="mk-kebab-btn" onclick="mkToggleKebab(this)">⋮</button><div class="mk-kebab-menu"><button class="mk-km-item">Duplicate</button></div></div></div></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="mk-empty-state" id="mkEmptyState" style="display:none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c8d5de" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <p class="mk-es-title">No transactions found</p>
+              <p class="mk-es-sub">Try a different filter or start a new transaction.</p>
+              <a href="transfer-international.html" class="mk-btn-es">+ New Transaction</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Payments (inline, below My Submissions) -->
+        <div class="mk-up-divider"></div>
+        <div class="mk-up-inline">
+          <div class="mk-panel-hdr" style="padding:.875rem 1.75rem .5rem">
+            <div class="mk-panel-title"><span class="material-icons">event</span>Upcoming Payments</div>
+            <button class="mk-panel-action">View Calendar <span class="material-icons">chevron_right</span></button>
+          </div>
+          <div class="mk-upcoming-grid mk-upcoming-grid-2">
+            <div class="mk-up-item" data-type="vendors">
+              <div class="mk-up-date mk-up-date-soon">
+                <div class="mk-up-urgency-lbl">2 days</div>
+                <div class="mk-up-day">26</div><div class="mk-up-mon">Jun</div>
+              </div>
+              <div class="mk-up-info">
+                <div class="mk-up-title">Vendor Payment</div>
+                <div class="mk-up-bene">Al Noor Ltd</div>
+                <div class="mk-up-amt">USD 45,000</div>
+                <div class="mk-up-alert-badge">Action required</div>
+              </div>
+              <a href="#" class="mk-up-view">View →</a>
+            </div>
+            <div class="mk-up-item" data-type="payroll">
+              <div class="mk-up-date mk-up-date-week">
+                <div class="mk-up-urgency-lbl">7 days</div>
+                <div class="mk-up-day">01</div><div class="mk-up-mon">Jul</div>
+              </div>
+              <div class="mk-up-info">
+                <div class="mk-up-title">Monthly Payroll</div>
+                <div class="mk-up-bene">All employees</div>
+                <div class="mk-up-amt">USD 287,400</div>
+              </div>
+              <a href="#" class="mk-up-view">View →</a>
+            </div>
+          </div>
+        </div>
+
+        </div><!-- /mk-left-col -->
+
+        <!-- Right: Smart Insights + Drafts + Activity -->
+        <div class="mk-right-stack">
+          <!-- Actionable Insights -->
+        <div class="mk-panel">
+          <div class="mk-si-hdr">
+            <div class="mk-si-label">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Actionable Insights
+            </div>
+            <span class="mk-si-count" id="mkSiCount">4 tips</span>
+          </div>
+          <div class="mk-si-list" id="mkSiList">
+            <div class="mk-si-item">
+              <div class="mk-si-body"><div class="mk-si-title">Submit before 11 AM for fastest approval</div><div class="mk-si-sub">Checker response is 3× faster before noon</div><a href="transfer-international.html" class="mk-si-action">New Transaction →</a></div>
+              <button class="mk-si-dismiss" onclick="mkDismissInsight(this)" title="Dismiss">×</button>
+            </div>
+            <div class="mk-si-item mk-si-item-warn">
+              <div class="mk-si-body"><div class="mk-si-title">2 drafts pending &gt;3 days — act now</div><div class="mk-si-sub">Resume or delete to clear your queue</div><a href="#" class="mk-si-action">Review Drafts →</a></div>
+              <button class="mk-si-dismiss" onclick="mkDismissInsight(this)" title="Dismiss">×</button>
+            </div>
+            <div class="mk-si-item mk-si-item-crit">
+              <div class="mk-si-body"><div class="mk-si-title">2 returned transactions need correction</div><div class="mk-si-sub">Checker left comments — review before cut-off</div><a href="#" onclick="mkStatClick('returned');return false;" class="mk-si-action">Review &amp; Resubmit →</a></div>
+              <button class="mk-si-dismiss" onclick="mkDismissInsight(this)" title="Dismiss">×</button>
+            </div>
+            <div class="mk-si-item">
+              <div class="mk-si-body"><div class="mk-si-title">REF-IN-2026-0408 approved instantly</div><div class="mk-si-sub">Use internal transfers to guarantee same-day approval</div><a href="#" class="mk-si-action">Download Receipt →</a></div>
+              <button class="mk-si-dismiss" onclick="mkDismissInsight(this)" title="Dismiss">×</button>
+            </div>
+          </div>
+          <div class="mk-si-empty" id="mkSiEmpty" style="display:none">All caught up — no insights right now</div>
+        </div>
+
+        <!-- Drafts -->
+        <div class="mk-panel">
+          <div class="mk-panel-hdr">
+            <div class="mk-panel-title"><span class="material-icons">edit_note</span>Drafts</div>
+            <div style="display:flex;gap:.5rem;align-items:center">
+              <button class="mk-panel-action mk-draft-delete-all" onclick="mkDeleteAllDrafts()" style="color:#c62828">Delete All</button>
+              <button class="mk-panel-action">New draft <span class="material-icons">add</span></button>
+            </div>
+          </div>
+          <div class="mk-draft-body" id="mkDraftBody">
+            <div class="mk-draft-item">
+              <div class="mk-draft-info">
+                <div class="mk-draft-title">Int'l Transfer → Deutsche Bank</div>
+                <div class="mk-draft-sub">EUR 75,000 · <span class="mk-autosave-lbl">Autosaved 2h ago</span></div>
+                <div class="mk-draft-progress"><div class="mk-draft-fill" style="width:80%"></div></div>
+                <div class="mk-draft-pct">80% complete</div>
+              </div>
+              <div class="mk-draft-actions">
+                <button class="mk-btn-resume">Resume</button>
+                <button class="mk-btn-del" title="Delete" onclick="this.closest('.mk-draft-item').remove()"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
+              </div>
+            </div>
+            <div class="mk-draft-item">
+              <div class="mk-draft-info">
+                <div class="mk-draft-title">Bulk Payment – June Salaries</div>
+                <div class="mk-draft-sub">Incomplete · <span class="mk-autosave-lbl">Autosaved yesterday</span></div>
+                <div class="mk-draft-progress"><div class="mk-draft-fill" style="width:40%"></div></div>
+                <div class="mk-draft-pct">40% complete</div>
+              </div>
+              <div class="mk-draft-actions">
+                <button class="mk-btn-resume">Resume</button>
+                <button class="mk-btn-del" title="Delete" onclick="this.closest('.mk-draft-item').remove()"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
+              </div>
+            </div>
+            <div class="mk-draft-item">
+              <div class="mk-draft-info">
+                <div style="display:flex;align-items:center;gap:.375rem;flex-wrap:wrap">
+                  <div class="mk-draft-title">Term Deposit Opening</div>
+                  <span class="mk-draft-age-badge">⚠ 3 days untouched</span>
+                </div>
+                <div class="mk-draft-sub">AED 200,000 · <span class="mk-autosave-lbl">Autosaved 3 days ago</span></div>
+                <div class="mk-draft-progress"><div class="mk-draft-fill mk-draft-fill-aged" style="width:60%"></div></div>
+                <div class="mk-draft-pct">60% complete</div>
+              </div>
+              <div class="mk-draft-actions">
+                <button class="mk-btn-resume">Resume</button>
+                <button class="mk-btn-del" title="Delete" onclick="this.closest('.mk-draft-item').remove()"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="mk-panel">
+          <div class="mk-panel-hdr">
+            <div class="mk-panel-title"><span class="material-icons">timeline</span>Recent Activity</div>
+            <a href="#" class="mk-panel-action">View all <span class="material-icons">chevron_right</span></a>
+          </div>
+          <div class="mk-act-body">
+            <div class="mk-act-item">
+              <span class="mk-act-dot mk-act-dot-submit"></span>
+              <div class="mk-act-content"><div class="mk-act-title">REF-BP-2026-0412 submitted for approval</div><div class="mk-act-time">Today, 09:15 AM</div></div>
+            </div>
+            <div class="mk-act-item">
+              <span class="mk-act-dot mk-act-dot-submit"></span>
+              <div class="mk-act-content"><div class="mk-act-title">REF-IT-2026-0411 submitted for approval</div><div class="mk-act-time">Today, 08:42 AM</div></div>
+            </div>
+            <div class="mk-act-item">
+              <span class="mk-act-dot mk-act-dot-approved"></span>
+              <div class="mk-act-content"><div class="mk-act-title">REF-IN-2026-0408 approved by checker</div><div class="mk-act-time">Yesterday, 03:22 PM</div></div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+      </div>
+
+
+
+    </div><!-- /mk-wrap -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <span>&copy; 2026 azentio software. All rights reserved.</span>
+    <div>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Security</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </footer>
+</div><!-- /app-main -->
+
+<script src="js/app.js"></script>
+<script src="js/shared.js"></script>
+<script>
+// ── KPI Count-up animations ──
+(function(){
+  var mkKpis=[
+    {id:'mkKpi1', target:5},
+    {id:'mkKpi2', target:2},
+    {id:'mkKpi3', target:23},
+    {id:'mkKpi4', target:5}
+  ];
+  function countUp(el, target){
+    var dur=1100, start=performance.now();
+    function frame(now){
+      var p=Math.min((now-start)/dur,1);
+      var ease=1-Math.pow(1-p,4);
+      el.textContent=Math.round(target*ease);
+      if(p<1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  setTimeout(function(){
+    mkKpis.forEach(function(k){
+      var el=document.getElementById(k.id);
+      if(el) countUp(el, k.target);
+    });
+  },300);
+})();
+
+// ── Limit bars ──
+var limits=[
+  {id:'lim1', pct:71},
+  {id:'lim2', pct:40},
+  {id:'lim3', pct:15},
+  {id:'lim4', pct:46}
+];
+setTimeout(function(){
+  limits.forEach(function(l){
+    var el=document.getElementById(l.id);
+    if(el) el.style.width=l.pct+'%';
+  });
+},400);
+
+// ── Submit row ──
+function submitRow(btn){
+  btn.innerHTML='<span class="material-icons" style="font-size:13px">check</span> Sent';
+  btn.style.background='#edfbf4';
+  btn.style.color='#1a9e62';
+  btn.style.borderColor='#b8f0d8';
+  btn.disabled=true;
+  var row=btn.closest('tr');
+  if(row){
+    var chip=row.querySelector('.mk-chip');
+    if(chip){
+      chip.className='mk-chip mk-chip-submitted';
+      chip.innerHTML='<span class="mk-chip-dot dot-submitted"></span>Submitted';
+    }
+  }
+}
+
+// ── Submit All ──
+function submitAll(){
+  var btn=document.getElementById('btnSubmitAll');
+  btn.innerHTML='<span class="material-icons" style="font-size:13px">check</span> All Submitted';
+  btn.style.background='#1a9e62';
+  btn.disabled=true;
+  var bar=document.getElementById('ctaBar');
+  if(bar){
+    bar.querySelector('.mk-cta-title').textContent='All 3 transactions submitted for checker review';
+    bar.style.background='#edfbf4';
+    bar.style.borderColor='#b8f0d8';
+    bar.style.borderLeftColor='#1a9e62';
+    bar.querySelector('.mk-cta-icon').style.background='#d6f5e7';
+    bar.querySelector('.mk-cta-icon').style.borderColor='#b8f0d8';
+    bar.querySelector('.mk-cta-icon .material-icons').style.color='#1a9e62';
+  }
+  // Update draft rows
+  document.querySelectorAll('.mk-row-submit').forEach(function(b){ submitRow(b); });
+}
+
+// ── Sidebar nav ──
+document.querySelectorAll('.sb-item').forEach(function(item){
+  item.addEventListener('click',function(){
+    if(!this.getAttribute('onclick')){
+      document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active-section'); });
+      this.classList.add('active-section');
+    }
+  });
+});
+
+// ── Sidebar search ──
+function sbFilter(q){
+  var cl=document.getElementById('sbSearchClear');
+  if(cl) cl.style.display=q?'flex':'none';
+  var items=document.querySelectorAll('.sb-item');
+  items.forEach(function(item){
+    var lbl=(item.dataset.label||item.querySelector('.sb-label')?.textContent||'').toLowerCase();
+    item.style.display=(!q||lbl.includes(q.toLowerCase()))?'':'none';
+  });
+}
+// ── Pipeline click → filter submissions table ──
+function mkPipeFilter(status){
+  var btn=document.querySelector('.mk-ftab[onclick*="\''+status+'\'"]');
+  if(btn) mkFilterTable(status, btn);
+}
+
+
+// ── Stat box click → filter table + scroll ──
+function mkStatClick(status) {
+  var tabs = document.querySelectorAll('.mk-ftab');
+  var tab = null;
+  tabs.forEach(function(t) {
+    var oc = t.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + status + "'") > -1) tab = t;
+  });
+  if (!tab) tab = tabs[0];
+  if (tab) mkFilterTable(status, tab);
+  var panel = document.querySelector('.mk-main-two-col');
+  if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Search filter ──
+function mkSearchTable(q) {
+  var rows = document.querySelectorAll('#mkSubTable tbody tr');
+  q = q.toLowerCase();
+  rows.forEach(function(row) {
+    var text = row.textContent.toLowerCase();
+    row.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+  mkCheckEmpty();
+}
+
+// ── Check / show empty state + update row count ──
+function mkCheckEmpty() {
+  var allRows = document.querySelectorAll('#mkSubTable tbody tr');
+  var visible = Array.from(allRows).filter(function(r){ return r.style.display !== 'none'; });
+  var es = document.getElementById('mkEmptyState');
+  if (es) es.style.display = visible.length === 0 ? 'flex' : 'none';
+  var countEl = document.getElementById('mkSubRowCount');
+  if (countEl) countEl.textContent = 'Showing ' + visible.length + ' of 24';
+}
+
+// ── Submissions filter ──
+function mkFilterTable(status, btn){
+  document.querySelectorAll('.mk-ftab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('#mkSubTable tbody tr').forEach(function(row){
+    row.style.display=(status==='all'||row.dataset.status===status)?'':'none';
+  });
+  mkCheckEmpty();
+}
+
+// ── Table sort ──
+var mkSortState = {};
+function mkSortTable(btn, colIdx) {
+  var dir = mkSortState[colIdx] === 'asc' ? 'desc' : 'asc';
+  mkSortState = {};
+  mkSortState[colIdx] = dir;
+  document.querySelectorAll('.mk-sort-btn').forEach(function(b) {
+    b.querySelector('.mk-sort-ico').textContent = '↕';
+    b.classList.remove('mk-sort-asc','mk-sort-desc');
+  });
+  btn.querySelector('.mk-sort-ico').textContent = dir === 'asc' ? '↑' : '↓';
+  btn.classList.add(dir === 'asc' ? 'mk-sort-asc' : 'mk-sort-desc');
+  var tbody = document.querySelector('#mkSubTable tbody');
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort(function(a, b) {
+    var aVal = a.cells[colIdx] ? a.cells[colIdx].textContent.trim() : '';
+    var bVal = b.cells[colIdx] ? b.cells[colIdx].textContent.trim() : '';
+    if (colIdx === 2) {
+      aVal = parseFloat(aVal.replace(/[^0-9.]/g,'')) || 0;
+      bVal = parseFloat(bVal.replace(/[^0-9.]/g,'')) || 0;
+      return dir === 'asc' ? aVal - bVal : bVal - aVal;
+    }
+    return dir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+  });
+  rows.forEach(function(row) { tbody.appendChild(row); });
+}
+
+// ── Upcoming Payments filter ──
+function mkUpFilter(type, btn) {
+  document.querySelectorAll('.mk-up-filter').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.mk-up-item').forEach(function(item){
+    item.style.display = (type === 'all' || item.dataset.type === type) ? '' : 'none';
+  });
+}
+
+// ── Delete All Drafts ──
+function mkDeleteAllDrafts() {
+  if (!confirm('Delete all 5 drafts? This cannot be undone.')) return;
+  var body = document.getElementById('mkDraftBody');
+  if (body) body.innerHTML = '<div style="text-align:center;padding:2rem 1.75rem;color:var(--az-muted);font-size:.8125rem;">No drafts saved</div>';
+}
+
+// ── Dismiss insight item ──
+function mkDismissInsight(btn) {
+  var item = btn.closest('.mk-si-item');
+  if (item) item.remove();
+  var list = document.getElementById('mkSiList');
+  var count = document.getElementById('mkSiCount');
+  if (list) {
+    var remaining = list.querySelectorAll('.mk-si-item').length;
+    if (count) count.textContent = remaining + (remaining === 1 ? ' tip' : ' tips');
+    var empty = document.getElementById('mkSiEmpty');
+    if (empty) empty.style.display = remaining === 0 ? 'block' : 'none';
+  }
+}
+
+// ── Conditional welcome nudge ──
+(function() {
+  var returnedCount = 2; // set to 0 when no returned items
+  var nudgeUrgent = document.getElementById('mkWbNudge');
+  var nudgeClear  = document.getElementById('mkWbNudgeClear');
+  if (!nudgeUrgent || !nudgeClear) return;
+  if (returnedCount > 0) {
+    nudgeUrgent.style.display = '';
+    nudgeClear.style.display  = 'none';
+  } else {
+    nudgeUrgent.style.display = 'none';
+    nudgeClear.style.display  = '';
+  }
+})();
+
+function mkToggleKebab(btn) {
+  var menu = btn.nextElementSibling;
+  var isOpen = menu.classList.contains('open');
+  document.querySelectorAll('.mk-kebab-menu.open').forEach(function(m){ m.classList.remove('open'); });
+  if (!isOpen) menu.classList.add('open');
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.mk-kebab-wrap')) {
+    document.querySelectorAll('.mk-kebab-menu.open').forEach(function(m){ m.classList.remove('open'); });
+  }
+});
+
+</script>
+
+<!-- ████ ROLE SWITCH MODAL ████ -->
+<div class="rm-overlay" id="roleModal" role="dialog" aria-modal="true" aria-label="Switch Role">
+  <div class="rm-modal">
+    <div class="rm-hdr">
+      <div class="rm-title">Switch Role</div>
+      <button class="rm-close" onclick="closeRoleModal()" aria-label="Close">&times;</button>
+    </div>
+    <div style="padding:.75rem 1.5rem 0">
+      <div class="rm-stepper">
+        <div class="rm-step-dot active" id="rdot1"></div>
+        <div class="rm-step-dot" id="rdot2"></div>
+      </div>
+    </div>
+    <div class="rm-body">
+      <div class="rm-step active" id="rmStep1">
+        <div class="rm-step-label">Step 1 of 2 — Select Role</div>
+        <div class="rm-roles">
+          <div class="rm-role-card disabled" id="rmCardMaker">
+            <div class="rm-role-icon" style="background:var(--mk-bg)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mk-color)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div class="rm-role-name">Maker</div>
+            <div class="rm-role-desc">Create &amp; submit transactions<br><span style="font-size:.7rem;color:var(--mk-color);font-weight:600">Current role</span></div>
+          </div>
+          <div class="rm-role-card" id="rmCardChecker" onclick="selectRole('checker')">
+            <div class="rm-role-icon" style="background:var(--ck-bg)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ck-color)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            <div class="rm-role-name">Checker <span class="rm-badge">12 pending</span></div>
+            <div class="rm-role-desc">Review &amp; approve transactions</div>
+          </div>
+        </div>
+      </div>
+      <div class="rm-step" id="rmStep2">
+        <div class="rm-step-label">Step 2 of 2 — Confirm Switch</div>
+        <div class="rm-field">
+          <label for="rmReason">Reason for switching role</label>
+          <select id="rmReason">
+            <option value="">Select a reason…</option>
+            <option>Checker unavailable</option>
+            <option>Authorised dual-role access</option>
+            <option>Urgent approval required</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="rm-step" id="rmStep3">
+        <div class="rm-success">
+          <div class="rm-success-ico">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--sla-safe-fg,#1a9e62)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div style="font-size:1rem;font-weight:700;color:var(--az-navy);margin-bottom:.375rem">Role switched to Checker</div>
+          <div style="font-size:.8125rem;color:var(--az-muted)">Redirecting to Checker Dashboard…</div>
+        </div>
+      </div>
+    </div>
+    <div class="rm-footer" id="rmFooter">
+      <button class="btn-rm-cancel" onclick="closeRoleModal()">Cancel</button>
+      <button class="btn-rm-next" id="rmNextBtn" onclick="rmNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ── Role Switch Modal ──
+var rmStep = 1;
+var selRole = null;
+function openRoleModal() {
+  rmStep = 1; selRole = null;
+  document.getElementById('rmCardChecker').classList.remove('selected');
+  ['rmStep1','rmStep2','rmStep3'].forEach(function(id,i){ document.getElementById(id).classList.toggle('active', i===0); });
+  ['rdot1','rdot2'].forEach(function(id,i){ document.getElementById(id).classList.toggle('active', i===0); });
+  document.getElementById('rmNextBtn').textContent = 'Next';
+  document.getElementById('rmFooter').style.display = 'flex';
+  if(document.getElementById('rmReason')) document.getElementById('rmReason').value='';
+  document.getElementById('roleModal').classList.add('open');
+}
+function closeRoleModal() { document.getElementById('roleModal').classList.remove('open'); }
+function selectRole(r) {
+  selRole = r;
+  document.querySelectorAll('.rm-role-card:not(.disabled)').forEach(function(c){ c.classList.remove('selected'); });
+  document.getElementById('rmCardChecker').classList.add('selected');
+}
+function rmNext() {
+  if(rmStep===1) {
+    if(!selRole){ alert('Please select a role to switch to.'); return; }
+    rmStep=2;
+    document.getElementById('rmStep1').classList.remove('active');
+    document.getElementById('rmStep2').classList.add('active');
+    document.getElementById('rdot1').classList.remove('active');
+    document.getElementById('rdot2').classList.add('active');
+    document.getElementById('rmNextBtn').textContent = 'Confirm Switch';
+  } else if(rmStep===2) {
+    var reason=document.getElementById('rmReason').value;
+    if(!reason){ alert('Please select a reason for switching.'); return; }
+    rmStep=3;
+    document.getElementById('rmStep2').classList.remove('active');
+    document.getElementById('rmStep3').classList.add('active');
+    document.getElementById('rdot2').classList.add('active');
+    document.getElementById('rmFooter').style.display='none';
+    setTimeout(function(){ window.location.href='checker-dashboard.html'; }, 2000);
+  }
+}
+document.getElementById('roleModal').addEventListener('click', function(e){
+  if(e.target===this) closeRoleModal();
+});
+</script>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

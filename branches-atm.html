@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – Branches & ATM Locations</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{font-family:'Roboto',-apple-system,sans-serif;font-size:14px;color:#16303d;background:#fff;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+    .f-input{width:100%;border:1.5px solid #e2e8ec;border-radius:6px;padding:.5rem .75rem;font-family:'Roboto',sans-serif;font-size:.8125rem;color:#16303d;background:#fff;outline:none;transition:border-color .15s}
+    .f-input:focus{border-color:#2ed88e;box-shadow:0 0 0 3px rgba(46,216,142,.1)}
+    .f-select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E") no-repeat right 10px center;cursor:pointer}
+    .btn-primary{padding:.5rem 1.5rem;background:#16303d;color:#fff;border:none;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
+    .btn-primary:hover{background:#1e4356;color:#fff}
+    .btn-green{padding:.5rem 1.5rem;background:#2ed88e;color:#fff;border:none;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
+    .btn-green:hover{background:#25c47e}
+    .acc-card{border:1.5px solid #e2e8ec;border-radius:8px;overflow:hidden;margin-bottom:.875rem}
+    .acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;cursor:pointer;background:#fff;transition:background .1s}
+    .acc-hdr:hover{background:#f8f9fa}
+    .acc-hdr.open{background:#edfaf6}
+    .acc-body{padding:.875rem 1rem;border-top:1px solid #e2e8ec;display:none}
+    .acc-body.show{display:block}
+    .loc-tab{padding:.4375rem 1.25rem;background:#fff;border:1.5px solid #e2e8ec;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:500;color:#16303d;cursor:pointer;transition:all .12s}
+.loc-tab:first-child{border-radius:6px 0 0 6px}
+.loc-tab:last-child{border-radius:0 6px 6px 0}
+.loc-tab.loc-active{background:#2ed88e;border-color:#2ed88e;color:#fff;font-weight:700}
+.f-input{width:100%;border:1.5px solid #e2e8ec;border-radius:6px;padding:.5rem .75rem;font-family:'Roboto',sans-serif;font-size:.8125rem;color:#16303d;background:#fff;outline:none;transition:border-color .15s}
+.f-input:focus{border-color:#2ed88e}
+.f-select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E") no-repeat right 10px center;cursor:pointer}
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+</head>
+<body>
+<header style="height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:#fff;border-bottom:1px solid #e2e8ec;position:sticky;top:0;z-index:100">
+  <a href="index.html" style="text-decoration:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="120" height="26" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></a>
+  <div style="display:flex;align-items:center;gap:6px">
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div style="width:1px;height:24px;background:#e2e8ec;margin:0 4px"></div>
+    <button style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;color:#16303d;padding:5px 8px;border-radius:6px">
+      ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#16303d"/></svg>
+    </button>
+  </div>
+</header>
+<div style="display:flex;flex:1;overflow:hidden">
+<aside class="prelogin-sidebar">
+  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h1"/><path d="M16 11l2 2 4-4"/></svg></span>
+    <span>Login</span>
+  </a>
+  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></span>
+    <span>Create Account</span>
+  </a>
+  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+    <span>Become Our Customer</span>
+  </a>
+  <div class="sidebar-divider" style="height:1px;background:#d0dade;margin:.25rem .875rem .25rem 3rem"></div>
+  <a href="bank-products.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M3 5l18 0"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+    <span>Bank Products</span>
+  </a>
+  <a href="branches-atm.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:700;color:#fff;text-decoration:none;border-left:3px solid #2ed88e;background:#2ed88e;color:#fff;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+    <span>Branches and ATM locations</span>
+  </a>
+  <a href="currency-exchange-rate.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+    <span>Currency Exchange Rate</span>
+  </a>
+  <a href="financial-calculator.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg></span>
+    <span>Financial Calculator</span>
+  </a>
+  <a href="faq.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+    <span>Frequently Asked Questions</span>
+  </a>
+  <a href="islamic-utilities.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
+    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
+    <span>Islamic Utilities</span>
+  </a>
+  <div class="sidebar-divider" style="height:1px;background:#d0dade;margin:.25rem .875rem .25rem 3rem"></div>
+</aside>
+  <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+    <main style="flex:1;padding:1.5rem 2rem">
+<div style="display:flex;align-items:center;gap:.25rem;margin-bottom:1rem"><a href="index.html" style="color:#16303d;text-decoration:none">Home</a> <span style="color:#8a979e;margin:0 4px">›</span> <span style="color:#8a979e">Branches &amp; ATMs Locator</span></div>
+<div style="display:flex;gap:1.5rem;height:calc(100vh - 56px - 46px - 48px - 40px)">
+  <!-- Left detail panel -->
+  <div style="width:320px;flex-shrink:0">
+    <!-- Type tabs -->
+    <div style="display:flex;gap:0;margin-bottom:1.25rem">
+      <button onclick="switchLocTab('all',this)" class="loc-tab">All</button>
+      <button onclick="switchLocTab('branch',this)" class="loc-tab loc-active">Branches</button>
+      <button onclick="switchLocTab('atm',this)" class="loc-tab">ATM</button>
+    </div>
+    <!-- Detail: Branch -->
+    <div id="detailBranch">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">Branch</h3>
+      <div style="margin-bottom:.375rem"><span style="font-size:.875rem;color:#16303d"><strong>Branch name:</strong>&nbsp; Lorem ipsum</span></div>
+      <div style="margin-bottom:.375rem"><span style="font-size:.875rem;color:#16303d"><strong>Manager:</strong>&nbsp; Lorem ipsum</span></div>
+      <div style="display:flex;align-items:center;gap:.375rem;margin-bottom:.875rem;padding-bottom:.875rem;border-bottom:1px solid #e2e8ec">
+        <strong style="font-size:.875rem">Tel:</strong>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span style="font-size:.875rem;color:#16303d">9878976567</span>
+      </div>
+      <h4 style="font-size:.9375rem;font-weight:700;margin-bottom:.375rem">Location</h4>
+      <p style="font-size:.875rem;color:#16303d;margin-bottom:.875rem;padding-bottom:.875rem;border-bottom:1px solid #e2e8ec">Lorem ipsum dolor sit amet</p>
+      <h4 style="font-size:.9375rem;font-weight:700;margin-bottom:.375rem">Opening Hours</h4>
+      <p style="font-size:.875rem;color:#16303d">Monday to Friday :&nbsp;&nbsp;9:00AM to 6.00PM</p>
+    </div>
+    <!-- Detail: ATM (hidden) -->
+    <div id="detailATM" style="display:none">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">ATM</h3>
+      <div style="margin-bottom:.875rem;padding-bottom:.875rem;border-bottom:1px solid #e2e8ec"><span style="font-size:.875rem"><strong>Country:</strong>&nbsp; Lorem ipsum</span></div>
+      <h4 style="font-size:.9375rem;font-weight:700;margin-bottom:.375rem">Location</h4>
+      <p style="font-size:.875rem;color:#16303d">Lorem ipsum dolor sit amet</p>
+    </div>
+  </div>
+
+  <!-- Right: map + filters -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:.875rem">
+    <!-- Filters row -->
+    <div style="display:flex;align-items:flex-end;gap:.875rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px">
+        <label style="font-size:.8125rem;font-weight:500;display:block;margin-bottom:.25rem">Country</label>
+        <select class="f-input f-select" style="height:36px;padding:.4rem .75rem"><option value="">Select</option><option>Lebanon</option><option>UAE</option><option>Saudi Arabia</option></select>
+      </div>
+      <div style="flex:1;min-width:120px">
+        <label style="font-size:.8125rem;font-weight:500;display:block;margin-bottom:.25rem">Province</label>
+        <select class="f-input f-select" style="height:36px;padding:.4rem .75rem"><option value="">Select</option><option>Beirut</option><option>Mount Lebanon</option></select>
+      </div>
+      <div style="flex:1;min-width:120px">
+        <label style="font-size:.8125rem;font-weight:500;display:block;margin-bottom:.25rem">City</label>
+        <select class="f-input f-select" style="height:36px;padding:.4rem .75rem"><option value="">Select</option><option>Beirut</option><option>Tripoli</option></select>
+      </div>
+      <button style="width:36px;height:36px;border:1.5px solid #e2e8ec;border-radius:6px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button style="width:36px;height:36px;border:1.5px solid #e2e8ec;border-radius:6px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="2" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      </button>
+    </div>
+    <!-- Map -->
+    <div style="height:450px;border-radius:10px;overflow:hidden;border:1px solid #e2e8ec">
+      <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=35.4,33.8,35.65,33.95&layer=mapnik" title="Beirut Map" style="width:100%;height:100%;border:none;display:block" loading="lazy"></iframe>
+    </div>
+    <!-- Bottom action buttons -->
+    <div style="display:flex;gap:.875rem">
+      <button style="flex:1;padding:.625rem;border:1.5px solid #16303d;background:#fff;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.8125rem;font-weight:700;color:#16303d;cursor:pointer;letter-spacing:.04em">MY LOCATOR</button>
+      <button style="flex:1;padding:.625rem;border:1.5px solid #16303d;background:#fff;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.8125rem;font-weight:700;color:#16303d;cursor:pointer;letter-spacing:.04em">NEAREST BRANCH</button>
+    </div>
+  </div>
+</div>
+    </main>
+<footer style="height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;border-top:1px solid #e2e8ec;background:#fff;font-size:12px;color:#8a979e">
+  <div>Copyright 2025. All Rights Reserved &nbsp;<a href="#" style="color:#8a979e;text-decoration:none">Terms and conditions</a>&nbsp;<a href="#" style="color:#8a979e;text-decoration:none">About App</a></div>
+  <div style="display:flex;align-items:center;gap:8px"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <div style="display:flex;gap:3px">
+      <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:11px;font-weight:700;cursor:pointer">A<sup>-</sup></button>
+      <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:12px;font-weight:700;cursor:pointer">A</button>
+      <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:11px;font-weight:700;cursor:pointer">A<sup>+</sup></button>
+      <button style="border:1px solid #e2e8ec;background:#16303d;color:#fff;border-radius:3px;padding:2px 6px;font-size:11px;cursor:pointer">&#9681;</button>
+    </div>
+  </div>
+</footer>
+  </div>
+</div>
+<script>
+function switchLocTab(tab,btn){
+  document.querySelectorAll('.loc-tab').forEach(function(b){b.classList.remove('loc-active')});
+  btn.classList.add('loc-active');
+  document.getElementById('detailBranch').style.display=(tab==='branch'||tab==='all')?'':'none';
+  document.getElementById('detailATM').style.display=(tab==='atm')?'':'none';
+}
+</script>
+<script src="js/app.js"></script>
+</body>
+</html>

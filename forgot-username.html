@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Azentio – Forgot Username</title>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <style>
+    :root{--az-green:#2ed88e;--az-navy:#16303d;--az-blue:#0085db;--az-muted:#8a979e;--az-border:#e2e8ec;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{height:100%;}
+    body{min-height:100vh;font-family:'Roboto',sans-serif;font-size:14px;color:var(--az-navy);background:#f4f7f9;display:flex;flex-direction:column;}
+
+    /* ── Header ── */
+    .fu-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem 0 .75rem;height:56px;background:#fff;border-bottom:1px solid var(--az-border);flex-shrink:0;z-index:100;}
+    .fu-hdr-left{display:flex;align-items:center;gap:.5rem;}
+    .fu-hamburger{background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;color:var(--az-navy);transition:background .12s;flex-shrink:0;}
+    .fu-hamburger:hover{background:#f0f4f6;}
+    .fu-hamburger .material-icons{font-size:22px;}
+    /* Left panel collapse */
+    .fu-left{transition:width .22s,padding .22s;}
+    .fu-left.collapsed{width:48px!important;min-width:0!important;padding:.75rem 0!important;overflow:hidden!important;}
+    .fu-left.collapsed .fu-left-title,
+    .fu-left.collapsed .fu-step-name,
+    .fu-left.collapsed .fu-step-desc{display:none;}
+    .fu-left.collapsed .fu-step-item{padding:.5rem 0;justify-content:center;background:rgba(46,216,142,.08);border-radius:8px;margin:0 6px;}
+    .fu-left.collapsed .fu-step-num{margin:0 auto;display:flex;}
+    .fu-hdr-right{display:flex;align-items:center;gap:.25rem;}
+    .fu-hdr-icon{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;text-decoration:none;transition:background .12s;}
+    .fu-hdr-icon:hover{background:#f0f4f6;}
+    .fu-hdr-div{width:1px;height:22px;background:var(--az-border);margin:0 6px;}
+    .fu-lang-wrap{position:relative;}
+    .fu-lang-btn{display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;color:var(--az-navy);padding:6px 8px;border-radius:6px;transition:background .12s;}
+    .fu-lang-btn:hover{background:#f0f4f6;}
+    .fu-lang-menu{position:absolute;top:calc(100%+6px);right:0;background:#fff;border:1px solid var(--az-border);border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.1);min-width:130px;overflow:hidden;display:none;z-index:200;}
+    .fu-lang-menu.open{display:block;}
+    .fu-lang-opt{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:8px 14px;font-family:'Roboto',sans-serif;font-size:13px;cursor:pointer;color:var(--az-navy);text-align:left;transition:background .1s;}
+    .fu-lang-opt:hover,.fu-lang-opt.active{background:#f4f9f7;}
+
+    /* ── 3-panel layout ── */
+    .fu-layout{display:flex;flex:1;align-items:stretch;}
+
+    /* LEFT panel */
+    .fu-left{width:220px;flex-shrink:0;background:#f0f2f4;border-right:1px solid var(--az-border);padding:1.5rem 1rem;display:flex;flex-direction:column;overflow-y:auto;}
+    .fu-left-title{font-size:.6875rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--az-muted);margin-bottom:.875rem;padding:0 .375rem;}
+    .fu-step-item{display:flex;align-items:center;gap:.75rem;padding:.625rem .75rem;border-radius:8px;background:rgba(46,216,142,.08);}
+    .fu-step-num{width:26px;height:26px;border-radius:50%;background:var(--az-green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;}
+    .fu-step-name{font-size:.8125rem;font-weight:600;color:var(--az-navy);}
+    .fu-step-desc{font-size:.7rem;color:var(--az-muted);margin-top:1px;}
+
+    /* CENTER */
+    .fu-center{flex:1;display:flex;flex-direction:column;background:#fff;min-width:0;}
+    .fu-breadcrumb{padding:.375rem 1.5rem;font-size:.75rem;color:var(--az-muted);background:#fff;flex-shrink:0;}
+    .fu-breadcrumb a{color:var(--az-blue);text-decoration:none;}
+    .fu-breadcrumb a:hover{text-decoration:underline;}
+    .fu-breadcrumb .sep{margin:0 .375rem;color:#ccc;}
+    .fu-page-bar{padding:.5rem 1.5rem .375rem;background:#fff;flex-shrink:0;}
+    .fu-page-title{font-size:1rem;font-weight:700;color:var(--az-navy);}
+    .fu-content{flex:1;padding:.75rem 1.5rem;}
+
+    /* Section cards */
+    .sec-card{background:#fff;border:none;border-radius:8px;margin-bottom:.625rem;overflow:hidden;}
+    .sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;font-size:.8125rem;font-weight:700;background:#f8f9fa;color:#374151;cursor:pointer;user-select:none;transition:background .12s;}
+    .sec-hdr:hover{background:#f0f2f4;}
+    .sec-hdr .chev{transition:transform .22s;flex-shrink:0;font-size:18px;color:#374151;}
+    .sec-hdr[aria-expanded="false"] .chev{transform:rotate(-180deg);}
+    .sec-body{padding:.75rem 1rem;border-top:1px solid var(--az-border);}
+
+    /* Form fields */
+    .f-label{display:block;font-size:.8rem;font-weight:600;color:var(--az-navy);margin-bottom:.2rem;}
+    .f-input{width:100%;border:1.5px solid var(--az-border);border-radius:6px;padding:6px 9px;font-family:'Roboto',sans-serif;font-size:12.5px;color:var(--az-navy);background:#fff;outline:none;transition:border-color .15s;}
+    .f-input:focus{border-color:var(--az-green);box-shadow:0 0 0 3px rgba(46,216,142,.1);}
+    .f-input::placeholder{color:#b8c4cc;}
+    .f-input[type="date"]{color-scheme:light;}
+    .f-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%238a979e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;}
+    .date-placeholder{position:relative;}
+    .date-placeholder .f-input{padding-right:34px;}
+    .date-cal-icon{position:absolute;right:9px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;}
+
+    /* Phone field */
+    .phone-wrap{display:flex;border:1.5px solid var(--az-border);border-radius:7px;overflow:hidden;transition:border-color .15s;}
+    .phone-wrap:focus-within{border-color:var(--az-green);box-shadow:0 0 0 3px rgba(46,216,142,.1);}
+    .phone-pfx{display:flex;align-items:center;gap:5px;padding:0 9px;background:#f4f7f9;border-right:1px solid var(--az-border);}
+    .phone-pfx select{background:none;border:none;font-size:12.5px;color:var(--az-navy);outline:none;cursor:pointer;}
+    .phone-wrap input{flex:1;border:none;padding:6px 9px;font-size:12.5px;color:var(--az-navy);outline:none;background:transparent;}
+
+    /* Form footer */
+    .fu-form-footer{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;padding:.625rem 1.5rem;background:#fff;border-top:1px solid var(--az-border);flex-shrink:0;}
+    .tc-row{display:flex;align-items:center;gap:.5rem;flex:1;}
+    .tc-row input[type=checkbox]{accent-color:var(--az-green);width:15px;height:15px;cursor:pointer;}
+    .tc-row label{font-size:.8rem;color:var(--az-muted);cursor:pointer;}
+    .tc-row a{color:var(--az-blue);text-decoration:none;}
+    .tc-row a:hover{text-decoration:underline;}
+    .btn-action{padding:7px 20px;border-radius:7px;font-family:'Roboto',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s;letter-spacing:.02em;text-decoration:none;display:inline-flex;align-items:center;}
+    .btn-submit{background:var(--az-navy);color:#fff;box-shadow:0 2px 8px rgba(22,48,61,.2);}
+    .btn-submit:hover{background:#1e4356;}
+    .btn-cancel{background:none;border:1.5px solid var(--az-border);color:var(--az-muted);}
+    .btn-cancel:hover{background:#f4f7f9;color:var(--az-navy);}
+
+    /* RIGHT aside */
+    .fu-right{width:310px;flex-shrink:0;background:#edfaf6;border-left:1px solid #cdeade;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;overflow-y:auto;}
+    .fu-right-title{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted);margin-bottom:.125rem;}
+    .fu-help-card{background:#fff;border:1px solid #cdeade;border-radius:10px;overflow:hidden;}
+    .fu-help-card-hdr{display:flex;align-items:center;gap:.5rem;font-size:.8125rem;font-weight:700;color:var(--az-navy);padding:.75rem 1rem;cursor:pointer;user-select:none;}
+    .fu-help-card-hdr .material-icons.hic{font-size:16px;color:var(--az-green);}
+    .fu-help-card-hdr .material-icons.hchev{font-size:16px;color:var(--az-muted);margin-left:auto;transition:transform .2s;}
+    .fu-help-card-hdr[aria-expanded="true"] .hchev{transform:rotate(-180deg);}
+    .fu-help-card-body{padding:0 1rem .75rem;}
+    .fu-help-tip{display:flex;gap:.5rem;align-items:flex-start;margin-bottom:.5rem;}
+    .fu-help-tip:last-child{margin-bottom:0;}
+    .fu-help-tip .tip-dot{width:6px;height:6px;border-radius:50%;background:var(--az-green);margin-top:.35rem;flex-shrink:0;}
+    .fu-help-tip span{font-size:.775rem;color:#556b76;line-height:1.55;}
+    .fu-help-tip strong{color:var(--az-navy);}
+    .fu-help-divider{height:1px;background:#cdeade;margin:.125rem 0;}
+    .fu-contact-row{display:flex;align-items:center;gap:.625rem;padding:.5rem 0;}
+    .fu-contact-row .material-icons{font-size:18px;color:var(--az-blue);}
+    .fu-contact-label{font-size:.75rem;color:#556b76;line-height:1.4;}
+    .fu-contact-label strong{display:block;color:var(--az-navy);font-size:.8rem;}
+    .fu-info-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;background:#e0f7ee;color:#0a7a4a;border:1px solid #b3e6ce;border-radius:20px;padding:.15rem .6rem;font-weight:600;}
+
+    /* Footer */
+    .fu-footer{flex-shrink:0;background:#fff;border-top:1px solid var(--az-border);display:flex;align-items:center;justify-content:space-between;padding:.5rem 2rem;font-size:.75rem;color:var(--az-muted);}
+    .fu-footer a{color:var(--az-muted);text-decoration:none;margin-left:1rem;}
+    .fu-footer a:hover{color:var(--az-navy);}
+    .acc-btns{display:flex;gap:4px;margin-left:.75rem;}
+    .acc-btn{background:none;border:1px solid var(--az-border);border-radius:4px;cursor:pointer;padding:2px 7px;font-size:12px;color:var(--az-navy);}
+    .acc-btn:hover{background:#f4f7f9;}
+
+    /* Modal */
+    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;align-items:center;justify-content:center;}
+    .modal-ov.hidden{display:none!important;}
+    .az-modal{background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;}
+    .modal-sm{max-width:420px;width:90%;}
+    .modal-md{max-width:520px;width:90%;}
+    .modal-title{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--az-border);font-weight:700;color:var(--az-navy);}
+    .modal-close-btn{background:none;border:none;cursor:pointer;color:var(--az-muted);display:flex;align-items:center;}
+    .modal-close-btn:hover{color:var(--az-navy);}
+
+    .row{display:flex;flex-wrap:wrap;margin:0 -.375rem;}
+    .g-3>.col-md-4,.g-3>.col-md-6{padding:.25rem;}
+    .col-md-4{width:33.333%;}
+    .col-md-6{width:50%;}
+    .mb-3{margin-bottom:.75rem;}
+    .position-relative{position:relative;}
+
+    @media(max-width:900px){.fu-right{display:none;}}
+    @media(max-width:640px){.fu-left{display:none;}.col-md-4,.col-md-6{width:100%;}}
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="fu-hdr">
+  <div class="fu-hdr-left">
+    <button class="fu-hamburger" id="fuCollapseBtn" onclick="toggleLeftPanel()" aria-label="Toggle navigation" title="Toggle sidebar">
+      <span class="material-icons" id="fuHamburgerIcon">menu</span>
+    </button>
+    <a href="login.html" aria-label="Azentio home"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="34" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg>
+  </a></div>
+  <div class="fu-hdr-right">
+    <a href="contact-us.html" class="fu-hdr-icon" title="Contact Us"><img src="images/icons/call_us.svg" width="22" height="22" alt="Contact"/></a>
+    <a href="faq.html" class="fu-hdr-icon" title="Help"><img src="images/icons/information.svg" width="22" height="22" alt="Help"/></a>
+    <div class="fu-hdr-div"></div>
+    <div class="fu-lang-wrap">
+      <button class="fu-lang-btn" id="fuLangBtn" onclick="toggleFuLang()">
+        <span class="fi fi-us"></span><span id="fuLangCode">ENG</span>
+        <svg width="9" height="6" viewBox="0 0 10 7" fill="none"><path d="M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z" fill="#16303d"/></svg>
+      </button>
+      <div class="fu-lang-menu" id="fuLangMenu">
+        <button class="fu-lang-opt active" onclick="setFuLang('ENG','us',this)"><span class="fi fi-us"></span> English</button>
+        <button class="fu-lang-opt" onclick="setFuLang('FR','fr',this)"><span class="fi fi-fr"></span> French</button>
+        <button class="fu-lang-opt" onclick="setFuLang('عربي','sa',this)"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="fu-layout">
+
+  <!-- LEFT: single step entry, no collapse button -->
+  <aside class="fu-left">
+    <div class="fu-left-title">Steps</div>
+    <div class="fu-step-item">
+      <div class="fu-step-num">1</div>
+      <div>
+        <div class="fu-step-name">Identification Details</div>
+        <div class="fu-step-desc">Account &amp; identity info</div>
+      </div>
+    </div>
+  </aside><!-- /.fu-left -->
+
+  <!-- CENTER -->
+  <div class="fu-center">
+    <div class="fu-breadcrumb"><a href="login.html">Home</a><span class="sep">›</span><span>Identification details</span></div>
+    <div class="fu-page-bar"><div class="fu-page-title">Forgot Username</div></div>
+    <div class="fu-content">
+
+      <div class="sec-card">
+        <div class="sec-hdr" onclick="toggleSec('fuSecId')" aria-expanded="true">
+          Identification details
+          <span class="material-icons chev">expand_more</span>
+        </div>
+        <div class="sec-body" id="fuSecId">
+          <div style="display:flex;align-items:flex-end;gap:0;">
+            <div style="flex:1;"><label class="f-label">CIF Number</label><input class="f-input" type="number" placeholder="e.g. 1023847" min="0"/></div>
+            <div style="flex-shrink:0;padding:0 .625rem .5rem;font-size:.7rem;font-weight:700;color:var(--az-muted);letter-spacing:.05em;">OR</div>
+            <div style="flex:1;"><label class="f-label">Account Number</label><input class="f-input" placeholder="e.g. 0012345678"/></div>
+            <div style="flex-shrink:0;padding:0 .625rem .5rem;font-size:.7rem;font-weight:700;color:var(--az-muted);letter-spacing:.05em;">OR</div>
+            <div style="flex:1;"><label class="f-label">Card Number</label><input class="f-input" placeholder="e.g. 4111 1111 1111 1111"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-card">
+        <div class="sec-hdr" onclick="toggleSec('fuSecAuth')" aria-expanded="true">
+          Authentication Details
+          <span class="material-icons chev">expand_more</span>
+        </div>
+        <div class="sec-body" id="fuSecAuth">
+          <div class="row g-3 mb-3">
+            <div class="col-md-4"><label class="f-label">Card PIN</label><input class="f-input" type="password" placeholder="Enter 4-digit PIN"/></div>
+            <div class="col-md-4"><label class="f-label">ID Type</label><select class="f-input f-select"><option value="">Select</option><option>Passport</option><option>National ID</option><option>Driver License</option></select></div>
+            <div class="col-md-4"><label class="f-label">ID Number</label><input class="f-input" placeholder="Enter ID number"/></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="f-label">Expiry Date</label>
+              <div class="date-placeholder"><input class="f-input" type="date"/><span class="date-cal-icon"><span class="material-icons" style="font-size:16px;color:var(--az-muted)">calendar_today</span></span></div>
+            </div>
+            <div class="col-md-4"><label class="f-label">Country Of Issuance</label><select class="f-input f-select"><option value="">Select</option><option>Lebanon</option><option>United States</option><option>UAE</option><option>United Kingdom</option></select></div>
+            <div class="col-md-4">
+              <label class="f-label">Issue Date</label>
+              <div class="date-placeholder"><input class="f-input" type="date"/><span class="date-cal-icon"><span class="material-icons" style="font-size:16px;color:var(--az-muted)">calendar_today</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-card">
+        <div class="sec-hdr" onclick="toggleSec('fuSecOther')" aria-expanded="true">
+          Other details
+          <span class="material-icons chev">expand_more</span>
+        </div>
+        <div class="sec-body" id="fuSecOther">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="f-label">Registered Mobile Number</label>
+              <div class="phone-wrap">
+                <div class="phone-pfx"><span class="fi fi-lb" id="fuPhoneFlag"></span><select id="fuPhoneCode" onchange="updateFlag('fuPhoneCode','fuPhoneFlag')"><option value="+961" data-flag="lb">+961</option><option value="+1" data-flag="us">+1</option><option value="+44" data-flag="gb">+44</option><option value="+971" data-flag="ae">+971</option><option value="+91" data-flag="in">+91</option></select></div>
+                <input type="tel" placeholder="e.g. 71 234 567"/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="f-label">Date Of Birth</label>
+              <div class="date-placeholder"><input class="f-input" type="date"/><span class="date-cal-icon"><span class="material-icons" style="font-size:16px;color:var(--az-muted)">calendar_today</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.fu-content -->
+    <div class="fu-form-footer">
+      <div class="tc-row"><input type="checkbox" id="fuTc"/><label for="fuTc"><a href="#" onclick="openModal('fuTcModal');return false;">I agree on terms and conditions</a></label></div>
+      <a href="login.html" class="btn-action btn-cancel" style="text-decoration:none">CANCEL</a>
+      <button onclick="submitForgotUsername()" class="btn-action btn-submit">SUBMIT</button>
+    </div>
+  </div><!-- /.fu-center -->
+
+  <!-- RIGHT -->
+  <aside class="fu-right">
+    <div class="fu-right-title">Help &amp; Guidance</div>
+
+    <div class="fu-help-card">
+      <div class="fu-help-card-hdr" aria-expanded="true" onclick="toggleHelpCard(this)">
+        <span class="material-icons hic">badge</span>Identification Details
+        <span class="material-icons hchev">expand_more</span>
+      </div>
+      <div class="fu-help-card-body">
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>CIF Number</strong> — Your 7-digit Customer Information File number, found on your welcome letter or bank statement.</span></div>
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>Account Number</strong> — Your primary bank account number (not the card number).</span></div>
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>Card Number</strong> — The 16-digit number on the front of your debit or credit card.</span></div>
+        <div style="margin-top:.5rem;"><span class="fu-info-badge"><span class="material-icons" style="font-size:12px;">info</span>Only one of the three is required</span></div>
+      </div>
+    </div>
+
+    <div class="fu-help-card">
+      <div class="fu-help-card-hdr" aria-expanded="false" onclick="toggleHelpCard(this)">
+        <span class="material-icons hic">lock</span>Authentication Details
+        <span class="material-icons hchev">expand_more</span>
+      </div>
+      <div class="fu-help-card-body" style="display:none">
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>Card PIN</strong> — The 4-digit PIN you use at ATMs.</span></div>
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>ID Type &amp; Number</strong> — Select your government-issued ID and enter the exact number as it appears on the document.</span></div>
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>Expiry &amp; Issue Dates</strong> — Enter the dates exactly as shown on your ID document.</span></div>
+      </div>
+    </div>
+
+    <div class="fu-help-card">
+      <div class="fu-help-card-hdr" aria-expanded="false" onclick="toggleHelpCard(this)">
+        <span class="material-icons hic">person</span>Other Details
+        <span class="material-icons hchev">expand_more</span>
+      </div>
+      <div class="fu-help-card-body" style="display:none">
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>Mobile Number</strong> — Must match the number registered with the bank at account opening.</span></div>
+        <div class="fu-help-tip"><div class="tip-dot"></div><span><strong>Date of Birth</strong> — Enter your date of birth as registered in the bank's records.</span></div>
+      </div>
+    </div>
+
+    <div class="fu-help-card">
+      <div class="fu-help-card-hdr" aria-expanded="false" onclick="toggleHelpCard(this)">
+        <span class="material-icons hic">support_agent</span>Need More Help?
+        <span class="material-icons hchev">expand_more</span>
+      </div>
+      <div class="fu-help-card-body" style="display:none">
+        <div class="fu-help-divider"></div>
+        <div class="fu-contact-row">
+          <span class="material-icons">phone</span>
+          <div class="fu-contact-label"><strong>Call Us</strong>+961 1 234 567<br>Mon–Fri, 8am–6pm</div>
+        </div>
+        <div class="fu-help-divider"></div>
+        <div class="fu-contact-row">
+          <span class="material-icons">email</span>
+          <div class="fu-contact-label"><strong>Email Support</strong>support@azentio.com</div>
+        </div>
+      </div>
+    </div>
+
+  </aside><!-- /.fu-right -->
+
+</div><!-- /.fu-layout -->
+
+<!-- Footer -->
+<footer class="fu-footer">
+  <span>© 2025 Azentio Software. All rights reserved.</span>
+  <div>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms.html">Terms &amp; Conditions</a>
+    <a href="contact-us.html">Contact Us</a>
+  </div>
+</footer>
+
+<!-- T&C Modal -->
+<div class="modal-ov hidden" id="fuTcModal" onclick="if(event.target===this)closeModal('fuTcModal')">
+  <div class="az-modal modal-md">
+    <div class="modal-title">
+      Terms &amp; Conditions
+      <button class="modal-close-btn" onclick="closeModal('fuTcModal')"><span class="material-icons">close</span></button>
+    </div>
+    <div style="padding:1.5rem;max-height:60vh;overflow-y:auto;font-size:.85rem;color:#556b76;line-height:1.7;">
+      <p>By submitting this form, you consent to Azentio Software processing your personal data for the purpose of recovering your username. Your information will be handled in accordance with our <a href="privacy-policy.html" style="color:var(--az-blue)">Privacy Policy</a>.</p>
+      <p style="margin-top:.75rem;">We will verify your identity using the information provided. If verification is successful, your username will be sent to your registered email address or mobile number.</p>
+      <p style="margin-top:.75rem;">Azentio Software will not share your personal information with third parties without your consent, except as required by law.</p>
+    </div>
+    <div style="display:flex;justify-content:flex-end;padding:1rem 1.5rem;border-top:1px solid var(--az-border);gap:.5rem;">
+      <button onclick="closeModal('fuTcModal')" class="btn-action btn-cancel">CLOSE</button>
+      <button onclick="document.getElementById('fuTc').checked=true;closeModal('fuTcModal')" class="btn-action btn-submit">ACCEPT</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-ov hidden" id="fuSuccessModal">
+  <div class="az-modal modal-sm">
+    <div class="modal-title" style="border-bottom:none;padding-bottom:.5rem;">
+      <span></span>
+      <button class="modal-close-btn" onclick="closeModal('fuSuccessModal')"><span class="material-icons">close</span></button>
+    </div>
+    <div style="text-align:center;padding:0 2rem 2rem;">
+      <div style="width:56px;height:56px;border-radius:50%;background:#e0f7ee;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
+        <span class="material-icons" style="font-size:28px;color:#0a7a4a;">check_circle</span>
+      </div>
+      <div style="font-size:1.05rem;font-weight:700;color:var(--az-navy);margin-bottom:.5rem;">Username Sent!</div>
+      <div style="font-size:.85rem;color:#556b76;line-height:1.6;">Your username has been sent to your registered email address and mobile number.</div>
+      <a href="login.html" class="btn-action btn-submit" style="margin-top:1.25rem;text-decoration:none;display:inline-flex;">BACK TO LOGIN</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleLeftPanel(){
+  const p=document.querySelector('.fu-left');
+  const icon=document.getElementById('fuHamburgerIcon');
+  if(p){p.classList.toggle('collapsed');icon.textContent=p.classList.contains('collapsed')?'menu_open':'menu';}
+}
+function toggleSec(id){
+  const body=document.getElementById(id);
+  const hdr=body.previousElementSibling;
+  const chev=hdr.querySelector('.chev');
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'';
+  hdr.setAttribute('aria-expanded',String(!isOpen));
+  if(chev)chev.style.transform=isOpen?'rotate(-180deg)':'';
+}
+function toggleHelpCard(hdr){
+  const body=hdr.nextElementSibling;
+  const chev=hdr.querySelector('.hchev');
+  const isOpen=hdr.getAttribute('aria-expanded')==='true';
+  body.style.display=isOpen?'none':'';
+  hdr.setAttribute('aria-expanded',String(!isOpen));
+}
+function openModal(id){document.getElementById(id).classList.remove('hidden');}
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+function submitForgotUsername(){openModal('fuSuccessModal');}
+function toggleFuLang(){document.getElementById('fuLangMenu').classList.toggle('open');}
+function setFuLang(code,flag,btn){
+  document.getElementById('fuLangCode').textContent=code;
+  document.querySelector('#fuLangBtn .fi').className='fi fi-'+flag;
+  document.querySelectorAll('.fu-lang-opt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fuLangMenu').classList.remove('open');
+}
+function updateFlag(selId,flagId){var s=document.getElementById(selId);var f=s.options[s.selectedIndex].getAttribute('data-flag');document.getElementById(flagId).className='fi fi-'+f;}
+document.addEventListener('click',function(e){
+  const wrap=document.querySelector('.fu-lang-wrap');
+  if(wrap&&!wrap.contains(e.target)){document.getElementById('fuLangMenu').classList.remove('open');}
+});
+</script>
+</body>
+</html>

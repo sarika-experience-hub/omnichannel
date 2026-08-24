@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Customise Dashboard</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    /* ── Toolbar ───────────────────────────────────── */
+    .dash-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: .5rem;
+      margin-bottom: 1rem;
+    }
+    .dash-toolbar-left { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }
+    .dash-title { font-size: 1.2rem; font-weight: 700; color: var(--az-navy); }
+
+    .edit-badge {
+      display: none; align-items: center; gap: .35rem;
+      background: #fff8e1; border: 1px solid #f59e0b;
+      border-radius: 20px; padding: .2rem .7rem;
+      font-size: .72rem; font-weight: 600; color: #b35a00;
+    }
+    .edit-badge.on { display: flex; }
+    .edit-pulse { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; animation: ep 1.2s infinite; }
+    @keyframes ep { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+
+    .toolbar-btn {
+      display: inline-flex; align-items: center; gap: .375rem;
+      border-radius: .5rem; padding: .4rem .875rem;
+      font-size: .8rem; font-weight: 600; cursor: pointer; border: none;
+      transition: background .14s, opacity .14s; white-space: nowrap;
+      text-decoration: none;
+    }
+    .tb-green  { background: var(--az-green); color: #fff; }
+    .tb-green:hover  { background: var(--az-green-hover); color: #fff; }
+    .tb-dark   { background: var(--az-navy); color: #fff; }
+    .tb-dark:hover   { background: #1e4357; }
+    .tb-outline { background: #fff; color: var(--az-navy); border: 1.5px solid var(--az-border); }
+    .tb-outline:hover { border-color: var(--az-navy); }
+    .tb-save { display: none; }
+    .tb-save.on { display: inline-flex; }
+
+    /* ── Edit mode body class ──────────────────────── */
+    body.editing .widget { border-color: #b8d4ff; cursor: grab; }
+    body.editing .widget:hover { border-color: var(--az-blue); box-shadow: 0 4px 14px rgba(0,133,219,.12); }
+    body.editing .widget.dragging { opacity: .5; transform: scale(1.015); box-shadow: 0 8px 28px rgba(22,48,61,.18); z-index: 10; cursor: grabbing; }
+    body.editing .widget.drag-over { border: 2px dashed var(--az-green); background: #f0faf6; }
+    body.editing .wdrag { display: flex !important; }
+    body.editing .wclose { display: flex !important; }
+
+    /* ── Widget grid – rows ────────────────────────── */
+    .wrow {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .wrow-4  { grid-template-columns: repeat(4, 1fr); }
+    .wrow-2l { grid-template-columns: 2fr 1fr; }
+    .wrow-1l { grid-template-columns: 1fr 1fr; }
+    .wrow-3  { grid-template-columns: repeat(3, 1fr); }
+
+    /* ── Widget card ───────────────────────────────── */
+    .widget {
+      background: #fff;
+      border: 1px solid var(--az-border);
+      border-radius: .75rem;
+      box-shadow: 0 1px 4px rgba(22,48,61,.05);
+      transition: box-shadow .14s, border-color .14s, transform .14s;
+      min-width: 0;
+    }
+
+    /* widget header */
+    .w-hdr {
+      display: flex; align-items: center; gap: .5rem;
+      padding: .8rem 1rem;
+      border-bottom: 1px solid var(--az-border);
+    }
+    .wdrag {
+      display: none; cursor: grab;
+      color: var(--az-placeholder); padding: 2px 3px;
+      border-radius: 3px; flex-shrink: 0;
+    }
+    .wdrag:hover { color: var(--az-muted); }
+    .w-hdr-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: .7; }
+    .w-hdr-title { font-size: .855rem; font-weight: 600; color: var(--az-navy); flex: 1; min-width: 0; }
+    .w-hdr-actions { display: flex; gap: .2rem; margin-left: auto; }
+    .wbtn {
+      width: 24px; height: 24px; border: none; background: none;
+      border-radius: .3rem; cursor: pointer; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--az-muted); transition: background .1s, color .1s; flex-shrink: 0;
+    }
+    .wbtn:hover { background: #f0f4f6; color: var(--az-navy); }
+    .wclose { display: none; }
+    .wclose:hover { background: #fdecea !important; color: #c62828 !important; }
+
+    /* widget body */
+    .w-body { padding: 1rem; overflow: hidden; }
+    .widget.collapsed .w-body { display: none; }
+    .widget.w-full { grid-column: 1 / -1 !important; }
+
+    /* ── Stat widget ───────────────────────────────── */
+    .stat-icon {
+      width: 40px; height: 40px; border-radius: .5rem;
+      background: #f0faf6; display: flex; align-items: center; justify-content: center;
+      margin-bottom: .625rem;
+    }
+    .stat-icon img { width: 22px; height: 22px; }
+    .stat-lbl { font-size: .775rem; color: var(--az-muted); margin-bottom: .2rem; }
+    .stat-val { font-size: 1.35rem; font-weight: 700; color: var(--az-navy); line-height: 1.2; margin-bottom: .3rem; }
+    .stat-sub { font-size: .75rem; color: var(--az-muted); }
+    .sbadge {
+      display: inline-flex; align-items: center;
+      font-size: .68rem; font-weight: 600;
+      padding: .15rem .55rem; border-radius: 20px;
+    }
+    .sb-green { background: #e6f9f0; color: #1a9e63; }
+    .sb-warn  { background: #fff8e1; color: #b35a00; }
+    .sb-blue  { background: #e8f4fd; color: #0071bc; }
+
+    /* ── Chart widget ──────────────────────────────── */
+    .chart-area { height: 170px; }
+    .chart-area svg { width: 100%; height: 100%; }
+    .chart-foot {
+      display: flex; align-items: center; gap: 1rem;
+      padding: .625rem 0 0;
+      border-top: 1px solid var(--az-border);
+      font-size: .75rem; color: var(--az-muted); flex-wrap: wrap;
+    }
+    .leg-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 3px; }
+
+    .chart-filters { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: .75rem; }
+    .cf-tab {
+      padding: .2rem .7rem; border-radius: 20px; font-size: .75rem; font-weight: 500;
+      border: 1px solid var(--az-border); background: #f5f7f9; color: var(--az-navy);
+      cursor: pointer; transition: all .1s;
+    }
+    .cf-tab.active, .cf-tab:hover { background: var(--az-navy); color: #fff; border-color: var(--az-navy); }
+    .cf-select {
+      font-size: .75rem; padding: .2rem .55rem;
+      border: 1px solid var(--az-border); border-radius: .375rem;
+      color: var(--az-navy); background: #fff; cursor: pointer;
+      margin-left: auto;
+    }
+
+    /* ── Donut widget ──────────────────────────────── */
+    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: .75rem; }
+    .dl-row { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: .2rem 0; font-size: .8rem; }
+    .dl-l { display: flex; align-items: center; gap: .375rem; color: var(--az-navy); }
+    .dl-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .dl-v { font-weight: 600; color: var(--az-navy); }
+
+    /* ── Table widget ──────────────────────────────── */
+    .wt { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .wt th {
+      font-size: .69rem; font-weight: 600; color: var(--az-muted);
+      text-transform: uppercase; letter-spacing: .04em;
+      padding: .375rem .625rem; border-bottom: 1px solid var(--az-border); text-align: left;
+    }
+    .wt td { padding: .6rem .625rem; border-bottom: 1px solid #f5f7f9; vertical-align: middle; }
+    .wt tr:last-child td { border-bottom: none; }
+    .wt tr:hover td { background: #fafcfd; }
+    .td-name { font-weight: 500; }
+    .td-sub  { font-size: .7rem; color: var(--az-muted); }
+    .bs {
+      font-size: .66rem; font-weight: 600;
+      padding: .14rem .45rem; border-radius: 20px; display: inline-block;
+    }
+    .bs-ok   { background: #e6f9f0; color: #1a9e63; }
+    .bs-pend { background: #fff8e1; color: #b35a00; }
+    .bs-fail { background: #fdecea; color: #c62828; }
+    .amt-dr { color: #c62828; font-weight: 600; }
+    .amt-cr { color: #1a9e63; font-weight: 600; }
+    .wt-foot { padding: .55rem .625rem; border-top: 1px solid var(--az-border); }
+    .wt-foot a { font-size: .75rem; color: var(--az-blue); text-decoration: none; font-weight: 500; }
+
+    /* ── Approval rows ─────────────────────────────── */
+    .apv-row {
+      display: flex; align-items: center; gap: .625rem;
+      padding: .55rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .apv-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .apv-ico {
+      width: 32px; height: 32px; border-radius: .5rem; background: #fff8e1;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .apv-info { flex: 1; min-width: 0; }
+    .apv-title { font-size: .8rem; font-weight: 600; color: var(--az-navy); }
+    .apv-sub   { font-size: .7rem; color: var(--az-muted); }
+    .apv-right { display: flex; flex-direction: column; align-items: flex-end; gap: .2rem; }
+    .apv-amt   { font-size: .8125rem; font-weight: 700; color: var(--az-navy); white-space: nowrap; }
+    .apv-btns  { display: flex; gap: .25rem; }
+    .btn-apv {
+      font-size: .7rem; font-weight: 600; border: none; border-radius: .3rem;
+      padding: .2rem .5rem; cursor: pointer;
+    }
+    .btn-apv.ok  { background: #e6f9f0; color: #1a9e63; }
+    .btn-apv.ok:hover  { background: #c8f1de; }
+    .btn-apv.rej { background: #fdecea; color: #c62828; }
+    .btn-apv.rej:hover { background: #fccfcc; }
+
+    /* ── Draft / Info rows ─────────────────────────── */
+    .list-row {
+      display: flex; align-items: center; gap: .625rem;
+      padding: .5rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .list-row:last-child { border-bottom: none; }
+    .list-ico {
+      width: 30px; height: 30px; border-radius: .375rem; background: #f0f4f6;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .list-body { flex: 1; min-width: 0; }
+    .list-title { font-size: .8rem; font-weight: 500; color: var(--az-navy); }
+    .list-sub   { font-size: .7rem; color: var(--az-muted); }
+    .list-right { font-size: .7rem; color: var(--az-muted); white-space: nowrap; }
+    .btn-sm {
+      font-size: .7rem; font-weight: 500; border: 1px solid var(--az-border);
+      border-radius: .3rem; padding: .18rem .5rem; cursor: pointer;
+      background: #fff; color: var(--az-navy); white-space: nowrap;
+    }
+    .btn-sm:hover { border-color: var(--az-blue); color: var(--az-blue); }
+
+    /* ── Widget library panel ──────────────────────── */
+    .wlib-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(22,48,61,.35); z-index: 1998;
+    }
+    .wlib-overlay.on { display: block; }
+    .wlib {
+      position: fixed; top: 0; right: -390px; width: 370px; height: 100%;
+      background: #fff; z-index: 1999;
+      box-shadow: -4px 0 24px rgba(22,48,61,.14);
+      display: flex; flex-direction: column;
+      transition: right .28s cubic-bezier(.4,0,.2,1);
+    }
+    .wlib.on { right: 0; }
+    .wlib-hdr {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--az-border);
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .wlib-title { font-size: .975rem; font-weight: 700; color: var(--az-navy); }
+    .wlib-x {
+      width: 28px; height: 28px; border: none; background: none; border-radius: .375rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--az-muted);
+    }
+    .wlib-x:hover { background: #f0f4f6; color: var(--az-navy); }
+    .wlib-body { flex: 1; overflow-y: auto; padding: 1rem 1.25rem; }
+    .wlib-sec { font-size: .69rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--az-muted); margin: .875rem 0 .4rem; }
+    .wlib-sec:first-child { margin-top: 0; }
+    .wlib-item {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .7rem .875rem; border: 1px solid var(--az-border);
+      border-radius: .625rem; margin-bottom: .45rem;
+      cursor: pointer; transition: border-color .14s, background .14s; user-select: none;
+    }
+    .wlib-item:hover  { border-color: var(--az-green); background: #f0faf6; }
+    .wlib-item.added  { border-color: #c7dbfe; background: #f0f6ff; cursor: default; }
+    .wlib-ico {
+      width: 36px; height: 36px; border-radius: .5rem; background: #f0faf6;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .wlib-item.added .wlib-ico { background: #e8f0fe; }
+    .wlib-ico img { width: 19px; height: 19px; }
+    .wlib-info { flex: 1; min-width: 0; }
+    .wlib-name { font-size: .8rem; font-weight: 600; color: var(--az-navy); }
+    .wlib-desc { font-size: .72rem; color: var(--az-muted); margin-top: 1px; }
+    .wlib-action {
+      width: 26px; height: 26px; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+    .wa-add  { background: var(--az-green); color: #fff; }
+    .wa-add:hover  { background: var(--az-green-hover); }
+    .wa-done { background: #e8f0fe; color: var(--az-blue); font-size: .75rem; cursor: default; }
+
+    /* ── Toast ─────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 3000;
+      background: var(--az-navy); color: #fff;
+      padding: .7rem 1.125rem; border-radius: .6rem;
+      font-size: .8rem; font-weight: 500;
+      box-shadow: 0 4px 16px rgba(22,48,61,.22);
+      display: none; align-items: center; gap: .5rem;
+      max-width: 320px;
+    }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 1199px) {
+      .wrow-4  { grid-template-columns: repeat(2, 1fr); }
+      .wrow-2l { grid-template-columns: 1fr; }
+      .wrow-1l { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 767px) {
+      .wrow-4,.wrow-3 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 479px) {
+      .wrow-4,.wrow-2l,.wrow-1l,.wrow-3 { grid-template-columns: 1fr; }
+      .widget.w-full { grid-column: auto !important; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img">
+      <svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
+        <g transform="translate(0.275 -0.84)">
+          <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+          <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+          <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+        </g>
+      </svg>
+    </span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" style="position:relative">
+      <img src="images/icons/notification.svg" width="18" height="18" alt=""/><span class="notif-dot">5</span>
+    </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          <a href="#" class="notif-clear-all">Clear all</a>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+<nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+    <button class="sb-item active-section" data-label="Dashboard" onclick="location.href='dashboard.html'"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none">
+      <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+      <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfer <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Account Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a></div>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment <span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div>
+    </div>
+    <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+    <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a><a href="cards-settlement-local.html" class="sb-sub3-item">Local Credit Card Settlement</a></div><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+    <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sCheq','cCheq')"><span class="sb-icon"><img src="images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cCheq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCheq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebooks</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a><a href="chequebook-report.html" class="sb-sub-item">Chequebook Report</a></div>
+    <button class="sb-item" data-label="Remittance" onclick="toggleSub('sRem','cRem')"><span class="sb-icon"><img src="images/icons/remittance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Remittance</span><span class="sb-chevron" id="cRem"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sRem" class="sb-sub" style="display:none"><a href="remittance-intra-bank.html" class="sb-sub-item">Intra Bank Remittance Request</a><a href="remittance-local.html" class="sb-sub-item">Local Remittance Request</a><a href="remittance-international.html" class="sb-sub-item">International Remittance Request</a></div>
+    <button class="sb-item" data-label="Sweeping and Pooling" onclick="toggleSub('sSP','cSP')"><span class="sb-icon"><img src="images/icons/sweeping_and_pooling.svg" width="18" height="18" alt=""/></span><span class="sb-label">Sweeping and Pooling</span><span class="sb-chevron" id="cSP"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSP" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Sweeping and Pooling</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+    <button class="sb-item" data-label="Cash Management" onclick="toggleSub('sCM','cCM')"><span class="sb-icon"><img src="images/icons/cash_management.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cash Management</span><span class="sb-chevron" id="cCM"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCM" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Cash Management</a></div>
+    <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><img src="images/icons/trade_finance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-lg-status.html" class="sb-sub-item">LG Status and Details</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a><a href="tf-ob-status.html" class="sb-sub-item">OB Status and Details</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+    <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><img src="images/icons/corporate_end_user.svg" width="18" height="18" alt=""/></span><span class="sb-label">Corporate End User Management Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc">
+      <a href="retail-dashboard.html">Home</a><span class="sep">›</span>
+      <a href="retail-dashboard.html" style="color:var(--az-muted);text-decoration:none">Dashboard</a>
+      <span class="sep">›</span><span class="cur">Customise</span>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="dash-toolbar">
+      <div class="dash-toolbar-left">
+        <span class="dash-title">My Dashboard</span>
+        <span class="edit-badge" id="editBadge"><span class="edit-pulse"></span>Edit Mode</span>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <button class="toolbar-btn tb-save" id="btnSave" onclick="saveLayout()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save Layout
+        </button>
+        <button class="toolbar-btn tb-green" onclick="openLibrary()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Widget
+        </button>
+        <button class="toolbar-btn tb-dark" id="btnEdit" onclick="toggleEditMode()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span id="editLabel">Edit Layout</span>
+        </button>
+        <a href="retail-dashboard.html" class="toolbar-btn tb-outline" style="text-decoration:none">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="19 12 5 12"/><polyline points="12 5 5 12 12 19"/></svg>
+          Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- ══ Row 1: 4 stat cards ══ -->
+    <div class="wrow wrow-4" id="row-stats">
+
+      <!-- Total Balance -->
+      <div class="widget" id="w-balance" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Consolidated_accounts.svg" alt=""/>
+          <span class="w-hdr-title">Total Balance</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-balance')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-balance')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-balance')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body">
+          <div class="stat-icon"><img src="images/dashboard/Consolidated_accounts.svg" alt=""/></div>
+          <div class="stat-lbl">Consolidated Balance</div>
+          <div class="stat-val">USD 1,248,350</div>
+          <div class="stat-sub"><span class="sbadge sb-blue">4 Accounts</span></div>
+        </div>
+      </div>
+
+      <!-- Net Worth -->
+      <div class="widget" id="w-networth" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/My_net_worth.svg" alt=""/>
+          <span class="w-hdr-title">Net Worth</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-networth')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-networth')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-networth')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body">
+          <div class="stat-icon"><img src="images/dashboard/My_net_worth.svg" alt=""/></div>
+          <div class="stat-lbl">Net Worth</div>
+          <div class="stat-val">USD 980,200</div>
+          <div class="stat-sub"><span class="sbadge sb-green">↑ 2.4% this month</span></div>
+        </div>
+      </div>
+
+      <!-- Pending Approvals -->
+      <div class="widget" id="w-approvals-stat" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Pending_approvals.svg" alt=""/>
+          <span class="w-hdr-title">Pending Approvals</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-approvals-stat')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-approvals-stat')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-approvals-stat')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body">
+          <div class="stat-icon" style="background:#fff8e1"><img src="images/dashboard/Pending_approvals.svg" alt=""/></div>
+          <div class="stat-lbl">Pending Approvals</div>
+          <div class="stat-val">3</div>
+          <div class="stat-sub"><span class="sbadge sb-warn">Requires Action</span></div>
+        </div>
+      </div>
+
+      <!-- Drafts -->
+      <div class="widget" id="w-drafts-stat" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/drafts.svg" alt=""/>
+          <span class="w-hdr-title">Drafts</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-drafts-stat')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-drafts-stat')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-drafts-stat')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body">
+          <div class="stat-icon" style="background:#f0f4f6"><img src="images/dashboard/drafts.svg" alt=""/></div>
+          <div class="stat-lbl">Saved Drafts</div>
+          <div class="stat-val">5</div>
+          <div class="stat-sub">3 transfers · 2 bulk</div>
+        </div>
+      </div>
+    </div><!-- /row-stats -->
+
+    <!-- ══ Row 2: Balance chart + Donut ══ -->
+    <div class="wrow wrow-2l" id="row-charts">
+
+      <!-- Balance chart -->
+      <div class="widget" id="w-chart" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Account_balance_fluctuations.svg" alt=""/>
+          <span class="w-hdr-title">Account Balance Fluctuations</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-chart')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-chart')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-chart')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body">
+          <div class="chart-filters">
+            <button class="cf-tab" onclick="setCF(this)">USD – IBAN8000</button>
+            <button class="cf-tab active" onclick="setCF(this)">USD – IBAN8001</button>
+            <button class="cf-tab" onclick="setCF(this)">EUR – IBAN8002</button>
+            <select class="cf-select">
+              <option>Last 7 days</option>
+              <option selected>Last 30 days</option>
+              <option>Last 90 days</option>
+            </select>
+          </div>
+          <div class="chart-area">
+            <svg viewBox="0 0 600 160" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2ed88e" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#2ed88e" stop-opacity=".01"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="1"   x2="600" y2="1"   stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="40"  x2="600" y2="40"  stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="80"  x2="600" y2="80"  stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="120" x2="600" y2="120" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="159" x2="600" y2="159" stroke="#f0f0f0" stroke-width="1"/>
+              <path d="M10,130 C70,108 120,138 180,98 C230,64 280,90 330,62 C380,38 430,74 480,52 C530,34 570,44 590,36 L590,159 L10,159 Z" fill="url(#cg)"/>
+              <path d="M10,130 C70,108 120,138 180,98 C230,64 280,90 330,62 C380,38 430,74 480,52 C530,34 570,44 590,36" fill="none" stroke="#2ed88e" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="10"  cy="130" r="3" fill="#2ed88e"/>
+              <circle cx="120" cy="138" r="3" fill="#2ed88e"/>
+              <circle cx="230" cy="64"  r="3" fill="#2ed88e"/>
+              <circle cx="330" cy="62"  r="3" fill="#2ed88e"/>
+              <circle cx="430" cy="74"  r="3" fill="#2ed88e"/>
+              <circle cx="530" cy="34"  r="3" fill="#2ed88e"/>
+              <circle cx="590" cy="36"  r="4.5" fill="#2ed88e" stroke="#fff" stroke-width="2"/>
+              <text x="10"  y="156" font-size="8" fill="#8a979e" text-anchor="middle">Apr 5</text>
+              <text x="120" y="156" font-size="8" fill="#8a979e" text-anchor="middle">Apr 10</text>
+              <text x="230" y="156" font-size="8" fill="#8a979e" text-anchor="middle">Apr 15</text>
+              <text x="330" y="156" font-size="8" fill="#8a979e" text-anchor="middle">Apr 20</text>
+              <text x="430" y="156" font-size="8" fill="#8a979e" text-anchor="middle">Apr 25</text>
+              <text x="530" y="156" font-size="8" fill="#8a979e" text-anchor="middle">Apr 30</text>
+              <text x="590" y="156" font-size="8" fill="#8a979e" text-anchor="middle">May 4</text>
+            </svg>
+          </div>
+          <div class="chart-foot">
+            <span><span class="leg-dot" style="background:#2ed88e"></span>Balance</span>
+            <span style="margin-left:auto;color:var(--az-navy);font-weight:600">Current: USD 1,248,350</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Net worth donut -->
+      <div class="widget" id="w-donut" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/My_net_worth.svg" alt=""/>
+          <span class="w-hdr-title">Net Worth Breakdown</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-donut')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-donut')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-donut')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body">
+          <div class="donut-wrap">
+            <svg width="130" height="130" viewBox="0 0 130 130">
+              <circle cx="65" cy="65" r="50" fill="none" stroke="#f0f4f6" stroke-width="16"/>
+              <circle cx="65" cy="65" r="50" fill="none" stroke="#2ed88e" stroke-width="16" stroke-dasharray="195 314" stroke-dashoffset="79"/>
+              <circle cx="65" cy="65" r="50" fill="none" stroke="#0085db" stroke-width="16" stroke-dasharray="75 439" stroke-dashoffset="-116"/>
+              <circle cx="65" cy="65" r="50" fill="none" stroke="#16303d" stroke-width="16" stroke-dasharray="44 470" stroke-dashoffset="-191"/>
+              <text x="65" y="61" text-anchor="middle" font-size="11" font-weight="700" fill="#16303d">USD</text>
+              <text x="65" y="75" text-anchor="middle" font-size="10" fill="#8a979e">980K</text>
+            </svg>
+            <div style="width:100%">
+              <div class="dl-row"><div class="dl-l"><div class="dl-dot" style="background:#2ed88e"></div>USD Accounts</div><div class="dl-v">62%</div></div>
+              <div class="dl-row"><div class="dl-l"><div class="dl-dot" style="background:#0085db"></div>EUR Accounts</div><div class="dl-v">24%</div></div>
+              <div class="dl-row"><div class="dl-l"><div class="dl-dot" style="background:#16303d"></div>AED Accounts</div><div class="dl-v">14%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /row-charts -->
+
+    <!-- ══ Row 3: Pending Approvals + Transactions ══ -->
+    <div class="wrow wrow-1l" id="row-main">
+
+      <!-- Pending approvals list -->
+      <div class="widget" id="w-approvals" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Pending_approvals.svg" alt=""/>
+          <span class="w-hdr-title">Pending Approvals</span>
+          <div class="w-hdr-actions" style="margin-left:auto">
+            <a href="transfer-pending-list.html" style="font-size:.75rem;color:var(--az-blue);text-decoration:none;margin-right:.5rem;font-weight:500">View all ›</a>
+            <button class="wbtn" onclick="collapseWidget('w-approvals')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-approvals')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-approvals')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body" style="padding:.75rem 1rem">
+          <div class="apv-row">
+            <div class="apv-ico"><img src="images/icons/transfer.svg" width="16" height="16" alt=""/></div>
+            <div class="apv-info"><div class="apv-title">Internal Transfer</div><div class="apv-sub">IBAN8000 › IBAN8001 · Sara Rahman P.</div></div>
+            <div class="apv-right"><div class="apv-amt">USD 50,000</div><div class="apv-btns"><button class="btn-apv ok">Approve</button><button class="btn-apv rej">Reject</button></div></div>
+          </div>
+          <div class="apv-row">
+            <div class="apv-ico"><img src="images/icons/bulk_payments.svg" width="16" height="16" alt=""/></div>
+            <div class="apv-info"><div class="apv-title">Bulk Payment</div><div class="apv-sub">May Vendor Batch · 42 records</div></div>
+            <div class="apv-right"><div class="apv-amt">USD 287,400</div><div class="apv-btns"><button class="btn-apv ok">Approve</button><button class="btn-apv rej">Reject</button></div></div>
+          </div>
+          <div class="apv-row">
+            <div class="apv-ico"><img src="images/icons/transfer.svg" width="16" height="16" alt=""/></div>
+            <div class="apv-info"><div class="apv-title">International Transfer</div><div class="apv-sub">IBAN8000 › BNP Paris</div></div>
+            <div class="apv-right"><div class="apv-amt">EUR 22,000</div><div class="apv-btns"><button class="btn-apv ok">Approve</button><button class="btn-apv rej">Reject</button></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent transactions -->
+      <div class="widget" id="w-transactions" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Transaction_history.svg" alt=""/>
+          <span class="w-hdr-title">Recent Transactions</span>
+          <div class="w-hdr-actions" style="margin-left:auto">
+            <button class="wbtn" onclick="collapseWidget('w-transactions')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-transactions')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-transactions')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body" style="padding:0">
+          <table class="wt">
+            <thead><tr><th>Transaction</th><th>Account</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><div class="td-name">Own Account Transfer</div><div class="td-sub">REF-TXN-20240501</div></td><td>IBAN8000</td><td style="color:var(--az-muted);font-size:.75rem">04 May</td><td class="amt-dr">−USD 5,000</td><td><span class="bs bs-ok">Done</span></td></tr>
+              <tr><td><div class="td-name">Bulk – April Salaries</div><div class="td-sub">REF-BLK-20240430</div></td><td>IBAN8001</td><td style="color:var(--az-muted);font-size:.75rem">30 Apr</td><td class="amt-dr">−USD 128,400</td><td><span class="bs bs-ok">Done</span></td></tr>
+              <tr><td><div class="td-name">International Transfer</div><div class="td-sub">REF-INT-20240428</div></td><td>IBAN8000</td><td style="color:var(--az-muted);font-size:.75rem">28 Apr</td><td class="amt-dr">−EUR 22,000</td><td><span class="bs bs-pend">Pending</span></td></tr>
+              <tr><td><div class="td-name">Interest Credit</div><div class="td-sub">REF-INT-20240425</div></td><td>IBAN8002</td><td style="color:var(--az-muted);font-size:.75rem">25 Apr</td><td class="amt-cr">+USD 1,840</td><td><span class="bs bs-ok">Done</span></td></tr>
+              <tr><td><div class="td-name">Local Transfer</div><div class="td-sub">REF-LCL-20240422</div></td><td>IBAN8000</td><td style="color:var(--az-muted);font-size:.75rem">22 Apr</td><td class="amt-dr">−USD 3,200</td><td><span class="bs bs-fail">Failed</span></td></tr>
+            </tbody>
+          </table>
+          <div class="wt-foot"><a href="transaction-history.html">View all transactions ›</a></div>
+        </div>
+      </div>
+    </div><!-- /row-main -->
+
+    <!-- ══ Row 4: Drafts + Sessions + Requests ══ -->
+    <div class="wrow wrow-3" id="row-bottom" style="margin-bottom:1.5rem">
+
+      <!-- Drafts -->
+      <div class="widget" id="w-drafts" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/drafts.svg" alt=""/>
+          <span class="w-hdr-title">Drafts</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-drafts')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-drafts')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-drafts')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body" style="padding:.75rem 1rem">
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/transfer.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Own Account Transfer</div><div class="list-sub">3 May · USD 10,000</div></div>
+            <button class="btn-sm">Resume</button>
+          </div>
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/bulk_payments.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Bulk – June Salaries</div><div class="list-sub">2 May · Incomplete</div></div>
+            <button class="btn-sm">Resume</button>
+          </div>
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/transfer.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">International Transfer</div><div class="list-sub">1 May · EUR 5,500</div></div>
+            <button class="btn-sm">Resume</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session History -->
+      <div class="widget" id="w-sessions" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Session_history.svg" alt=""/>
+          <span class="w-hdr-title">Session History</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-sessions')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-sessions')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-sessions')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body" style="padding:.75rem 1rem">
+          <div class="list-row">
+            <div class="list-ico" style="background:#e6f9f0"><img src="images/icons/information.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Current Session</div><div class="list-sub">Chrome · Win10 · 192.168.1.1</div></div>
+            <div class="list-right">08:14 AM</div>
+          </div>
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/information.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Previous Session</div><div class="list-sub">Chrome · Win10 · 192.168.1.1</div></div>
+            <div class="list-right">03 May</div>
+          </div>
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/information.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Session Login</div><div class="list-sub">Safari · macOS · 10.0.0.45</div></div>
+            <div class="list-right">01 May</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Request History -->
+      <div class="widget" id="w-requests" draggable="false">
+        <div class="w-hdr">
+          <span class="wdrag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.5" fill="currentColor"/><circle cx="15" cy="7" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/></svg></span>
+          <img class="w-hdr-icon" src="images/dashboard/Request_history.svg" alt=""/>
+          <span class="w-hdr-title">Request History</span>
+          <div class="w-hdr-actions">
+            <button class="wbtn" onclick="collapseWidget('w-requests')" title="Collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="wbtn" onclick="expandWidget('w-requests')" title="Full width"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="wbtn wclose" onclick="closeWidget('w-requests')" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <div class="w-body" style="padding:.75rem 1rem">
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/chequebook.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Chequebook Request</div><div class="list-sub">25 leaves · IBAN8000</div></div>
+            <span class="bs bs-ok">Approved</span>
+          </div>
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/cards.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Debit Card Request</div><div class="list-sub">Replacement · IBAN8001</div></div>
+            <span class="bs bs-pend">In Progress</span>
+          </div>
+          <div class="list-row">
+            <div class="list-ico"><img src="images/icons/export.svg" width="14" height="14" alt=""/></div>
+            <div class="list-body"><div class="list-title">Hard Copy Statement</div><div class="list-sub">Q1 2026 · IBAN8000</div></div>
+            <span class="bs bs-ok">Dispatched</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /row-bottom -->
+
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████ WIDGET LIBRARY ████ -->
+<div class="wlib-overlay" id="wlibOverlay" onclick="closeLibrary()"></div>
+<aside class="wlib" id="wlib" role="complementary" aria-label="Widget library">
+  <div class="wlib-hdr">
+    <span class="wlib-title">Add Widgets</span>
+    <button class="wlib-x" onclick="closeLibrary()" aria-label="Close">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="wlib-body">
+    <div class="wlib-sec">Summary</div>
+    <div class="wlib-item" id="lib-balance"       onclick="addWidget('w-balance','lib-balance')"><div class="wlib-ico"><img src="images/dashboard/Consolidated_accounts.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Total Balance</div><div class="wlib-desc">Consolidated balance across all accounts</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-balance','lib-balance')">+</button></div>
+    <div class="wlib-item" id="lib-networth"      onclick="addWidget('w-networth','lib-networth')"><div class="wlib-ico"><img src="images/dashboard/My_net_worth.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Net Worth</div><div class="wlib-desc">Total net worth with trend</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-networth','lib-networth')">+</button></div>
+    <div class="wlib-item" id="lib-approvals-stat" onclick="addWidget('w-approvals-stat','lib-approvals-stat')"><div class="wlib-ico"><img src="images/dashboard/Pending_approvals.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Pending Approvals Counter</div><div class="wlib-desc">Count of items awaiting approval</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-approvals-stat','lib-approvals-stat')">+</button></div>
+    <div class="wlib-item" id="lib-drafts-stat"   onclick="addWidget('w-drafts-stat','lib-drafts-stat')"><div class="wlib-ico"><img src="images/dashboard/drafts.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Drafts Counter</div><div class="wlib-desc">Number of saved draft transactions</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-drafts-stat','lib-drafts-stat')">+</button></div>
+
+    <div class="wlib-sec">Charts</div>
+    <div class="wlib-item" id="lib-chart"  onclick="addWidget('w-chart','lib-chart')"><div class="wlib-ico"><img src="images/dashboard/Account_balance_fluctuations.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Balance Chart</div><div class="wlib-desc">Account balance trend over time</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-chart','lib-chart')">+</button></div>
+    <div class="wlib-item" id="lib-donut"  onclick="addWidget('w-donut','lib-donut')"><div class="wlib-ico"><img src="images/dashboard/My_net_worth.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Net Worth Breakdown</div><div class="wlib-desc">Currency distribution donut chart</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-donut','lib-donut')">+</button></div>
+
+    <div class="wlib-sec">Transactional</div>
+    <div class="wlib-item" id="lib-transactions" onclick="addWidget('w-transactions','lib-transactions')"><div class="wlib-ico"><img src="images/dashboard/Transaction_history.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Recent Transactions</div><div class="wlib-desc">Latest transaction activity</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-transactions','lib-transactions')">+</button></div>
+    <div class="wlib-item" id="lib-approvals"    onclick="addWidget('w-approvals','lib-approvals')"><div class="wlib-ico"><img src="images/dashboard/Pending_approvals.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Pending Approvals List</div><div class="wlib-desc">Actionable list with approve/reject</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-approvals','lib-approvals')">+</button></div>
+    <div class="wlib-item" id="lib-drafts"       onclick="addWidget('w-drafts','lib-drafts')"><div class="wlib-ico"><img src="images/dashboard/drafts.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Drafts List</div><div class="wlib-desc">Resume saved draft transactions</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-drafts','lib-drafts')">+</button></div>
+
+    <div class="wlib-sec">Activity</div>
+    <div class="wlib-item" id="lib-sessions"  onclick="addWidget('w-sessions','lib-sessions')"><div class="wlib-ico"><img src="images/dashboard/Session_history.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Session History</div><div class="wlib-desc">Recent login sessions</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-sessions','lib-sessions')">+</button></div>
+    <div class="wlib-item" id="lib-requests"  onclick="addWidget('w-requests','lib-requests')"><div class="wlib-ico"><img src="images/dashboard/Request_history.svg" alt=""/></div><div class="wlib-info"><div class="wlib-name">Request History</div><div class="wlib-desc">Chequebook, card & statement requests</div></div><button class="wlib-action wa-add" onclick="event.stopPropagation();addWidget('w-requests','lib-requests')">+</button></div>
+  </div>
+</aside>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:3000;background:var(--az-navy);color:#fff;padding:.7rem 1.125rem;border-radius:.6rem;font-size:.8rem;font-weight:500;box-shadow:0 4px 16px rgba(22,48,61,.22);display:none;align-items:center;gap:.5rem;max-width:320px">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+'use strict';
+
+/* Widget → library ID map */
+var LIB_MAP = {
+  'w-balance':       'lib-balance',
+  'w-networth':      'lib-networth',
+  'w-approvals-stat':'lib-approvals-stat',
+  'w-drafts-stat':   'lib-drafts-stat',
+  'w-chart':         'lib-chart',
+  'w-donut':         'lib-donut',
+  'w-approvals':     'lib-approvals',
+  'w-transactions':  'lib-transactions',
+  'w-drafts':        'lib-drafts',
+  'w-sessions':      'lib-sessions',
+  'w-requests':      'lib-requests'
+};
+
+/* ── Edit mode ──────────────────────────────── */
+var _editing = false;
+function toggleEditMode() {
+  _editing = !_editing;
+  document.body.classList.toggle('editing', _editing);
+  document.getElementById('editBadge').classList.toggle('on', _editing);
+  document.getElementById('editLabel').textContent = _editing ? 'Done' : 'Edit Layout';
+  document.getElementById('btnEdit').style.background = _editing ? '#1a9e63' : '';
+  document.getElementById('btnSave').classList.toggle('on', _editing);
+  document.querySelectorAll('.widget').forEach(function(w) {
+    w.setAttribute('draggable', _editing ? 'true' : 'false');
+  });
+  if (_editing) toast('Drag widgets to rearrange · click × to remove');
+}
+
+/* ── Collapse ────────────────────────────────── */
+function collapseWidget(id) {
+  var w = document.getElementById(id);
+  if (w) { w.classList.toggle('collapsed'); save(); }
+}
+
+/* ── Full-width expand ───────────────────────── */
+function expandWidget(id) {
+  var w = document.getElementById(id);
+  if (w) { w.classList.toggle('w-full'); save(); }
+}
+
+/* ── Close widget ────────────────────────────── */
+function closeWidget(id) {
+  var w = document.getElementById(id);
+  if (!w) return;
+  w.style.transition = 'opacity .22s, transform .22s';
+  w.style.opacity = '0'; w.style.transform = 'scale(.96)';
+  setTimeout(function() {
+    w.style.display = 'none';
+    setLibState(LIB_MAP[id], false);
+    save();
+    toast('Widget removed – re-add from Add Widget');
+  }, 230);
+}
+
+/* ── Add widget ──────────────────────────────── */
+function addWidget(wid, libId) {
+  var w = document.getElementById(wid);
+  if (!w) return;
+  w.style.display = '';
+  w.style.opacity = '0'; w.style.transform = 'scale(.96)';
+  w.style.transition = 'opacity .22s, transform .22s';
+  requestAnimationFrame(function() { w.style.opacity = '1'; w.style.transform = ''; });
+  setLibState(libId, true);
+  save(); closeLibrary();
+  toast('Widget added to dashboard');
+  w.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function setLibState(libId, added) {
+  var item = document.getElementById(libId);
+  if (!item) return;
+  var btn = item.querySelector('.wlib-action');
+  item.classList.toggle('added', added);
+  if (btn) { btn.className = 'wlib-action ' + (added ? 'wa-done' : 'wa-add'); btn.textContent = added ? '✓' : '+'; }
+}
+
+/* ── Library panel ───────────────────────────── */
+function openLibrary() {
+  document.getElementById('wlib').classList.add('on');
+  document.getElementById('wlibOverlay').classList.add('on');
+  syncLib();
+}
+function closeLibrary() {
+  document.getElementById('wlib').classList.remove('on');
+  document.getElementById('wlibOverlay').classList.remove('on');
+}
+function syncLib() {
+  Object.keys(LIB_MAP).forEach(function(wid) {
+    var w = document.getElementById(wid);
+    setLibState(LIB_MAP[wid], w && w.style.display !== 'none');
+  });
+}
+
+/* ── Drag & drop (within rows) ───────────────── */
+var _src = null;
+document.querySelectorAll('.wrow').forEach(function(row) {
+  row.addEventListener('dragstart', function(e) {
+    var w = e.target.closest('.widget');
+    if (!w || !_editing) return;
+    _src = w; w.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  row.addEventListener('dragend', function(e) {
+    if (_src) _src.classList.remove('dragging');
+    row.querySelectorAll('.drag-over').forEach(function(t) { t.classList.remove('drag-over'); });
+    _src = null;
+  });
+  row.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    var t = e.target.closest('.widget');
+    if (t && t !== _src) {
+      row.querySelectorAll('.drag-over').forEach(function(x){ x.classList.remove('drag-over'); });
+      t.classList.add('drag-over');
+    }
+  });
+  row.addEventListener('dragleave', function(e) {
+    var t = e.target.closest('.widget');
+    if (t) t.classList.remove('drag-over');
+  });
+  row.addEventListener('drop', function(e) {
+    e.preventDefault();
+    var t = e.target.closest('.widget');
+    if (!t || t === _src || !_src) return;
+    t.classList.remove('drag-over');
+    var items = Array.from(row.querySelectorAll('.widget'));
+    if (items.indexOf(_src) < items.indexOf(t)) row.insertBefore(_src, t.nextSibling);
+    else row.insertBefore(_src, t);
+    save();
+  });
+});
+
+/* ── Save / restore layout ───────────────────── */
+function saveLayout() { save(); toast('Layout saved'); }
+function save() {
+  try {
+    var state = {};
+    document.querySelectorAll('.widget').forEach(function(w) {
+      state[w.id] = { hidden: w.style.display === 'none', collapsed: w.classList.contains('collapsed'), expanded: w.classList.contains('w-full') };
+    });
+    localStorage.setItem('az-custom-dash', JSON.stringify(state));
+  } catch(e) {}
+}
+function restore() {
+  try {
+    var s = localStorage.getItem('az-custom-dash');
+    if (!s) return;
+    var state = JSON.parse(s);
+    Object.keys(state).forEach(function(id) {
+      var w = document.getElementById(id); if (!w) return;
+      if (state[id].hidden)    w.style.display = 'none';
+      if (state[id].collapsed) w.classList.add('collapsed');
+      if (state[id].expanded)  w.classList.add('w-full');
+    });
+  } catch(e) {}
+}
+
+/* ── Toast ───────────────────────────────────── */
+var _tt;
+function toast(msg) {
+  var t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.display = 'flex'; t.style.opacity = '1';
+  clearTimeout(_tt);
+  _tt = setTimeout(function() {
+    t.style.opacity = '0';
+    setTimeout(function(){ t.style.display = 'none'; }, 300);
+  }, 3000);
+}
+
+function setCF(btn) {
+  btn.closest('.chart-filters').querySelectorAll('.cf-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+restore(); syncLib();
+</script>
+</body>
+</html>

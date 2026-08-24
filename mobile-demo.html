@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>azentio · Mobile Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+  .demo-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 2rem; width: 100%; max-width: 900px;
+    justify-content: space-between;
+  }
+  .demo-logo { display: flex; align-items: center; gap: .5rem; }
+  .demo-logo svg { width: 28px; height: 20px; }
+  .demo-logo span { font-size: 1.2rem; font-weight: 700; color: #16303d; }
+  .demo-logo span b { color: #2ed88e; font-weight: 700; }
+  .demo-badge {
+    background: #e8f9f1; color: #0f6e56; font-size: .75rem;
+    font-weight: 600; padding: .25rem .75rem; border-radius: 20px;
+    border: 1px solid #9fe1cb; letter-spacing: .03em;
+  }
+  .demo-controls {
+    display: flex; gap: .5rem; align-items: center;
+  }
+  .demo-btn {
+    background: #fff; border: 1px solid #d1dbe1; border-radius: 8px;
+    padding: .4rem .9rem; font-size: .8rem; font-weight: 500;
+    color: #16303d; cursor: pointer; transition: background .15s;
+  }
+  .demo-btn:hover { background: #f0f2f5; }
+  .demo-btn.active { background: #16303d; color: #fff; border-color: #16303d; }
+
+  /* Phone frame */
+  .phone-stage {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1rem;
+  }
+  .phone-label {
+    font-size: .75rem; color: #707070; letter-spacing: .06em;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .phone-frame {
+    background: #1a1a1a;
+    border-radius: 44px;
+    padding: 14px;
+    box-shadow: 0 0 0 1px #333, 0 30px 60px rgba(0,0,0,.3), inset 0 0 0 2px #444;
+    position: relative;
+    transition: all .3s ease;
+  }
+  .phone-frame.landscape {
+    border-radius: 44px;
+  }
+  /* notch */
+  .phone-notch {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
+    z-index: 10;
+  }
+  .phone-screen {
+    border-radius: 32px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+  }
+  .phone-screen iframe {
+    display: block;
+    border: none;
+    width: 390px;
+    height: 680px;
+    border-radius: 32px;
+    transition: all .3s ease;
+  }
+  /* Side buttons */
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    left: -3px; top: 100px;
+    width: 3px; height: 32px;
+    background: #333; border-radius: 2px 0 0 2px;
+    box-shadow: 0 44px 0 #333, 0 88px 0 #333;
+  }
+  .phone-frame::after {
+    content: '';
+    position: absolute;
+    right: -3px; top: 130px;
+    width: 3px; height: 60px;
+    background: #333; border-radius: 0 2px 2px 0;
+  }
+  .home-bar {
+    height: 4px; width: 120px;
+    background: #222; border-radius: 4px;
+    margin: 10px auto 2px;
+  }
+
+  /* Tablet mode */
+  .phone-frame.tablet .phone-screen iframe {
+    width: 768px; height: 600px;
+  }
+  .phone-frame.tablet { border-radius: 20px; padding: 16px; }
+  .phone-frame.tablet .phone-screen { border-radius: 8px; }
+  .phone-frame.tablet .phone-screen iframe { border-radius: 8px; }
+  .phone-frame.tablet .phone-notch { display: none; }
+  .phone-frame.tablet .home-bar { display: none; }
+
+  .tip {
+    margin-top: 1.5rem;
+    font-size: .8rem; color: #8a9baa;
+    text-align: center; max-width: 400px; line-height: 1.6;
+  }
+  .tip a { color: #16303d; font-weight: 500; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="demo-header">
+  <div class="demo-logo">
+    <svg viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 19.6V7.18A6.6 6.6 0 016.6.54v12.44A6.6 6.6 0 010 19.6z" fill="#2ed88e"/>
+      <path d="M7.4 12.97V.54A6.6 6.6 0 0114 7.16v12.44a6.6 6.6 0 01-6.6-6.63z" fill="#2ed88e"/>
+    </svg>
+    <span>azentio<b>.</b></span>
+  </div>
+  <div class="demo-badge">Mobile Preview</div>
+  <div class="demo-controls">
+    <button class="demo-btn active" id="btnPhone" onclick="setMode('phone')">Phone</button>
+    <button class="demo-btn" id="btnTablet" onclick="setMode('tablet')">Tablet</button>
+    <button class="demo-btn" onclick="reloadFrame()">↺ Reload</button>
+  </div>
+</div>
+
+<div class="phone-stage">
+  <div class="phone-label" id="deviceLabel">iPhone 14 · 390 × 680</div>
+  <div class="phone-frame" id="phoneFrame">
+    <div class="phone-notch" id="notch"></div>
+    <div class="phone-screen">
+      <iframe id="demoFrame" src="retail-dashboard.html" title="azentio Mobile Dashboard"></iframe>
+    </div>
+    <div class="home-bar" id="homeBar"></div>
+  </div>
+</div>
+
+<p class="tip">
+  Scroll inside the phone to explore all sections.<br>
+  For full interactive demo, open in
+  <a href="retail-dashboard.html" target="_blank">browser ↗</a> and use Chrome DevTools device mode.
+</p>
+
+<script>
+function setMode(mode) {
+  var frame = document.getElementById('phoneFrame');
+  var iframe = document.getElementById('demoFrame');
+  var label = document.getElementById('deviceLabel');
+  var btnPhone = document.getElementById('btnPhone');
+  var btnTablet = document.getElementById('btnTablet');
+
+  if (mode === 'tablet') {
+    frame.classList.add('tablet');
+    frame.classList.remove('phone');
+    label.textContent = 'iPad · 768 × 600';
+    btnTablet.classList.add('active');
+    btnPhone.classList.remove('active');
+  } else {
+    frame.classList.remove('tablet');
+    label.textContent = 'iPhone 14 · 390 × 680';
+    btnPhone.classList.add('active');
+    btnTablet.classList.remove('active');
+  }
+}
+
+function reloadFrame() {
+  var iframe = document.getElementById('demoFrame');
+  iframe.src = iframe.src;
+}
+</script>
+</body>
+</html>

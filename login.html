@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Login</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/login_styles.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="lp-hdr">
+  <a class="l-logo" href="index.html" aria-label="azentio home">
+    <svg xmlns="http://www.w3.org/2000/svg" width="130" height="34" viewBox="0 0 152.97 40.623">
+      <g transform="translate(0.275 -0.84)">
+        <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+        <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+        <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+      </g>
+    </svg>
+  </a>
+
+  <div class="lp-hdr-right">
+    <a href="contact-us.html" class="hdr-icon-btn" title="Contact Us" aria-label="Contact Us"><img src="images/icons/call_us.svg" width="24" height="24" alt="Contact Us"/></a>
+    <a href="faq.html" class="hdr-icon-btn" title="Help &amp; Support" aria-label="Help"><img src="images/icons/information.svg" width="24" height="24" alt="Help"/></a>
+    <span class="hdr-div"></span>
+    <div class="lang-wrap">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-haspopup="listbox" aria-expanded="false">
+        <span class="fi fi-us"></span>
+        <span id="langCode">ENG</span>
+        <svg width="9" height="6" viewBox="0 0 10 7" fill="none"><path d="M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z" fill="#16303d"/></svg>
+      </button>
+      <div class="lang-menu hidden" id="langMenu" role="listbox">
+        <button class="lang-opt active" onclick="setLang('ENG','us',this)"><span class="fi fi-us"></span> English</button>
+        <button class="lang-opt" onclick="setLang('FR','fr',this)"><span class="fi fi-fr"></span> French</button>
+        <button class="lang-opt" onclick="setLang('عربي','sa',this)"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Main: LEFT hero | RIGHT form ── -->
+<main class="l-main">
+
+  <!-- ═══ LEFT: Hero Image ═══ -->
+  <div class="l-hero-side">
+    <div class="l-hero-img"></div>
+    <div class="l-hero-overlay"></div>
+
+    <!-- Decorative curves -->
+    <svg class="l-hero-curves" viewBox="0 0 800 700" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M800,0 Q620,180 700,370 Q770,530 640,700 L800,700 Z" fill="rgba(46,216,142,.07)"/>
+      <path d="M750,0 C650,100 550,200 620,380 C690,560 580,640 660,700" stroke="#2ed88e" stroke-width="1.5" opacity="0.4"/>
+      <path d="M800,80 C700,180 600,280 670,460 C740,640 630,700 710,700" stroke="#2ed88e" stroke-width="1" opacity="0.25"/>
+      <circle cx="680" cy="140" r="80" fill="rgba(46,216,142,.05)"/>
+      <circle cx="580" cy="580" r="110" fill="rgba(0,83,138,.06)"/>
+    </svg>
+
+    <!-- Trust badges (top-right) -->
+    <div class="l-hero-trust">
+      <div class="trust-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        256-bit SSL Secure
+      </div>
+      <div class="trust-badge">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        24/7 Support
+      </div>
+    </div>
+
+    <!-- Brand headline (bottom-left) -->
+    <div class="l-hero-brand">
+      <div class="l-hero-eyebrow">Secure Banking</div>
+      <h1 class="l-hero-h1">Smart Banking for a<br><span>Better Future</span></h1>
+      <p class="l-hero-sub">Trusted by millions across the region for seamless, secure digital banking.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num">2M+</span>
+          <span class="hero-stat-lbl">Customers</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">99.9%</span>
+          <span class="hero-stat-lbl">Uptime</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">24/7</span>
+          <span class="hero-stat-lbl">Support</span>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.l-hero-side -->
+
+  <!-- ═══ RIGHT: Login Form ═══ -->
+  <div class="l-form-side" id="formSidePanel">
+
+    <div class="l-panel-eyebrow">Online Banking</div>
+    <h2 class="l-title">Login to Azentio Banking</h2>
+    <p class="l-subtitle">Choose how you'd like to sign in.</p>
+
+    <!-- ── Login method tabs ── -->
+    <div class="l-tabs">
+      <button class="l-tab active" onclick="switchTab('username',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Username
+      </button>
+      <button class="l-tab" onclick="switchTab('touchid',this)">
+        <span class="material-icons" style="font-size:15px">fingerprint</span>
+        Touch ID
+      </button>
+      <button class="l-tab" onclick="switchTab('faceid',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/><path d="M9 15s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>
+        Face ID
+      </button>
+    </div>
+
+    <!-- Tab: Username/Password -->
+    <div class="l-tab-pane active" id="pane-username">
+
+    <!-- State 1: Username + Password -->
+    <div id="stateLogin">
+      <div class="f-grp">
+        <label class="f-lbl" for="username">Username</label>
+        <input class="f-inp" type="text" id="username" autocomplete="username" autocapitalize="none" spellcheck="false" oninput="this.style.borderColor='';document.getElementById('loginErrorState1').textContent='';"/>
+        <div class="f-forgot"><a href="forgot-username.html" class="f-link f-link-sm">Forgot your username?</a></div>
+      </div>
+
+      <div class="f-grp">
+        <label class="f-lbl" for="password">Password</label>
+        <div class="f-inp-wrap">
+          <input class="f-inp" type="password" id="password" autocomplete="current-password" oninput="this.style.borderColor='';document.getElementById('loginErrorState1').textContent='';"/>
+          <button type="button" class="f-eye" onclick="togglePwd('password',this)" aria-label="Toggle password">
+            <span class="material-icons f-eye-ic">visibility</span>
+          </button>
+        </div>
+        <div class="f-forgot"><a href="forgot-password.html" class="f-link f-link-sm">Forgot your password?</a></div>
+      </div>
+
+      <div class="f-grp">
+        <label class="f-lbl" for="startIn">Start In</label>
+        <select class="f-select" id="startIn">
+          <option value="dashboard" selected>Dashboard</option>
+          <option value="accounts">Accounts</option>
+          <option value="payments">Payments</option>
+        </select>
+      </div>
+
+      <div class="f-check-row">
+        <input type="checkbox" id="rememberMe" class="f-check"/>
+        <label for="rememberMe">Remember Me</label>
+      </div>
+
+      <div id="loginErrorState1" style="color:#dc2626;font-size:.75rem;margin-bottom:.375rem;text-align:center;min-height:1em;"></div>
+      <div class="btn-row">
+        <button type="button" class="btn-login" onclick="handleLogin()">LOGIN</button>
+        <button type="button" class="btn-cancel" onclick="resetForm()">CANCEL</button>
+      </div>
+
+    </div>
+
+    <!-- State 2: Captcha -->
+    <div id="stateCaptcha" style="display:none">
+      <div class="f-grp">
+        <label class="f-lbl" for="c_user">Username</label>
+        <input class="f-inp" type="text" id="c_user" autocomplete="username"/>
+        <div class="f-forgot"><a href="#" class="f-link f-link-sm">Forgot your username?</a></div>
+      </div>
+
+      <div class="f-grp">
+        <label class="f-lbl" for="c_pwd">Password</label>
+        <div class="f-inp-wrap">
+          <input class="f-inp" type="password" id="c_pwd" autocomplete="current-password"/>
+          <button type="button" class="f-eye" onclick="togglePwd('c_pwd',this)" aria-label="Toggle password">
+            <span class="material-icons f-eye-ic">visibility</span>
+          </button>
+        </div>
+        <div class="f-forgot"><a href="#" class="f-link f-link-sm">Forgot your password?</a></div>
+      </div>
+
+      <div class="f-grp">
+        <label class="f-lbl" for="c_startIn">Start In</label>
+        <select class="f-select" id="c_startIn">
+          <option value="dashboard" selected>Dashboard</option>
+          <option value="accounts">Accounts</option>
+        </select>
+      </div>
+
+      <div class="f-grp">
+        <label class="f-lbl">Please enter the text below</label>
+        <div class="captcha-row">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 42" preserveAspectRatio="xMidYMid meet">
+            <rect width="130" height="42" fill="#e8e8e8" rx="3"/>
+            <line x1="5" y1="21" x2="125" y2="17" stroke="#bbb" stroke-width="1"/>
+            <line x1="0" y1="31" x2="130" y2="11" stroke="#ccc" stroke-width="1"/>
+            <text x="5"  y="30" font-family="Georgia,serif" font-size="21" font-weight="bold" fill="#2a2a2a" transform="rotate(-4,5,30)">N</text>
+            <text x="27" y="32" font-family="Georgia,serif" font-size="20" fill="#555" transform="rotate(3,27,32)">F</text>
+            <text x="48" y="29" font-family="Courier,monospace" font-size="21" fill="#111" font-weight="bold" transform="rotate(-2,48,29)">7</text>
+            <text x="68" y="33" font-family="Georgia,serif" font-size="20" fill="#333" transform="rotate(5,68,33)">N</text>
+            <text x="91" y="30" font-family="Georgia,serif" font-size="19" fill="#2a2a2a" transform="rotate(-3,91,30)">Z</text>
+          </svg>
+          <button class="captcha-btn" type="button" title="Listen">&#128266;</button>
+          <button class="captcha-btn" type="button" title="Refresh" onclick="refreshCaptcha()">&#8635;</button>
+          <input class="f-inp" type="text" id="captchaVal" autocomplete="off" placeholder="Enter text" style="flex:1;min-width:0"/>
+        </div>
+      </div>
+
+      <div class="f-check-row">
+        <input type="checkbox" id="c_remember" class="f-check"/>
+        <label for="c_remember">Remember Me</label>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-login" onclick="validateAndLogin()">VALIDATE AND LOGIN</button>
+        <button type="button" class="btn-cancel" onclick="showLogin()">CANCEL</button>
+      </div>
+
+    </div>
+      <div class="l-create-account">
+        New to Azentio Banking? <a href="#" class="f-link" onclick="showWip();return false;">Create an account</a> it only takes 2 minutes.
+      </div>
+    </div><!-- /.l-tab-pane#pane-username -->
+
+    <!-- Tab: Touch ID -->
+    <div class="l-tab-pane" id="pane-touchid">
+      <div class="biometric-pane">
+
+        <p class="biometric-hint" style="margin-bottom:.5rem">Place your registered finger on the sensor and hold steady until scanning completes.</p>
+
+        <!-- Fingerprint scanner -->
+        <div class="fp-scanner idle" id="fpScanner">
+          <div class="fp-ring"></div>
+          <div class="fp-ring"></div>
+          <div class="fp-ring"></div>
+          <div class="fp-disc" id="fpDisc">
+            <span class="material-icons" id="fpIconFp" style="font-size:30px;color:#1a8a55">fingerprint</span>
+            <svg id="fpIconOk" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;opacity:0"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="fp-status">
+          <div class="fp-status-label" id="fpStatusLabel">Ready to scan</div>
+          <div class="fp-status-hint" id="fpStatusHint">Tap the button below to begin</div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="fp-progress"><div class="fp-progress-bar" id="fpBar"></div></div>
+
+        <!-- Scan button -->
+        <button class="btn-biometric" id="fpBtn" onclick="startScan()">
+          <span class="material-icons" style="font-size:16px">fingerprint</span>
+          Scan Fingerprint
+        </button>
+
+      </div>
+      <div class="l-create-account">
+        New to Azentio Banking? <a href="#" class="f-link" onclick="showWip();return false;">Create an account</a> it only takes 2 minutes.
+      </div>
+    </div><!-- /.l-tab-pane#pane-touchid -->
+
+    <!-- Tab: Face ID -->
+    <div class="l-tab-pane" id="pane-faceid">
+      <div class="biometric-pane">
+
+        <p class="biometric-hint" style="margin-bottom:.25rem"><span style="display:block">Position your face within the frame and hold still.</span><span style="display:block">Ensure good lighting for best results.</span></p>
+
+        <!-- Face scanner -->
+        <div class="face-scanner" id="faceScanner">
+          <div class="face-frame"><span class="fc"></span></div>
+          <div class="face-dot-grid" id="faceDotGrid">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="face-scan-line" id="faceScanLine"></div>
+          <div class="face-silhouette">
+            <img src="images/login/face-id.png" srcset="images/login/face-id@2x.png 2x" alt="Face scan" style="width:90px;height:90px;object-fit:contain;position:relative;z-index:2"/>
+          </div>
+          <div class="face-check" id="faceCheck">
+            <div class="face-check-circle">
+              <span class="material-icons" style="font-size:26px;color:#fff;display:block;line-height:1">check</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="fp-status">
+          <div class="fp-status-label" id="faceStatusLabel">Ready to scan</div>
+          <div class="fp-status-hint" id="faceStatusHint">Tap the button below to begin</div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="fp-progress"><div class="fp-progress-bar" id="faceBar"></div></div>
+
+        <!-- Scan button -->
+        <button class="btn-biometric" id="faceBtn" onclick="startFaceScan()">
+          <span class="material-icons" style="font-size:16px">face</span>
+          Scan Face
+        </button>
+
+      </div>
+      <div class="l-create-account">
+        New to Azentio Banking? <a href="#" class="f-link" onclick="showWip();return false;">Create an account</a> it only takes 2 minutes.
+      </div>
+    </div><!-- /.l-tab-pane#pane-faceid -->
+
+  </div><!-- /.l-form-side -->
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="l-footer">
+  <div>Copyright 2025. All Rights Reserved
+    <a href="#">Terms and conditions</a>
+    <a href="about-app.html" target="_blank">About App</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <div class="acc-btns">
+      <button class="acc-btn">A<sup>-</sup></button>
+      <button class="acc-btn">A</button>
+      <button class="acc-btn">A<sup>+</sup></button>
+      <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()">&#9681;</button>
+    </div>
+  </div>
+</footer>
+
+<!-- Face ID success modal -->
+<div class="modal-ov hidden" id="faceSuccessModal">
+  <div class="success-card">
+    <button class="modal-close" onclick="document.getElementById('faceSuccessModal').classList.add('hidden')" aria-label="Close"><span class="material-icons">close</span></button>
+    <div class="success-ring">
+      <span class="material-icons" style="font-size:36px;color:#1a8a55;line-height:1;display:block">check</span>
+    </div>
+    <div class="success-msg">Face Recognised</div>
+    <p class="success-sub">Your identity has been verified successfully. You're being signed in.</p>
+    <a href="retail/retail-dashboard.html" class="btn-ok">Continue</a>
+  </div>
+</div>
+
+<!-- Touch ID success modal -->
+<div class="modal-ov hidden" id="fpSuccessModal">
+  <div class="success-card">
+    <button class="modal-close" onclick="document.getElementById('fpSuccessModal').classList.add('hidden')" aria-label="Close"><span class="material-icons">close</span></button>
+    <div class="success-ring">
+      <span class="material-icons" style="font-size:36px;color:#1a8a55;line-height:1;display:block">check</span>
+    </div>
+    <div class="success-msg">Identity Verified</div>
+    <p class="success-sub">Your fingerprint was recognised successfully. You're being signed in.</p>
+    <a href="retail/retail-dashboard.html" class="btn-ok">Continue</a>
+  </div>
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.l-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.l-tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('pane-'+id).classList.add('active');
+}
+
+/* ── Fingerprint scanner ── */
+var fpScanning=false, fpInterval=null;
+function startScan(){
+  if(fpScanning) return;
+  fpScanning=true;
+  var sc=document.getElementById('fpScanner'),disc=document.getElementById('fpDisc'),
+      bar=document.getElementById('fpBar'),btn=document.getElementById('fpBtn'),
+      lbl=document.getElementById('fpStatusLabel'),hint=document.getElementById('fpStatusHint'),
+      ic=document.getElementById('fpIconFp'),ok=document.getElementById('fpIconOk');
+  sc.classList.remove('idle'); sc.classList.add('scanning');
+  btn.disabled=true;
+  lbl.textContent='Scanning…'; hint.textContent='Keep your finger steady';
+  var pct=0;
+  fpInterval=setInterval(function(){
+    pct+=2; bar.style.width=Math.min(pct,100)+'%';
+    if(pct>=100){ clearInterval(fpInterval); onFpVerified(sc,disc,btn,lbl,hint,ic,ok); }
+  },40);
+}
+function onFpVerified(sc,disc,btn,lbl,hint,ic,ok){
+  sc.classList.remove('scanning');
+  sc.classList.add('verified');
+  disc.style.background='#1a8a55';
+  ic.style.display='none';
+  ok.style.display='block';
+  setTimeout(function(){ok.style.opacity=1;},50);
+  lbl.textContent='Verified!'; hint.textContent='Identity confirmed';
+  btn.style.display='none';
+  setTimeout(function(){ document.getElementById('fpSuccessModal').classList.remove('hidden'); },700);
+  fpScanning=false;
+}
+
+/* ── Face ID scanner ── */
+var faceScanning=false, faceInterval=null;
+function startFaceScan(){
+  if(faceScanning) return;
+  faceScanning=true;
+  var sc=document.getElementById('faceScanner'),
+      bar=document.getElementById('faceBar'),btn=document.getElementById('faceBtn'),
+      lbl=document.getElementById('faceStatusLabel'),hint=document.getElementById('faceStatusHint'),
+      line=document.getElementById('faceScanLine'),check=document.getElementById('faceCheck');
+  sc.classList.add('scanning');
+  btn.disabled=true;
+  lbl.textContent='Scanning…'; hint.textContent='Hold still';
+  var pct=0;
+  faceInterval=setInterval(function(){
+    pct+=2; bar.style.width=Math.min(pct,100)+'%';
+    if(pct>=100){ clearInterval(faceInterval); onFaceVerified(sc,btn,lbl,hint,line,check); }
+  },40);
+}
+function onFaceVerified(sc,btn,lbl,hint,line,check){
+  sc.classList.remove('scanning'); sc.classList.add('verified');
+  line.style.display='none'; check.style.opacity='1';
+  lbl.textContent='Face Recognised!'; hint.textContent='Identity confirmed';
+  btn.style.display='none';
+  setTimeout(function(){ document.getElementById('faceSuccessModal').classList.remove('hidden'); },700);
+  faceScanning=false;
+}
+
+/* ── Password toggle ── */
+function togglePwd(id,btn){
+  var inp=document.getElementById(id);
+  var ic=btn.querySelector('.f-eye-ic');
+  if(inp.type==='password'){inp.type='text';ic.textContent='visibility_off';}
+  else{inp.type='password';ic.textContent='visibility';}
+}
+
+/* ── Login flow ── */
+function handleLogin(){
+  var u=document.getElementById('username').value.trim();
+  var p=document.getElementById('password').value;
+  var err=document.getElementById('loginErrorState1');
+  if(!u||!p){
+    err.textContent='Please enter your username and password.';
+    if(!u)document.getElementById('username').style.borderColor='#dc2626';
+    if(!p)document.getElementById('password').style.borderColor='#dc2626';
+    return;
+  }
+  // Captcha hidden — go directly to dashboard
+  var si=document.getElementById('startIn').value;
+  if(si==='accounts'){window.location.href='retail/accounts.html';}
+  else if(si==='payments'){window.location.href='retail/payments-bill-payment.html';}
+  else{window.location.href='retail/retail-dashboard.html';}
+}
+function showCaptcha(u,p,si){
+  document.getElementById('stateLogin').style.display='none';
+  document.getElementById('stateCaptcha').style.display='';
+  document.getElementById('c_user').value=u;
+  document.getElementById('c_pwd').value=p;
+  document.getElementById('c_startIn').value=si||'dashboard';
+}
+function showLogin(){
+  document.getElementById('stateCaptcha').style.display='none';
+  document.getElementById('stateLogin').style.display='';
+}
+function validateAndLogin(){
+  var cap=document.getElementById('captchaVal').value.trim().toUpperCase();
+  if(cap!=='NF7NZ'){
+    document.getElementById('captchaVal').value='';
+    document.getElementById('captchaVal').style.borderColor='#dc2626';
+    return;
+  }
+  var si=document.getElementById('c_startIn').value;
+  if(si==='accounts'){window.location.href='retail/accounts.html';}
+  else if(si==='payments'){window.location.href='retail/payments-bill-payment.html';}
+  else{window.location.href='retail/retail-dashboard.html';}
+}
+function resetForm(){
+  document.getElementById('username').value='';
+  document.getElementById('password').value='';
+  document.getElementById('loginErrorState1').textContent='';
+  document.getElementById('username').style.borderColor='';
+  document.getElementById('password').style.borderColor='';
+  document.getElementById('stateLogin').style.display='';
+  document.getElementById('stateCaptcha').style.display='none';
+}
+function refreshCaptcha(){
+  document.getElementById('captchaVal').value='';
+  document.getElementById('captchaVal').style.borderColor='';
+}
+
+/* ── Language ── */
+function toggleLang(){
+  var m=document.getElementById('langMenu');
+  m.classList.toggle('hidden');
+}
+function setLang(code,flag,btn){
+  document.getElementById('langCode').textContent=code;
+  document.querySelector('.lang-btn .fi').className='fi fi-'+flag;
+  document.querySelectorAll('.lang-opt').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('langMenu').classList.add('hidden');
+}
+document.addEventListener('click',function(e){
+  var wrap=document.querySelector('.lang-wrap');
+  if(wrap&&!wrap.contains(e.target)){document.getElementById('langMenu').classList.add('hidden');}
+});
+</script>
+
+<!-- WIP Modal -->
+<div id="wipModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:2rem 2.5rem;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative;">
+    <button onclick="document.getElementById('wipModal').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:20px;color:#8a979e;">&#x2715;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#fff8e1;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div style="font-size:1.1rem;font-weight:700;color:#16303d;margin-bottom:.5rem;">Coming Soon</div>
+    <p style="font-size:.875rem;color:#556b76;line-height:1.6;margin-bottom:1.25rem;">This feature is currently under development and will be available shortly.</p>
+    <button onclick="document.getElementById('wipModal').style.display='none'" style="background:#16303d;color:#fff;border:none;border-radius:8px;padding:9px 28px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;">OK</button>
+  </div>
+</div>
+<script>
+function showWip(){
+  var m=document.getElementById('wipModal');
+  m.style.display='flex';
+  m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';},{once:true});
+}
+</script>
+</body>
+</html>

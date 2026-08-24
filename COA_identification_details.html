@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="css/flag-icons.min.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Online Account – Identification Details | Azentio</title>
+<style>
+/* ── Reset & Variables ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green:#2db87a; --green-light:#e8f7f0; --green-dark:#1f9e63;
+  --navy:#1c3a52;  --navy-mid:#2a5070;
+  --gray-sb:#efefef; --gray-bd:#dde2e7; --gray-tx:#6b7280; --gray-bg:#f7f8fa;
+  --orange:#f57c00; --orange-lt:#fff3e0;
+  --red:#d32f2f;   --blue:#1976d2;
+  --white:#fff;    --text:#1a2533;
+  --ff:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --r:6px; --rl:10px;
+  --sh:0 2px 8px rgba(0,0,0,.08); --shm:0 4px 16px rgba(0,0,0,.12);
+  --tr:.2s ease;
+}
+body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(--white); min-height:100vh; display:flex; flex-direction:column; }
+
+/* ── Utility ─────────────────────────────────────────────────── */
+.hidden { display:none !important; }
+
+/* ── Hamburger button ────────────────────────────────────────── */
+.hdr-hamburger { background:none; border:none; cursor:pointer; padding:.375rem .5rem; display:flex; align-items:center; justify-content:center; border-radius:.375rem; transition:background .12s; color:#16303d; }
+.hdr-hamburger:hover { background:#f0f4f6; }
+.hdr-hamburger .material-icons { font-size:22px; color:#16303d; line-height:1; }
+.hdr-hamburger .icon-collapsed { display:none; }
+.hdr-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
+.hdr-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
+
+/* ── Header ──────────────────────────────────────────────────── */
+.app-hdr { height:56px; background:#fff; border-bottom:1px solid #e2e8ec; display:flex; align-items:center; position:sticky; top:0; z-index:100; padding-right:1.25rem; box-shadow:0 1px 4px rgba(22,48,61,.06); }
+.hdr-logo { width:240px; flex-shrink:0; display:flex; align-items:center; padding:0 1.25rem; overflow:hidden; }
+.hdr-logo-svg { display:flex; align-items:center; }
+.hdr-logo-svg svg { height:28px; width:auto; }
+.hdr-right { display:flex; align-items:center; gap:.5rem; margin-left:auto; }
+.hdr-icon-btn { background:none; border:none; cursor:pointer; padding:.375rem; display:flex; align-items:center; position:relative; border-radius:.375rem; transition:background .12s; }
+.hdr-icon-btn:hover { background:#f0f4f6; }
+.hdr-icon-btn img { width:20px; height:20px; }
+.notif-dot { position:absolute; top:4px; right:4px; width:7px; height:7px; background:#2ed88e; border-radius:50%; border:1.5px solid #fff; }
+.hdr-div { width:1px; height:24px; background:#e2e8ec; margin:0 .125rem; }
+.hdr-lang { font-size:.875rem; font-weight:500; color:#16303d; border:none; background:none; cursor:pointer; display:flex; align-items:center; gap:.25rem; padding:.3125rem .5rem; border-radius:.375rem; }
+.hdr-lang:hover { background:#f0f4f6; }
+.hdr-lang-wrap { position: relative; display: flex; align-items: center; }
+.hdr-lang-wrap::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 12px; }
+.hdr-lang-drop { position: absolute; top: calc(100% + 12px); right: 0; min-width: 150px; background: #fff; border: 1px solid #e2e8ec; border-radius: .5rem; box-shadow: 0 8px 24px rgba(0,0,0,.13); z-index: 9997; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity .2s .4s, transform .2s .4s; padding: .25rem 0; overflow: hidden; }
+.hdr-lang-wrap:hover .hdr-lang-drop { opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity .15s, transform .15s; }
+.hdr-lang-opt { display: flex; align-items: center; gap: .625rem; padding: .5625rem 1rem; width: 100%; background: none; border: none; cursor: pointer; font-family: inherit; font-size: .8125rem; color: #16303d; text-align: left; transition: background .1s; }
+.hdr-lang-opt:hover { background: #f0faf5; }
+.hdr-lang-opt.active { font-weight: 700; background: #f5fdf9; }
+.hdr-lang-opt .fi { width: 20px; height: 15px; border-radius: 2px; flex-shrink: 0; }
+.hdr-avatar { width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid #e2e8ec; cursor:pointer; }
+.btn-logout { background:#2ed88e; color:#fff; border:none; border-radius:20px; padding:.3125rem 1.125rem; font-size:.8125rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s; text-decoration:none; display:inline-block; }
+.btn-logout:hover { background:#25c47e; }
+
+/* ── Layout ──────────────────────────────────────────────────── */
+.az-layout { display:flex; flex:1; min-height:0; }
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.az-sidebar { width:240px; min-width:240px; background:var(--gray-sb); border-right:1px solid var(--gray-bd); padding:20px 0; position:relative; transition:width var(--tr),min-width var(--tr); }
+.az-sidebar.collapsed, .az-sidebar.sb-collapsed { width:56px; min-width:56px; }
+
+.az-steps { list-style:none; padding:4px 0; }
+.az-step { display:flex; align-items:center; gap:12px; padding:11px 16px; border-left:4px solid transparent; margin-bottom:2px; }
+.az-step.completed { border-left-color:#1a7a4a; background:rgba(45,184,122,.05); }
+.az-step.active    { border-left-color:#f57c00; background:rgba(245,124,0,.04); }
+.az-step.inactive  { border-left-color:var(--gray-bd); }
+.az-step-circle { width:30px; height:30px; min-width:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; border:2px solid transparent; flex-shrink:0; }
+.az-step-circle svg { width:13px; height:13px; }
+.az-step.completed .az-step-circle { background:#1a7a4a; border-color:#1a7a4a; color:var(--white); }
+.az-step.active    .az-step-circle { background:var(--white); border-color:#f57c00; color:#f57c00; }
+.az-step.inactive  .az-step-circle { background:var(--white); border-color:#c0c8d0; color:#c0c8d0; }
+.az-step-info { display:flex; align-items:center; justify-content:space-between; flex:1; gap:8px; overflow:hidden; min-width:0; }
+.az-sidebar.collapsed .az-step-info, .az-sidebar.sb-collapsed .az-step-info { display:none; }
+.az-step-label { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
+.az-step.completed .az-step-label { color:var(--text); }
+.az-step.active    .az-step-label { color:var(--text); }
+.az-step.inactive  .az-step-label { color:var(--gray-tx); }
+.az-step-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; flex-shrink:0; }
+.badge-green  { background:var(--green-light); color:#1a7a4a; }
+.badge-orange { background:var(--orange-lt);   color:var(--orange); }
+.badge-gray   { background:var(--gray-bd);     color:var(--gray-tx); }
+
+/* ── Main content ────────────────────────────────────────────── */
+.az-main { flex:1; min-width:0; display:flex; flex-direction:column; }
+.az-content-wrap { flex:1; display:flex; }
+.az-form-area { flex:1; min-width:0; padding:16px 24px 12px; display:flex; flex-direction:column; }
+
+.az-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gray-tx); margin-bottom:6px; }
+.az-breadcrumb a { color:var(--green); text-decoration:none; }
+.az-breadcrumb a:hover { text-decoration:underline; }
+.az-bc-sep { color:var(--gray-bd); }
+.az-page-title { font-size:20px; font-weight:700; color:var(--text); margin-bottom:12px; }
+
+/* ── Section (divider style, no box) ─────────────────────────── */
+.az-section { margin-bottom:4px; }
+.az-sec-hdr { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1.5px solid var(--gray-bd); cursor:pointer; user-select:none; }
+.az-sec-hdr h2 { font-size:12px; font-weight:700; color:var(--gray-tx); letter-spacing:.04em; text-transform:uppercase; }
+.az-sec-hdr .chev { flex-shrink:0; transition:transform var(--tr); }
+.az-section.collapsed .az-sec-hdr .chev { transform:rotate(180deg); }
+.az-sec-body { padding:10px 0 2px; }
+.az-section.collapsed .az-sec-body { display:none; }
+
+/* Subsection */
+.az-sub { margin-bottom:14px; }
+.az-sub-title { font-size:14px; font-weight:700; color:var(--text); padding-bottom:10px; margin-bottom:16px; border-bottom:1px solid var(--gray-bd); display:flex; align-items:center; justify-content:space-between; }
+.az-sub-title .chev-sm { width:16px; height:16px; cursor:pointer; transition:transform var(--tr); flex-shrink:0; }
+.az-sub.collapsed .az-sub-title .chev-sm { transform:rotate(180deg); }
+.az-sub.collapsed .az-sub-body { display:none; }
+
+/* ── Form grid ───────────────────────────────────────────────── */
+.frow { display:grid; gap:14px; margin-bottom:12px; }
+.frow.c3 { grid-template-columns:repeat(3,1fr); }
+.frow.c2 { grid-template-columns:repeat(2,1fr); }
+.frow.c1 { grid-template-columns:1fr; }
+.az-field { display:flex; flex-direction:column; gap:3px; }
+.az-field label { font-size:11.5px; font-weight:600; color:var(--gray-tx); display:flex; align-items:center; gap:4px; }
+.az-field label .req { color:var(--red); font-size:14px; margin-left:1px; line-height:1; }
+
+/* Input */
+.az-input { height:36px; padding:0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white); transition:border-color var(--tr),box-shadow var(--tr); width:100%; outline:none; font-family:var(--ff); }
+.az-input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
+.az-input::placeholder { color:#b0b8c1; }
+.az-input.error { border-color:var(--red); box-shadow:0 0 0 3px rgba(211,47,47,.08); }
+
+/* Select */
+.az-select { height:36px; padding:0 36px 0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 10px) center; -webkit-appearance:none; appearance:none; cursor:pointer; width:100%; outline:none; font-family:var(--ff); transition:border-color var(--tr),box-shadow var(--tr); }
+.az-select:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
+
+/* Password */
+.az-pwd-wrap { position:relative; }
+.az-pwd-wrap .az-input { padding-right:44px; }
+.az-pwd-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--gray-tx); display:flex; align-items:center; padding:0; }
+.az-pwd-toggle svg { width:18px; height:18px; }
+
+/* Date */
+.az-date-wrap { position:relative; }
+.az-date-wrap .az-input { padding-right:40px; }
+.az-date-icon { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--gray-tx); cursor:pointer; display:flex; }
+.az-date-icon svg { width:16px; height:16px; }
+
+/* Phone */
+.az-phone-wrap { display:flex; }
+.az-phone-flag { display:flex; align-items:center; gap:5px; padding:0 10px; height:36px; border:1px solid var(--gray-bd); border-right:none; border-radius:var(--r) 0 0 var(--r); background:var(--gray-bg); font-size:13px; cursor:pointer; white-space:nowrap; }
+.az-phone-flag svg { width:20px; }
+.az-phone-flag .caret { width:10px; height:10px; }
+.az-phone-wrap .az-input { border-radius:0 var(--r) var(--r) 0; }
+
+/* Tooltip */
+.az-tip { position:relative; display:inline-flex; }
+.az-tip-icon { width:16px; height:16px; color:var(--blue); cursor:help; flex-shrink:0; }
+.az-tip-box { position:absolute; left:24px; top:-4px; width:220px; background:var(--white); border:1px solid var(--gray-bd); border-radius:var(--r); padding:10px 12px; font-size:12px; color:var(--text); box-shadow:var(--shm); z-index:50; display:none; line-height:1.5; font-weight:400; }
+.az-tip-box::before { content:''; position:absolute; left:-6px; top:10px; width:10px; height:10px; background:var(--white); border:1px solid var(--gray-bd); border-right:none; border-top:none; transform:rotate(45deg); }
+.az-tip:hover .az-tip-box { display:block; }
+
+/* ── Bottom bar & Buttons ────────────────────────────────────── */
+.az-bottom-bar { display:flex; justify-content:flex-end; gap:10px; padding:12px 24px; border-top:1px solid var(--gray-bd); background:var(--white); margin-top:auto; }
+.btn-action { display:inline-flex; align-items:center; justify-content:center; gap:.375rem; border:none; border-radius:.25rem; padding:.5625rem 1.75rem; font-size:.8125rem; font-weight:700; cursor:pointer; text-decoration:none; white-space:nowrap; transition:background .12s,opacity .12s; font-family:var(--ff); }
+.btn-action:disabled { opacity:.6; cursor:not-allowed; }
+.btn-cancel { background:#2ed88e; color:#16303d; }
+.btn-cancel:hover { background:#25c47e; color:#16303d; }
+.btn-save { background:#6c757d; color:#fff; }
+.btn-save:hover { background:#5a6268; color:#fff; }
+.btn-submit { background:#16303d; color:#fff; }
+.btn-submit:hover { background:#1e4356; color:#fff; }
+
+/* ── Right panel ─────────────────────────────────────────────── */
+.az-right-panel { width:280px; min-width:280px; border-left:1px solid var(--gray-bd); background:var(--green-light); padding:24px 20px; overflow-y:auto; }
+.promo-title { font-size:17px; font-weight:700; color:var(--text); margin-bottom:12px; }
+.promo-body  { font-size:13px; line-height:1.75; color:var(--text); margin-bottom:20px; }
+.promo-body strong { font-weight:700; }
+.promo-img { width:100%; max-width:200px; display:block; margin:0 auto; }
+
+/* Summary panel (pages 2–3) */
+.sum-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:16px; text-align:center; }
+.sum-sec { margin-bottom:8px; }
+.sum-hdr { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-bd); cursor:pointer; }
+.sum-hdr span { font-size:13px; font-weight:600; color:var(--green); }
+.sum-hdr .chev-s { width:16px; height:16px; color:var(--green); transition:transform var(--tr); }
+.sum-sec.collapsed .sum-hdr .chev-s { transform:rotate(180deg); }
+.sum-sec.collapsed .sum-body { display:none; }
+.sum-body { padding:12px 0 4px; }
+.sum-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; margin-bottom:8px; }
+.sum-key { font-size:12px; color:var(--gray-tx); font-weight:500; }
+.sum-val { font-size:12px; color:var(--text); font-weight:600; word-break:break-word; }
+.az-verified { display:inline-flex; align-items:center; gap:4px; background:var(--green-light); color:var(--green); font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; margin-bottom:6px; }
+
+/* Field error */
+.az-field-error { font-size:12px; color:var(--red); margin-top:2px; display:flex; align-items:center; gap:4px; }
+.az-field-error svg { width:14px; height:14px; flex-shrink:0; }
+
+/* Checkbox */
+.az-check-wrap { display:flex; align-items:center; gap:10px; margin:8px 0; }
+.az-check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--green); }
+.az-check-wrap label { font-size:13px; cursor:pointer; color:var(--text); }
+.az-check-wrap label a { color:var(--green); text-decoration:none; }
+.az-check-wrap label a:hover { text-decoration:underline; }
+
+/* ── Modal ───────────────────────────────────────────────────── */
+.az-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center; }
+.az-overlay.open { display:flex; }
+.az-modal { background:var(--white); border-radius:var(--rl); width:90%; max-width:680px; max-height:90vh; display:flex; flex-direction:column; box-shadow:var(--shm); overflow:hidden; animation:modalIn .2s ease; }
+@keyframes modalIn { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+.az-modal-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--gray-bd); }
+.az-modal-hdr h3 { font-size:16px; font-weight:700; }
+.az-modal-close { background:none; border:none; cursor:pointer; font-size:22px; color:var(--gray-tx); line-height:1; }
+.az-modal-close:hover { color:var(--text); }
+.az-modal-body { padding:24px 20px; overflow-y:auto; flex:1; line-height:1.8; font-size:13px; }
+.az-modal-body p + p { margin-top:16px; }
+.az-modal-ftr { padding:16px 20px; border-top:1px solid var(--gray-bd); display:flex; justify-content:center; }
+.az-success-body { display:flex; flex-direction:column; align-items:center; padding:40px 20px; text-align:center; gap:16px; }
+.az-success-icon { width:64px; height:64px; border-radius:50%; border:3px solid var(--green); display:flex; align-items:center; justify-content:center; }
+.az-success-icon svg { width:32px; height:32px; color:var(--green); }
+.az-success-body p { font-size:15px; font-weight:600; color:var(--text); line-height:1.5; }
+
+/* Charges amount field */
+.az-currency-wrap { position:relative; }
+.az-currency-wrap .az-input { padding-right:110px; }
+.az-currency-badge { position:absolute; right:0; top:0; bottom:0; display:flex; align-items:center; gap:4px; padding:0 12px; background:var(--gray-bg); border:1px solid var(--gray-bd); border-left:none; border-radius:0 var(--r) var(--r) 0; font-size:13px; color:var(--text); font-weight:600; cursor:pointer; white-space:nowrap; }
+.az-currency-badge svg { width:12px; height:12px; }
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.az-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; font-size:12px; color:var(--gray-tx); border-top:1px solid var(--gray-bd); background:var(--white); }
+.az-footer-links { display:flex; gap:20px; }
+.az-footer-links a { color:var(--gray-tx); text-decoration:none; }
+.az-footer-links a:hover { color:var(--text); }
+.az-footer-access { display:flex; align-items:center; gap:10px; }
+.az-font-btn { background:none; border:none; cursor:pointer; font-weight:700; color:var(--text); padding:2px 4px; font-family:var(--ff); }
+.az-font-btn:hover { color:var(--green); }
+.az-contrast-btn { width:22px; height:22px; border-radius:50%; background:var(--text); color:var(--white); border:none; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width:1024px) { .az-right-panel { display:none; } }
+@media (max-width:900px)  { .frow.c3 { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px)  { .az-sidebar { display:none; } .frow.c3,.frow.c2 { grid-template-columns:1fr; } .az-form-area { padding:16px; } }
+</style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar" onclick="document.getElementById('sidebar').classList.toggle('sb-collapsed');this.classList.toggle('is-collapsed');this.setAttribute('aria-expanded',String(!this.classList.contains('is-collapsed')))"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
+  <g id="logo" transform="translate(0.275 -0.84)">
+    <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+    <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+  </g>
+</svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+  </div>
+</header>
+
+<div class="az-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="az-sidebar" id="sidebar">
+    <ul class="az-steps">
+      <li class="az-step active">
+        <div class="az-step-circle">1</div>
+        <div class="az-step-info">
+          <span class="az-step-label">Identification details</span>
+          <span class="az-step-badge badge-orange">0%</span>
+        </div>
+      </li>
+      <li class="az-step inactive">
+        <div class="az-step-circle">2</div>
+        <div class="az-step-info">
+          <span class="az-step-label">User Credentials</span>
+          <span class="az-step-badge badge-gray">0%</span>
+        </div>
+      </li>
+      <li class="az-step inactive">
+        <div class="az-step-circle">3</div>
+        <div class="az-step-info">
+          <span class="az-step-label">Registration Charges</span>
+          <span class="az-step-badge badge-gray">0%</span>
+        </div>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="az-main">
+    <div class="az-content-wrap">
+      <div class="az-form-area">
+
+        <nav class="az-breadcrumb">
+          <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+          <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
+          <span>Identification Details</span>
+        </nav>
+        <h1 class="az-page-title">Create Online Account</h1>
+        <p style="font-size:12px;color:var(--gray-tx);margin-bottom:14px;display:flex;align-items:center;gap:6px;">
+          <span style="display:inline-flex;align-items:center;gap:3px;">
+            <span style="color:var(--red);font-size:11px;font-weight:700;">*</span> Required fields
+          </span>
+          <span style="color:var(--gray-bd);">·</span>
+          <span>Step <strong style="color:var(--text);">1</strong> of 3</span>
+        </p>
+
+        <!-- SECTION: Identification Details -->
+        <div class="az-section">
+          <div class="az-sec-hdr">
+            <h2>Identification Details</h2>
+            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+          </div>
+          <div class="az-sec-body">
+            <div class="frow c3">
+              <div class="az-field">
+                <label for="cif">CIF Number <span class="req">*</span></label>
+                <input class="az-input" type="number" id="cif" placeholder="e.g. 0012345678" min="0">
+              </div>
+              <div class="az-field">
+                <label for="acctnum">Account Number <span class="req">*</span></label>
+                <input class="az-input" type="text" id="acctnum" placeholder="e.g. 001-123456-01">
+              </div>
+              <div class="az-field">
+                <label for="cardnum">Card Number <span class="req">*</span></label>
+                <input class="az-input" type="text" id="cardnum" placeholder="Last 4 digits of your card">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Authentication Details -->
+        <div class="az-section">
+          <div class="az-sec-hdr">
+            <h2>Authentication Details</h2>
+            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+          </div>
+          <div class="az-sec-body">
+            <div class="frow c3">
+              <div class="az-field">
+                <label for="cardpin">Card PIN <span class="req">*</span></label>
+                <div class="az-pwd-wrap">
+                  <input class="az-input" type="password" id="cardpin" placeholder="">
+                  <button class="az-pwd-toggle" type="button" data-target="cardpin">
+                    <svg class="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-hide hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="az-field">
+                <label for="idtype">ID Type</label>
+                <select class="az-select" id="idtype">
+                  <option value="">Select</option>
+                  <option>Passport</option>
+                  <option>National ID</option>
+                  <option>Driver's License</option>
+                  <option>Residence Permit</option>
+                </select>
+              </div>
+              <div class="az-field">
+                <label for="idnum">ID Number <span class="req">*</span></label>
+                <input class="az-input" type="text" id="idnum" placeholder="Enter your ID number">
+              </div>
+            </div>
+            <div class="frow c3">
+              <div class="az-field">
+                <label for="issuedate">Issue Date</label>
+                <div class="az-date-wrap">
+                  <input class="az-input" type="text" id="issuedate" placeholder="DD / MM / YYYY" readonly>
+                  <span class="az-date-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                </div>
+              </div>
+              <div class="az-field">
+                <label for="expirydate">Expiry Date</label>
+                <div class="az-date-wrap">
+                  <input class="az-input" type="text" id="expirydate" placeholder="DD / MM / YYYY" readonly>
+                  <span class="az-date-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                </div>
+              </div>
+              <div class="az-field">
+                <label for="country">Country</label>
+                <select class="az-select" id="country">
+                  <option value="">Select</option>
+                  <option>Lebanon</option><option>UAE</option>
+                  <option>Saudi Arabia</option><option>Jordan</option>
+                  <option>Egypt</option><option>India</option>
+                  <option>United Kingdom</option><option>United States</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Other Details -->
+        <div class="az-section">
+          <div class="az-sec-hdr">
+            <h2>Other Details</h2>
+            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+          </div>
+          <div class="az-sec-body">
+            <div class="frow c3">
+              <div class="az-field">
+                <label for="mobile">Registered Mobile Number <span class="req">*</span></label>
+                <div class="az-phone-wrap">
+                  <div class="az-phone-flag">
+                    <svg viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="20" height="14" fill="#fff"/>
+                      <rect width="20" height="4.67" fill="#EE161F"/>
+                      <rect y="9.33" width="20" height="4.67" fill="#EE161F"/>
+                      <path d="M10 3.5l1.2 3H14l-2.4 1.8.9 3L10 9.6l-2.5 1.7.9-3L6 6.5h2.8z" fill="#00A550" transform="scale(.55) translate(9,1)"/>
+                    </svg>
+                    <span>+961</span>
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+                  <input class="az-input" type="tel" id="mobile" placeholder="e.g. 71 234 567">
+                </div>
+              </div>
+              <div class="az-field">
+                <label for="dob">Date Of Birth</label>
+                <div class="az-date-wrap">
+                  <input class="az-input" type="text" id="dob" placeholder="DD / MM / YYYY" readonly>
+                  <span class="az-date-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                </div>
+              </div>
+              <div class="az-field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input class="az-input" type="email" id="email" placeholder="name@example.com">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="az-bottom-bar">
+          <button class="btn-action btn-cancel" onclick="location.href='login.html'">Cancel</button>
+          <button class="btn-action btn-submit" onclick="location.href='COA_user_credentials.html'" style="min-width:120px;display:inline-flex;align-items:center;gap:.375rem;">
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+      </div><!-- /form-area -->
+
+      <!-- RIGHT PANEL -->
+      <aside class="az-right-panel">
+        <h3 class="promo-title">Create Your Online Account</h3>
+        <p class="promo-body">Don't have an <strong>online account</strong> yet? Sign up now to access <strong>personalized services, manage your account</strong>, and enjoy seamless features.</p>
+        <svg class="promo-img" viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg">
+          <rect x="55" y="36" width="155" height="100" rx="6" fill="#f0f4f8" stroke="#dde2e7" stroke-width="1.5"/>
+          <rect x="68" y="52" width="55" height="8" rx="3" fill="#e0e0e0"/>
+          <rect x="68" y="66" width="128" height="8" rx="3" fill="#e0e0e0"/>
+          <rect x="68" y="80" width="100" height="8" rx="3" fill="#e0e0e0"/>
+          <circle cx="190" cy="118" r="18" fill="#2db87a" opacity=".15"/>
+          <circle cx="190" cy="118" r="12" fill="#2db87a"/>
+          <path d="M184 118l4 4 8-8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="58" cy="108" r="13" fill="#a0616a"/>
+          <rect x="38" y="122" width="40" height="52" rx="7" fill="#6c63ff"/>
+          <rect x="27" y="138" width="14" height="28" rx="6" fill="#6c63ff"/>
+          <rect x="77" y="138" width="14" height="28" rx="6" fill="#6c63ff"/>
+          <rect x="41" y="174" width="13" height="38" rx="5" fill="#2f2e41"/>
+          <rect x="58" y="174" width="13" height="38" rx="5" fill="#2f2e41"/>
+          <circle cx="112" cy="152" r="15" fill="#2db87a" opacity=".12"/>
+          <text x="106" y="158" font-size="16" fill="#2db87a" font-weight="bold" font-family="sans-serif">$</text>
+          <line x1="0" y1="236" x2="220" y2="236" stroke="#ccc" stroke-width="1.2"/>
+        </svg>
+      </aside>
+
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="az-footer">
+  <span>Copyright 2025. All Rights Reserved</span>
+  <div class="az-footer-links">
+    <a href="#">Terms and conditions</a>
+    <a href="about-app.html" target="_blank">About App</a>
+  </div>
+  <div class="az-footer-access">
+    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <button class="az-font-btn" data-scale="down">A&#8315;</button>
+    <button class="az-font-btn" data-scale="reset">A</button>
+    <button class="az-font-btn" data-scale="up">A&#8314;</button>
+    <button class="az-contrast-btn" title="High contrast">&#9681;</button>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Section headers
+  document.querySelectorAll('.az-sec-hdr').forEach(function(h){
+    h.addEventListener('click',function(){ h.closest('.az-section').classList.toggle('collapsed'); });
+  });
+  // Password toggle
+  document.querySelectorAll('.az-pwd-toggle').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var inp = document.getElementById(btn.getAttribute('data-target'));
+      var hide = inp.type==='password';
+      inp.type = hide ? 'text' : 'password';
+      btn.querySelector('.eye-show').classList.toggle('hidden', hide);
+      btn.querySelector('.eye-hide').classList.toggle('hidden', !hide);
+    });
+  });
+  // Font size
+  var fs=1;
+  document.querySelectorAll('.az-font-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var a=b.getAttribute('data-scale');
+      if(a==='up')   fs=Math.min(fs+0.1,1.4);
+      if(a==='down') fs=Math.max(fs-0.1,0.8);
+      if(a==='reset')fs=1;
+      document.documentElement.style.fontSize=(fs*14)+'px';
+    });
+  });
+
+  // ── Date picker ───────────────────────────────────────────────
+  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DAYS=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  var cal={popup:null,field:null,y:0,m:0};
+
+  function buildPopup(){
+    var d=document.createElement('div');
+    d.id='az-cal-popup';
+    d.style.cssText='position:fixed;z-index:400;background:#fff;border:1px solid #dde2e7;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.14);padding:12px 14px;width:264px;display:none;';
+    d.innerHTML=
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+      +'<button id="cal-prev" style="background:none;border:none;cursor:pointer;font-size:18px;color:#2db87a;padding:0 6px;line-height:1;">&#8249;</button>'
+      +'<span id="cal-label" style="font-size:13px;font-weight:700;color:#1a2533;"></span>'
+      +'<button id="cal-next" style="background:none;border:none;cursor:pointer;font-size:18px;color:#2db87a;padding:0 6px;line-height:1;">&#8250;</button>'
+      +'</div>'
+      +'<div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>';
+    document.body.appendChild(d);
+    d.addEventListener('click',function(e){e.stopPropagation();});
+    document.getElementById('cal-prev').addEventListener('click',function(){
+      cal.m--; if(cal.m<0){cal.m=11;cal.y--;} renderCal();
+    });
+    document.getElementById('cal-next').addEventListener('click',function(){
+      cal.m++; if(cal.m>11){cal.m=0;cal.y++;} renderCal();
+    });
+    document.addEventListener('click',function(){ closeCal(); });
+    cal.popup=d;
+  }
+
+  function renderCal(){
+    document.getElementById('cal-label').textContent=MONTHS[cal.m]+' '+cal.y;
+    var grid=document.getElementById('cal-grid');
+    grid.innerHTML='';
+    DAYS.forEach(function(d){
+      var h=document.createElement('div');
+      h.textContent=d;
+      h.style.cssText='font-size:11px;font-weight:700;color:#6b7280;padding:3px 0;';
+      grid.appendChild(h);
+    });
+    var first=new Date(cal.y,cal.m,1).getDay();
+    var total=new Date(cal.y,cal.m+1,0).getDate();
+    var now=new Date();
+    for(var i=0;i<first;i++) grid.appendChild(document.createElement('div'));
+    for(var day=1;day<=total;day++){
+      var btn=document.createElement('button');
+      btn.textContent=day;
+      var isTd=(day===now.getDate()&&cal.m===now.getMonth()&&cal.y===now.getFullYear());
+      btn.style.cssText='border:none;cursor:pointer;border-radius:50%;width:32px;height:32px;font-size:12px;font-family:inherit;'
+        +'background:'+(isTd?'#2db87a':'none')+';color:'+(isTd?'#fff':'#1a2533')+';font-weight:'+(isTd?'700':'400')+';';
+      if(isTd) btn.setAttribute('data-today','1');
+      btn.addEventListener('mouseenter',function(){if(!this.getAttribute('data-today'))this.style.background='#e8f7f0';});
+      btn.addEventListener('mouseleave',function(){if(!this.getAttribute('data-today'))this.style.background='none';});
+      (function(d){
+        btn.addEventListener('click',function(){
+          cal.field.value=String(d).padStart(2,'0')+' / '+String(cal.m+1).padStart(2,'0')+' / '+cal.y;
+          closeCal();
+        });
+      })(day);
+      grid.appendChild(btn);
+    }
+  }
+
+  function openCal(field,anchor){
+    if(!cal.popup) buildPopup();
+    cal.field=field;
+    var now=new Date(); cal.y=now.getFullYear(); cal.m=now.getMonth();
+    var v=field.value.replace(/\s/g,'');
+    if(/^\d{2}\/\d{2}\/\d{4}$/.test(v)){var p=v.split('/');cal.m=parseInt(p[1])-1;cal.y=parseInt(p[2]);}
+    renderCal();
+    var r=anchor.getBoundingClientRect();
+    cal.popup.style.top=(r.bottom+4)+'px';
+    var left=r.left;
+    if(left+264>window.innerWidth) left=window.innerWidth-272;
+    cal.popup.style.left=left+'px';
+    cal.popup.style.display='block';
+  }
+
+  function closeCal(){ if(cal.popup) cal.popup.style.display='none'; }
+
+  document.querySelectorAll('.az-date-wrap').forEach(function(wrap){
+    var inp=wrap.querySelector('.az-input');
+    var icon=wrap.querySelector('.az-date-icon');
+    icon.style.pointerEvents='auto';
+    icon.style.cursor='pointer';
+    icon.addEventListener('click',function(e){e.stopPropagation();openCal(inp,wrap);});
+    inp.addEventListener('click',function(e){e.stopPropagation();openCal(inp,wrap);});
+  });
+}());
+
+/* Language selector */
+function setHdrLang(code, flagCode, optBtn) {
+  document.querySelectorAll('.hdr-lang').forEach(function(btn) {
+    var flagEl = btn.querySelector('.fi');
+    if (flagEl) { flagEl.className = 'fi fi-' + flagCode; }
+    btn.childNodes.forEach(function(n){ if (n.nodeType===3) n.textContent = code + ' '; });
+  });
+  if (optBtn) {
+    optBtn.closest('.hdr-lang-drop').querySelectorAll('.hdr-lang-opt').forEach(

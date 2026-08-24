@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Banking – Dashboard"/>
+  <title>azentio – Dashboard</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+  <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    /* ── Dashboard layout ─────────────────────────── */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .dash-grid-2 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .dash-grid-3 {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Stat cards ───────────────────────────────── */
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--az-border);
+      border-radius: .75rem;
+      padding: 1.25rem 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      box-shadow: 0 1px 4px rgba(22,48,61,.05);
+      transition: box-shadow .15s;
+    }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(22,48,61,.1); }
+    .stat-card-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .stat-card-icon {
+      width: 40px; height: 40px; border-radius: .5rem;
+      background: #f0faf6;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-card-icon img { width: 22px; height: 22px; }
+    .stat-card-badge {
+      font-size: .6875rem; font-weight: 600;
+      padding: .2rem .5rem; border-radius: 20px;
+    }
+    .badge-up { background: #e6f9f0; color: #1a9e63; }
+    .badge-down { background: #fdecea; color: #c62828; }
+    .badge-warn { background: #fff8e1; color: #b35a00; }
+    .badge-info { background: #e8f4fd; color: #0071bc; }
+    .stat-card-label {
+      font-size: .8125rem; color: var(--az-muted); font-weight: 400;
+    }
+    .stat-card-value {
+      font-size: 1.4rem; font-weight: 700; color: var(--az-navy);
+      line-height: 1.2;
+    }
+    .stat-card-sub {
+      font-size: .75rem; color: var(--az-muted);
+    }
+
+    /* ── Section card ─────────────────────────────── */
+    .dash-card {
+      background: #fff;
+      border: 1px solid var(--az-border);
+      border-radius: .75rem;
+      box-shadow: 0 1px 4px rgba(22,48,61,.05);
+      overflow: hidden;
+    }
+    .dash-card-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--az-border);
+    }
+    .dash-card-title {
+      font-size: .9375rem; font-weight: 600; color: var(--az-navy);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .dash-card-title img { width: 18px; height: 18px; opacity: .75; }
+    .dash-card-body { padding: 1.25rem; }
+    .dash-card-link {
+      font-size: .8125rem; color: var(--az-blue); font-weight: 500;
+      text-decoration: none; white-space: nowrap;
+    }
+    .dash-card-link:hover { text-decoration: underline; }
+
+    /* ── Welcome bar ──────────────────────────────── */
+    .welcome-bar {
+      background: linear-gradient(135deg, var(--az-navy) 0%, #1f4557 100%);
+      border-radius: .75rem;
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+    .welcome-bar-left h2 {
+      font-size: 1.1rem; font-weight: 600; margin: 0 0 .25rem;
+      color: #fff;
+    }
+    .welcome-bar-left p {
+      font-size: .8125rem; color: rgba(255,255,255,.7); margin: 0;
+    }
+    .welcome-bar-actions { display: flex; gap: .625rem; }
+    .btn-quick {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff; border-radius: .5rem;
+      padding: .4375rem .875rem;
+      font-size: .8125rem; font-weight: 500;
+      cursor: pointer; transition: background .15s;
+      display: flex; align-items: center; gap: .375rem;
+      text-decoration: none;
+    }
+    .btn-quick:hover { background: rgba(255,255,255,.22); color: #fff; }
+    .btn-quick-primary {
+      background: var(--az-green); border-color: var(--az-green);
+    }
+    .btn-quick-primary:hover { background: var(--az-green-hover); }
+
+    /* ── Chart placeholder ────────────────────────── */
+    .chart-wrap {
+      position: relative; height: 200px;
+    }
+    .chart-svg { width: 100%; height: 100%; }
+    .chart-legend {
+      display: flex; gap: 1.25rem; flex-wrap: wrap;
+      padding: .75rem 1.25rem; border-top: 1px solid var(--az-border);
+    }
+    .legend-item { display: flex; align-items: center; gap: .375rem; font-size: .75rem; color: var(--az-muted); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ── Transactions table ───────────────────────── */
+    .txn-table { width: 100%; border-collapse: collapse; }
+    .txn-table th {
+      font-size: .75rem; font-weight: 600; color: var(--az-muted);
+      text-transform: uppercase; letter-spacing: .04em;
+      padding: .5rem .75rem; border-bottom: 1px solid var(--az-border);
+      text-align: left;
+    }
+    .txn-table td {
+      padding: .75rem .75rem; font-size: .8125rem;
+      border-bottom: 1px solid #f5f7f9;
+      color: var(--az-navy);
+      vertical-align: middle;
+    }
+    .txn-table tr:last-child td { border-bottom: none; }
+    .txn-table tr:hover td { background: #fafcfd; }
+    .txn-icon-wrap {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .txn-icon-wrap img { width: 16px; height: 16px; }
+    .txn-ref { font-size: .75rem; color: var(--az-muted); }
+    .txn-debit { color: #c62828; font-weight: 600; }
+    .txn-credit { color: #1a9e63; font-weight: 600; }
+    .badge-txn {
+      font-size: .6875rem; font-weight: 600;
+      padding: .15rem .5rem; border-radius: 20px; display: inline-block;
+    }
+    .badge-txn.completed { background: #e6f9f0; color: #1a9e63; }
+    .badge-txn.pending   { background: #fff8e1; color: #b35a00; }
+    .badge-txn.failed    { background: #fdecea; color: #c62828; }
+
+    /* ── Pending approvals ────────────────────────── */
+    .approval-item {
+      display: flex; align-items: center; gap: .875rem;
+      padding: .75rem 0;
+      border-bottom: 1px solid #f5f7f9;
+    }
+    .approval-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .approval-icon {
+      width: 36px; height: 36px; border-radius: .5rem;
+      background: #fff8e1; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .approval-info { flex: 1; min-width: 0; }
+    .approval-title { font-size: .8125rem; font-weight: 600; color: var(--az-navy); }
+    .approval-sub { font-size: .75rem; color: var(--az-muted); }
+    .approval-amount { font-size: .875rem; font-weight: 700; color: var(--az-navy); white-space: nowrap; }
+    .approval-actions { display: flex; gap: .375rem; }
+    .btn-approve {
+      background: #e6f9f0; color: #1a9e63; border: none;
+      border-radius: .375rem; padding: .25rem .625rem;
+      font-size: .75rem; font-weight: 600; cursor: pointer;
+      transition: background .12s;
+    }
+    .btn-approve:hover { background: #c8f1de; }
+    .btn-reject {
+      background: #fdecea; color: #c62828; border: none;
+      border-radius: .375rem; padding: .25rem .625rem;
+      font-size: .75rem; font-weight: 600; cursor: pointer;
+      transition: background .12s;
+    }
+    .btn-reject:hover { background: #fccfcc; }
+
+    /* ── Net worth donut ──────────────────────────── */
+    .donut-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      padding: .5rem 0 .25rem;
+    }
+    .donut-center { font-size: 1.3rem; font-weight: 700; color: var(--az-navy); }
+    .donut-label { font-size: .75rem; color: var(--az-muted); }
+    .donut-legend { width: 100%; margin-top: .75rem; }
+    .donut-legend-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .3rem 0; font-size: .8rem;
+    }
+    .donut-legend-item .dl-left { display: flex; align-items: center; gap: .5rem; }
+    .dl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dl-name { color: var(--az-navy); }
+    .dl-val { font-weight: 600; color: var(--az-navy); }
+
+    /* ── Session / Request rows ───────────────────── */
+    .info-row {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .625rem 0;
+      border-bottom: 1px solid #f5f7f9;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row-icon {
+      width: 32px; height: 32px; border-radius: .5rem;
+      background: #edf2f5; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .info-row-icon img { width: 16px; height: 16px; }
+    .info-row-body { flex: 1; min-width: 0; }
+    .info-row-title { font-size: .8125rem; font-weight: 500; color: var(--az-navy); }
+    .info-row-sub { font-size: .75rem; color: var(--az-muted); }
+    .info-row-right { font-size: .75rem; color: var(--az-muted); white-space: nowrap; }
+
+    /* ── Account selector tabs ────────────────────── */
+    .acct-tabs {
+      display: flex; gap: .375rem; flex-wrap: wrap;
+      padding: 0 1.25rem 1rem; margin-top: -.25rem;
+    }
+    .acct-tab-btn {
+      background: #f0f4f6; border: 1px solid var(--az-border);
+      border-radius: 20px; padding: .25rem .875rem;
+      font-size: .75rem; font-weight: 500; color: var(--az-navy);
+      cursor: pointer; transition: all .12s;
+    }
+    .acct-tab-btn.active, .acct-tab-btn:hover {
+      background: var(--az-navy); color: #fff; border-color: var(--az-navy);
+    }
+
+    /* ── Draft item ───────────────────────────────── */
+    .draft-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .625rem 0; border-bottom: 1px solid #f5f7f9;
+    }
+    .draft-item:last-child { border-bottom: none; }
+    .draft-icon {
+      width: 34px; height: 34px; border-radius: .5rem;
+      background: #f0f4f6; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .draft-info { flex: 1; min-width: 0; }
+    .draft-title { font-size: .8125rem; font-weight: 500; color: var(--az-navy); }
+    .draft-sub { font-size: .75rem; color: var(--az-muted); }
+    .draft-actions { display: flex; gap: .375rem; }
+    .btn-draft-edit {
+      background: none; border: 1px solid var(--az-border);
+      border-radius: .375rem; padding: .2rem .5rem;
+      font-size: .75rem; color: var(--az-navy); cursor: pointer;
+      transition: border-color .12s;
+    }
+    .btn-draft-edit:hover { border-color: var(--az-blue); color: var(--az-blue); }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 1199px) {
+      .dash-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-grid-2, .dash-grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 767px) {
+      .dash-grid { grid-template-columns: 1fr 1fr; }
+      .welcome-bar-actions { display: none; }
+    }
+    @media (max-width: 479px) {
+      .dash-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/dark.css"/>
+  <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
+  <g id="logo" transform="translate(0.275 -0.84)">
+    <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+    <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+  </g>
+</svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+      <img src="images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-label="5 notifications">5</span>
+    </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          <a href="#" class="notif-clear-all">Clear all</a>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 Jul, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:42
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+<nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')"><span class="sb-icon"><img src="images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Favourites</a></div>
+    <button class="sb-item active-section" data-label="Dashboard" onclick="location.href='dashboard.html'"><span class="sb-icon"><img src="images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">Dashboard</span></button>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none">
+      <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfer <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a></div>
+      <a href="transfer-list.html" class="sb-sub-item">Transfer List</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfer <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Account Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a></div>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sBulk','cBulk')">Bulk Payment <span class="sb-chev-sm" id="cBulk"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sBulk" class="sb-sub3" style="display:none"><a href="bulk-payment-offline.html" class="sb-sub3-item">Offline Bulk Payment</a><a href="bulk-payment-upload.html" class="sb-sub3-item">Bulk Payment Upload</a><a href="bulk-payment-list.html" class="sb-sub3-item">Bulk Payment List</a></div>
+    </div>
+    <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub" style="display:none"><a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payments Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payments</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+    <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a><a href="cards-settlement-local.html" class="sb-sub3-item">Local Credit Card Settlement</a></div><a href="cards-report.html" class="sb-sub-item">Card Report</a></div>
+    <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sCheq','cCheq')"><span class="sb-icon"><img src="images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cCheq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCheq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebooks</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a><a href="chequebook-report.html" class="sb-sub-item">Chequebook Report</a></div>
+    <button class="sb-item" data-label="Remittance" onclick="toggleSub('sRem','cRem')"><span class="sb-icon"><img src="images/icons/remittance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Remittance</span><span class="sb-chevron" id="cRem"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sRem" class="sb-sub" style="display:none"><a href="remittance-intra-bank.html" class="sb-sub-item">Intra Bank Remittance Request</a><a href="remittance-local.html" class="sb-sub-item">Local Remittance Request</a><a href="remittance-international.html" class="sb-sub-item">International Remittance Request</a></div>
+    <button class="sb-item" data-label="Sweeping and Pooling" onclick="toggleSub('sSP','cSP')"><span class="sb-icon"><img src="images/icons/sweeping_and_pooling.svg" width="18" height="18" alt=""/></span><span class="sb-label">Sweeping and Pooling</span><span class="sb-chevron" id="cSP"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSP" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Sweeping and Pooling</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a></div>
+    <button class="sb-item" data-label="Cash Management" onclick="toggleSub('sCM','cCM')"><span class="sb-icon"><img src="images/icons/cash_management.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cash Management</span><span class="sb-chevron" id="cCM"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCM" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Cash Management</a></div>
+    <button class="sb-item" data-label="Trade Finance" onclick="toggleSub('sTF','cTF')"><span class="sb-icon"><img src="images/icons/trade_finance.svg" width="18" height="18" alt=""/></span><span class="sb-label">Trade Finance</span><span class="sb-chevron" id="cTF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTF" class="sb-sub" style="display:none"><a href="tf-lc-request.html" class="sb-sub-item">Request for Letter of Credit</a><a href="tf-lc-status.html" class="sb-sub-item">LC Status and Details</a><a href="tf-lg-request.html" class="sb-sub-item">Letter of Guarantee</a><a href="tf-lg-status.html" class="sb-sub-item">LG Status and Details</a><a href="tf-ob-request.html" class="sb-sub-item">Request for Outward Bill</a><a href="tf-ob-status.html" class="sb-sub-item">OB Status and Details</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="#" class="sb-sub-item">Services</a></div>
+    <button class="sb-item" data-label="Corporate End User Management Reports"><span class="sb-icon"><img src="images/icons/corporate_end_user.svg" width="18" height="18" alt=""/></span><span class="sb-label">Corporate End User Management Reports</span></button>
+  </nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <!-- Breadcrumb -->
+    <div class="az-bc">
+      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">Dashboard</span>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.875rem">
+      <h1 class="page-title">Dashboard</h1>
+      <a href="dashboard-custom.html" class="btn-open-account" style="text-decoration:none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Customise Dashboard
+      </a>
+    </div>
+
+    <!-- Welcome banner -->
+    <div class="welcome-bar">
+      <div class="welcome-bar-left">
+        <h2>Good morning, Sara Rahman &#128075;</h2>
+        <p>Sunday, 4 May 2026 &nbsp;·&nbsp; Last login: Today at 08:14 AM from 192.168.1.1</p>
+      </div>
+      <div class="welcome-bar-actions">
+        <a href="transfer-own-accounts.html" class="btn-quick btn-quick-primary" style="text-decoration:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          New Transfer
+        </a>
+        <a href="transfer-pending-list.html" class="btn-quick" style="text-decoration:none">Pending Approvals <span style="background:rgba(255,200,0,.3);color:#fff;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:4px;font-weight:700">3</span></a>
+        <a href="accounts.html" class="btn-quick" style="text-decoration:none">My Accounts</a>
+      </div>
+    </div>
+
+    <!-- Row 1: Stat cards -->
+    <div class="dash-grid">
+      <!-- Consolidated Accounts -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon"><img src="images/dashboard/Consolidated_accounts.svg" alt="accounts"/></div>
+          <span class="stat-card-badge badge-info">4 Accounts</span>
+        </div>
+        <div class="stat-card-label">Total Balance</div>
+        <div class="stat-card-value">USD 1,248,350.00</div>
+        <div class="stat-card-sub">Across all accounts &nbsp;<a href="accounts.html" style="color:var(--az-blue);font-size:.75rem;text-decoration:none">View all ›</a></div>
+      </div>
+
+      <!-- My Net Worth -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon"><img src="images/dashboard/My_net_worth.svg" alt="net worth"/></div>
+          <span class="stat-card-badge badge-up">&#8593; 2.4%</span>
+        </div>
+        <div class="stat-card-label">Net Worth</div>
+        <div class="stat-card-value">USD 980,200.00</div>
+        <div class="stat-card-sub">vs last month: <span style="color:#1a9e63;font-weight:600">+USD 23,100</span></div>
+      </div>
+
+      <!-- Pending Approvals -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" style="background:#fff8e1"><img src="images/dashboard/Pending_approvals.svg" alt="approvals"/></div>
+          <span class="stat-card-badge badge-warn">Requires Action</span>
+        </div>
+        <div class="stat-card-label">Pending Approvals</div>
+        <div class="stat-card-value">3</div>
+        <div class="stat-card-sub">2 transfers &nbsp;·&nbsp; 1 bulk payment</div>
+      </div>
+
+      <!-- Drafts -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" style="background:#f0f4f6"><img src="images/dashboard/drafts.svg" alt="drafts"/></div>
+          <span class="stat-card-badge badge-info">Saved</span>
+        </div>
+        <div class="stat-card-label">Drafts</div>
+        <div class="stat-card-value">5</div>
+        <div class="stat-card-sub">3 transfers &nbsp;·&nbsp; 2 bulk payments</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Balance chart + Net worth donut -->
+    <div class="dash-grid-2">
+
+      <!-- Account Balance Fluctuations -->
+      <div class="dash-card">
+        <div class="dash-card-hdr">
+          <div class="dash-card-title">
+            <img src="images/dashboard/Account_balance_fluctuations.svg" alt=""/>
+            Account Balance Fluctuations
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <div class="acct-tabs" style="padding:0;margin:0">
+              <button class="acct-tab-btn active" onclick="switchChartAccount(this,'gc0')">USD – IBAN8000</button>
+              <button class="acct-tab-btn" onclick="switchChartAccount(this,'gc1')">USD – IBAN8001</button>
+              <button class="acct-tab-btn" onclick="switchChartAccount(this,'gc2')">EUR – IBAN8002</button>
+            </div>
+            <select style="font-size:.75rem;padding:.25rem .5rem;border:1px solid var(--az-border);border-radius:.375rem;color:var(--az-navy);background:#fff" onchange="updateChartRange(this.value)">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </div>
+        </div>
+        <div class="dash-card-body" style="padding:1rem 1.25rem .5rem">
+          <div class="chart-wrap">
+            <svg class="chart-svg" id="balanceChart" viewBox="0 0 700 180" preserveAspectRatio="none">
+              <!-- Grid lines -->
+              <line x1="0" y1="0" x2="700" y2="0" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="45" x2="700" y2="45" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="90" x2="700" y2="90" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="135" x2="700" y2="135" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="0" y1="180" x2="700" y2="180" stroke="#f0f0f0" stroke-width="1"/>
+              <!-- Y labels -->
+              <text x="4" y="12" font-size="9" fill="#8a979e">1.5M</text>
+              <text x="4" y="57" font-size="9" fill="#8a979e">1.2M</text>
+              <text x="4" y="102" font-size="9" fill="#8a979e">0.9M</text>
+              <text x="4" y="147" font-size="9" fill="#8a979e">0.6M</text>
+              <text x="4" y="178" font-size="9" fill="#8a979e">0.3M</text>
+              <!-- Gradient fill -->
+              <defs>
+                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2ed88e" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#2ed88e" stop-opacity="0.01"/>
+                </linearGradient>
+              </defs>
+              <!-- Area fill -->
+              <path d="M30,140 C80,120 130,150 180,110 C230,75 280,100 330,70 C380,45 430,85 480,60 C530,40 580,55 650,45 L650,180 L30,180 Z" fill="url(#chartGrad)"/>
+              <!-- Line -->
+              <path d="M30,140 C80,120 130,150 180,110 C230,75 280,100 330,70 C380,45 430,85 480,60 C530,40 580,55 650,45" fill="none" stroke="#2ed88e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Data points -->
+              <circle cx="30" cy="140" r="3.5" fill="#2ed88e"/>
+              <circle cx="130" cy="150" r="3.5" fill="#2ed88e"/>
+              <circle cx="230" cy="75" r="3.5" fill="#2ed88e"/>
+              <circle cx="330" cy="70" r="3.5" fill="#2ed88e"/>
+              <circle cx="430" cy="85" r="3.5" fill="#2ed88e"/>
+              <circle cx="530" cy="40" r="3.5" fill="#2ed88e"/>
+              <circle cx="650" cy="45" r="4.5" fill="#2ed88e" stroke="#fff" stroke-width="2"/>
+              <!-- X labels -->
+              <text x="22" y="196" font-size="9" fill="#8a979e" text-anchor="middle">Apr 5</text>
+              <text x="122" y="196" font-size="9" fill="#8a979e" text-anchor="middle">Apr 10</text>
+              <text x="222" y="196" font-size="9" fill="#8a979e" text-anchor="middle">Apr 15</text>
+              <text x="322" y="196" font-size="9" fill="#8a979e" text-anchor="middle">Apr 20</text>
+              <text x="422" y="196" font-size="9" fill="#8a979e" text-anchor="middle">Apr 25</text>
+              <text x="522" y="196" font-size="9" fill="#8a979e" text-anchor="middle">Apr 30</text>
+              <text x="645" y="196" font-size="9" fill="#8a979e" text-anchor="middle">May 4</text>
+              <!-- Tooltip marker -->
+              <line x1="650" y1="0" x2="650" y2="180" stroke="#2ed88e" stroke-width="1" stroke-dasharray="3,3" opacity=".6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#2ed88e"></div> Balance</div>
+          <div class="legend-item" style="margin-left:auto;font-size:.75rem;color:var(--az-navy)">Current: <strong>USD 1,248,350.00</strong></div>
+        </div>
+      </div>
+
+      <!-- Net Worth Donut -->
+      <div class="dash-card">
+        <div class="dash-card-hdr">
+          <div class="dash-card-title">
+            <img src="images/dashboard/My_net_worth.svg" alt=""/>
+            My Net Worth
+          </div>
+          <a href="accounts.html" class="dash-card-link">Details ›</a>
+        </div>
+        <div class="dash-card-body">
+          <div class="donut-wrap">
+            <svg width="150" height="150" viewBox="0 0 150 150">
+              <defs>
+                <filter id="ds" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity=".1"/>
+                </filter>
+              </defs>
+              <!-- Background ring -->
+              <circle cx="75" cy="75" r="58" fill="none" stroke="#f0f4f6" stroke-width="18"/>
+              <!-- USD segment: 62% -->
+              <circle cx="75" cy="75" r="58" fill="none" stroke="#2ed88e" stroke-width="18"
+                stroke-dasharray="225.9 364.4" stroke-dashoffset="91" stroke-linecap="butt"/>
+              <!-- EUR segment: 24% -->
+              <circle cx="75" cy="75" r="58" fill="none" stroke="#0085db" stroke-width="18"
+                stroke-dasharray="87.4 502.9" stroke-dashoffset="-134.9" stroke-linecap="butt"/>
+              <!-- AED segment: 14% -->
+              <circle cx="75" cy="75" r="58" fill="none" stroke="#16303d" stroke-width="18"
+                stroke-dasharray="50.9 539.4" stroke-dashoffset="-222.3" stroke-linecap="butt"/>
+              <text x="75" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#16303d">USD 980K</text>
+              <text x="75" y="86" text-anchor="middle" font-size="9" fill="#8a979e">Net Worth</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="donut-legend-item">
+                <div class="dl-left"><div class="dl-dot" style="background:#2ed88e"></div><div class="dl-name">USD Accounts</div></div>
+                <div class="dl-val">62%</div>
+              </div>
+              <div class="donut-legend-item">
+                <div class="dl-left"><div class="dl-dot" style="background:#0085db"></div><div class="dl-name">EUR Accounts</div></div>
+                <div class="dl-val">24%</div>
+              </div>
+              <div class="donut-legend-item">
+                <div class="dl-left"><div class="dl-dot" style="background:#16303d"></div><div class="dl-name">AED Accounts</div></div>
+                <div class="dl-val">14%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Recent Transactions + Pending Approvals -->
+    <div class="dash-grid-3">
+
+      <!-- Recent Transactions -->
+      <div class="dash-card">
+        <div class="dash-card-hdr">
+          <div class="dash-card-title">
+            <img src="images/dashboard/Transaction_history.svg" alt=""/>
+            Recent Transactions
+          </div>
+          <a href="transaction-history.html" class="dash-card-link">View all ›</a>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="txn-table">
+            <thead>
+              <tr>
+                <th>Transaction</th>
+                <th>Account</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem">
+                    <div class="txn-icon-wrap" style="background:#e6f9f0"><img src="images/icons/transfer.svg" alt=""/></div>
+                    <div>
+                      <div style="font-weight:500">Own Account Transfer</div>
+                      <div class="txn-ref">REF-TXN-20240501</div>
+                    </div>
+                  </div>
+                </td>
+                <td>IBAN8000</td>
+                <td>04 May 2026</td>
+                <td class="txn-debit">- USD 5,000.00</td>
+                <td><span class="badge-txn completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem">
+                    <div class="txn-icon-wrap" style="background:#e8f4fd"><img src="images/icons/bulk_payments.svg" alt=""/></div>
+                    <div>
+                      <div style="font-weight:500">Bulk Payment – April Salaries</div>
+                      <div class="txn-ref">REF-BLK-20240430</div>
+                    </div>
+                  </div>
+                </td>
+                <td>IBAN8001</td>
+                <td>30 Apr 2026</td>
+                <td class="txn-debit">- USD 128,400.00</td>
+                <td><span class="badge-txn completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem">
+                    <div class="txn-icon-wrap" style="background:#fff8e1"><img src="images/icons/payments.svg" alt=""/></div>
+                    <div>
+                      <div style="font-weight:500">International Transfer</div>
+                      <div class="txn-ref">REF-INT-20240428</div>
+                    </div>
+                  </div>
+                </td>
+                <td>IBAN8000</td>
+                <td>28 Apr 2026</td>
+                <td class="txn-debit">- EUR 22,000.00</td>
+                <td><span class="badge-txn pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem">
+                    <div class="txn-icon-wrap" style="background:#e6f9f0"><img src="images/icons/accounts.svg" alt=""/></div>
+                    <div>
+                      <div style="font-weight:500">Interest Credit</div>
+                      <div class="txn-ref">REF-INT-20240425</div>
+                    </div>
+                  </div>
+                </td>
+                <td>IBAN8002</td>
+                <td>25 Apr 2026</td>
+                <td class="txn-credit">+ USD 1,840.00</td>
+                <td><span class="badge-txn completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem">
+                    <div class="txn-icon-wrap" style="background:#fdecea"><img src="images/icons/transfer.svg" alt=""/></div>
+                    <div>
+                      <div style="font-weight:500">Local Transfer</div>
+                      <div class="txn-ref">REF-LCL-20240422</div>
+                    </div>
+                  </div>
+                </td>
+                <td>IBAN8000</td>
+                <td>22 Apr 2026</td>
+                <td class="txn-debit">- USD 3,200.00</td>
+                <td><span class="badge-txn failed">Failed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right column: Pending Approvals + Drafts + Session History -->
+      <div style="display:flex;flex-direction:column;gap:1rem">
+
+        <!-- Pending Approvals -->
+        <div class="dash-card">
+          <div class="dash-card-hdr">
+            <div class="dash-card-title">
+              <img src="images/dashboard/Pending_approvals.svg" alt=""/>
+              Pending Approvals
+            </div>
+            <a href="transfer-pending-list.html" class="dash-card-link">View all ›</a>
+          </div>
+          <div class="dash-card-body" style="padding:.75rem 1.25rem">
+            <div class="approval-item">
+              <div class="approval-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt="transfer"/></div>
+              <div class="approval-info">
+                <div class="approval-title">Internal Transfer</div>
+                <div class="approval-sub">IBAN8000 › IBAN8001 &nbsp;·&nbsp; Sara Rahman P.</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.25rem">
+                <div class="approval-amount">USD 50,000</div>
+                <div class="approval-actions">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-reject">Reject</button>
+                </div>
+              </div>
+            </div>
+            <div class="approval-item">
+              <div class="approval-icon"><img src="images/icons/bulk_payments.svg" width="18" height="18" alt="bulk"/></div>
+              <div class="approval-info">
+                <div class="approval-title">Bulk Payment</div>
+                <div class="approval-sub">May Vendor Batch &nbsp;·&nbsp; 42 records</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.25rem">
+                <div class="approval-amount">USD 287,400</div>
+                <div class="approval-actions">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-reject">Reject</button>
+                </div>
+              </div>
+            </div>
+            <div class="approval-item">
+              <div class="approval-icon"><img src="images/icons/transfer.svg" width="18" height="18" alt="transfer"/></div>
+              <div class="approval-info">
+                <div class="approval-title">International Transfer</div>
+                <div class="approval-sub">IBAN8000 › BNP Paris &nbsp;·&nbsp; Sara Rahman P.</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.25rem">
+                <div class="approval-amount">EUR 22,000</div>
+                <div class="approval-actions">
+                  <button class="btn-approve">Approve</button>
+                  <button class="btn-reject">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drafts -->
+        <div class="dash-card">
+          <div class="dash-card-hdr">
+            <div class="dash-card-title">
+              <img src="images/dashboard/drafts.svg" alt=""/>
+              Drafts
+            </div>
+            <a href="#" class="dash-card-link">View all ›</a>
+          </div>
+          <div class="dash-card-body" style="padding:.75rem 1.25rem">
+            <div class="draft-item">
+              <div class="draft-icon"><img src="images/icons/transfer.svg" width="16" height="16" alt=""/></div>
+              <div class="draft-info">
+                <div class="draft-title">Own Account Transfer</div>
+                <div class="draft-sub">Saved 3 May 2026 &nbsp;·&nbsp; USD 10,000</div>
+              </div>
+              <div class="draft-actions">
+                <button class="btn-draft-edit">Resume</button>
+                <button class="btn-draft-edit" style="color:#c62828;border-color:#fccfcc">Delete</button>
+              </div>
+            </div>
+            <div class="draft-item">
+              <div class="draft-icon"><img src="images/icons/bulk_payments.svg" width="16" height="16" alt=""/></div>
+              <div class="draft-info">
+                <div class="draft-title">Bulk Payment – June Salaries</div>
+                <div class="draft-sub">Saved 2 May 2026 &nbsp;·&nbsp; Incomplete</div>
+              </div>
+              <div class="draft-actions">
+                <button class="btn-draft-edit">Resume</button>
+                <button class="btn-draft-edit" style="color:#c62828;border-color:#fccfcc">Delete</button>
+              </div>
+            </div>
+            <div class="draft-item">
+              <div class="draft-icon"><img src="images/icons/transfer.svg" width="16" height="16" alt=""/></div>
+              <div class="draft-info">
+                <div class="draft-title">International Transfer</div>
+                <div class="draft-sub">Saved 1 May 2026 &nbsp;·&nbsp; EUR 5,500</div>
+              </div>
+              <div class="draft-actions">
+                <button class="btn-draft-edit">Resume</button>
+                <button class="btn-draft-edit" style="color:#c62828;border-color:#fccfcc">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Row 4: Request History + Session History -->
+    <div class="dash-grid" style="grid-template-columns:1fr 1fr;margin-bottom:1.5rem">
+      <!-- Request History -->
+      <div class="dash-card">
+        <div class="dash-card-hdr">
+          <div class="dash-card-title">
+            <img src="images/dashboard/Request_history.svg" alt=""/>
+            Request History
+          </div>
+          <a href="#" class="dash-card-link">View all ›</a>
+        </div>
+        <div class="dash-card-body" style="padding:.75rem 1.25rem">
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/chequebook.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Chequebook Request</div>
+              <div class="info-row-sub">25 leaves &nbsp;·&nbsp; IBAN8000</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span class="badge-txn completed">Approved</span>
+              <div class="info-row-right">02 May 2026</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/cards.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Debit Card Request</div>
+              <div class="info-row-sub">Replacement &nbsp;·&nbsp; IBAN8001</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span class="badge-txn pending">In Progress</span>
+              <div class="info-row-right">28 Apr 2026</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/export.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Hard Copy Statement</div>
+              <div class="info-row-sub">Q1 2026 &nbsp;·&nbsp; IBAN8000</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span class="badge-txn completed">Dispatched</span>
+              <div class="info-row-right">15 Apr 2026</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/barcode.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">QR Code Generation</div>
+              <div class="info-row-sub">IBAN8002</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span class="badge-txn completed">Completed</span>
+              <div class="info-row-right">10 Apr 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session History -->
+      <div class="dash-card">
+        <div class="dash-card-hdr">
+          <div class="dash-card-title">
+            <img src="images/dashboard/Session_history.svg" alt=""/>
+            Session History
+          </div>
+          <a href="#" class="dash-card-link">View all ›</a>
+        </div>
+        <div class="dash-card-body" style="padding:.75rem 1.25rem">
+          <div class="info-row">
+            <div class="info-row-icon" style="background:#e6f9f0"><img src="images/icons/information.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Current Session</div>
+              <div class="info-row-sub">Chrome 124 &nbsp;·&nbsp; Windows 10 &nbsp;·&nbsp; 192.168.1.1</div>
+            </div>
+            <div class="info-row-right">Today 08:14 AM</div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/information.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Previous Session</div>
+              <div class="info-row-sub">Chrome 124 &nbsp;·&nbsp; Windows 10 &nbsp;·&nbsp; 192.168.1.1</div>
+            </div>
+            <div class="info-row-right">03 May 2026</div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/information.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Session Login</div>
+              <div class="info-row-sub">Safari 17 &nbsp;·&nbsp; macOS &nbsp;·&nbsp; 10.0.0.45</div>
+            </div>
+            <div class="info-row-right">01 May 2026</div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-icon"><img src="images/icons/information.svg" alt=""/></div>
+            <div class="info-row-body">
+              <div class="info-row-title">Session Login</div>
+              <div class="info-row-sub">Firefox 125 &nbsp;·&nbsp; Windows 11 &nbsp;·&nbsp; 192.168.1.5</div>
+            </div>
+            <div class="info-row-right">29 Apr 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+  function switchChartAccount(btn, id) {
+    btn.closest('.acct-tabs').querySelectorAll('.acct-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+  }
+  function updateChartRange(v) { /* hook for live data */ }
+</script>
+</body>
+</html>
