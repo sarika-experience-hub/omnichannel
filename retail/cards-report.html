@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Card Report</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">
+    <button class="hdr-icon-btn"><img src="../images/icons/about_us.svg" width="18" height="18" alt=""/></button>
+    <div class="hdr-div"></div>
+    <button class="hdr-icon-btn"><img src="../images/icons/notification.svg" width="18" height="18" alt=""/><span class="notif-dot">3</span></button>
+    <button class="hdr-icon-btn"><img src="../images/icons/call_us.svg" width="18" height="18" alt=""/></button>
+    <button class="hdr-icon-btn"><img src="../images/icons/information.svg" width="18" height="18" alt=""/></button>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap"><button class="hdr-lang">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button></div>
+    <div class="hdr-avatar-wrap"><svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg></div>
+  </div>
+</header>
+
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">›</span><a href="cards-my-cards.html">My Cards</a></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem;">
+      <h1 class="page-title" style="margin-bottom:0;">Card Report</h1>
+      <div class="rpt-search-wrap" style="position:relative;">
+        <input type="text" class="f-input" id="rptSearch" placeholder="Search" style="padding-right:2.25rem;min-width:220px;"/>
+        <svg style="position:absolute;right:.625rem;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--az-muted)" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+    </div>
+
+    <!-- Filters Panel -->
+    <div class="content-card" style="margin-bottom:1rem;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.125rem;border-bottom:1px solid var(--az-border);">
+        <span style="font-weight:700;font-size:.9375rem;">Filters</span>
+        <button class="card-strip-chev open" id="filterChev" onclick="toggleExtraFilters()" aria-label="Toggle extra filters" style="position:static;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Basic filters (always visible) -->
+      <div style="padding:.875rem 1.125rem;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem 1.25rem;align-items:end;" class="filter-grid-4c">
+          <div>
+            <label class="f-label">Market Date</label>
+            <div style="position:relative;">
+              <input type="text" class="f-input" id="fMarketDate" placeholder="DD / MM / YYYY" style="padding-right:2.25rem;"/>
+              <svg style="position:absolute;right:.625rem;top:50%;transform:translateY(-50%);pointer-events:none;cursor:pointer;" viewBox="0 0 24 24" fill="none" stroke="var(--az-blue)" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div>
+            <label class="f-label">Transaction Type</label>
+            <select class="f-input f-select" id="fTxnType">
+              <option value="">Select</option>
+              <option>Debit</option>
+              <option>Credit</option>
+              <option>Transfer</option>
+            </select>
+          </div>
+          <div>
+            <label class="f-label">Transaction Identification</label>
+            <select class="f-input f-select" id="fTxnId">
+              <option value="">Select</option>
+              <option>By Date</option>
+              <option>By Reference</option>
+            </select>
+          </div>
+          <div>
+            <label class="f-label">Reference Number</label>
+            <input type="text" class="f-input" id="fRefNum" placeholder=""/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extra filters (expandable) -->
+      <div id="extraFilters" style="display:none;padding:0 1.125rem .875rem;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem 1.25rem;align-items:end;" class="filter-grid-4c">
+          <div>
+            <label class="f-label">Status</label>
+            <select class="f-input f-select" id="fStatus">
+              <option value="">Select</option>
+              <option>Active</option>
+              <option>Pending</option>
+              <option>Completed</option>
+              <option>Failed</option>
+            </select>
+          </div>
+          <div>
+            <label class="f-label">From Date</label>
+            <div style="position:relative;">
+              <input type="text" class="f-input" placeholder="DD / MM / YYYY" style="padding-right:2.25rem;"/>
+              <svg style="position:absolute;right:.625rem;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--az-blue)" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div>
+            <label class="f-label">To Date</label>
+            <div style="position:relative;">
+              <input type="text" class="f-input" placeholder="DD / MM / YYYY" style="padding-right:2.25rem;"/>
+              <svg style="position:absolute;right:.625rem;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--az-blue)" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div>
+            <label class="f-label">Number Of Transactions</label>
+            <input type="number" class="f-input" placeholder=""/>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem 1.25rem;align-items:end;margin-top:.875rem;" class="filter-grid-4c">
+          <div>
+            <label class="f-label">Enter Max Amount</label>
+            <input type="number" class="f-input" placeholder="00.00"/>
+          </div>
+          <div>
+            <label class="f-label">Enter Min Amount</label>
+            <input type="number" class="f-input" placeholder="00.00"/>
+          </div>
+          <div>
+            <label class="f-label">Filter Currency</label>
+            <select class="f-input f-select">
+              <option value="">Select</option>
+              <option>USD</option>
+              <option>MRU</option>
+              <option>EUR</option>
+            </select>
+          </div>
+          <div>
+            <label class="f-label">Select Date</label>
+            <div style="position:relative;">
+              <input type="text" class="f-input" placeholder="DD / MM / YYYY" style="padding-right:2.25rem;"/>
+              <svg style="position:absolute;right:.625rem;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--az-blue)" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter actions -->
+      <div style="display:flex;justify-content:flex-end;gap:.625rem;padding:.75rem 1.125rem;border-top:1px solid var(--az-border);">
+        <button class="btn-reset" onclick="resetFilters()">RESET</button>
+        <button class="btn-apply" onclick="applyFilters()">APPLY FILTER</button>
+      </div>
+    </div>
+
+    <!-- Active Filter Chips -->
+    <div class="filter-chips-bar" id="filterChipsBar" style="display:none;">
+      <span class="filter-chip" id="chipMarketDate" style="display:none;">Market Date <button onclick="removeChip('chipMarketDate','fMarketDate')" aria-label="Remove filter">&#x2715;</button></span>
+      <span class="filter-chip" id="chipTxnType" style="display:none;">Transaction Type <button onclick="removeChip('chipTxnType','fTxnType')" aria-label="Remove filter">&#x2715;</button></span>
+      <span class="filter-chip" id="chipReference" style="display:none;">Reference <button onclick="removeChip('chipReference','fRefNum')" aria-label="Remove filter">&#x2715;</button></span>
+    </div>
+
+    <!-- Results area -->
+    <div id="resultsArea" style="display:none;margin-bottom:1rem;">
+      <div class="txn-list">
+        <div class="txn-row">
+          <span style="min-width:90px;color:var(--az-muted);font-size:.8125rem;">12/09/2024</span>
+          <span style="flex:1;">Breaking of Time Dept From</span>
+          <span style="min-width:130px;color:var(--az-muted);">00320089003400</span>
+          <span style="min-width:60px;color:var(--az-muted);">#80123</span>
+          <span style="min-width:100px;">Ref No -201</span>
+        </div>
+        <div class="txn-row">
+          <span style="min-width:90px;color:var(--az-muted);font-size:.8125rem;">12/09/2024</span>
+          <span style="flex:1;">Breaking of Time Dept From</span>
+          <span style="min-width:130px;color:var(--az-muted);">00320089003400</span>
+          <span style="min-width:60px;color:var(--az-muted);">#80123</span>
+          <span style="min-width:100px;">Ref No -201</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom action bar -->
+    <div style="display:flex;justify-content:flex-end;gap:1.125rem;padding-top:.75rem;flex-wrap:wrap;" id="rptActions">
+      <button class="btn-rpt-action" id="btnCancel" onclick="cancelResults()" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Cancel
+      </button>
+      <button class="btn-rpt-action" onclick="openShareModal('sendself')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Send to Self
+      </button>
+      <button class="btn-rpt-action" onclick="openShareModal('share')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+      <button class="btn-rpt-action" onclick="openShareModal('export')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+    </div>
+
+  </main>
+  <footer class="app-footer">
+    <span>Copyright 2025. All Rights Reserved</span>
+    <div><a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a><div class="acc-btns"><button class="acc-btn">A-</button><button class="acc-btn">A</button><button class="acc-btn">A+</button><button class="acc-btn acc-btn-dark" aria-label="Toggle dark theme">&#9681;</button></div></div>
+  </footer>
+</div>
+
+<!-- Share / Export Modal -->
+<div class="modal-ov hidden" id="shareModal" role="dialog" aria-modal="true">
+  <div class="az-modal" style="max-width:480px;width:90%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+      <span style="font-weight:700;font-size:1rem;">Select Document Type</span>
+      <button onclick="closeShareModal()" style="background:none;border:none;cursor:pointer;color:var(--az-muted);font-size:1.25rem;line-height:1;" aria-label="Close">&times;</button>
+    </div>
+    <p style="font-size:.875rem;color:var(--az-muted);margin-bottom:1rem;">Select a document type to share</p>
+    <div style="display:flex;flex-direction:column;gap:.625rem;margin-bottom:1.25rem;">
+      <button class="doc-type-opt" onclick="selectDocType('pdf')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--az-blue)" stroke-width="2" width="28" height="28"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6M9 11h6"/></svg>
+        PDF
+      </button>
+      <button class="doc-type-opt" onclick="selectDocType('excel')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--az-blue)" stroke-width="2" width="28" height="28"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="12" x2="15" y2="18"/><line x1="15" y1="12" x2="9" y2="18"/></svg>
+        Excel
+      </button>
+    </div>
+    <button class="btn-action btn-cancel" onclick="closeShareModal()" style="width:100%;justify-content:center;">CANCEL</button>
+  </div>
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const collapseBtn = document.getElementById('collapseBtn');
+  const appMain = document.getElementById('appMain');
+  const hdrLogo = document.getElementById('hdrLogo');
+  collapseBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sb-collapsed');
+    appMain.classList.toggle('sb-collapsed');
+    hdrLogo.classList.toggle('sb-collapsed');
+  });
+  function toggleSub(id, chevId) {
+    const el = document.getElementById(id);
+    const chev = document.getElementById(chevId);
+    const open = el.style.display !== 'none';
+    el.style.display = open ? 'none' : 'block';
+    if (chev) chev.classList.toggle('open', !open);
+  }
+
+  // Filter expand/collapse
+  function toggleExtraFilters() {
+    const extra = document.getElementById('extraFilters');
+    const chev = document.getElementById('filterChev');
+    const vis = extra.style.display !== 'none';
+    extra.style.display = vis ? 'none' : 'block';
+    chev.classList.toggle('open', !vis);
+  }
+
+  // Apply filters
+  function applyFilters() {
+    const marketDate = document.getElementById('fMarketDate').value;
+    const txnType = document.getElementById('fTxnType').value;
+    const refNum = document.getElementById('fRefNum').value;
+    const chipsBar = document.getElementById('filterChipsBar');
+    let hasChip = false;
+    if (marketDate) { document.getElementById('chipMarketDate').style.display = 'inline-flex'; hasChip = true; }
+    if (txnType) { document.getElementById('chipTxnType').style.display = 'inline-flex'; hasChip = true; }
+    if (refNum) { document.getElementById('chipReference').style.display = 'inline-flex'; hasChip = true; }
+    chipsBar.style.display = hasChip ? 'flex' : 'none';
+    document.getElementById('resultsArea').style.display = 'block';
+    document.getElementById('btnCancel').style.display = 'inline-flex';
+  }
+
+  function resetFilters() {
+    document.getElementById('fMarketDate').value = '';
+    document.getElementById('fTxnType').value = '';
+    document.getElementById('fTxnId').value = '';
+    document.getElementById('fRefNum').value = '';
+    document.querySelectorAll('.filter-chip').forEach(c => c.style.display = 'none');
+    document.getElementById('filterChipsBar').style.display = 'none';
+    document.getElementById('resultsArea').style.display = 'none';
+    document.getElementById('btnCancel').style.display = 'none';
+  }
+
+  function removeChip(chipId, fieldId) {
+    document.getElementById(chipId).style.display = 'none';
+    const field = document.getElementById(fieldId);
+    if (field) field.value = '';
+    const visibleChips = document.querySelectorAll('.filter-chip[style*="inline-flex"]');
+    if (!visibleChips.length) document.getElementById('filterChipsBar').style.display = 'none';
+  }
+
+  function cancelResults() {
+    resetFilters();
+  }
+
+  // Share modal
+  function openShareModal(mode) {
+    document.getElementById('shareModal').classList.remove('hidden');
+  }
+  function closeShareModal() {
+    document.getElementById('shareModal').classList.add('hidden');
+  }
+  function selectDocType(type) {
+    closeShareModal();
+  }
+
+/* Language selector */
+function setHdrLang(code, flagCode, optBtn) {
+  document.querySelectorAll('.hdr-lang').forEach(function(btn) {
+    var flagEl = btn.querySelector('.fi');
+    if (flagEl) { flagEl.className = 'fi fi-' + flagCode; }
+    btn.childNodes.forEach(function(n){ if (n.nodeType===3) n.textContent = code + ' '; });
+  });
+  if (optBtn) {
+    optBtn.closest('.hdr-lang-drop').querySelectorAll('.hdr-lang-opt').forEach(function(o){ o.classList.remove('active'); o.setAttribute('aria-selected','false'); });
+    optBtn.classList.add('active');
+    optBtn.setAttribute('aria-selected','true');
+  }
+}</script>
+</body>
+</html>

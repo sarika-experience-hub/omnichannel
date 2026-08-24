@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Banking – My Accounts"/>
+  <title>azentio – My Accounts</title>
+  <!-- Bootstrap 5 (local) -->
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <!-- Roboto Font (local @font-face + system fallback) -->
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <!-- Flag Icons (local self-contained) -->
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <!-- Date Picker styles -->
+  <link rel="stylesheet" href="../css/datepicker.css"/>
+  <!-- Application styles -->
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ ACCOUNTS — Modern UX ══ */
+
+/* Summary strip */
+.acct-summary-strip { display: flex; flex-wrap: nowrap; gap: 0; align-items: stretch; background: #fff; border-radius: .75rem; margin-bottom: .875rem; border: 1px solid var(--az-border,#e2e8ec); box-shadow: 0 1px 4px rgba(22,48,61,.05); overflow: hidden; }
+.acct-sum-item { display: flex; flex-direction: column; gap: .1rem; flex: 1; padding: .75rem 1.25rem; position: relative; }
+.acct-sum-item + .acct-sum-item::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 1px; background: var(--az-border,#e2e8ec); }
+.acct-sum-lbl { font-size: .68rem; color: var(--az-muted,#707070); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.acct-sum-val { font-size: 1.25rem; font-weight: 700; color: var(--az-navy,#16303d); line-height: 1.2; }
+.acct-sum-sep { display: none; }
+.acct-summary-strip { display: none !important; }
+
+/* Filter toolbar */
+.acct-filter-bar { display: flex; align-items: center; gap: .375rem; flex-wrap: wrap; margin-bottom: 0; padding: .5rem 1.25rem; border-bottom: 1px solid #f0f4f7; }
+.acct-filter-lbl { font-size: .72rem; font-weight: 600; color: var(--az-muted,#707070); text-transform: uppercase; letter-spacing: .06em; margin-right: .375rem; white-space: nowrap; }
+.acct-filter-btn { font-size: .75rem; padding: .275rem .8rem; border-radius: 20px; border: 1.5px solid var(--az-border,#e2e8ec); background: #fff; color: var(--az-navy,#16303d); cursor: pointer; font-family: 'Roboto',sans-serif; font-weight: 500; transition: all .15s; }
+.acct-filter-btn.active { background: #16303d; color: #fff; border-color: #16303d; }
+.acct-filter-btn:hover:not(.active) { background: #f0f4f8; border-color: #b0bec5; }
+
+/* ── Horizontal card list ── */
+#cardView, #termCardView { display: flex; flex-direction: column; gap: .375rem; padding: .625rem 1.25rem; overflow: visible; }
+
+/* Account card — horizontal row */
+#cardView .acct-row, #termCardView .acct-row {
+  display: flex; flex-direction: row; align-items: stretch;
+  border: 1px solid var(--az-border,#e2e8ec);
+  border-radius: .75rem; background: #fff;
+  box-shadow: 0 1px 4px rgba(22,48,61,.06);
+  transition: box-shadow .15s;
+  opacity: 0; animation: acct-card-in .3s cubic-bezier(.22,1,.36,1) forwards;
+  overflow: visible; position: relative; min-height: 52px;
+}
+#cardView .acct-row:hover, #termCardView .acct-row:hover { box-shadow: 0 4px 16px rgba(22,48,61,.1); }
+#cardView .acct-row.ctx-open, #termCardView .acct-row.ctx-open { z-index: 10; }
+#cardView .acct-row:nth-child(1), #termCardView .acct-row:nth-child(1) { animation-delay: .04s; }
+#cardView .acct-row:nth-child(2), #termCardView .acct-row:nth-child(2) { animation-delay: .08s; }
+#cardView .acct-row:nth-child(3), #termCardView .acct-row:nth-child(3) { animation-delay: .12s; }
+#cardView .acct-row:nth-child(4), #termCardView .acct-row:nth-child(4) { animation-delay: .16s; }
+#cardView .acct-row:nth-child(5), #termCardView .acct-row:nth-child(5) { animation-delay: .2s; }
+@keyframes acct-card-in { from { opacity: 0; } to { opacity: 1; } }
+.acct-row-dimmed { opacity: 1; }
+.bal-masked { font-size: 1.1rem; letter-spacing: .18em; vertical-align: middle; }
+
+/* Card header */
+.ac-card-hdr { display: flex; flex-direction: column; justify-content: center; gap: .25rem; padding: .5rem .875rem; border-right: 1px solid #f0f4f7; flex: 0 0 190px; min-width: 0; }
+.ac-type-icon { width: 34px; height: 34px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ac-type-icon .material-icons { font-size: 17px; }
+.ac-title { flex: 1; min-width: 0; }
+.acct-name { font-weight: 600; font-size: .775rem; color: var(--az-navy,#16303d); display: flex; align-items: center; gap: .375rem; }
+.acct-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; text-transform: capitalize; }
+.acct-currency { display: flex; align-items: center; gap: .3125rem; font-size: .7rem; color: var(--az-muted,#707070); margin-top: .15rem; }
+
+/* Balance body */
+.ac-bal-body { flex: 1; display: flex; flex-direction: row; align-items: stretch; border-right: 1px solid #f0f4f7; }
+.ac-bal-hero .val { font-size: 1.05rem !important; font-weight: 700 !important; letter-spacing: -.025em; line-height: 1.15 !important; color: var(--az-navy,#16303d) !important; }
+
+/* Field labels */
+.acct-field .lbl { font-size: .63rem; color: var(--az-muted,#707070); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .2rem; font-weight: 500; }
+.acct-field .val { font-size: .8rem; font-weight: 600; color: var(--az-navy,#16303d); white-space: nowrap; }
+
+/* Term Deposit card — horizontal row layout */
+.acct-row.td-card { flex-direction: column; align-items: stretch; padding: 0; }
+.td-card-body { display: flex; align-items: center; gap: 1rem; padding: .875rem 1.25rem; flex: 1; }
+.td-identity { display: flex; align-items: center; gap: .625rem; flex: 0 0 auto; min-width: 148px; }
+.td-icon-circle { width: 38px; height: 38px; border-radius: 50%; background: #e4f2ec; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; color: #1a7a55; flex-shrink: 0; }
+.td-identity-info { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.td-identity-info .acct-name { font-size: .8rem; }
+.td-identity-info .acct-currency { font-size: .75rem; }
+.td-data-fields { display: flex; flex: 1; align-items: flex-start; }
+.td-data-field { flex: 1; padding: 0 .875rem; border-left: 1px solid #f0f4f7; display: flex; flex-direction: column; gap: .1rem; }
+.td-data-field .lbl { font-size: .6rem; text-transform: uppercase; letter-spacing: .05em; color: var(--az-muted); font-weight: 500; white-space: nowrap; }
+.td-data-field .val { font-size: .875rem; font-weight: 700; color: var(--az-navy); white-space: nowrap; }
+.td-prog-mini { display: flex; align-items: center; gap: .5rem; margin-top: .3rem; min-width: 100px; }
+.td-prog-mini .td-prog-track { flex: 1; height: 4px; background: #e2e8ec; border-radius: 99px; overflow: hidden; min-width: 60px; }
+.td-prog-mini .td-prog-fill { height: 100%; border-radius: 99px; }
+.td-prog-mini .td-prog-lbl { font-size: .68rem; color: var(--az-muted); white-space: nowrap; }
+.td-card-footer { display: flex; align-items: center; justify-content: flex-end; gap: .375rem; padding: .5rem 1.25rem; border-top: 1px solid #f0f4f7; }
+.td-act-btn { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .75rem; border: 1.5px solid var(--az-border); border-radius: 2rem; background: #fff; font-size: .78rem; font-weight: 500; color: var(--az-navy); cursor: pointer; text-decoration: none; transition: all .15s; white-space: nowrap; }
+.td-act-btn:hover { border-color: var(--az-green); color: var(--az-green); text-decoration: none; }
+.td-act-btn .material-icons { font-size: 14px; }
+
+/* IBAN chip */
+.ac-iban-field { display: flex !important; flex-direction: column !important; justify-content: center; gap: .15rem; flex: 0 0 150px; padding: .5rem .875rem !important; border-right: 1px solid #f0f4f7 !important; margin: 0 !important; background: transparent !important; border-radius: 0 !important; }
+.ac-iban-field .lbl { margin-bottom: 0 !important; white-space: nowrap; flex-shrink: 0; }
+.ac-iban-field .val { font-size: .78rem !important; font-weight: 500 !important; letter-spacing: .04em; }
+
+/* Footer */
+.ac-card-footer { display: flex; flex-direction: row; align-items: stretch; margin-top: 0; overflow: visible; border-radius: 0 .75rem .75rem 0; border-left: 1px solid #f0f4f7; }
+.ac-act { flex: 0 0 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; padding: .375rem .25rem; background: none; border: none; border-left: 1px solid #f0f4f7; cursor: pointer; text-decoration: none; font-family: 'Roboto',sans-serif; font-size: .58rem; font-weight: 500; color: var(--az-muted,#707070); transition: background .12s, color .12s; line-height: 1; white-space: nowrap; }
+.ac-act:hover { background: #f0faf5; color: var(--az-navy,#16303d); text-decoration: none; }
+.ac-act .material-icons { font-size: 15px; color: var(--az-blue,#00538A); display: block; }
+/* Round the two bottom corners on the first and last footer children */
+.ac-card-footer > .ac-act:first-child { border-left: none; }
+.ac-card-footer .ctx-wrap { flex: 0 0 56px; display: flex; position: relative; }
+.ac-card-footer .ctx-wrap .ac-act { border-right: none; flex: 1; border-radius: 0 .75rem .75rem 0; }
+/* Menu opens upward from the More button */
+.ac-card-footer .ctx-wrap .ctx-menu { min-width: 220px; z-index: 9999; }
+
+/* Utility */
+.copy-iban-btn { background: none; border: none; padding: 0 0 0 5px; cursor: pointer; color: var(--az-muted,#707070); vertical-align: middle; line-height: 1; position: relative; }
+.copy-iban-btn:hover { color: var(--az-green,#2ed88e); }
+.copy-iban-btn .material-icons { font-size: 13px; vertical-align: middle; }
+.copy-tip { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); background: var(--az-navy,#16303d); color: #fff; font-size: .65rem; padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .2s; font-family: 'Roboto',sans-serif; }
+.bal-toggle-btn { background: none; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: 20px; cursor: pointer; color: var(--az-muted,#707070); padding: 0 .75rem; height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; gap: .25rem; font-size: .75rem; font-family: 'Roboto',sans-serif; line-height: 1; transition: all .15s; }
+.bal-toggle-btn:hover { color: var(--az-navy,#16303d); border-color: var(--az-navy,#16303d); }
+.bal-toggle-btn .material-icons { font-size: 16px; }
+.btn-open-account { background: var(--az-navy,#16303d)!important; color: #fff!important; border: none; border-radius: .5rem; padding: .5rem 1.25rem; font-size: .8125rem; font-weight: 600; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: background .2s; letter-spacing: .01em; }
+.btn-open-account:hover { background: #1f4a5e!important; }
+.btn-open-account .material-icons { font-size: 17px; }
+.td-prog-wrap { margin-top: .375rem; }
+.td-prog-track { height: 4px; background: #e2e8ec; border-radius: 2px; overflow: hidden; }
+.td-prog-fill { height: 4px; border-radius: 2px; }
+.td-prog-lbl { font-size: .65rem; color: var(--az-muted,#707070); margin-top: .25rem; }
+
+/* Balance field inside horizontal card — each balance is its own column */
+.ac-bal-body .acct-field { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: .5rem 1rem; }
+.ac-bal-body .acct-field + .acct-field { border-left: 1px solid #f0f4f7; }
+
+/* Status badge sits below account name in left panel */
+.ac-card-hdr .badge-s { align-self: flex-start; margin-top: .2rem; }
+
+/* Dimmed card */
+.acct-row-dimmed { opacity: .7; }
+</style>
+</head>
+<body>
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
+  <g id="logo" transform="translate(0.275 -0.84)">
+    <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12570" data-name="Path 12570" d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12571" data-name="Path 12571" d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12572" data-name="Path 12572" d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12573" data-name="Path 12573" d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12574" data-name="Path 12574" d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12575" data-name="Path 12575" d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12576" data-name="Path 12576" d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+    <path id="Path_12577" data-name="Path 12577" d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+  </g>
+</svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+      <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-label="3 notifications">3</span>
+    </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Contact Us" aria-label="Contact Us"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 Jul, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:42
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item active-section" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron open" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item active">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+<div class="az-bc">
+  <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Accounts</span>
+</div>
+<div class="page-top-bar">
+  <h1 class="page-title">My Accounts</h1>
+  <a href="general-account-opening.html" class="btn-open-account"><span class="material-icons">add_circle_outline</span> Open New General Account</a>
+</div>
+<div class="content-card">
+  <div class="tabs-header-row">
+    <div class="az-tabs" role="tablist">
+      <button class="az-tab active" id="tabGenBtn" onclick="switchTab('general')" role="tab" aria-selected="true" aria-controls="tabGeneral">General Accounts</button>
+      <button class="az-tab" id="tabTermBtn" onclick="switchTab('term')" role="tab" aria-selected="false" aria-controls="tabTerm">Term Deposit Accounts</button>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button class="bal-toggle-btn" id="balToggleBtn" onclick="toggleBalVisibility()" title="Toggle balance visibility" aria-label="Toggle balance visibility"><span class="material-icons">visibility</span> Balance</button>
+      <div class="view-toggle" id="genViewToggle">
+        <button class="view-btn active" id="vCard" onclick="switchView('card')" title="Card View" aria-label="Card view"><span class="material-icons" style="font-size:18px;line-height:1;vertical-align:middle;color:#5f6368">grid_view</span></button>
+        <button class="view-btn" id="vTable" onclick="switchView('table')" title="Table View" aria-label="Table view"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="2" width="14" height="2.5" rx="1" fill="#5f6368"/><rect x="1" y="6.75" width="14" height="2.5" rx="1" fill="#5f6368"/><rect x="1" y="11.5" width="14" height="2.5" rx="1" fill="#5f6368"/></svg></button>
+      </div>
+      <div class="view-toggle hidden" id="termViewToggle">
+        <button class="view-btn active" id="vTermCard" onclick="switchTermView('card')" title="Card View" aria-label="Card view"><span class="material-icons" style="font-size:18px;line-height:1;vertical-align:middle;color:#5f6368">grid_view</span></button>
+        <button class="view-btn" id="vTermTable" onclick="switchTermView('table')" title="Table View" aria-label="Table view"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="2" width="14" height="2.5" rx="1" fill="#5f6368"/><rect x="1" y="6.75" width="14" height="2.5" rx="1" fill="#5f6368"/><rect x="1" y="11.5" width="14" height="2.5" rx="1" fill="#5f6368"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <!-- General Accounts Tab -->
+  <div id="tabGeneral" role="tabpanel" aria-labelledby="tabGenBtn">
+    <div class="acct-filter-bar">
+      <button class="acct-filter-btn active" onclick="filterAccounts('all',this)">All (5)</button>
+      <button class="acct-filter-btn" onclick="filterAccounts('active',this)">Active (1)</button>
+      <button class="acct-filter-btn" onclick="filterAccounts('inactive',this)">Inactive (1)</button>
+      <button class="acct-filter-btn" onclick="filterAccounts('others',this)">Others (3)</button>
+    </div>
+    <div id="cardView"><div class="acct-row" id="accRow_gc0" data-status="active">
+  <div class="ac-card-hdr">
+    <div class="ac-title">
+      <div class="acct-name"><span id="accName_gc0" class="text-truncate">Current Account</span><button class="edit-name-btn" onclick="startEdit('gc0')" aria-label="Edit account name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+      <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+    </div>
+    <span class="badge-s s-active">Active</span>
+  </div>
+  <div class="ac-bal-body">
+    <div class="acct-field ac-bal-hero"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
+    <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
+  </div>
+  <div class="acct-field ac-iban-field"><div class="lbl">Acct No.</div><div class="val">IBAN8000 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8000')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
+  <div class="ac-card-footer">
+    <a href="transfer-own-accounts.html" class="ac-act"><span class="material-icons">swap_horiz</span>Transfer</a>
+    <a href="transaction-history.html" class="ac-act"><span class="material-icons">history</span>History</a>
+    <a href="account-statement.html" class="ac-act"><span class="material-icons">description</span>Statement</a>
+    <div class="ctx-wrap">
+      <button class="ac-act" onclick="toggleCtx('ctx_gc0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span>More</button>
+      <div class="ctx-menu hidden" id="ctx_gc0" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gc0')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+  </div>
+    </div>
+  </div>
+</div><div class="acct-row acct-row-dimmed" id="accRow_gc1" data-status="inactive">
+  <div class="ac-card-hdr">
+    <div class="ac-title">
+      <div class="acct-name"><span id="accName_gc1" class="text-truncate">Savings Account</span><button class="edit-name-btn" onclick="startEdit('gc1')" aria-label="Edit account name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+      <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+    </div>
+    <span class="badge-s s-inactive">Inactive</span>
+  </div>
+  <div class="ac-bal-body">
+    <div class="acct-field ac-bal-hero"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
+    <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
+  </div>
+  <div class="acct-field ac-iban-field"><div class="lbl">Acct No.</div><div class="val">IBAN8001 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8001')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
+  <div class="ac-card-footer">
+    <a href="transfer-own-accounts.html" class="ac-act"><span class="material-icons">swap_horiz</span>Transfer</a>
+    <a href="transaction-history.html" class="ac-act"><span class="material-icons">history</span>History</a>
+    <a href="account-statement.html" class="ac-act"><span class="material-icons">description</span>Statement</a>
+    <div class="ctx-wrap">
+      <button class="ac-act" onclick="toggleCtx('ctx_gc1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span>More</button>
+      <div class="ctx-menu hidden" id="ctx_gc1" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gc1')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+  </div>
+    </div>
+  </div>
+</div><div class="acct-row" id="accRow_gc2" data-status="approved">
+  <div class="ac-card-hdr">
+    <div class="ac-title">
+      <div class="acct-name"><span id="accName_gc2" class="text-truncate">Salary Account</span><button class="edit-name-btn" onclick="startEdit('gc2')" aria-label="Edit account name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+      <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+    </div>
+    <span class="badge-s s-approved">Approved</span>
+  </div>
+  <div class="ac-bal-body">
+    <div class="acct-field ac-bal-hero"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
+    <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
+  </div>
+  <div class="acct-field ac-iban-field"><div class="lbl">Acct No.</div><div class="val">IBAN8002 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8002')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
+  <div class="ac-card-footer">
+    <a href="transfer-own-accounts.html" class="ac-act"><span class="material-icons">swap_horiz</span>Transfer</a>
+    <a href="transaction-history.html" class="ac-act"><span class="material-icons">history</span>History</a>
+    <a href="account-statement.html" class="ac-act"><span class="material-icons">description</span>Statement</a>
+    <div class="ctx-wrap">
+      <button class="ac-act" onclick="toggleCtx('ctx_gc2')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span>More</button>
+      <div class="ctx-menu hidden" id="ctx_gc2" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gc2')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+  </div>
+    </div>
+  </div>
+</div><div class="acct-row" id="accRow_gc3" data-status="submitted">
+  <div class="ac-card-hdr">
+    <div class="ac-title">
+      <div class="acct-name"><span id="accName_gc3" class="text-truncate">Joint Account</span><button class="edit-name-btn" onclick="startEdit('gc3')" aria-label="Edit account name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+      <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+    </div>
+    <span class="badge-s s-pending">Submitted</span>
+  </div>
+  <div class="ac-bal-body">
+    <div class="acct-field ac-bal-hero"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
+    <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
+  </div>
+  <div class="acct-field ac-iban-field"><div class="lbl">Acct No.</div><div class="val">IBAN8003 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8003')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
+  <div class="ac-card-footer">
+    <a href="transfer-own-accounts.html" class="ac-act"><span class="material-icons">swap_horiz</span>Transfer</a>
+    <a href="transaction-history.html" class="ac-act"><span class="material-icons">history</span>History</a>
+    <a href="account-statement.html" class="ac-act"><span class="material-icons">description</span>Statement</a>
+    <div class="ctx-wrap">
+      <button class="ac-act" onclick="toggleCtx('ctx_gc3')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span>More</button>
+      <div class="ctx-menu hidden" id="ctx_gc3" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gc3')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+  </div>
+    </div>
+  </div>
+</div><div class="acct-row acct-row-dimmed" id="accRow_gc4" data-status="cancelled">
+  <div class="ac-card-hdr">
+    <div class="ac-title">
+      <div class="acct-name"><span id="accName_gc4" class="text-truncate">Foreign Currency</span><button class="edit-name-btn" onclick="startEdit('gc4')" aria-label="Edit account name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+      <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+    </div>
+    <span class="badge-s s-cancelled">Cancelled</span>
+  </div>
+  <div class="ac-bal-body">
+    <div class="acct-field ac-bal-hero"><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
+    <div class="acct-field"><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
+  </div>
+  <div class="acct-field ac-iban-field"><div class="lbl">Acct No.</div><div class="val">IBAN8004 <button class="copy-iban-btn" onclick="copyIBAN(this,'IBAN8004')" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div></div>
+  <div class="ac-card-footer">
+    <a href="transfer-own-accounts.html" class="ac-act"><span class="material-icons">swap_horiz</span>Transfer</a>
+    <a href="transaction-history.html" class="ac-act"><span class="material-icons">history</span>History</a>
+    <a href="account-statement.html" class="ac-act"><span class="material-icons">description</span>Statement</a>
+    <div class="ctx-wrap">
+      <button class="ac-act" onclick="toggleCtx('ctx_gc4')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span>More</button>
+      <div class="ctx-menu hidden" id="ctx_gc4" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gc4')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+  </div>
+    </div>
+  </div>
+</div></div>
+    <div id="tableView" class="hidden"><div class="table-responsive">
+<table class="az-table w-100" role="grid">
+<thead><tr>
+  <th scope="col">Account Name</th><th scope="col">Status</th>
+  <th scope="col">Account Number</th><th scope="col">Account Type</th>
+  <th scope="col">Current Balance</th><th scope="col">Available Balance</th>
+  <th scope="col" class="text-end">Actions</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td><div class="td-name">Current Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-active">Active</span></td>
+  <td>IBAN8000</td><td>Current Account</td><td>0.00 USD</td><td>0.00 USD</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_gt0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_gt0" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gt0')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    
+  </div>
+</div></div></td>
+</tr>
+<tr>
+  <td><div class="td-name">Savings Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-inactive">Inactive</span></td>
+  <td>IBAN8001</td><td>Savings Account</td><td>1,250.00 USD</td><td>1,250.00 USD</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_gt1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_gt1" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gt1')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    
+  </div>
+</div></div></td>
+</tr>
+<tr>
+  <td><div class="td-name">Salary Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-approved">Approved</span></td>
+  <td>IBAN8002</td><td>Current Account</td><td>3,800.00 USD</td><td>3,600.00 USD</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_gt2')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_gt2" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gt2')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    
+  </div>
+</div></div></td>
+</tr>
+<tr>
+  <td><div class="td-name">Joint Account</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-pending">Submitted</span></td>
+  <td>IBAN8003</td><td>Current Account</td><td>0.00 USD</td><td>0.00 USD</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_gt3')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_gt3" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gt3')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    
+  </div>
+</div></div></td>
+</tr>
+<tr>
+  <td><div class="td-name">Foreign Currency</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-cancelled">Cancelled</span></td>
+  <td>IBAN8004</td><td>Savings Account</td><td>0.00 USD</td><td>0.00 USD</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_gt4')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_gt4" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_gt4')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    
+  </div>
+</div></div></td>
+</tr>
+</tbody></table></div></div>
+  </div>
+  <!-- Term Deposit Tab -->
+  <div id="tabTerm" class="hidden" role="tabpanel" aria-labelledby="tabTermBtn">
+    <div id="termCardView"><div class="acct-row td-card" id="accRow_tc0">
+  <div class="td-card-body">
+    <div class="td-identity">
+      <div class="td-icon-circle">1D</div>
+      <div class="td-identity-info">
+        <div class="acct-name"><span id="accName_tc0">12-Month Deposit</span><button class="edit-name-btn" onclick="startEdit('tc0')" aria-label="Edit"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+        <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+      </div>
+    </div>
+    <span class="badge-s s-active">Active</span>
+    <div class="td-data-fields">
+      <div class="td-data-field"><div class="lbl">Account Number</div><div class="val">TD001-2024</div></div>
+      <div class="td-data-field"><div class="lbl">Principal Amount</div><div class="val">25,000.00 USD</div></div>
+      <div class="td-data-field"><div class="lbl">Interest Rate</div><div class="val">4.50% p.a.</div></div>
+      <div class="td-data-field"><div class="lbl">Tenure</div><div class="val">12 Months</div></div>
+      <div class="td-data-field">
+        <div class="lbl">Maturity Date</div><div class="val">31 Dec 2025</div>
+        <div class="td-prog-mini"><div class="td-prog-track"><div class="td-prog-fill" style="width:85%;background:#2ed88e;"></div></div><div class="td-prog-lbl">85% elapsed</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="td-card-footer">
+    <a href="transaction-history.html" class="td-act-btn"><span class="material-icons">history</span>Transaction History</a>
+    <a href="account-statement.html" class="td-act-btn"><span class="material-icons">description</span>Statement</a>
+    <a href="change-maturity-instructions.html" class="td-act-btn"><span class="material-icons">event_note</span>Maturity</a>
+    <div class="ctx-wrap" style="position:relative;">
+      <button class="td-act-btn" onclick="toggleCtx('ctx_tc0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span></button>
+      <div class="ctx-menu hidden" id="ctx_tc0" role="menu">
+        <div class="ctx-sec">Term Deposit</div>
+        <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tc0')"><img src="../images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
+        <a href="break-term-deposit.html" class="ctx-item" onclick="closeCtx('ctx_tc0')"><img src="../images/icons/cancel.svg" width="18" height="18" alt="cancel" loading="lazy"/> Break Term Deposit</a>
+        <div class="ctx-divider" role="separator"></div>
+        <div class="ctx-sec">Statements</div>
+        <button class="ctx-item" onclick="closeCtx('ctx_tc0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+        <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_tc0')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+      </div>
+    </div>
+  </div>
+</div><div class="acct-row td-card" id="accRow_tc1">
+  <div class="td-card-body">
+    <div class="td-identity">
+      <div class="td-icon-circle">6M</div>
+      <div class="td-identity-info">
+        <div class="acct-name"><span id="accName_tc1">6-Month Growth Plan</span><button class="edit-name-btn" onclick="startEdit('tc1')" aria-label="Edit"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+        <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+      </div>
+    </div>
+    <span class="badge-s s-active">Active</span>
+    <div class="td-data-fields">
+      <div class="td-data-field"><div class="lbl">Account Number</div><div class="val">TD002-2024</div></div>
+      <div class="td-data-field"><div class="lbl">Principal Amount</div><div class="val">10,000.00 USD</div></div>
+      <div class="td-data-field"><div class="lbl">Interest Rate</div><div class="val">5.00% p.a.</div></div>
+      <div class="td-data-field"><div class="lbl">Tenure</div><div class="val">6 Months</div></div>
+      <div class="td-data-field">
+        <div class="lbl">Maturity Date</div><div class="val">30 Jun 2025</div>
+        <div class="td-prog-mini"><div class="td-prog-track"><div class="td-prog-fill" style="width:62%;background:#2ed88e;"></div></div><div class="td-prog-lbl">62% elapsed</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="td-card-footer">
+    <a href="transaction-history.html" class="td-act-btn"><span class="material-icons">history</span>Transaction History</a>
+    <a href="account-statement.html" class="td-act-btn"><span class="material-icons">description</span>Statement</a>
+    <a href="change-maturity-instructions.html" class="td-act-btn"><span class="material-icons">event_note</span>Maturity</a>
+    <div class="ctx-wrap" style="position:relative;">
+      <button class="td-act-btn" onclick="toggleCtx('ctx_tc1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span></button>
+      <div class="ctx-menu hidden" id="ctx_tc1" role="menu">
+        <div class="ctx-sec">Term Deposit</div>
+        <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tc1')"><img src="../images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
+        <a href="break-term-deposit.html" class="ctx-item" onclick="closeCtx('ctx_tc1')"><img src="../images/icons/cancel.svg" width="18" height="18" alt="cancel" loading="lazy"/> Break Term Deposit</a>
+        <div class="ctx-divider" role="separator"></div>
+        <div class="ctx-sec">Statements</div>
+        <button class="ctx-item" onclick="closeCtx('ctx_tc1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+        <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_tc1')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+      </div>
+    </div>
+  </div>
+</div><div class="acct-row td-card" id="accRow_tc2">
+  <div class="td-card-body">
+    <div class="td-identity">
+      <div class="td-icon-circle" style="background:#f1f5f9;color:#64748b;">FD</div>
+      <div class="td-identity-info">
+        <div class="acct-name"><span id="accName_tc2">Fixed Deposit 2023</span><button class="edit-name-btn" onclick="startEdit('tc2')" aria-label="Edit"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
+        <div class="acct-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+      </div>
+    </div>
+    <span class="badge-s s-matured">Matured</span>
+    <div class="td-data-fields">
+      <div class="td-data-field"><div class="lbl">Account Number</div><div class="val">TD003-2023</div></div>
+      <div class="td-data-field"><div class="lbl">Principal Amount</div><div class="val">15,000.00 USD</div></div>
+      <div class="td-data-field"><div class="lbl">Interest Rate</div><div class="val">3.75% p.a.</div></div>
+      <div class="td-data-field"><div class="lbl">Tenure</div><div class="val">18 Months</div></div>
+      <div class="td-data-field">
+        <div class="lbl">Maturity Date</div><div class="val">15 Jan 2025</div>
+        <div class="td-prog-mini"><div class="td-prog-track"><div class="td-prog-fill" style="width:100%;background:#94a3b8;"></div></div><div class="td-prog-lbl">Matured</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="td-card-footer">
+    <a href="transaction-history.html" class="td-act-btn"><span class="material-icons">history</span>Transaction History</a>
+    <a href="account-statement.html" class="td-act-btn"><span class="material-icons">description</span>Statement</a>
+    <div class="ctx-wrap" style="position:relative;">
+      <button class="td-act-btn" onclick="toggleCtx('ctx_tc2')" aria-haspopup="true" aria-expanded="false" aria-label="More actions"><span class="material-icons">more_horiz</span></button>
+      <div class="ctx-menu hidden" id="ctx_tc2" role="menu">
+        <div class="ctx-sec">Term Deposit</div>
+        <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tc2')"><img src="../images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
+        <a href="break-term-deposit.html" class="ctx-item" onclick="closeCtx('ctx_tc2')"><img src="../images/icons/cancel.svg" width="18" height="18" alt="cancel" loading="lazy"/> Break Term Deposit</a>
+        <div class="ctx-divider" role="separator"></div>
+        <div class="ctx-sec">Statements</div>
+        <button class="ctx-item" onclick="closeCtx('ctx_tc2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+        <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_tc2')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+      </div>
+    </div>
+  </div>
+</div></div>
+    <div id="termTableView" class="hidden"><div class="table-responsive">
+<table class="az-table w-100" role="grid">
+<thead><tr>
+  <th scope="col">Deposit Name</th><th scope="col">Status</th>
+  <th scope="col">Account Number</th><th scope="col">Principal Amount</th>
+  <th scope="col">Interest Rate</th><th scope="col">Tenure</th>
+  <th scope="col">Maturity Date</th><th scope="col">Profit Account</th>
+  <th scope="col" class="text-end">Actions</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td><div class="td-name">12-Month Deposit</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-active">Active</span></td>
+  <td>TD001-2024</td><td>25,000.00 USD</td><td>4.50% p.a.</td><td>12 Months</td><td>31 Dec 2025</td><td>IBAN8000</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_tt0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_tt0" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_tt0')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Term Deposit</div>
+    <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tt0')"><img src="../images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
+    <a href="break-term-deposit.html" class="ctx-item" onclick="closeCtx('ctx_tt0')"><img src="../images/icons/cancel.svg" width="18" height="18" alt="cancel" loading="lazy"/> Break Term Deposit</a>
+  </div>
+</div></div></td>
+</tr>
+<tr>
+  <td><div class="td-name">6-Month Growth Plan</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-active">Active</span></td>
+  <td>TD002-2024</td><td>10,000.00 USD</td><td>5.00% p.a.</td><td>6 Months</td><td>30 Jun 2025</td><td>IBAN8001</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_tt1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_tt1" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_tt1')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Term Deposit</div>
+    <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tt1')"><img src="../images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
+    <a href="break-term-deposit.html" class="ctx-item" onclick="closeCtx('ctx_tt1')"><img src="../images/icons/cancel.svg" width="18" height="18" alt="cancel" loading="lazy"/> Break Term Deposit</a>
+  </div>
+</div></div></td>
+</tr>
+<tr>
+  <td><div class="td-name">Fixed Deposit 2023</div><div class="td-curr"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</div></td>
+  <td><span class="badge-s s-matured">Matured</span></td>
+  <td>TD003-2023</td><td>15,000.00 USD</td><td>3.75% p.a.</td><td>18 Months</td><td>15 Jan 2025</td><td>IBAN8000</td>
+  <td class="text-end"><div class="td-actions"><a href="transaction-history.html" class="btn-txn">Transaction History</a><div class="ctx-wrap position-relative">
+  <button class="btn-more" onclick="toggleCtx('ctx_tt2')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+  <div class="ctx-menu hidden" id="ctx_tt2" role="menu">
+    <div class="ctx-sec">Transfers</div>
+    <button class="ctx-item" onclick="openTransfer();closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/transfer.svg" width="18" height="18" alt="transfer" loading="lazy"/> Transfer Money</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/send_to_self.svg" width="18" height="18" alt="send_to_self" loading="lazy"/> View Pending Transfers</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Requests</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/chequebook.svg" width="18" height="18" alt="chequebook" loading="lazy"/> Request Chequebook</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Debit Card</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/cards.svg" width="18" height="18" alt="cards" loading="lazy"/> Request Credit Card</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Statements</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Request e-Statement</button>
+    <a href="request-hard-copy-statement.html" class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/> Request Hard Copy Statement</a>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Account Information</div>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/share.svg" width="18" height="18" alt="share" loading="lazy"/> Share Account Details</button>
+    <button class="ctx-item" onclick="closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/export.svg" width="18" height="18" alt="export" loading="lazy"/> Download RIB/IBAN Report</button>
+    <button class="ctx-item" onclick="openQR();closeCtx('ctx_tt2')" role="menuitem"><img src="../images/icons/barcode.svg" width="18" height="18" alt="barcode" loading="lazy"/> Generate QR Code</button>
+    <div class="ctx-divider" role="separator"></div>
+    <div class="ctx-sec">Term Deposit</div>
+    <a href="change-maturity-instructions.html" class="ctx-item" onclick="closeCtx('ctx_tt2')"><img src="../images/icons/calendar.svg" width="18" height="18" alt="calendar" loading="lazy"/> Change Maturity Instructions</a>
+    <a href="break-term-deposit.html" class="ctx-item" onclick="closeCtx('ctx_tt2')"><img src="../images/icons/cancel.svg" width="18" height="18" alt="cancel" loading="lazy"/> Break Term Deposit</a>
+  </div>
+</div></div></td>
+</tr>
+</tbody></table></div></div>
+  </div>
+</div>
+  </main>
+  <footer class="app-footer" role="contentinfo">
+  <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+  <div class="d-flex align-items-center gap-2">
+    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <div class="acc-btns">
+      <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+      <button class="acc-btn" aria-label="Default font size">A</button>
+      <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+      <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+    </div>
+  </div>
+</footer>
+</div>
+
+<!-- QR Modal -->
+<div class="modal-ov hidden" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+  <div class="az-modal modal-sm text-center" style="padding:28px">
+    <button class="modal-close" onclick="closeModal('qrModal')" aria-label="Close">&#215;</button>
+    <div id="qrModalTitle" class="modal-title text-start">QR Code</div>
+    <div class="d-flex justify-content-center py-3"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><rect x="10" y="10" width="60" height="60" fill="none" stroke="#000" stroke-width="6"/><rect x="22" y="22" width="36" height="36" fill="#000"/><rect x="130" y="10" width="60" height="60" fill="none" stroke="#000" stroke-width="6"/><rect x="142" y="22" width="36" height="36" fill="#000"/><rect x="10" y="130" width="60" height="60" fill="none" stroke="#000" stroke-width="6"/><rect x="22" y="142" width="36" height="36" fill="#000"/><rect x="82" y="10" width="10" height="10" fill="#000"/><rect x="96" y="10" width="10" height="10" fill="#000"/><rect x="110" y="10" width="10" height="10" fill="#000"/><rect x="82" y="24" width="10" height="10" fill="#000"/><rect x="110" y="24" width="10" height="10" fill="#000"/><rect x="96" y="38" width="10" height="10" fill="#000"/><rect x="82" y="52" width="10" height="10" fill="#000"/><rect x="96" y="52" width="10" height="10" fill="#000"/><rect x="110" y="52" width="10" height="10" fill="#000"/><rect x="82" y="82" width="10" height="10" fill="#000"/><rect x="96" y="82" width="10" height="10" fill="#000"/><rect x="82" y="96" width="10" height="10" fill="#000"/><rect x="110" y="96" width="10" height="10" fill="#000"/><rect x="96" y="110" width="10" height="10" fill="#000"/><rect x="110" y="110" width="10" height="10" fill="#000"/><rect x="130" y="82" width="10" height="10" fill="#000"/><rect x="158" y="82" width="10" height="10" fill="#000"/><rect x="130" y="96" width="10" height="10" fill="#000"/><rect x="144" y="96" width="10" height="10" fill="#000"/><rect x="158" y="110" width="10" height="10" fill="#000"/><rect x="82" y="130" width="10" height="10" fill="#000"/><rect x="96" y="130" width="10" height="10" fill="#000"/><rect x="110" y="130" width="10" height="10" fill="#000"/><rect x="82" y="158" width="10" height="10" fill="#000"/><rect x="96" y="158" width="10" height="10" fill="#000"/><rect x="110" y="144" width="10" height="10" fill="#000"/><rect x="130" y="130" width="10" height="10" fill="#000"/><rect x="158" y="130" width="10" height="10" fill="#000"/><rect x="144" y="158" width="10" height="10" fill="#000"/><rect x="130" y="158" width="10" height="10" fill="#000"/><rect x="158" y="158" width="10" height="10" fill="#000"/><rect x="144" y="144" width="10" height="10" fill="#000"/></svg></div>
+    <div class="d-flex gap-3 justify-content-center">
+      <button class="btn-action btn-cancel" onclick="closeModal('qrModal')" style="padding:10px 36px">CLOSE</button>
+      <button class="btn-action btn-submit" style="padding:10px 22px">SAVE TO PHOTOS</button>
+    </div>
+  </div>
+</div>
+<!-- Transfer Modal -->
+<div class="modal-ov hidden" id="transferModal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle">
+  <div class="az-modal modal-md">
+    <button class="modal-close" onclick="closeModal('transferModal')" aria-label="Close">&#215;</button>
+    <div id="transferModalTitle" class="modal-title">Select Transfer Option</div>
+    <div class="modal-tabs" role="tablist">
+      <button class="m-tab active" id="mTabImm" onclick="switchTxTab('imm')" role="tab" aria-selected="true"><img src="../images/icons/transfer.svg" width="16" height="16" alt="transfer" loading="lazy"/> Immediate Transfer</button>
+      <button class="m-tab" id="mTabSch" onclick="switchTxTab('sch')" role="tab" aria-selected="false"><img src="../images/icons/calendar.svg" width="16" height="16" alt="calendar" loading="lazy"/> Scheduled Transfer</button>
+    </div>
+    <button class="tx-opt sel"><div class="tx-icon"><img src="../images/icons/send_to_self.svg" width="22" height="22" alt="send_to_self" loading="lazy"/></div><div><div class="tx-title">Own Account Transfer</div><div class="tx-sub">Transfer between your accounts.</div></div></button>
+    <button class="tx-opt"><div class="tx-icon"><img src="../images/icons/beneficiary.svg" width="22" height="22" alt="beneficiary" loading="lazy"/></div><div><div class="tx-title">Internal Transfer</div><div class="tx-sub">Transfer within our bank to another user.</div></div></button>
+    <button class="tx-opt"><div class="tx-icon"><img src="../images/icons/payments.svg" width="22" height="22" alt="payments" loading="lazy"/></div><div><div class="tx-title">Local Country Transfer</div><div class="tx-sub">Transfer to a local bank account.</div></div></button>
+    <button class="tx-opt"><div class="tx-icon"><img src="../images/icons/remittance.svg" width="22" height="22" alt="remittance" loading="lazy"/></div><div><div class="tx-title">International Transfer</div><div class="tx-sub">Transfer to an international bank account.</div></div></button>
+    <div class="text-center mt-4"><button class="btn-action btn-cancel" onclick="closeModal('transferModal')" style="padding:10px 60px">CANCEL</button></div>
+  </div>
+</div>
+<!-- Map Modal -->
+<div class="modal-ov hidden" id="mapModal" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle">
+  <div class="az-modal modal-lg">
+    <button class="modal-close" onclick="closeModal('mapModal')" aria-label="Close">&#215;</button>
+    <div id="mapModalTitle" class="modal-title">Locate the Branch</div>
+    <div style="width:100%;height:300px;background:linear-gradient(135deg,#b2dfdb,#e8f5e9);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px;gap:8px"><img src="../images/icons/information.svg" width="20" height="20" alt="information" loading="lazy"/> Map — Branch Locator</div>
+    <div class="text-center mt-4"><button class="btn-action btn-submit" onclick="closeModal('mapModal')" style="padding:10px 60px">OK</button></div>
+  </div>
+</div>
+
+<!-- ████ ACCOUNTS UX JS ████ -->
+<script>
+/* ── Balance visibility toggle (star mask) ── */
+function toggleBalVisibility(){
+  var balVals=[];
+  document.querySelectorAll('.acct-field').forEach(function(f){
+    var lbl=f.querySelector('.lbl');
+    if(lbl&&(lbl.textContent.includes('Balance')||lbl.textContent.includes('Principal'))){
+      var val=f.querySelector('.val');
+      if(val) balVals.push(val);
+    }
+  });
+  var isHiding=balVals.length&&!balVals[0].hasAttribute('data-orig');
+  balVals.forEach(function(val){
+    if(isHiding){
+      val.setAttribute('data-orig',val.textContent.trim());
+      val.textContent='••• ••• ••';
+      val.classList.add('bal-masked');
+    } else {
+      val.textContent=val.getAttribute('data-orig')||val.textContent;
+      val.removeAttribute('data-orig');
+      val.classList.remove('bal-masked');
+    }
+  });
+  var btn=document.getElementById('balToggleBtn');
+  if(btn){var ic=btn.querySelector('.material-icons');
+    if(ic) ic.textContent=isHiding?'visibility_off':'visibility';}
+}
+
+/* ── Status filter chips (card view) ── */
+function filterAccounts(type,btn){
+  document.querySelectorAll('.acct-filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('#cardView .acct-row').forEach(function(row){
+    var st=row.getAttribute('data-status')||'';
+    var show=false;
+    if(type==='all') show=true;
+    else if(type==='active') show=(st==='active');
+    else if(type==='inactive') show=(st==='inactive');
+    else if(type==='others') show=(st!=='active'&&st!=='inactive');
+    row.style.display=show?'':'none';
+  });
+}
+
+/* ── Copy IBAN ── */
+function copyIBAN(btn,iban){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(iban).then(function(){showCopyTip(btn);});
+  } else {
+    var t=document.createElement('textarea');
+    t.value=iban;document.body.appendChild(t);t.select();
+    document.execCommand('copy');document.body.removeChild(t);
+    showCopyTip(btn);
+  }
+}
+function showCopyTip(btn){
+  var tip=btn.querySelector('.copy-tip');
+  if(!tip) return;
+  tip.style.opacity='1';
+  setTimeout(function(){tip.style.opacity='0';},1400);
+}
+
+</script>
+<!-- Bootstrap JS (local) -->
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/shared.js"></script>
+<script>
+  (function() {
+    var tab = new URLSearchParams(window.location.search).get('tab');
+    if (tab === 'term') switchTab('term');
+  })();
+</script>
+</body>
+</html>

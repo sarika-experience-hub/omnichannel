@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – Movie Ticket Perks</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  
+</head>
+<body>
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="../images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>27 Jul, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:42</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="retail-dashboard.html">My Banking</a><span class="sep">&#8250;</span><span class="cur">Movie Ticket Perks</span></div>
+    <h1 class="page-title mb-4">Movie Ticket Perks</h1>
+
+    <!-- Hero -->
+    <div class="mv-hero">
+      <div class="mv-hero-overlay"></div>
+      <div class="mv-hero-content">
+        <div class="mv-hero-badge"><span class="material-icons">credit_card</span>Gold Mastercard Exclusive</div>
+        <div class="mv-hero-title">Exclusive Cinema Privileges</div>
+        <div class="mv-hero-sub">Get up to 1 complimentary ticket with every ticket purchased at partner cinemas across the UAE. Simply pay with your Gold Mastercard.</div>
+        <div style="display:flex;gap:.625rem;flex-wrap:wrap;margin-top:1rem;">
+          <div class="mv-hero-pill"><span class="material-icons">movie</span>Buy 1 Get 1 Free</div>
+          <div class="mv-hero-pill"><span class="material-icons">location_on</span>15+ cinemas across UAE</div>
+          <div class="mv-hero-pill"><span class="material-icons">calendar_today</span>Valid till Dec 2026</div>
+        </div>
+        <button class="mv-elig-btn" onclick="document.getElementById('eligModal').style.display='flex'">
+          <span class="material-icons">verified</span>Check Eligibility
+        </button>
+      </div>
+      <div class="mv-hero-icon"><span class="material-icons">local_movies</span></div>
+    </div>
+
+    <!-- How it works -->
+    <div class="mv-section">
+      <h3><span class="material-icons">info</span>How It Works</h3>
+      <div class="mv-steps">
+        <div class="mv-step">
+          <div class="mv-step-bubble">
+            <span class="mv-step-bg-num">1</span>
+            <div class="mv-step-icon-ring"><span class="material-icons">search</span></div>
+          </div>
+          <div class="mv-step-label">Pick a Movie</div>
+          <div class="mv-step-text">Browse now-showing titles at any partner cinema near you</div>
+        </div>
+        <div class="mv-connector"><span></span></div>
+        <div class="mv-step">
+          <div class="mv-step-bubble">
+            <span class="mv-step-bg-num">2</span>
+            <div class="mv-step-icon-ring"><span class="material-icons">credit_card</span></div>
+          </div>
+          <div class="mv-step-label">Pay with Your Card</div>
+          <div class="mv-step-text">Use your Gold Mastercard ····7841 at the cinema counter</div>
+        </div>
+        <div class="mv-connector"><span></span></div>
+        <div class="mv-step">
+          <div class="mv-step-bubble">
+            <span class="mv-step-bg-num">3</span>
+            <div class="mv-step-icon-ring"><span class="material-icons">confirmation_number</span></div>
+          </div>
+          <div class="mv-step-label">Instant Discount</div>
+          <div class="mv-step-text">Your second ticket is complimentary — applied automatically at checkout</div>
+        </div>
+        <div class="mv-connector"><span></span></div>
+        <div class="mv-step">
+          <div class="mv-step-bubble">
+            <span class="mv-step-bg-num">4</span>
+            <div class="mv-step-icon-ring" style="background:linear-gradient(135deg,#2ed88e,#1a9e63);"><span class="material-icons" style="color:#fff;">celebration</span></div>
+          </div>
+          <div class="mv-step-label">Enjoy!</div>
+          <div class="mv-step-text">Sit back and watch. Benefit resets on the 1st of each month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Partner Cinemas -->
+    <div class="mv-section">
+      <h3><span class="material-icons">theaters</span>Partner Cinemas</h3>
+      <div class="mv-cinema-grid">
+
+        <div class="mv-cinema-card">
+          <div class="mv-cinema-logo" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+            <span class="material-icons" style="font-size:32px;color:#e94560;">movie</span>
+          </div>
+          <div class="mv-cinema-info">
+            <div class="mv-cinema-name">VOX Cinemas</div>
+            <div class="mv-cinema-locs"><span class="material-icons">location_on</span>Mall of Emirates, Dubai Mall +6 more</div>
+            <div class="mv-cinema-perk">Buy 1 Get 1 Free</div>
+          </div>
+        </div>
+
+        <div class="mv-cinema-card">
+          <div class="mv-cinema-logo" style="background:linear-gradient(135deg,#0f3460,#533483);">
+            <span class="material-icons" style="font-size:32px;color:#e94560;">theaters</span>
+          </div>
+          <div class="mv-cinema-info">
+            <div class="mv-cinema-name">Reel Cinemas</div>
+            <div class="mv-cinema-locs"><span class="material-icons">location_on</span>Dubai Marina Mall, The Dubai Mall</div>
+            <div class="mv-cinema-perk">Buy 1 Get 1 Free</div>
+          </div>
+        </div>
+
+        <div class="mv-cinema-card">
+          <div class="mv-cinema-logo" style="background:linear-gradient(135deg,#1b262c,#0f4c75);">
+            <span class="material-icons" style="font-size:32px;color:#bbe1fa;">local_movies</span>
+          </div>
+          <div class="mv-cinema-info">
+            <div class="mv-cinema-name">Novo Cinemas</div>
+            <div class="mv-cinema-locs"><span class="material-icons">location_on</span>IMG Worlds, Ibn Battuta Mall +3 more</div>
+            <div class="mv-cinema-perk">Buy 1 Get 1 Free</div>
+          </div>
+        </div>
+
+        <div class="mv-cinema-card">
+          <div class="mv-cinema-logo" style="background:linear-gradient(135deg,#2d6a4f,#1b4332);">
+            <span class="material-icons" style="font-size:32px;color:#95d5b2;">smart_display</span>
+          </div>
+          <div class="mv-cinema-info">
+            <div class="mv-cinema-name">Cinemacity</div>
+            <div class="mv-cinema-locs"><span class="material-icons">location_on</span>Khalidiyah Mall, Abu Dhabi Mall</div>
+            <div class="mv-cinema-perk">Buy 1 Get 1 Free</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Now Showing -->
+    <div class="mv-section">
+      <h3><span class="material-icons">play_circle</span>Now Showing</h3>
+      <div class="mv-movies-grid">
+
+        <div class="mv-movie-card">
+          <div class="mv-poster" style="background:linear-gradient(160deg,#1a1a2e 0%,#e94560 100%);">
+            <span class="material-icons mv-poster-icon">movie</span>
+            <div class="mv-rating-badge">PG-13</div>
+          </div>
+          <div class="mv-movie-info">
+            <div class="mv-movie-title">The Last Horizon</div>
+            <div class="mv-movie-meta">Action &middot; 2h 18m</div>
+            <div class="mv-movie-genre"><span class="material-icons">star</span>8.2</div>
+          </div>
+        </div>
+
+        <div class="mv-movie-card">
+          <div class="mv-poster" style="background:linear-gradient(160deg,#0f3460 0%,#533483 100%);">
+            <span class="material-icons mv-poster-icon">auto_awesome</span>
+            <div class="mv-rating-badge">U</div>
+          </div>
+          <div class="mv-movie-info">
+            <div class="mv-movie-title">Starfall Chronicles</div>
+            <div class="mv-movie-meta">Sci-Fi &middot; 2h 05m</div>
+            <div class="mv-movie-genre"><span class="material-icons">star</span>7.9</div>
+          </div>
+        </div>
+
+        <div class="mv-movie-card">
+          <div class="mv-poster" style="background:linear-gradient(160deg,#1b4332 0%,#52b788 100%);">
+            <span class="material-icons mv-poster-icon">nature_people</span>
+            <div class="mv-rating-badge">U</div>
+          </div>
+          <div class="mv-movie-info">
+            <div class="mv-movie-title">Into the Wild Sky</div>
+            <div class="mv-movie-meta">Adventure &middot; 1h 52m</div>
+            <div class="mv-movie-genre"><span class="material-icons">star</span>7.5</div>
+          </div>
+        </div>
+
+        <div class="mv-movie-card">
+          <div class="mv-poster" style="background:linear-gradient(160deg,#3d0c02 0%,#c1440e 100%);">
+            <span class="material-icons mv-poster-icon">whatshot</span>
+            <div class="mv-rating-badge">PG-15</div>
+          </div>
+          <div class="mv-movie-info">
+            <div class="mv-movie-title">Ember Rising</div>
+            <div class="mv-movie-meta">Thriller &middot; 2h 30m</div>
+            <div class="mv-movie-genre"><span class="material-icons">star</span>8.5</div>
+          </div>
+        </div>
+
+        <div class="mv-movie-card">
+          <div class="mv-poster" style="background:linear-gradient(160deg,#0c1445 0%,#2563eb 100%);">
+            <span class="material-icons mv-poster-icon">waves</span>
+            <div class="mv-rating-badge">U</div>
+          </div>
+          <div class="mv-movie-info">
+            <div class="mv-movie-title">Ocean's End</div>
+            <div class="mv-movie-meta">Drama &middot; 1h 48m</div>
+            <div class="mv-movie-genre"><span class="material-icons">star</span>7.2</div>
+          </div>
+        </div>
+
+        <div class="mv-movie-card">
+          <div class="mv-poster" style="background:linear-gradient(160deg,#2d1b69 0%,#a855f7 100%);">
+            <span class="material-icons mv-poster-icon">psychology</span>
+            <div class="mv-rating-badge">PG-13</div>
+          </div>
+          <div class="mv-movie-info">
+            <div class="mv-movie-title">Mind Palace</div>
+            <div class="mv-movie-meta">Mystery &middot; 2h 10m</div>
+            <div class="mv-movie-genre"><span class="material-icons">star</span>8.0</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Eligible card -->
+    <div class="mv-section" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:.875rem;">
+        <span class="material-icons" style="font-size:32px;color:#2ed88e;">credit_card</span>
+        <div>
+          <div style="font-size:.9375rem;font-weight:700;color:var(--az-navy);">Gold Mastercard ····7841</div>
+          <div style="font-size:.8125rem;color:var(--az-muted);">Buy 1 Get 1 Free · 1 redemption remaining</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.375rem;background:#e6f9f2;border:1px solid #a3e6c8;border-radius:2rem;padding:.375rem 1rem;font-size:.8125rem;font-weight:600;color:#0a5c3a;">
+        <span class="material-icons" style="font-size:15px;">check_circle</span>Benefit Active
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<style>
+  .mv-hero {
+    border-radius:.875rem; padding:2rem 2rem 1.75rem;
+    background:linear-gradient(135deg,#16303d 0%,#0e3347 55%,#00538A 100%);
+    color:#fff; position:relative; overflow:hidden; margin-bottom:1.25rem;
+  }
+  .mv-hero-overlay {
+    position:absolute; right:-30px; top:-30px;
+    width:180px; height:180px; border-radius:50%;
+    background:rgba(255,255,255,.05);
+  }
+  .mv-hero-content { position:relative; z-index:1; max-width:70%; }
+  .mv-hero-badge {
+    display:inline-flex; align-items:center; gap:.375rem;
+    background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);
+    border-radius:2rem; padding:.25rem .875rem;
+    font-size:.75rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:.04em; margin-bottom:.875rem;
+  }
+  .mv-hero-badge .material-icons { font-size:14px; }
+  .mv-hero-title { font-size:2rem; font-weight:800; margin-bottom:.375rem; letter-spacing:-.02em; }
+  .mv-hero-sub { font-size:.8125rem; opacity:.85; line-height:1.55; }
+  .mv-hero-pill {
+    display:inline-flex; align-items:center; gap:.3rem;
+    background:rgba(255,255,255,.12); border-radius:2rem;
+    padding:.25rem .75rem; font-size:.75rem; font-weight:500;
+  }
+  .mv-hero-pill .material-icons { font-size:13px; }
+  .mv-hero-icon {
+    position:absolute; right:2rem; top:50%; transform:translateY(-50%);
+    width:80px; height:80px; border-radius:50%;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+  .mv-hero-icon .material-icons { font-size:40px; color:#2ed88e; }
+
+  .mv-section {
+    background:var(--card-bg,#fff); border:1px solid var(--az-border);
+    border-radius:.625rem; padding:1.25rem 1.5rem; margin-bottom:1rem;
+  }
+  .mv-section h3 {
+    font-size:.9375rem; font-weight:700; color:var(--az-navy);
+    margin:0 0 1rem; display:flex; align-items:center; gap:.5rem;
+  }
+  .mv-section h3 .material-icons { font-size:18px; color:#00538A; }
+
+  /* Steps */
+  .mv-steps { display:flex; align-items:flex-start; gap:0; }
+  .mv-step {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; text-align:center;
+  }
+  .mv-step-bubble {
+    position:relative; width:72px; height:72px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:.75rem;
+  }
+  .mv-step-bg-num {
+    position:absolute; font-size:3.5rem; font-weight:900;
+    color:#00538A; opacity:.07; line-height:1;
+    top:50%; left:50%; transform:translate(-50%,-52%);
+    user-select:none;
+  }
+  .mv-step-icon-ring {
+    width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg,#eef4fb,#dbeafe);
+    border:2px solid #93c5fd;
+    display:flex; align-items:center; justify-content:center;
+    position:relative; z-index:1;
+    box-shadow:0 4px 12px rgba(0,83,138,.12);
+  }
+  .mv-step-icon-ring .material-icons { font-size:24px; color:#00538A; }
+  .mv-step-label { font-size:.8125rem; font-weight:700; color:var(--az-navy); margin-bottom:.3rem; }
+  .mv-step-text { font-size:.75rem; color:var(--az-muted); line-height:1.5; padding:0 .5rem; }
+  .mv-connector {
+    flex-shrink:0; width:2.5rem;
+    display:flex; align-items:center; justify-content:center;
+    padding-top:2rem;
+  }
+  .mv-connector span {
+    display:block; height:2px; width:100%;
+    background:linear-gradient(90deg,#93c5fd,#bfdbfe);
+    border-radius:2px;
+  }
+
+  /* Cinemas */
+  .mv-cinema-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1rem; }
+  .mv-cinema-card {
+    display:flex; align-items:center; gap:.875rem;
+    border:1px solid var(--az-border); border-radius:.625rem;
+    overflow:hidden; background:var(--card-bg,#fff);
+    transition:box-shadow .15s;
+  }
+  .mv-cinema-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.08); }
+  .mv-cinema-logo {
+    width:64px; min-width:64px; height:64px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .mv-cinema-info { padding:.625rem .75rem .625rem 0; flex:1; }
+  .mv-cinema-name { font-size:.9rem; font-weight:700; color:var(--az-navy); margin-bottom:.2rem; }
+  .mv-cinema-locs { font-size:.7rem; color:var(--az-muted); display:flex; align-items:center; gap:.2rem; margin-bottom:.3rem; }
+  .mv-cinema-locs .material-icons { font-size:12px; }
+  .mv-cinema-perk { font-size:.7rem; font-weight:600; color:#1a9e63; }
+
+  /* Movies */
+  .mv-movies-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:1rem; }
+  .mv-movie-card { border-radius:.625rem; overflow:hidden; border:1px solid var(--az-border); background:var(--card-bg,#fff); transition:transform .15s,box-shadow .15s; cursor:pointer; }
+  .mv-movie-card:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,.1); }
+  .mv-poster {
+    height:140px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .mv-poster-icon { font-size:40px; color:rgba(255,255,255,.4); }
+  .mv-rating-badge {
+    position:absolute; top:.5rem; right:.5rem;
+    background:rgba(0,0,0,.5); color:#fff;
+    font-size:.6rem; font-weight:700; border-radius:.25rem;
+    padding:.1rem .35rem;
+  }
+  .mv-movie-info { padding:.625rem .75rem; }
+  .mv-movie-title { font-size:.8125rem; font-weight:700; color:var(--az-navy); margin-bottom:.2rem; line-height:1.3; }
+  .mv-movie-meta { font-size:.7rem; color:var(--az-muted); margin-bottom:.25rem; }
+  .mv-movie-genre { display:flex; align-items:center; gap:.15rem; font-size:.75rem; font-weight:600; color:#f59e0b; }
+  .mv-movie-genre .material-icons { font-size:13px; }
+
+
+  /* Check Eligibility button */
+  .mv-elig-btn {
+    display:inline-flex; align-items:center; gap:.4rem;
+    margin-top:1.125rem;
+    background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.4);
+    color:#fff; border-radius:.5rem;
+    padding:.5rem 1.125rem; font-size:.875rem; font-weight:600;
+    cursor:pointer; transition:background .15s;
+  }
+  .mv-elig-btn:hover { background:rgba(255,255,255,.25); }
+  .mv-elig-btn .material-icons { font-size:17px; }
+
+  /* Eligibility modal */
+  .elig-modal {
+    background:#fff; border-radius:.875rem;
+    width:100%; max-width:440px;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);
+    overflow:hidden;
+  }
+  .elig-modal-hdr {
+    display:flex; align-items:flex-start; justify-content:space-between;
+    padding:1.25rem 1.5rem 1rem; border-bottom:1px solid #e2e8ec;
+  }
+  .elig-modal-title {
+    display:flex; align-items:center; gap:.5rem;
+    font-size:1rem; font-weight:700; color:#16303d; margin-bottom:.2rem;
+  }
+  .elig-modal-title .material-icons { font-size:19px; color:#00538A; }
+  .elig-modal-sub { font-size:.8rem; color:#707070; }
+  .elig-close {
+    background:none; border:none; font-size:1.5rem; color:#aaa;
+    cursor:pointer; line-height:1; padding:.25rem;
+  }
+  .elig-close:hover { color:#333; }
+  .elig-card-row {
+    display:flex; align-items:center; gap:.875rem;
+    padding:.875rem 1.5rem; border-bottom:1px solid #f0f0f0;
+  }
+  .elig-eligible { background:#f8fffe; }
+  .elig-card-icon {
+    width:40px; height:40px; border-radius:.5rem;
+    background:linear-gradient(135deg,#e6f9f2,#c8f0e0);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .elig-card-icon .material-icons { font-size:20px; color:#1a9e63; }
+  .elig-card-info { flex:1; }
+  .elig-card-name { font-size:.875rem; font-weight:600; color:#16303d; }
+  .elig-card-num { font-size:.75rem; color:#707070; letter-spacing:.05em; }
+  .elig-status {
+    display:inline-flex; align-items:center; gap:.25rem;
+    border-radius:2rem; padding:.2rem .7rem;
+    font-size:.75rem; font-weight:600; flex-shrink:0;
+  }
+  .elig-status .material-icons { font-size:14px; }
+  .elig-yes { background:#e6f9f2; color:#0a6b42; }
+  .elig-no  { background:#fef2f2; color:#991b1b; }
+  .elig-note {
+    display:flex; align-items:flex-start; gap:.5rem;
+    margin:1rem 1.5rem; padding:.75rem 1rem;
+    background:#eff6ff; border-radius:.5rem; border:1px solid #dbeafe;
+    font-size:.8rem; color:#1d4ed8; line-height:1.5;
+  }
+  .elig-note .material-icons { font-size:16px; flex-shrink:0; margin-top:.1rem; }
+  .elig-view-cards {
+    display:flex; align-items:center; justify-content:center; gap:.3rem;
+    padding:.875rem; font-size:.8125rem; font-weight:600;
+    color:#00538A; text-decoration:none; border-top:1px solid #e2e8ec;
+  }
+  .elig-view-cards:hover { background:#f8fafc; }
+  .elig-view-cards .material-icons { font-size:16px; }
+  @media(max-width:600px){
+    .mv-hero-content { max-width:100%; }
+    .mv-hero-icon { display:none; }
+    .mv-steps { flex-direction:column; }
+    .mv-step-arrow { display:none; }
+  }
+</style>
+
+
+<!-- Eligibility Modal -->
+<div id="eligModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+  <div class="elig-modal">
+    <div class="elig-modal-hdr">
+      <div>
+        <div class="elig-modal-title"><span class="material-icons">verified</span>Card Eligibility</div>
+        <div class="elig-modal-sub">Cards in your profile checked against this privilege</div>
+      </div>
+      <button class="elig-close" onclick="document.getElementById('eligModal').style.display='none'">&times;</button>
+    </div>
+
+    <div class="elig-card-row elig-eligible">
+      <div class="elig-card-icon"><span class="material-icons">credit_card</span></div>
+      <div class="elig-card-info">
+        <div class="elig-card-name">Gold Mastercard</div>
+        <div class="elig-card-num">····  ····  ····  7841</div>
+      </div>
+      <div class="elig-status elig-yes"><span class="material-icons">check_circle</span>Eligible</div>
+    </div>
+
+    <div class="elig-card-row">
+      <div class="elig-card-icon" style="background:#f5f5f5;"><span class="material-icons" style="color:#aaa;">credit_card</span></div>
+      <div class="elig-card-info">
+        <div class="elig-card-name">Classic Debit Card</div>
+        <div class="elig-card-num">····  ····  ····  3302</div>
+      </div>
+      <div class="elig-status elig-no"><span class="material-icons">cancel</span>Not Eligible</div>
+    </div>
+
+    <div class="elig-card-row">
+      <div class="elig-card-icon" style="background:#f0f4ff;"><span class="material-icons" style="color:#5b6abf;">credit_card</span></div>
+      <div class="elig-card-info">
+        <div class="elig-card-name">Platinum Visa</div>
+        <div class="elig-card-num">····  ····  ····  5519</div>
+      </div>
+      <div class="elig-status elig-yes"><span class="material-icons">check_circle</span>Eligible</div>
+    </div>
+
+    <div class="elig-note">
+      <span class="material-icons">info</span>
+      Privilege applies to Gold Mastercard and Platinum Visa holders. Present your card at the cinema counter to avail Buy 1 Get 1 Free on tickets.
+    </div>
+
+    <a href="cards-my-cards.html" class="elig-view-cards">View All My Cards <span class="material-icons">arrow_forward</span></a>
+  </div>
+</div>
+
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/sidebar.js"></script>
+</body>
+</html>

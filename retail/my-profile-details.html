@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Banking – My Profile Details"/>
+  <title>azentio – My Profile Details</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <style>
+/* ── Avatar hover overlay ──────────────────────────── */
+.hdr-avatar-wrap { position: relative; }
+.avatar-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 284px; background: #fff;
+  border: 1px solid var(--az-border); border-radius: .625rem;
+  box-shadow: 0 8px 28px rgba(0,0,0,.15);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transform: translateY(-6px); transition: opacity .18s, transform .18s;
+  overflow: hidden;
+}
+.hdr-avatar-wrap:hover .avatar-dropdown { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.av-drop-top { background: #e6f5ee; padding: 1rem 1.125rem; display: flex; align-items: center; gap: .875rem; }
+.av-drop-photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(46,216,142,.4); flex-shrink: 0; }
+.av-drop-name { font-weight: 700; font-size: .9375rem; color: var(--az-navy); line-height: 1.2; }
+.av-drop-login-lbl { font-size: .75rem; color: #5a7060; margin-top: .25rem; }
+.av-drop-login-time { display: flex; align-items: center; gap: .625rem; font-size: .75rem; color: var(--az-navy); margin-top: .1875rem; flex-wrap: wrap; }
+.av-drop-login-time .t-part { display: flex; align-items: center; gap: .25rem; }
+.av-drop-login-time svg { width: 12px; height: 12px; color: #1ea065; flex-shrink: 0; }
+.av-drop-login-time .t-sep { color: #b0c4b8; }
+.av-drop-details { padding: .75rem 1.125rem .625rem; border-bottom: 1px solid var(--az-border); }
+.av-detail-row { display: flex; align-items: baseline; gap: .375rem; font-size: .8125rem; line-height: 1.5; }
+.av-detail-lbl { color: var(--az-muted); min-width: 70px; flex-shrink: 0; }
+.av-detail-val { color: var(--az-navy); font-weight: 600; }
+.av-drop-nav { padding: .375rem 0; }
+.av-nav-link { display: flex; align-items: center; gap: .75rem; padding: .625rem 1.125rem; font-size: .875rem; color: var(--az-navy); text-decoration: none; font-family: 'Roboto', sans-serif; transition: background .1s; }
+.av-nav-link:hover { background: #f0faf5; color: var(--az-navy); }
+.av-nav-icon { width: 32px; height: 32px; border-radius: 50%; background: #f0faf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.av-nav-icon svg { width: 16px; height: 16px; color: var(--az-green); }
+
+/* ── Profile user summary card ─────────────────────── */
+.profile-user-card {
+  background: #fff; border: 1px solid var(--az-border); border-radius: .625rem;
+  padding: 1.75rem 2rem; display: flex; align-items: center;
+  gap: 1.75rem; margin-bottom: 1.25rem; flex-wrap: wrap;
+}
+.profile-avatar-wrap { position: relative; flex-shrink: 0; }
+.profile-avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--az-border); }
+.profile-avatar-edit {
+  position: absolute; bottom: 2px; right: 2px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--az-green); border: 2px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .12s;
+}
+.profile-avatar-edit:hover { background: var(--az-green-hover); }
+.profile-avatar-edit svg { width: 11px; height: 11px; color: #fff; }
+.profile-user-info { flex: 1; min-width: 0; }
+.profile-user-name { font-size: 1.25rem; font-weight: 700; color: var(--az-navy); margin-bottom: .375rem; }
+.profile-meta {
+  display: flex; align-items: center; gap: .5rem 1.5rem;
+  flex-wrap: wrap; margin-top: .5rem; font-size: .8125rem;
+}
+.profile-meta-item { color: var(--az-muted); display: flex; align-items: center; gap: .3rem; }
+.profile-meta-item strong { color: var(--az-navy); font-weight: 500; }
+.profile-last-login { font-size: .75rem; color: var(--az-muted); margin-top: .625rem; }
+
+/* ── Expandable detail sections ────────────────────── */
+.detail-section {
+  background: #fff; border: 1px solid var(--az-border);
+  border-radius: .625rem; margin-bottom: .875rem; overflow: hidden;
+}
+.detail-sec-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem; cursor: pointer; user-select: none;
+  transition: background .12s;
+}
+.detail-sec-hdr:hover { background: #fafcfd; }
+.detail-sec-hdr-left { display: flex; align-items: center; gap: .875rem; }
+.detail-sec-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #f0faf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.detail-sec-icon svg { width: 17px; height: 17px; color: var(--az-green); }
+.detail-sec-title { font-weight: 700; font-size: .9375rem; color: var(--az-navy); }
+.detail-sec-subtitle { font-size: .75rem; color: var(--az-muted); margin-top: .1875rem; }
+.detail-sec-hdr-right { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+.detail-sec-edit-btn {
+  display: inline-flex; align-items: center; gap: .3125rem;
+  font-size: .8125rem; font-weight: 600; color: var(--az-blue);
+  background: none; border: 1.5px solid var(--az-blue); cursor: pointer;
+  padding: .25rem .75rem; border-radius: .375rem;
+  font-family: 'Roboto', sans-serif; transition: background .1s;
+}
+.detail-sec-edit-btn:hover { background: #edf6ff; }
+.detail-sec-edit-btn svg { width: 12px; height: 12px; }
+.detail-sec-chev { flex-shrink: 0; color: var(--az-muted); transition: transform .22s; }
+.detail-sec-chev.open { transform: rotate(180deg); }
+.detail-sec-body { border-top: 1px solid var(--az-border); padding: 1.5rem 1.25rem 1.75rem; }
+
+/* Fields grid */
+.fields-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem 2.5rem; }
+@media (max-width: 900px) { .fields-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 600px) { .fields-grid { grid-template-columns: 1fr; } }
+.field-full { grid-column: 1/-1; }
+.pf-label { font-size: .6875rem; font-weight: 700; color: var(--az-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3125rem; }
+.pf-value { font-size: .875rem; font-weight: 500; color: var(--az-navy); display: flex; align-items: center; gap: .375rem; }
+.pf-value.muted-val { color: var(--az-muted); font-style: italic; }
+.pf-value.masked { letter-spacing: .2em; color: var(--az-muted); }
+.pf-edit-inline { background: none; border: none; cursor: pointer; padding: .125rem; opacity: .6; transition: opacity .12s; display: inline-flex; flex-shrink: 0; }
+.pf-edit-inline:hover { opacity: 1; }
+.pf-edit-inline svg { width: 12px; height: 12px; color: var(--az-muted); }
+
+/* Toggle rows */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: .875rem 0; border-bottom: 1px solid var(--az-border); }
+.toggle-row:last-child { border-bottom: none; }
+.tr-title { font-size: .875rem; font-weight: 500; color: var(--az-navy); }
+.tr-sub   { font-size: .75rem; color: var(--az-muted); margin-top: .1875rem; }
+
+/* Security rows */
+.security-row { display: flex; align-items: center; justify-content: space-between; padding: .875rem 0; border-bottom: 1px solid var(--az-border); flex-wrap: wrap; gap: .5rem; }
+.security-row:last-child { border-bottom: none; }
+.sr-title { font-size: .875rem; font-weight: 500; color: var(--az-navy); }
+.sr-sub   { font-size: .75rem; color: var(--az-muted); margin-top: .1875rem; }
+.sr-action { display: inline-flex; align-items: center; gap: .375rem; font-size: .8125rem; font-weight: 600; color: var(--az-blue); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Roboto', sans-serif; white-space: nowrap; }
+.sr-action:hover { color: var(--az-navy); }
+.sr-action svg { width: 13px; height: 13px; }
+
+/* Session cards */
+.session-card { display: flex; align-items: center; gap: 1rem; padding: .75rem 1rem; background: #fafbfc; border: 1px solid var(--az-border); border-radius: .375rem; margin-bottom: .5rem; flex-wrap: wrap; }
+.session-device { flex: 1; min-width: 0; }
+.sd-name { font-size: .8125rem; font-weight: 600; color: var(--az-navy); }
+.sd-meta { font-size: .75rem; color: var(--az-muted); margin-top: .125rem; }
+.sd-current { font-size: .75rem; font-weight: 700; color: var(--az-green); margin-left: .375rem; }
+.btn-end-session { font-size: .75rem; font-weight: 600; color: #dc3545; background: none; border: 1px solid #dc3545; border-radius: 20px; padding: .1875rem .75rem; cursor: pointer; font-family: 'Roboto', sans-serif; white-space: nowrap; transition: background .1s; }
+.btn-end-session:hover { background: #fff5f5; }
+  </style>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+      <img src="../images/icons/notification.svg" width="18" height="18" alt=""/><span class="notif-dot" aria-label="3 notifications">3</span>
+    </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div>
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>27 Jul, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:42</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <div class="az-bc">
+      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Profile</span>
+    </div>
+    <div class="page-top-bar">
+      <div class="page-title">My Profile</div>
+    </div>
+
+    <!-- User summary card -->
+    <div class="profile-user-card">
+      <div class="profile-avatar-wrap">
+        <svg class="profile-avatar" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#1e3a4a;flex-shrink:0;"><circle cx="44" cy="44" r="44" fill="#1e3a4a"/><text x="44" y="57" text-anchor="middle" font-family="Roboto,sans-serif" font-size="30" font-weight="700" fill="#2ed88e">SR</text></svg>
+        <button class="profile-avatar-edit" title="Change profile photo" aria-label="Change profile photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+      </div>
+      <div class="profile-user-info">
+        <div class="profile-user-name">Sara Rahman</div>
+        <div style="margin-top:.3125rem"><span class="badge-s s-active" style="font-size:.75rem;padding:.1875rem .875rem">Active</span></div>
+        <div class="profile-meta">
+          <div class="profile-meta-item">Customer ID: <strong>CIF-1023847</strong></div>
+          <div class="profile-meta-item">Email: <strong>sara.rahman@email.com</strong></div>
+          <div class="profile-meta-item">Mobile: <strong>+971 55 987 6543</strong></div>
+          <div class="profile-meta-item">User Type: <strong>Retail Premium</strong></div>
+        </div>
+        <div class="profile-last-login">Last login: 05 May 2026, 09:42 AM &nbsp;&middot;&nbsp; IP: 192.168.1.45 &nbsp;&middot;&nbsp; Dubai, UAE</div>
+      </div>
+    </div>
+
+    <!-- ── 1. Personal Information ── -->
+    <div class="detail-section">
+      <div class="detail-sec-hdr" onclick="toggleSec('ds1','dc1')" aria-expanded="true">
+        <div class="detail-sec-hdr-left">
+          <div class="detail-sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div>
+            <div class="detail-sec-title">Personal Information</div>
+            <div class="detail-sec-subtitle">Name, date of birth, gender, nationality</div>
+          </div>
+        </div>
+        <div class="detail-sec-hdr-right">
+          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+          <div class="detail-sec-chev open" id="dc1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="detail-sec-body" id="ds1">
+        <div class="fields-grid">
+          <div><div class="pf-label">First Name</div><div class="pf-value">Sara Rahman</div></div>
+          <div><div class="pf-label">Middle Name</div><div class="pf-value">D</div></div>
+          <div><div class="pf-label">Last Name</div><div class="pf-value">Desai</div></div>
+          <div><div class="pf-label">Date of Birth</div><div class="pf-value">18 September 1990</div></div>
+          <div><div class="pf-label">Gender</div><div class="pf-value">Female</div></div>
+          <div><div class="pf-label">Marital Status</div><div class="pf-value">Single</div></div>
+          <div><div class="pf-label">Nationality</div><div class="pf-value"><span class="fi fi-in" style="margin-right:.25rem"></span>Indian</div></div>
+          <div><div class="pf-label">Country of Residence</div><div class="pf-value"><span class="fi fi-ae" style="margin-right:.25rem"></span>United Arab Emirates</div></div>
+          <div><div class="pf-label">Customer Segment</div><div class="pf-value">Retail Premium</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2. Contact Details ── -->
+    <div class="detail-section">
+      <div class="detail-sec-hdr" onclick="toggleSec('ds2','dc2')" aria-expanded="false">
+        <div class="detail-sec-hdr-left">
+          <div class="detail-sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92v2z"/></svg></div>
+          <div>
+            <div class="detail-sec-title">Contact Details</div>
+            <div class="detail-sec-subtitle">Phone numbers, email addresses, residential address</div>
+          </div>
+        </div>
+        <div class="detail-sec-hdr-right">
+          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+          <div class="detail-sec-chev" id="dc2"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="detail-sec-body" id="ds2" style="display:none">
+        <div class="fields-grid">
+          <div>
+            <div class="pf-label">Primary Mobile</div>
+            <div class="pf-value">+971 55 987 6543
+              <button class="pf-edit-inline" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            </div>
+          </div>
+          <div><div class="pf-label">Alternate Mobile</div><div class="pf-value muted-val">— Not provided</div></div>
+          <div>
+            <div class="pf-label">Primary Email</div>
+            <div class="pf-value">sara.rahman@email.com
+              <button class="pf-edit-inline" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            </div>
+          </div>
+          <div><div class="pf-label">Alternate Email</div><div class="pf-value muted-val">— Not provided</div></div>
+          <div><div class="pf-label">Office Number</div><div class="pf-value">+971 4 123 4567</div></div>
+          <div><div class="pf-label">Fax Number</div><div class="pf-value muted-val">— Not provided</div></div>
+          <div class="field-full"><div class="pf-label">Residential Address</div><div class="pf-value">Villa 14, Block B, Jumeirah Village Circle, Dubai, United Arab Emirates, P.O. Box 12345</div></div>
+          <div class="field-full"><div class="pf-label">Mailing Address</div><div class="pf-value">Same as Residential Address</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 3. Identification & Documents ── -->
+    <div class="detail-section">
+      <div class="detail-sec-hdr" onclick="toggleSec('ds3','dc3')" aria-expanded="false">
+        <div class="detail-sec-hdr-left">
+          <div class="detail-sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+          <div>
+            <div class="detail-sec-title">Identification &amp; Documents</div>
+            <div class="detail-sec-subtitle">ID type, ID number, expiry dates</div>
+          </div>
+        </div>
+        <div class="detail-sec-hdr-right">
+          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+          <div class="detail-sec-chev" id="dc3"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="detail-sec-body" id="ds3" style="display:none">
+        <div class="fields-grid">
+          <div><div class="pf-label">ID Type</div><div class="pf-value">Emirates ID</div></div>
+          <div><div class="pf-label">ID Number</div><div class="pf-value">784-1990-7654321-2</div></div>
+          <div><div class="pf-label">ID Expiry Date</div><div class="pf-value">18 September 2028</div></div>
+          <div><div class="pf-label">Issue Date</div><div class="pf-value">19 September 2023</div></div>
+          <div><div class="pf-label">Issuing Country</div><div class="pf-value"><span class="fi fi-ae" style="margin-right:.25rem"></span>United Arab Emirates</div></div>
+          <div><div class="pf-label">Issuing Authority</div><div class="pf-value">Federal Authority for Identity</div></div>
+          <div style="grid-column:1/-1;height:1px;background:var(--az-border);margin:.375rem 0"></div>
+          <div><div class="pf-label">Passport Number</div><div class="pf-value">P98765432</div></div>
+          <div><div class="pf-label">Passport Expiry</div><div class="pf-value">18 March 2031</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 4. Security & Login ── -->
+    <div class="detail-section">
+      <div class="detail-sec-hdr" onclick="toggleSec('ds4','dc4')" aria-expanded="false">
+        <div class="detail-sec-hdr-left">
+          <div class="detail-sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
+          <div>
+            <div class="detail-sec-title">Security &amp; Login</div>
+            <div class="detail-sec-subtitle">Password, two-factor authentication, active sessions</div>
+          </div>
+        </div>
+        <div class="detail-sec-hdr-right">
+          <div class="detail-sec-chev" id="dc4"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="detail-sec-body" id="ds4" style="display:none">
+        <div class="security-row">
+          <div><div class="sr-title">Password</div><div class="sr-sub">Last changed 45 days ago &nbsp;&middot;&nbsp; Next mandatory change in 45 days</div></div>
+          <div class="pf-value masked">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</div>
+          <button class="sr-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Change Password</button>
+        </div>
+        <div class="security-row">
+          <div><div class="sr-title">Security Questions</div><div class="sr-sub">3 security questions configured</div></div>
+          <span class="badge-s s-active" style="font-size:.7rem;padding:.125rem .75rem">Configured</span>
+          <button class="sr-action">Manage</button>
+        </div>
+        <div class="security-row">
+          <div><div class="sr-title">Two-Factor Authentication (2FA)</div><div class="sr-sub">OTP sent to +971 50 &#8226;&#8226;&#8226; 4567</div></div>
+          <label class="az-toggle"><input type="checkbox" checked aria-label="2FA toggle"/><span class="az-slider"></span></label>
+        </div>
+        <div class="security-row">
+          <div><div class="sr-title">Biometric Login</div><div class="sr-sub">Face ID / Touch ID enabled on registered devices</div></div>
+          <label class="az-toggle"><input type="checkbox" checked aria-label="Biometric toggle"/><span class="az-slider"></span></label>
+        </div>
+        <div class="security-row" style="flex-direction:column;align-items:flex-start;gap:.875rem">
+          <div><div class="sr-title">Active Sessions</div><div class="sr-sub">Devices currently signed in to your account</div></div>
+          <div style="width:100%">
+            <div class="session-card">
+              <div class="session-device">
+                <div class="sd-name">Chrome on Windows <span class="sd-current">&#10003; Current Session</span></div>
+                <div class="sd-meta">Dubai, UAE &nbsp;&middot;&nbsp; IP: 192.168.1.45 &nbsp;&middot;&nbsp; 05 May 2026, 09:42 AM</div>
+              </div>
+            </div>
+            <div class="session-card">
+              <div class="session-device">
+                <div class="sd-name">Mobile App – iPhone 14</div>
+                <div class="sd-meta">Dubai, UAE &nbsp;&middot;&nbsp; IP: 10.0.0.22 &nbsp;&middot;&nbsp; 04 May 2026, 07:15 PM</div>
+              </div>
+              <button class="btn-end-session">End Session</button>
+            </div>
+            <div class="session-card">
+              <div class="session-device">
+                <div class="sd-name">Safari on iPad</div>
+                <div class="sd-meta">Abu Dhabi, UAE &nbsp;&middot;&nbsp; IP: 172.16.4.8 &nbsp;&middot;&nbsp; 02 May 2026, 02:30 PM</div>
+              </div>
+              <button class="btn-end-session">End Session</button>
+            </div>
+          </div>
+          <button class="sr-action" style="color:#dc3545">Terminate All Other Sessions</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 5. Notification Preferences ── -->
+    <div class="detail-section">
+      <div class="detail-sec-hdr" onclick="toggleSec('ds5','dc5')" aria-expanded="false">
+        <div class="detail-sec-hdr-left">
+          <div class="detail-sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+          <div>
+            <div class="detail-sec-title">Notification Preferences</div>
+            <div class="detail-sec-subtitle">Email, SMS, push notifications and alert settings</div>
+          </div>
+        </div>
+        <div class="detail-sec-hdr-right">
+          <div class="detail-sec-chev" id="dc5"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="detail-sec-body" id="ds5" style="display:none">
+        <div class="toggle-row"><div><div class="tr-title">Email Notifications</div><div class="tr-sub">Transaction confirmations, account statements, alerts</div></div><label class="az-toggle"><input type="checkbox" checked/><span class="az-slider"></span></label></div>
+        <div class="toggle-row"><div><div class="tr-title">SMS Notifications</div><div class="tr-sub">OTP, transaction alerts, balance updates</div></div><label class="az-toggle"><input type="checkbox" checked/><span class="az-slider"></span></label></div>
+        <div class="toggle-row"><div><div class="tr-title">Push Notifications</div><div class="tr-sub">In-app and mobile push alerts</div></div><label class="az-toggle"><input type="checkbox" checked/><span class="az-slider"></span></label></div>
+        <div class="toggle-row"><div><div class="tr-title">Transaction Alerts</div><div class="tr-sub">Receive alerts for every debit and credit transaction</div></div><label class="az-toggle"><input type="checkbox" checked/><span class="az-slider"></span></label></div>
+        <div class="toggle-row"><div><div class="tr-title">Login Alerts</div><div class="tr-sub">Notify when a new login occurs on your account</div></div><label class="az-toggle"><input type="checkbox" checked/><span class="az-slider"></span></label></div>
+        <div class="toggle-row"><div><div class="tr-title">Low Balance Alert</div><div class="tr-sub">Alert when account balance falls below threshold</div></div><label class="az-toggle"><input type="checkbox"/><span class="az-slider"></span></label></div>
+        <div class="toggle-row"><div><div class="tr-title">Promotional &amp; Offers</div><div class="tr-sub">Bank offers, product recommendations, campaigns</div></div><label class="az-toggle"><input type="checkbox"/><span class="az-slider"></span></label></div>
+      </div>
+    </div>
+
+    <!-- ── 6. Preferences ── -->
+    <div class="detail-section">
+      <div class="detail-sec-hdr" onclick="toggleSec('ds6','dc6')" aria-expanded="false">
+        <div class="detail-sec-hdr-left">
+          <div class="detail-sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+          <div>
+            <div class="detail-sec-title">Preferences</div>
+            <div class="detail-sec-subtitle">Language, currency display, accessibility settings</div>
+          </div>
+        </div>
+        <div class="detail-sec-hdr-right">
+          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+          <div class="detail-sec-chev" id="dc6"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="detail-sec-body" id="ds6" style="display:none">
+        <div class="fields-grid">
+          <div><div class="pf-label">Preferred Language</div><div class="pf-value">English</div></div>
+          <div><div class="pf-label">Default Currency</div><div class="pf-value"><span class="fi fi-ae" style="margin-right:.25rem"></span>AED – UAE Dirham</div></div>
+          <div><div class="pf-label">Date Format</div><div class="pf-value">DD MMM YYYY</div></div>
+          <div><div class="pf-label">Time Zone</div><div class="pf-value">GMT+4 (Gulf Standard Time)</div></div>
+          <div><div class="pf-label">Session Timeout</div><div class="pf-value">10 minutes</div></div>
+          <div><div class="pf-label">Dashboard Layout</div><div class="pf-value">Default</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="../js/app.js"></script>
+<script>
+'use strict';
+function toggleSec(bodyId, chevId) {
+  var b = document.getElementById(bodyId);
+  var c = document.getElementById(chevId);
+  var h = b ? b.previousElementSibling : null;
+  if (!b) return;
+  var open = b.style.display !== 'none';
+  b.style.display = open ? 'none' : 'block';
+  if (c) c.classList.toggle('open', !open);
+  if (h) h.setAttribute('aria-expanded', String(!open));
+}
+</script>
+</body>
+</html>

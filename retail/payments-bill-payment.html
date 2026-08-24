@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – Bill Payments</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    /* Search */
+    .bp-search-wrap { position:relative; margin-bottom:1.5rem; }
+    .bp-search-wrap input { width:100%; padding:.8125rem 3rem .8125rem 1.375rem; border:1.5px solid var(--az-border); border-radius:2rem; font-size:.9375rem; color:var(--az-navy); background:#fff; outline:none; box-shadow:0 1px 4px rgba(0,0,0,.05); transition:border-color .15s,box-shadow .15s; }
+    .bp-search-wrap input:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.12); }
+    .bp-search-icon { position:absolute; right:1.125rem; top:50%; transform:translateY(-50%); color:var(--az-muted); font-size:1.25rem !important; pointer-events:none; }
+
+    /* Category strip */
+    .bp-cat-strip { display:flex; align-items:center; gap:.75rem; margin-bottom:1.375rem; }
+    .bp-cat-arrow { flex-shrink:0; background:#fff; border:1.5px solid var(--az-border); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--az-navy); transition:all .15s; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+    .bp-cat-arrow:hover { border-color:var(--az-green); color:var(--az-green); }
+    .bp-cat-track-wrap { flex:1; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; }
+    .bp-cat-track-wrap::-webkit-scrollbar { display:none; }
+    .bp-cat-track { display:flex; gap:.625rem; }
+    .bp-cat-chip { flex-shrink:0; display:flex; align-items:center; gap:.5rem; padding:.5rem 1rem .5rem .625rem; border:1.5px solid var(--az-border); border-radius:2rem; background:#fff; cursor:pointer; transition:all .18s; white-space:nowrap; }
+    .bp-cat-chip svg { width:18px; height:18px; stroke:var(--az-muted); fill:none; stroke-width:1.5; flex-shrink:0; transition:stroke .18s; }
+    .bp-cat-chip span { font-size:.8125rem; font-weight:500; color:var(--az-navy); }
+    .bp-cat-chip:hover { border-color:var(--az-green); background:#f0fdf8; }
+    .bp-cat-chip:hover svg { stroke:var(--az-green); }
+    .bp-cat-chip:hover span { color:var(--az-green); }
+    .bp-cat-chip.active { border-color:var(--az-green); background:var(--az-green); box-shadow:0 2px 8px rgba(46,216,142,.25); }
+    .bp-cat-chip.active svg { stroke:#fff; }
+    .bp-cat-chip.active span { color:#fff; }
+
+    /* Biller section */
+    .bp-biller-panel { border:1.5px solid var(--az-border); border-radius:.875rem; overflow:hidden; }
+    .bp-biller-panel-hdr { display:flex; align-items:center; justify-content:space-between; padding:.875rem 1.375rem; background:#fafbfd; border-bottom:1px solid var(--az-border); }
+    .bp-biller-panel-title { font-size:.875rem; font-weight:600; color:var(--az-navy); }
+    .bp-biller-count { font-size:.8rem; color:var(--az-muted); background:#eff2f5; padding:.2rem .625rem; border-radius:1rem; }
+    .bp-biller-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1rem; padding:1.25rem 1.375rem; }
+    .bp-biller-card { border:1.5px solid var(--az-border); border-radius:.75rem; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1rem .75rem .875rem; cursor:pointer; transition:border-color .18s,background .18s,box-shadow .18s,transform .12s; min-height:96px; gap:.5rem; text-decoration:none; }
+    .bp-biller-card:hover { border-color:var(--az-green); background:#f0fdf8; box-shadow:0 4px 14px rgba(46,216,142,.14); transform:translateY(-2px); }
+    .bp-biller-card.bp-popular { border-color:#e0ecf7; }
+    .bp-biller-logo { width:52px; height:42px; background:linear-gradient(135deg,#e8f5f0,#d0efe2); border-radius:.5rem; display:flex; align-items:center; justify-content:center; font-size:.7rem; color:#1a7a55; font-weight:700; }
+    .bp-biller-name { font-size:.75rem; color:var(--az-navy); font-weight:500; text-align:center; line-height:1.3; }
+    .bp-biller-card[data-hidden="true"] { display:none; }
+
+    /* Pagination */
+    .bp-pagination { display:flex; align-items:center; justify-content:space-between; padding:.875rem 1.375rem; border-top:1px solid var(--az-border); background:#fafbfd; }
+    .bp-page-info { font-size:.8125rem; color:var(--az-muted); }
+    .bp-page-btns { display:flex; gap:.3rem; align-items:center; }
+    .bp-page-btn { width:32px; height:32px; border:1.5px solid var(--az-border); border-radius:.4375rem; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.8125rem; color:var(--az-navy); transition:all .15s; }
+    .bp-page-btn.active { border-color:var(--az-green); background:var(--az-green); color:#fff; font-weight:600; }
+    .bp-page-btn:hover:not(.active) { border-color:var(--az-green); color:var(--az-green); }
+    .bp-page-sep { color:var(--az-muted); font-size:.9rem; padding:0 .125rem; }
+
+    /* Empty state */
+    .bp-empty { padding:2.5rem 1rem; text-align:center; color:var(--az-muted); font-size:.875rem; display:none; }
+    .bp-empty .material-icons { font-size:2.5rem; display:block; margin-bottom:.5rem; opacity:.4; }
+
+  </style>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="../images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Investment maturing notification</div><div class="notif-time">2 hrs ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div><div class="notif-time">6 hrs ago</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>27 Jul, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:42</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none"><span class="material-icons">close</span></button>
+  </div>
+  <nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+    <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none">
+      <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+      <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+      <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+      <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+    </div>
+    <button class="sb-item active-section" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron open" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item active">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+    <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">Bill Payments</span></div>
+    <h1 class="page-title" style="margin-bottom:1.375rem;">Bill Payments</h1>
+
+    <!-- Search -->
+    <div class="bp-search-wrap">
+      <input type="text" id="globalSearch" placeholder="Search for a biller…" oninput="filterBillers()" aria-label="Search billers"/>
+      <span class="material-icons bp-search-icon">search</span>
+    </div>
+
+    <!-- Category filter chips -->
+    <div class="bp-cat-strip">
+      <button class="bp-cat-arrow" onclick="scrollCat(-1)" aria-label="Previous">
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 1 1 6 6 11"/></svg>
+      </button>
+      <div class="bp-cat-track-wrap">
+        <div class="bp-cat-track" id="catTrack">
+              <div class="bp-cat-chip active" data-cat="all" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                <span>All</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="mobile" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="2"/></svg>
+                <span>Mobile</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="utility" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="6" height="6"/><rect x="9" y="7" width="6" height="6"/><rect x="16" y="7" width="6" height="6"/><rect x="2" y="14" width="6" height="6"/><rect x="9" y="14" width="6" height="6"/><rect x="16" y="14" width="6" height="6"/></svg>
+                <span>Utility</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="finance" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><path d="M4 22V12L12 5l8 7v10"/><rect x="9" y="14" width="6" height="8"/></svg>
+                <span>Finance</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="insurance" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Insurance</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="taxi" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><path d="M7 17H5a2 2 0 01-2-2v-4l3-6h12l3 6v4a2 2 0 01-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 17h6"/></svg>
+                <span>Taxi</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="creditcard" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <span>Credit Card</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="government" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Government</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="education" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+                <span>Education</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="health" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Health</span>
+              </div>
+              <div class="bp-cat-chip" data-cat="internet" onclick="selectCat(this)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                <span>Internet</span>
+              </div>
+        </div>
+      </div>
+      <button class="bp-cat-arrow" onclick="scrollCat(1)" aria-label="Next">
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 1 6 6 1 11"/></svg>
+      </button>
+    </div>
+
+    <!-- Biller grid panel -->
+    <div class="bp-biller-panel">
+      <div class="bp-biller-panel-hdr">
+        <span class="bp-biller-panel-title" id="panelTitle">All Billers</span>
+        <span class="bp-biller-count" id="billerCount">48 billers</span>
+      </div>
+
+      <div class="bp-biller-grid" id="billerGrid">
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="etisalat">
+          <div class="bp-biller-logo">E</div>
+          <span class="bp-biller-name">Etisalat</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="du">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">Du</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="virgin mobile">
+          <div class="bp-biller-logo">VM</div>
+          <span class="bp-biller-name">Virgin Mobile</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="salam">
+          <div class="bp-biller-logo">S</div>
+          <span class="bp-biller-name">Salam</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="mobily">
+          <div class="bp-biller-logo">M</div>
+          <span class="bp-biller-name">Mobily</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="zain">
+          <div class="bp-biller-logo">Z</div>
+          <span class="bp-biller-name">Zain</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="stc">
+          <div class="bp-biller-logo">S</div>
+          <span class="bp-biller-name">STC</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="ooredoo">
+          <div class="bp-biller-logo">O</div>
+          <span class="bp-biller-name">Ooredoo</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="batelco">
+          <div class="bp-biller-logo">B</div>
+          <span class="bp-biller-name">Batelco</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="dialog">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">Dialog</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="airtel">
+          <div class="bp-biller-logo">A</div>
+          <span class="bp-biller-name">Airtel</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="mobile" data-name="safaricom">
+          <div class="bp-biller-logo">S</div>
+          <span class="bp-biller-name">Safaricom</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="dewa">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">DEWA</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="sewa">
+          <div class="bp-biller-logo">S</div>
+          <span class="bp-biller-name">SEWA</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="fewa">
+          <div class="bp-biller-logo">F</div>
+          <span class="bp-biller-name">FEWA</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="addc">
+          <div class="bp-biller-logo">A</div>
+          <span class="bp-biller-name">ADDC</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="aadc">
+          <div class="bp-biller-logo">A</div>
+          <span class="bp-biller-name">AADC</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="sharjah gas">
+          <div class="bp-biller-logo">SG</div>
+          <span class="bp-biller-name">Sharjah Gas</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="ajman sewerage">
+          <div class="bp-biller-logo">AS</div>
+          <span class="bp-biller-name">Ajman Sewerage</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="utility" data-name="enec">
+          <div class="bp-biller-logo">E</div>
+          <span class="bp-biller-name">ENEC</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="dib">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">DIB</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="adib">
+          <div class="bp-biller-logo">A</div>
+          <span class="bp-biller-name">ADIB</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="emirates nbd">
+          <div class="bp-biller-logo">EN</div>
+          <span class="bp-biller-name">Emirates NBD</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="fab">
+          <div class="bp-biller-logo">F</div>
+          <span class="bp-biller-name">FAB</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="mashreq">
+          <div class="bp-biller-logo">M</div>
+          <span class="bp-biller-name">Mashreq</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="rakbank">
+          <div class="bp-biller-logo">R</div>
+          <span class="bp-biller-name">RAKBank</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="hsbc">
+          <div class="bp-biller-logo">H</div>
+          <span class="bp-biller-name">HSBC</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="finance" data-name="citi">
+          <div class="bp-biller-logo">C</div>
+          <span class="bp-biller-name">Citi</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="insurance" data-name="daman">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">Daman</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="insurance" data-name="axa gulf">
+          <div class="bp-biller-logo">AG</div>
+          <span class="bp-biller-name">AXA Gulf</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="insurance" data-name="oman insurance">
+          <div class="bp-biller-logo">OI</div>
+          <span class="bp-biller-name">Oman Insurance</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="insurance" data-name="rsa">
+          <div class="bp-biller-logo">R</div>
+          <span class="bp-biller-name">RSA</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="taxi" data-name="rta taxi">
+          <div class="bp-biller-logo">RT</div>
+          <span class="bp-biller-name">RTA Taxi</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="taxi" data-name="careem">
+          <div class="bp-biller-logo">C</div>
+          <span class="bp-biller-name">Careem</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="taxi" data-name="uber">
+          <div class="bp-biller-logo">U</div>
+          <span class="bp-biller-name">Uber</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="taxi" data-name="indriver">
+          <div class="bp-biller-logo">I</div>
+          <span class="bp-biller-name">InDriver</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="creditcard" data-name="visa">
+          <div class="bp-biller-logo">V</div>
+          <span class="bp-biller-name">Visa</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="creditcard" data-name="mastercard">
+          <div class="bp-biller-logo">M</div>
+          <span class="bp-biller-name">Mastercard</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="creditcard" data-name="amex">
+          <div class="bp-biller-logo">A</div>
+          <span class="bp-biller-name">Amex</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="creditcard" data-name="diners">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">Diners</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="government" data-name="dld">
+          <div class="bp-biller-logo">D</div>
+          <span class="bp-biller-name">DLD</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="government" data-name="moi">
+          <div class="bp-biller-logo">M</div>
+          <span class="bp-biller-name">MOI</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="government" data-name="rta fines">
+          <div class="bp-biller-logo">RF</div>
+          <span class="bp-biller-name">RTA Fines</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="government" data-name="mohre">
+          <div class="bp-biller-logo">M</div>
+          <span class="bp-biller-name">MOHRE</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="education" data-name="khda">
+          <div class="bp-biller-logo">K</div>
+          <span class="bp-biller-name">KHDA</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="education" data-name="adek">
+          <div class="bp-biller-logo">A</div>
+          <span class="bp-biller-name">ADEK</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="education" data-name="gems">
+          <div class="bp-biller-logo">G</div>
+          <span class="bp-biller-name">Gems</span>
+        </a>
+        <a href="payments-bill-payment-details.html" class="bp-biller-card" data-cat="education" data-name="taaleem">
+          <div class="bp-biller-logo">T</div>
+          <span class="bp-biller-name">Taaleem</span>
+        </a>
+      </div>
+      <div class="bp-empty" id="emptyState">
+        <span class="material-icons">search_off</span>
+        No billers found. Try a different search or category.
+      </div>
+
+      <div class="bp-pagination" id="paginationBar">
+        <span class="bp-page-info" id="pageInfo">Showing 1–12 of 48</span>
+        <div class="bp-page-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn">A<sup>-</sup></button><button class="acc-btn">A</button><button class="acc-btn">A<sup>+</sup></button>
+        <button class="acc-btn" style="background:var(--az-navy);color:#fff">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
+<script>
+'use strict';
+var activeCat = 'all';
+var currentPage = 1;
+var PAGE_SIZE = 12;
+function selectCat(el) {
+  document.querySelectorAll('.bp-cat-chip').forEach(function(c) { c.classList.remove('active'); });
+  el.classList.add('active');
+  activeCat = el.dataset.cat;
+  currentPage = 1;
+  filterBillers();
+}
+
+function filterBillers() {
+  var q = (document.getElementById('globalSearch').value || '').toLowerCase().trim();
+  var cards = Array.from(document.querySelectorAll('.bp-biller-card'));
+  var visible = cards.filter(function(c) {
+    var catMatch = activeCat === 'all' || c.dataset.cat === activeCat;
+    var nameMatch = !q || c.dataset.name.includes(q);
+    return catMatch && nameMatch;
+  });
+
+  // Category name in header
+  var chips = document.querySelectorAll('.bp-cat-chip');
+  var activeChip = document.querySelector('.bp-cat-chip.active');
+  var catLabel = activeChip ? activeChip.querySelector('span').textContent : 'All';
+  document.getElementById('panelTitle').textContent = catLabel + ' Billers';
+  document.getElementById('billerCount').textContent = visible.length + ' billers';
+
+  // Pagination
+  var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = 1;
+  var start = (currentPage - 1) * PAGE_SIZE;
+  var end = start + PAGE_SIZE;
+  var pageVisible = visible.slice(start, end);
+  var pageSet = new Set(pageVisible);
+
+  cards.forEach(function(c) { c.style.display = pageSet.has(c) ? '' : 'none'; });
+
+  // Empty state
+  document.getElementById('emptyState').style.display = visible.length === 0 ? 'flex' : 'none';
+  document.getElementById('emptyState').style.flexDirection = 'column';
+  document.getElementById('paginationBar').style.display = visible.length === 0 ? 'none' : '';
+
+  // Page info
+  document.getElementById('pageInfo').textContent =
+    'Showing ' + (visible.length === 0 ? 0 : start + 1) + '–' + Math.min(end, visible.length) + ' of ' + visible.length;
+
+  // Build page buttons
+  renderPageBtns(totalPages);
+}
+
+function renderPageBtns(total) {
+  var container = document.getElementById('pageBtns');
+  container.innerHTML = '';
+
+  function btn(content, title, onclick, extraClass) {
+    var b = document.createElement('button');
+    b.className = 'bp-page-btn' + (extraClass ? ' ' + extraClass : '');
+    if (title) b.title = title;
+    b.innerHTML = content;
+    b.addEventListener('click', onclick);
+    return b;
+  }
+
+  // First / Prev
+  container.appendChild(btn('<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 2 5 6 9 10"/><line x1="3" y1="2" x2="3" y2="10"/></svg>', 'First', function() { goPage(1); }, ''));
+  container.appendChild(btn('<svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 1 2 6 6 11"/></svg>', 'Previous', function() { goPage(currentPage - 1); }, ''));
+
+  // Page numbers
+  var pages = [];
+  if (total <= 5) {
+    for (var i = 1; i <= total; i++) pages.push(i);
+  } else {
+    pages = [1];
+    if (currentPage > 3) { var sep = document.createElement('span'); sep.className = 'bp-page-sep'; sep.textContent = '…'; container.appendChild(sep); }
+    for (var p = Math.max(2, currentPage - 1); p <= Math.min(total - 1, currentPage + 1); p++) pages.push(p);
+    pages.push(total);
+  }
+  pages.forEach(function(n) {
+    var b = btn(String(n), '', function(nn) { return function() { goPage(nn); }; }(n), n === currentPage ? 'active' : '');
+    container.appendChild(b);
+  });
+
+  // Next / Last
+  container.appendChild(btn('<svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="2 1 6 6 2 11"/></svg>', 'Next', function() { goPage(currentPage + 1); }, ''));
+  container.appendChild(btn('<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 2 7 6 3 10"/><line x1="9" y1="2" x2="9" y2="10"/></svg>', 'Last', function() { goPage(total); }, ''));
+}
+
+function goPage(n) {
+  var cards = Array.from(document.querySelectorAll('.bp-biller-card'));
+  var visible = cards.filter(function(c) {
+    var q = (document.getElementById('globalSearch').value || '').toLowerCase().trim();
+    var catMatch = activeCat === 'all' || c.dataset.cat === activeCat;
+    var nameMatch = !q || c.dataset.name.includes(q);
+    return catMatch && nameMatch;
+  });
+  var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  currentPage = Math.max(1, Math.min(n, totalPages));
+  filterBillers();
+}
+
+function scrollCat(dir) {
+  var wrap = document.getElementById('catTrack').parentElement;
+  wrap.scrollBy({ left: dir * 160, behavior: 'smooth' });
+}
+
+// Init
+filterBillers();
+</script>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                

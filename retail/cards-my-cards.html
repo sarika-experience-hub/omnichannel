@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Banking – My Cards"/>
+  <title>azentio – My Cards</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/retail-dashboard.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+        <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-label="3 notifications">3</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Contact Us" aria-label="Contact Us"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 Jul, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:42
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item active-section" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron open" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub"><a href="cards-my-cards.html" class="sb-sub-item active">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+    <div class="az-bc">
+      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Cards</span>
+    </div>
+
+    <div class="page-top-bar">
+      <h1 class="page-title">My Cards</h1>
+      <button class="btn-request-card" id="btnRequestCard" onclick="location.href='cards-debit-request.html'">
+        <img src="../images/icons/cards.svg" width="16" height="16" alt=""/> Request Debit Card
+      </button>
+    </div>
+
+    <div class="content-card">
+      <!-- Tabs + view toggle -->
+      <div class="tabs-header-row">
+        <div class="az-tabs" role="tablist">
+          <button class="az-tab active" id="tabDebitBtn" onclick="switchCardTab('debit')" role="tab" aria-selected="true">Debit Cards</button>
+          <button class="az-tab" id="tabCreditBtn" onclick="switchCardTab('credit')" role="tab" aria-selected="false">Credit Cards</button>
+          <button class="az-tab" id="tabPrepaidBtn" onclick="switchCardTab('prepaid')" role="tab" aria-selected="false">Prepaid Cards</button>
+        </div>
+        <div class="view-toggle">
+          <button class="view-btn active" id="vCardBtn" onclick="switchView('card')" title="Card View" aria-label="Card view"><img src="../images/icons/cards_view.svg" width="18" height="18" alt="card view" loading="lazy"/></button>
+          <button class="view-btn" id="vTableBtn" onclick="switchView('table')" title="Table View" aria-label="Table view"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table view" loading="lazy"/></button>
+        </div>
+      </div>
+
+      <!-- ── DEBIT CARDS TAB ── -->
+      <div id="tabDebit" role="tabpanel">
+        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt=""/> My Debit Cards</div>
+
+        <!-- Card view -->
+        <div id="debitCardView">
+
+          <!-- Card 1: Active / Primary — Platinum Visa -->
+          <div class="card-row" id="debitRow0">
+            <div class="mc-card">
+              <div class="mc-card-top">
+                <div><div class="mc-bank">azentio</div><div class="mc-type">Platinum Visa</div></div>
+                <span class="mc-status-chip mc-status-active">ACTIVE</span>
+              </div>
+              <div class="mc-mid">
+                <div class="mc-chip"></div>
+                <div class="mc-num" id="debitNum0" data-masked="•••• •••• •••• 7841" data-full="5321 4892 6614 7841" data-pan-visible="0">•••• •••• •••• 7841</div>
+              </div>
+              <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                <span class="material-icons-outlined" style="font-size:15px;">visibility</span>
+              </button>
+              <div class="mc-card-bot">
+                <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">09 / 27</div></div>
+                <div class="mc-brand-visa">VISA</div>
+              </div>
+              <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
+            </div>
+            <div class="card-row-mid">
+              <div class="card-name-col">
+                <div class="card-name" id="debitNameWrap0">
+                  <span id="debitNameTxt0">Platinum Visa</span>
+                  <button class="edit-name-btn" onclick="startCardEdit('debit',0)" aria-label="Edit card name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
+                </div>
+                <div style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;margin-top:.6rem;margin-bottom:.6rem;">
+                  <span class="fi fi-ae" title="AED"></span> AED
+                </div>
+                <span class="badge-s s-active" style="display:inline-block;">Active</span>
+              </div>
+              <div class="card-field">
+                <div class="cl">Account Number</div>
+                <div class="cv">····4200</div>
+              </div>
+              <div class="card-field">
+                <div class="cl">Expiry Date</div>
+                <div class="cv">09/27</div>
+              </div>
+              <div class="card-field">
+                <div class="cl">CVV</div>
+                <div class="cv" style="display:flex;align-items:center;gap:.25rem;">
+                  Check physical card
+                  <button class="info-ico" onclick="openCvvModal()" title="What is CVV?" aria-label="CVV information">
+                    <img src="../images/icons/information.svg" width="13" height="13" alt="info" loading="lazy"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-row-actions">
+              <a href="transaction-history.html" class="btn-txn">Transaction History</a>
+              <div class="ctx-wrap position-relative">
+                <button class="btn-more" onclick="toggleCtx('ctxD0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+                <div class="ctx-menu hidden" id="ctxD0" role="menu">
+                  <button class="ctx-item" onclick="location.href='cards-pin-change.html';closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> PIN Change</button>
+                  <button class="ctx-item" onclick="location.href='cards-pin-reset.html';closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg> PIN Reset</button>
+                  <button class="ctx-item" onclick="location.href='cards-limit-update.html';closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Limit Update</button>
+                  <button class="ctx-item" onclick="location.href='cards-supplementary-debit.html';closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add on Card</button>
+                  <button class="ctx-item" onclick="location.href='cards-replace.html';closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> Replace card</button>
+                  <button class="ctx-item" onclick="location.href='cards-block.html';closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg> Block Card</button>
+                  <button class="ctx-item ctx-delete" onclick="closeCtx('ctxD0')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> Deactivate Card</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Supplementary — Platinum Visa -->
+          <div class="card-row" id="debitRow1">
+            <div class="mc-card" style="background:linear-gradient(135deg,#2a4060 0%,#172840 100%);">
+              <div class="mc-card-top">
+                <div><div class="mc-bank">azentio</div><div class="mc-type">Platinum Visa</div></div>
+                <span class="mc-status-chip mc-status-active">ACTIVE</span>
+              </div>
+              <div class="mc-mid">
+                <div class="mc-chip"></div>
+                <div class="mc-num" id="debitNum1" data-masked="•••• •••• •••• 7842" data-full="5321 4892 6614 7842" data-pan-visible="0">•••• •••• •••• 7842</div>
+              </div>
+              <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                <span class="material-icons-outlined" style="font-size:15px;">visibility</span>
+              </button>
+              <div class="mc-card-bot">
+                <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">09 / 27</div></div>
+                <div class="mc-brand-visa">VISA</div>
+              </div>
+              <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
+            </div>
+            <div class="card-row-mid">
+              <div class="card-name-col">
+                <div class="card-name">
+                  <span>Platinum Visa</span>
+                  <button class="edit-name-btn" onclick="startCardEdit('debit',1)" aria-label="Edit card name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
+                </div>
+                <div style="display:inline-flex;gap:.5rem;align-items:center;color:var(--az-muted);font-size:.75rem;margin-top:.6rem;margin-bottom:.6rem;">
+                  <span class="fi fi-ae" title="AED"></span> AED
+                  <span class="badge-s s-replaced">Supplementary</span>
+                </div>
+
+              </div>
+              <div class="card-field">
+                <div class="cl">Account Number</div>
+                <div class="cv">····4200</div>
+              </div>
+              <div class="card-field">
+                <div class="cl">Expiry Date</div>
+                <div class="cv">09/27</div>
+              </div>
+              <div class="card-field">
+                <div class="cl">CVV</div>
+                <div class="cv" style="display:flex;align-items:center;gap:.25rem;">
+                  Check physical card
+                  <button class="info-ico" onclick="openCvvModal()" title="What is CVV?" aria-label="CVV information">
+                    <img src="../images/icons/information.svg" width="13" height="13" alt="info" loading="lazy"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-row-actions">
+              <a href="transaction-history.html" class="btn-txn">Transaction History</a>
+              <div class="ctx-wrap position-relative">
+                <button class="btn-more" onclick="toggleCtx('ctxD1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+                <div class="ctx-menu hidden" id="ctxD1" role="menu">
+                  <button class="ctx-item" onclick="location.href='cards-pin-change.html';closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> PIN Change</button>
+                  <button class="ctx-item" onclick="location.href='cards-pin-reset.html';closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg> PIN Reset</button>
+                  <button class="ctx-item" onclick="location.href='cards-limit-update.html';closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Limit Update</button>
+                  <button class="ctx-item" onclick="closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add on Card</button>
+                  <button class="ctx-item" onclick="location.href='cards-replace.html';closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> Replace card</button>
+                  <button class="ctx-item" onclick="location.href='cards-block.html';closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg> Block Card</button>
+                  <button class="ctx-item ctx-delete" onclick="closeCtx('ctxD1')" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> Deactivate Card</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /debitCardView -->
+
+        <!-- Table view -->
+        <div id="debitTableView" class="hidden">
+          <table class="az-table" style="margin-top:.5rem;">
+            <thead>
+              <tr>
+                <th>Card Name</th>
+                <th>Status</th>
+                <th>Primary Account</th>
+                <th>CVV</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem;">
+                    <div class="card-thumb"></div>
+                    <div>
+                      <div class="td-name">Platinum Visa <button class="edit-name-btn" aria-label="Edit"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit"/></button></div>
+                      <div class="td-curr"><span class="fi fi-ae"></span> AED</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge-s s-active">Active</span></td>
+                <td>····4200</td>
+                <td>Check your physical card</td>
+                <td>
+                  <div class="td-actions">
+                    <a href="transaction-history.html" class="btn-txn">Transaction History</a>
+                    <div class="ctx-wrap position-relative">
+                      <button class="btn-more" onclick="toggleCtx('ctxDT0')" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+                      <div class="ctx-menu hidden" id="ctxDT0" role="menu">
+                        <button class="ctx-item" onclick="location.href='cards-pin-change.html'" role="menuitem">PIN Change</button>
+                        <button class="ctx-item" onclick="location.href='cards-pin-reset.html'" role="menuitem">PIN Reset</button>
+                        <button class="ctx-item" onclick="location.href='cards-limit-update.html'" role="menuitem">Limit Update</button>
+                        <button class="ctx-item" onclick="location.href='cards-supplementary-debit.html'" role="menuitem">Add on Card</button>
+                        <button class="ctx-item" onclick="location.href='cards-replace.html'" role="menuitem">Replace card</button>
+                        <button class="ctx-item" onclick="location.href='cards-block.html'" role="menuitem">Block Card</button>
+                        <button class="ctx-item ctx-delete" role="menuitem">Deactivate Card</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.625rem;">
+                    <div class="card-thumb"></div>
+                    <div>
+                      <div class="td-name">Platinum Visa (Supp.) <button class="edit-name-btn" aria-label="Edit"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit"/></button></div>
+                      <div class="td-curr"><span class="fi fi-ae"></span> AED</div>
+                    </div>
+                  </div>
+                </td>
+                <td>—</td>
+                <td>····4200</td>
+                <td>Check your physical card</td>
+                <td>
+                  <div class="td-actions">
+                    <a href="transaction-history.html" class="btn-txn">Transaction History</a>
+                    <div class="ctx-wrap position-relative">
+                      <button class="btn-more" onclick="toggleCtx('ctxDT1')" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+                      <div class="ctx-menu hidden" id="ctxDT1" role="menu">
+                        <button class="ctx-item" onclick="location.href='cards-pin-change.html'" role="menuitem">PIN Change</button>
+                        <button class="ctx-item" onclick="location.href='cards-pin-reset.html'" role="menuitem">PIN Reset</button>
+                        <button class="ctx-item" onclick="location.href='cards-limit-update.html'" role="menuitem">Limit Update</button>
+                        <button class="ctx-item" onclick="location.href='cards-supplementary-debit.html'" role="menuitem">Add on Card</button>
+                        <button class="ctx-item" onclick="location.href='cards-replace.html'" role="menuitem">Replace card</button>
+                        <button class="ctx-item" onclick="location.href='cards-block.html'" role="menuitem">Block Card</button>
+                        <button class="ctx-item ctx-delete" role="menuitem">Deactivate Card</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /tabDebit -->
+
+      <!-- ── CREDIT CARDS TAB ── -->
+      <div id="tabCredit" role="tabpanel" class="hidden">
+        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt=""/> My Credit Cards</div>
+
+        <div id="creditCardView">
+          <!-- Credit card row with expandable details — Gold Mastercard -->
+          <div class="card-row" id="creditRow0" style="flex-wrap:wrap;align-items:flex-start;">
+            <div class="mc-card" style="background:linear-gradient(135deg,#1a4a6b 0%,#0d2d45 100%);">
+              <div class="mc-card-top">
+                <div><div class="mc-bank">azentio</div><div class="mc-type">Gold Mastercard</div></div>
+                <span class="mc-status-chip mc-status-active">ACTIVE</span>
+              </div>
+              <div class="mc-mid">
+                <div class="mc-chip"></div>
+                <div class="mc-num" id="creditNum0" data-masked="•••• •••• •••• 3290" data-full="8412 5573 9901 3290" data-pan-visible="0">•••• •••• •••• 3290</div>
+              </div>
+              <button class="mc-eye-btn" onclick="mcTogglePan(this)" aria-label="Show card number" title="Show/hide card number">
+                <span class="material-icons-outlined" style="font-size:15px;">visibility</span>
+              </button>
+              <div class="mc-card-bot">
+                <div><div class="mc-lbl">CARD HOLDER</div><div class="mc-holder">SARIKA DESAI</div></div>
+                <div><div class="mc-lbl">EXPIRES</div><div class="mc-expiry">12 / 26</div></div>
+                <div class="mc-brand-mc"></div>
+              </div>
+              <div class="mc-frozen-overlay"><span class="material-icons">lock</span><span>Card Blocked</span></div>
+            </div>
+            <div class="card-row-mid" style="align-items:flex-start;">
+              <div class="card-name-col">
+                <div class="card-name">
+                  <span>Gold Mastercard</span>
+                  <button class="edit-name-btn" aria-label="Edit card name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
+                </div>
+                <div style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;margin-top:.6rem;margin-bottom:.6rem;">
+                  <span class="fi fi-ae" title="AED"></span> AED
+                </div>
+                <span class="badge-s s-active" style="display:inline-block;">Active</span>
+              </div>
+              <!-- Expanded credit card details grid -->
+              <div class="card-dtl-grid" style="flex:1;min-width:280px;">
+                <div class="cf"><div class="cl">Card Type</div><div class="cv">Primary</div></div>
+                <div class="cf"><div class="cl">Settlement Account</div><div class="cv">····4200</div></div>
+                <div class="cf"><div class="cl">Withdrawal Limit</div><div class="cv">AED 50,000</div></div>
+                <div class="cf" style="display:flex;flex-direction:column;align-items:flex-end;"><a href="transaction-history.html" class="btn-txn">Transaction History</a></div>
+                <div class="cf"><div class="cl">POS Limit</div><div class="cv">AED 25,000</div></div>
+                <div class="cf"><div class="cl">Remaining POS Limit</div><div class="cv">AED 25,000</div></div>
+                <div class="cf"><div class="cl">Payment Percentage</div><div class="cv">100%</div></div>
+                <div class="cf"><div class="cl">Billing Cycle</div><div class="cv">25th of month</div></div>
+                <div class="cf"><div class="cl">Outstanding Balance</div><div class="cv">AED 0.00</div></div>
+                <div class="cf"><div class="cl">Expiry Date</div><div class="cv">12/26</div></div>
+                <div class="cf"><div class="cl">Applicant Address</div><div class="cv">123 Main Street, Dubai</div></div>
+                <div class="cf"><div class="cl">Available Balance</div><div class="cv">AED 50,000</div></div>
+                <div class="cf"><div class="cl">Remaining Withdrawal Limit</div><div class="cv">AED 50,000</div></div>
+                <div class="cf"><div class="cl">Loyalty Points</div><div class="cv">3,840 pts</div></div>
+              </div>
+            </div>
+            <div class="card-row-actions">
+              <div class="ctx-wrap position-relative">
+                <button class="btn-more" onclick="toggleCtx('ctxC0')" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+                <div class="ctx-menu hidden" id="ctxC0" role="menu">
+                  <button class="ctx-item" onclick="location.href='cards-pin-change.html';closeCtx('ctxC0')" role="menuitem">PIN Change</button>
+                  <button class="ctx-item" onclick="location.href='cards-pin-reset.html';closeCtx('ctxC0')" role="menuitem">PIN Reset</button>
+                  <button class="ctx-item" onclick="location.href='cards-limit-update.html';closeCtx('ctxC0')" role="menuitem">Limit Update</button>
+                  <button class="ctx-item" onclick="location.href='cards-supplementary-credit.html';closeCtx('ctxC0')" role="menuitem">Add on Card</button>
+                  <button class="ctx-item" onclick="location.href='cards-replace.html';closeCtx('ctxC0')" role="menuitem">Replace card</button>
+                  <button class="ctx-item" onclick="location.href='cards-block.html';closeCtx('ctxC0')" role="menuitem">Block Card</button>
+                  <button class="ctx-item ctx-delete" onclick="closeCtx('ctxC0')" role="menuitem">Deactivate Card</button>
+                </div>
+              </div>
+              <button class="card-strip-chev open" onclick="toggleCreditDetail(0)" aria-label="Collapse">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tabCredit -->
+
+      <!-- ── PREPAID CARDS TAB ── -->
+      <div id="tabPrepaid" role="tabpanel" class="hidden">
+        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt=""/> My Prepaid Cards</div>
+
+        <div id="prepaidCardView">
+          <div class="card-row">
+            <div class="az-card-vis">
+              <span class="az-card-logo">VISA</span>
+              <div class="az-card-num">
+                <span>2345 6789 5432 3749</span>
+                <div class="az-card-num-icons">
+                  <button aria-label="Toggle card number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                  <button aria-label="Copy card number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+                </div>
+              </div>
+              <div class="az-card-expiry">Expiry date 02/30</div>
+              <div class="az-card-holder">Sara Rahman</div>
+              <div class="az-card-footer">
+                <span class="az-card-label">Primary Card</span>
+              </div>
+            </div>
+            <div class="card-row-mid">
+              <div class="card-name-col">
+                <div class="card-name">
+                  <span>Visa Prepaid Card</span>
+                  <button class="edit-name-btn" aria-label="Edit card name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
+                  <span class="fi fi-us" title="USD"></span>
+                  <span class="card-curr" style="display:inline-flex;gap:.25rem;align-items:center;color:var(--az-muted);font-size:.75rem;">USD</span>
+                </div>
+                <span class="badge-s s-active" style="margin-top:.375rem;display:inline-block;">Active</span>
+              </div>
+              <div class="card-field">
+                <div class="cl">Card Type</div>
+                <div class="cv">Primary</div>
+              </div>
+              <div class="card-field">
+                <div class="cl">Primary Account</div>
+                <div class="cv">3245600678</div>
+              </div>
+              <div class="card-field">
+                <div class="cl">Applicant Address</div>
+                <div class="cv">123 Main Street</div>
+              </div>
+              <div class="card-field">
+                <a href="transaction-history.html" class="btn-txn" style="margin-top:.25rem;">Transaction History</a>
+              </div>
+            </div>
+            <div class="card-row-actions">
+              <div class="ctx-wrap position-relative">
+                <button class="btn-more" onclick="toggleCtx('ctxP0')" aria-label="More actions">&#8226;&#8226;&#8226;</button>
+                <div class="ctx-menu hidden" id="ctxP0" role="menu">
+                  <button class="ctx-item" onclick="location.href='cards-pin-change.html';closeCtx('ctxP0')" role="menuitem">PIN Change</button>
+                  <button class="ctx-item" onclick="location.href='cards-pin-reset.html';closeCtx('ctxP0')" role="menuitem">PIN Reset</button>
+                  <button class="ctx-item" onclick="location.href='cards-limit-update.html';closeCtx('ctxP0')" role="menuitem">Limit Update</button>
+                  <button class="ctx-item" onclick="closeCtx('ctxP0')" role="menuitem">Add on Card</button>
+                  <button class="ctx-item" onclick="location.href='cards-replace.html';closeCtx('ctxP0')" role="menuitem">Replace card</button>
+                  <button class="ctx-item" onclick="location.href='cards-block.html';closeCtx('ctxP0')" role="menuitem">Block Card</button>
+                  <button class="ctx-item ctx-delete" onclick="closeCtx('ctxP0')" role="menuitem">Deactivate Card</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tabPrepaid -->
+
+    </div><!-- /content-card -->
+
+    <!-- CVV Info modal -->
+    <div class="modal-ov hidden" id="cvvModal" role="dialog" aria-modal="true" aria-label="CVV Information" onclick="if(event.target===this)closeCvvModal()">
+      <div class="az-modal" style="max-width:420px;padding:1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+          <h3 style="font-size:1rem;font-weight:700;color:var(--az-navy);margin:0;">What is CVV?</h3>
+          <button onclick="closeCvvModal()" style="background:none;border:none;cursor:pointer;color:var(--az-muted);display:flex;align-items:center;padding:.25rem;" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <p style="font-size:.8125rem;color:var(--az-muted);margin-bottom:1rem;line-height:1.5;">The CVV (Card Verification Value) is a 3-digit security code printed on the back of your card. It is not stored digitally — please refer to your physical card.</p>
+        <img src="../images/cvv-info.png" alt="CVV location on card" style="width:100%;border-radius:.5rem;border:1px solid var(--az-border);display:block;"/>
+        <div class="modal-footer-center">
+          <button class="btn-action btn-submit" onclick="closeCvvModal()" style="min-width:80px;">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success modal -->
+    <div class="modal-ov hidden" id="successModal" role="dialog" aria-modal="true" aria-label="Success">
+      <div class="az-modal modal-sm" style="text-align:center;">
+        <div class="success-circle" style="margin-top:.5rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--az-green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <p style="font-weight:600;margin-bottom:1.25rem;" id="successMsg">Your card name has been changed successfully.</p>
+        <button class="btn-action btn-submit" onclick="closeSuccess()" style="min-width:80px;">OK</button>
+      </div>
+    </div>
+
+  </main>
+  <footer class="app-footer">
+    <span>Copyright 2026. All Rights Reserved</span>
+    <div><a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" onclick="changeFont(-1)" aria-label="Decrease font size">A-</button>
+        <button class="acc-btn" aria-label="Normal font size">A</button>
+        <button class="acc-btn" onclick="changeFont(1)" aria-label="Increase font size">A+</button>
+        <button class="acc-btn acc-btn-dark" aria-label="Toggle dark theme">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="../js/app.js"></script>
+<script>
+  function switchCardTab(tab) {
+    ['debit','credit','prepaid'].forEach(t => {
+      document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
+      document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn').classList.toggle('active', t === tab);
+    });
+    const labels = { debit: 'Request Debit Card', credit: 'Request Credit Card', prepaid: 'Request Prepaid Card' };
+    const links  = { debit: 'cards-debit-request.html', credit: 'cards-credit-request.html', prepaid: 'cards-prepaid-request.html' };
+    const btn = document.getElementById('btnRequestCard');
+    btn.textContent = labels[tab];
+    btn.onclick = () => location.href = links[tab];
+  }
+
+  function switchView(v) {
+    document.getElementById('vCardBtn').classList.toggle('active', v === 'card');
+    document.getElementById('vTableBtn').classList.toggle('active', v === 'table');
+    document.getElementById('debitCardView').classList.toggle('hidden', v !== 'card');
+    document.getElementById('debitTableView').classList.toggle('hidden', v !== 'table');
+  }
+
+  function toggleCardNum(spanId, eyeId) {
+    const span = document.getElementById(spanId);
+    if (!span) return;
+    const isHidden = span.dataset.panVisible !== '1';
+    span.textContent = isHidden ? span.dataset.full : span.dataset.masked;
+    span.dataset.panVisible = isHidden ? '1' : '0';
+  }
+
+  function mcTogglePan(btn) {
+    var card = btn.closest('.mc-card');
+    if (!card) return;
+    var numEl = card.querySelector('.mc-num');
+    if (!numEl) return;
+    var icon = btn.querySelector('.material-icons-outlined');
+    var isHidden = numEl.dataset.panVisible !== '1';
+    if (isHidden) {
+      numEl.textContent = numEl.dataset.full;
+      numEl.dataset.panVisible = '1';
+      if (icon) icon.textContent = 'visibility_off';
+    } else {
+      numEl.textContent = numEl.dataset.masked;
+      numEl.dataset.panVisible = '0';
+      if (icon) icon.textContent = 'visibility';
+    }
+  }
+
+  function startCardEdit(type, idx) {
+    const wrap = document.getElementById(type + 'NameWrap' + idx);
+    const txt = document.getElementById(type + 'NameTxt' + idx);
+    if (!wrap || !txt) return;
+    const val = txt.textContent.trim();
+    wrap.innerHTML = '';
+    const div = document.createElement('div'); div.className = 'card-ie-wrap';
+    const inp = document.createElement('input'); inp.value = val;
+    const ok = document.createElement('button'); ok.className = 'ie-btn'; ok.textContent = '✓';
+    const cancel = document.createElement('button'); cancel.className = 'ie-btn'; cancel.textContent = '✗';
+    ok.onclick = () => { showSuccess('Your card name has been changed successfully.'); restoreCardName(type, idx, inp.value); };
+    cancel.onclick = () => restoreCardName(type, idx, val);
+    div.appendChild(inp); div.appendChild(ok); div.appendChild(cancel);
+    wrap.appendChild(div);
+    inp.focus();
+  }
+  function restoreCardName(type, idx, name) {
+    const wrap = document.getElementById(type + 'NameWrap' + idx);
+    if (!wrap) return;
+    wrap.id = type + 'NameWrap' + idx;
+    wrap.innerHTML = '<span id="' + type + 'NameTxt' + idx + '">' + name + '</span>'
+      + '<button class="edit-name-btn" onclick="startCardEdit(\'' + type + '\',' + idx + ')" aria-label="Edit card name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit"/></button>';
+    wrap.className = 'card-name';
+  }
+
+  function openCvvModal()  { document.getElementById('cvvModal').classList.remove('hidden'); }
+  function closeCvvModal() { document.getElementById('cvvModal').classList.add('hidden'); }
+
+  function showSuccess(msg) {
+    document.getElementById('successMsg').textContent = msg;
+    document.getElementById('successModal').classList.remove('hidden');
+  }
+  function closeSuccess() { document.getElementById('successModal').classList.add('hidden'); }
+
+  function changeFont(d) { document.documentElement.style.fontSize = (parseFloat(getComputedStyle(document.documentElement).fontSize) + d) + 'px'; }
+</script>
+</body>
+</html>
+                                                                                                       
