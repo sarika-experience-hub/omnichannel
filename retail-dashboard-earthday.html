@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – Earth Day</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/retail-dashboard.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="../js/theme.js"></script>
+<style>
+
+    /* ══ NEW SECTIONS (outside rd-wrap, no grid conflict) ══ */
+    .v2-section { margin:0 0 .5rem; }
+
+    /* Carousel */
+    .pc-outer { background:#fff; }
+    .pc-track  { display:flex; transition:transform .45s ease; }
+    .pc-slide  { min-width:100%; height:90px; display:flex; align-items:center; padding:.75rem 1.25rem; position:relative; overflow:hidden; }
+    .pc-slide-1{ background:linear-gradient(to right,#0a4200 0%,#082010 55%,#051808 100%); }
+    @keyframes ed-sparkle-spin { 0%{transform:rotate(0deg) scale(1)} 50%{transform:rotate(180deg) scale(1.2)} 100%{transform:rotate(360deg) scale(1)} }
+    .ed-sparkle { position:absolute;top:-4px;right:-4px;font-size:.875rem;line-height:1;animation:ed-sparkle-spin 3s linear infinite; }
+    .pc-slide-2{ background:linear-gradient(to right,#3a8fb0 0%,#53a7c3 60%,#5aaec9 100%); }
+    .pc-slide-3{ background:linear-gradient(to right,#b7b6b2 0%,#c3c2be 50%,#cccbc7 100%); }
+    .pc-slide-4{ background:linear-gradient(to right,#120c0c 0%,#2a1e18 50%,#3a2c24 100%); }
+    .pc-bg-circle{ position:absolute; border-radius:50%; pointer-events:none; }
+    .pc-icon{ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0; }
+    .pc-icon .material-icons{ font-size:22px; }
+    .pc-body{ flex:1;min-width:0; }
+    .pc-tag{ display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.15rem .5rem;border-radius:20px;margin-bottom:.28rem; }
+    .pc-title{ font-size:.93rem;font-weight:700;color:#16303d;line-height:1.3;margin-bottom:.18rem; }
+    .pc-sub{ font-size:.74rem;color:#334155;line-height:1.35;font-weight:500; }
+    .pc-cta{ display:inline-flex;align-items:center;gap:.3rem;color:#fff;border:none;border-radius:2rem;padding:.32rem .85rem;font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:opacity .15s; }
+    .pc-cta:hover{ opacity:.88;color:#fff;text-decoration:none; }
+    .pc-x{ position:absolute;top:6px;right:8px;background:none;border:none;color:#64748b;font-size:1rem;cursor:pointer;padding:.15rem .3rem;line-height:1; }
+    .pc-x:hover{ color:#16303d; }
+    .pc-footer{ display:flex;align-items:center;padding:.25rem 1.25rem .3rem;background:#fff;border-top:1px solid #e2e8f0; }
+    .pc-dots{ display:flex;gap:.35rem;flex:1; }
+    .pc-dot{ width:6px;height:6px;border-radius:50%;background:#cbd5e1;cursor:pointer;transition:background .2s,transform .2s; }
+    .pc-dot.on{ background:#00538A;transform:scale(1.4); }
+    .pc-btns{ display:flex;gap:.3rem; }
+    .pc-btn{ background:#f1f5f9;border:1px solid #e2e8f0;color:#475569;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer; }
+    .pc-btn:hover{ background:#e2e8f0;color:#16303d; }
+    .pc-btn .material-icons{ font-size:15px; }
+
+    /* Recently Used */
+    .ru-row{ display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem; }
+    .ru-lbl{ font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted); }
+    .ru-clr{ font-size:.73rem;color:var(--az-blue);background:none;border:none;cursor:pointer;padding:0; }
+    #ruStrip{ display:flex;flex-wrap:wrap;gap:.4rem; }
+    .ru-pill{ display:flex;align-items:center;gap:.45rem;background:#f7f9fb;border:1px solid var(--az-border);border-radius:2rem;padding:.3rem .6rem .3rem .35rem;text-decoration:none;transition:border-color .15s,box-shadow .15s;min-width:0; }
+    .ru-pill:hover{ border-color:var(--az-green);box-shadow:0 2px 8px rgba(46,216,142,.12); }
+    .ru-pill-icon{ width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+    .ru-pill-icon .material-icons{ font-size:13px; }
+    .ru-pill-name{ font-size:.75rem;font-weight:600;color:var(--az-navy);line-height:1.2; }
+    .ru-pill-time{ display:block;font-size:.63rem;color:var(--az-muted);font-weight:400;margin-top:.05rem; }
+
+
+    .ins-nudge-icon { color:#1aad6e !important; }
+    .d7-nudge-icon  { color:#1aad6e !important; }
+
+    /* ══ Dashboard page background ══ */
+    .pg-retail-dashboard .main-body {
+      background: #f9fafb !important;
+      padding: 1.25rem !important;
+      flex: 1 !important;
+    }
+
+    /* ══ Greeting bar: transparent on grey bg ══ */
+    .pg-retail-dashboard .rd-alert-bar {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: .25rem 0 !important;
+    }
+
+    /* ══ Carousel: white card with rounded corners ══ */
+    .pg-retail-dashboard .pc-outer {
+      border-radius: .875rem !important;
+      overflow: hidden !important;
+      border: 1px solid var(--az-border) !important;
+      box-shadow: 0 1px 6px rgba(22,48,61,.06) !important;
+    }
+
+    /* ══ rd-left: transparent — each panel is its own card ══ */
+    .pg-retail-dashboard .rd-left {
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+      gap: .75rem !important;
+    }
+
+    /* ══ rd-left unified-card overrides → individual cards ══ */
+    .pg-retail-dashboard .rd-left .rd-d1,
+    .pg-retail-dashboard .rd-left .rd-d5 {
+      border: 1px solid var(--az-border) !important;
+      border-right: 1px solid var(--az-border) !important;
+      border-radius: .875rem !important;
+      background: #fff !important;
+      box-shadow: 0 1px 6px rgba(22,48,61,.06) !important;
+    }
+    .pg-retail-dashboard .rd-left .rd-d1 { align-self: stretch !important; }
+    .pg-retail-dashboard .rd-left .rd-d5 { align-self: start !important; }
+
+    /* ══ Greeting bar typography ══ */
+    .ab-greet-name { font-size: 1rem; font-weight: 600; }
+    .ab-greet-sub  { font-size: .95rem; }
+
+    /* ══ All rd-panels: white, rounded, subtle shadow ══ */
+    .pg-retail-dashboard .rd-panel {
+      background: #fff !important;
+      border-radius: .875rem !important;
+      border: 1px solid var(--az-border) !important;
+      box-shadow: 0 1px 6px rgba(22,48,61,.06) !important;
+    }
+
+    /* ══ rd-right panels gap ══ */
+    .pg-retail-dashboard .rd-right {
+      gap: .75rem !important;
+    }
+
+    /* ══ rd-wrap: transparent wrapper, gap ══ */
+    .pg-retail-dashboard .rd-wrap {
+      background: transparent !important;
+      gap: .75rem !important;
+      margin: 0 !important;
+    }
+
+    /* Partner Apps */
+    .pa-hdr{ display:flex;align-items:center;justify-content:space-between;margin-bottom:.55rem; }
+    .pa-lbl{ font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted); }
+    .pa-va{ font-size:.73rem;color:var(--az-blue);text-decoration:none;display:flex;align-items:center; }
+    .pa-va .material-icons{ font-size:14px; }
+    .pa-row{ display:flex;gap:.625rem;overflow-x:auto;scrollbar-width:none; }
+    .pa-row::-webkit-scrollbar{ display:none; }
+    .pa-grid{ display:grid;grid-template-columns:repeat(4,1fr);gap:.375rem; }
+    .pa-tile{ background:#fff;border:1px solid var(--az-border);border-radius:.75rem;padding:.5rem .25rem .4rem;display:flex;flex-direction:column;align-items:center;gap:.25rem;cursor:pointer;text-decoration:none;transition:box-shadow .15s,border-color .15s; }
+    .pa-tile:hover{ box-shadow:0 3px 10px rgba(22,48,61,.1);border-color:var(--az-green); }
+    .pa-logo{ width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;font-family:'Roboto',sans-serif;letter-spacing:-.5px;overflow:hidden; }
+    .pa-logo img{ width:34px;height:34px;object-fit:contain;border-radius:8px;display:block; }
+    .pa-name{ font-size:.67rem;font-weight:600;color:var(--az-navy);text-align:center;line-height:1.2; }
+    .pa-cat{ font-size:.6rem;color:var(--az-muted);text-align:center; }
+    .pa-conn{ display:inline-flex;align-items:center;background:none;border:1px solid var(--az-border);border-radius:2rem;padding:.08rem .45rem;font-size:.62rem;font-weight:600;color:var(--az-navy);cursor:pointer;transition:border-color .15s,background .15s; }
+    .pa-conn:hover,.pa-conn.on{ border-color:#2ed88e;background:#edfaf6;color:#2a7a50; }
+    /* ── Notification tabs ── */
+    .nt-tabs{ display:flex;border-bottom:1px solid var(--az-border);padding:0 1rem;gap:.125rem; }
+    .nt-tab{ background:none;border:none;border-bottom:2px solid transparent;padding:.5rem .625rem;font-size:.8125rem;font-weight:600;color:var(--az-muted);cursor:pointer;display:flex;align-items:center;gap:.35rem;margin-bottom:-1px;transition:color .15s,border-color .15s; }
+    .nt-tab.active{ color:var(--az-blue);border-bottom-color:var(--az-blue); }
+    .nt-badge{ font-size:.6rem;font-weight:700;background:#e8f0fe;color:#00538A;border-radius:2rem;padding:.05rem .35rem;line-height:1.4; }
+    .nt-tab.active .nt-badge{ background:#00538A;color:#fff; }
+    .nt-panel{ display:none; }
+    .nt-panel.active{ display:block; }
+    .nt-ico{ font-size:14px!important;vertical-align:-3px;margin-right:.25rem; }
+    .nt-ico-alert{ color:#d97706; }
+    .nt-ico-success{ color:#16a34a; }
+    .nt-ico-info{ color:#00538A; }
+    .nt-ico-offer{ color:#7c3aed; }
+    .nt-cta{ font-size:.7rem;font-weight:700;color:#00538A;text-decoration:none;white-space:nowrap;padding:.15rem .5rem;border:1px solid #00538A;border-radius:2rem;margin-left:.5rem;flex-shrink:0; }
+    .notif-item{ display:flex;align-items:center; }
+    #nt-offers .notif-msg{ font-weight:400;line-height:1.45; }
+    .notif-content{ flex:1; }
+  
+    /* ══ Mobile responsive overrides ══ */
+    @media (max-width: 1100px) {
+      /* Override inline grid positions on all rd-left children */
+      .pg-retail-dashboard .rd-left > div {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        width: 100% !important;
+      }
+      .pg-retail-dashboard .rd-left .rd-d5 {
+        align-self: stretch !important;
+      }
+      .pg-retail-dashboard #pcWrap {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+      }
+      .pg-retail-dashboard .rd-right {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+      }
+    }
+    @media (max-width: 767px) {
+      .pg-retail-dashboard .main-body { padding: .75rem !important; }
+      .pg-retail-dashboard .rd-wrap   { margin: 0 !important; gap: .5rem !important; }
+      .pg-retail-dashboard .rd-left   { gap: .5rem !important; }
+      .pg-retail-dashboard .rd-right  { gap: .5rem !important; }
+      /* Carousel slide: auto height, wrap content */
+      .pg-retail-dashboard .pc-slide {
+        height: auto !important;
+        min-height: 72px;
+        padding: .625rem .875rem !important;
+        gap: .5rem;
+      }
+      /* Shift content left since icon is absolute at 20px */
+      .pg-retail-dashboard .pc-slide > div[style] {
+        padding-left: 72px !important;
+        padding-right: .75rem !important;
+      }
+      .pg-retail-dashboard .pc-cta {
+        font-size: .68rem !important;
+        padding: .22rem .55rem !important;
+        white-space: nowrap;
+      }
+      /* Stack CTA buttons if they overflow */
+      .pg-retail-dashboard .pc-slide .pc-cta + .pc-cta { margin-top: 0; }
+      /* Hide banner icons on mobile to avoid distortion */
+      .pg-retail-dashboard .pc-slide > div[style*="left:20px"] { display: none !important; }
+      /* Remove icon padding-left since icon is hidden */
+      .pg-retail-dashboard .pc-slide > div[style*="padding-left"] {
+        padding-left: .875rem !important;
+      }
+
+      /* Banner icon sizing */
+      .pg-retail-dashboard .pc-slide > div[style*="left:20px"] div {
+        width: 44px !important; height: 44px !important;
+      }
+      /* Right panel widgets full width */
+      .pg-retail-dashboard .rd-right > * { width: 100% !important; }
+      /* Explore More: single column */
+      .pg-retail-dashboard .rd-right .rd-panel a { padding: .5rem 1rem !important; }
+    }
+    @media (max-width: 479px) {
+      .pg-retail-dashboard .main-body { padding: .5rem !important; }
+      .pg-retail-dashboard .pc-cta { font-size: .65rem !important; padding: .2rem .45rem !important; }
+    }
+
+    </style>
+</head>
+<body class="pg-retail-dashboard">
+
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="142 0 22 29" aria-hidden="true">
+        <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/>
+        <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/>
+      </svg>
+    </a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications" style="position:relative" onclick="toggleNotifPanel(event)">
+        <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" id="notifBadge" aria-label="3 notifications">3</span>
+      </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><button class="notif-mobile-close" onclick="closeNotifPanel()" aria-label="Close"><span class="material-icons">arrow_back</span></button><span class="notif-panel-title">Notifications</span></div>
+        <!-- Category tabs -->
+        <div class="nt-tabs">
+          <button class="nt-tab active" onclick="ntSwitch('alerts',this)">Alerts<span class="nt-badge" id="ntb-alerts">2</span></button>
+          <button class="nt-tab" onclick="ntSwitch('announcements',this)">Announcements<span class="nt-badge" id="ntb-announcements">1</span></button>
+          <button class="nt-tab" onclick="ntSwitch('offers',this)">Offers<span class="nt-badge" id="ntb-offers" style="display:none">0</span></button>
+        </div>
+        <!-- Alerts -->
+        <div class="nt-panel active" id="nt-alerts">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">2 bills due this week — avoid late fees</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Scheduled transfer of AED 3,200 processed</div><div class="notif-time">1 hr ago</div></div></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Card statement ready for download</div><div class="notif-time">Yesterday</div></div></div>
+        </div>
+        <!-- Announcements -->
+        <div class="nt-panel" id="nt-announcements">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">New: Instant International Transfers now available</div><div class="notif-time">Today</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Scheduled maintenance: Sunday 3–5 AM. Services may be briefly unavailable</div><div class="notif-time">2 days ago</div></div></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Updated Terms &amp; Conditions effective Aug 1, 2026</div><div class="notif-time">Last week</div></div></div>
+        </div>
+        <!-- Offers (also shows dismissed carousel slides) -->
+        <div class="nt-panel" id="nt-offers">
+          <div class="nt-empty" style="padding:1.25rem;color:var(--az-muted);font-size:.8rem;text-align:center;">No offers</div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span id="lastLoginDate">27 Jul, 2026</span></span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:42</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <button class="sb-item" data-label="Frequently Visited" onclick="toggleSub('sFU','cFU')"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Frequently Visited</span><span class="sb-chevron" id="cFU"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFU" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="transfer-own-accounts.html" class="sb-sub-item">Own Accounts Transfer</a></div>
+  <a href="retail-dashboard.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div>
+  <a href="offer-dining-cashback.html" class="sb-item" data-label="Offers"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Offers</span></a>
+</nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+
+
+    <!-- Page header -->
+    <div class="page-top-bar" style="margin-bottom:.75rem;margin-top:0;padding:0 1.75rem;display:none;">
+      <h1 class="page-title">My Banking</h1>
+    </div>
+
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="rd-wrap">
+
+      <!-- ══ GREETING BAR (row 1, spans both columns) ══ -->
+      <div class="rd-alert-bar" style="grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding:.25rem 0;">
+        <div class="ab-greeting">
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            <span class="ab-greet-name">Hi, Sara Rahman</span>
+            <span style="color:var(--az-muted);">·</span>
+            <span class="ab-greet-sub" id="abDate">Here is what's happening with your finances today.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Left column: actionable ── -->
+      <div class="rd-left">
+
+      <!-- ── Personalized Carousel ── -->
+      <div id="pcWrap" style="grid-column:1/-1;grid-row:1;position:relative;border-radius:.875rem;overflow:hidden;background:#fff;box-shadow:0 0 0 1.5px #cbd5e1;">
+        <button class="pc-x" onclick="pcDismiss()" aria-label="Dismiss offers" title="Dismiss" style="z-index:5;top:6px;right:8px;width:18px;height:18px;padding:0;background:none;border:none;box-shadow:none;color:rgba(255,255,255,.7);text-shadow:0 1px 2px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;"><span class="material-icons" style="font-size:14px;">close</span></button>
+        <div class="pc-outer">
+          <div class="pc-track" id="pcTrack">
+            <!-- Slide: Earth Day -->
+            <div class="pc-slide" style="background:linear-gradient(to right,#0a4200 0%,#082010 50%,#051808 100%);">
+              <div style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:#2ed88e;opacity:.08;pointer-events:none;"></div>
+              <div style="position:absolute;right:65px;bottom:-40px;width:90px;height:90px;border-radius:50%;background:#2ed88e;opacity:.05;pointer-events:none;"></div>
+              <div style="position:absolute;left:0;top:0;bottom:0;width:145px;overflow:hidden;border-radius:.875rem 0 0 0;">
+                <img src="../images/banner-earthday.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;"/>
+              </div>
+              <div style="display:flex;align-items:center;flex:1;min-width:0;padding-left:157px;padding-right:1.5rem;gap:.875rem;">
+                <div style="min-width:0;flex:1;">
+                  <span class="pc-tag" style="background:rgba(255,255,255,.15);color:#fff;">Earth Day</span>
+                  <div class="pc-title" style="color:#fff;">Go Green, Save More</div>
+                  <div class="pc-sub" style="color:rgba(255,255,255,.85);">Plant a tree with every transaction · Earn green rewards</div>
+                </div>
+                <a href="#" class="pc-cta" style="background:rgba(46,216,142,.25);border:1px solid rgba(255,255,255,.35);flex-shrink:0;">Learn More</a>
+              </div>
+            </div>
+            <!-- Slide: Personal Loan -->
+            <div class="pc-slide pc-slide-2">
+              <div style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:#00538A;opacity:.12;pointer-events:none;"></div>
+              <div style="position:absolute;right:60px;bottom:-40px;width:90px;height:90px;border-radius:50%;background:#00538A;opacity:.08;pointer-events:none;"></div>
+              <div style="position:absolute;right:160px;top:-20px;width:60px;height:60px;border-radius:50%;background:#00538A;opacity:.07;pointer-events:none;"></div>
+              <div style="position:absolute;left:0;top:0;bottom:0;width:145px;overflow:hidden;border-radius:.875rem 0 0 0;">
+                <img src="../images/banner-person-cashback.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;"/>
+              </div>
+              <div style="display:flex;align-items:center;flex:1;min-width:0;padding-left:157px;padding-right:1.5rem;gap:.875rem;">
+                <div style="min-width:0;flex:1;">
+                  <span class="pc-tag" style="background:rgba(255,255,255,.2);color:#fff;">Limited Time</span>
+                  <div class="pc-title" style="color:#fff;">Personal Loan at 3.49% p.a.</div>
+                  <div class="pc-sub" style="color:rgba(255,255,255,.85);">Up to AED 500,000 · Instant approval · No processing fee</div>
+                </div>
+                <a href="financing-facility-request.html" class="pc-cta" style="background:#00538A;flex-shrink:0;">Apply for Personal Loan</a>
+              </div>
+            </div>
+            <!-- Slide: Fixed Deposit -->
+            <div class="pc-slide pc-slide-3">
+              <div style="position:absolute;right:-25px;top:-35px;width:110px;height:110px;border-radius:50%;background:#16303d;opacity:.09;pointer-events:none;"></div>
+              <div style="position:absolute;right:70px;bottom:-38px;width:85px;height:85px;border-radius:50%;background:#16303d;opacity:.06;pointer-events:none;"></div>
+              <div style="position:absolute;right:170px;top:-15px;width:55px;height:55px;border-radius:50%;background:#16303d;opacity:.05;pointer-events:none;"></div>
+              <div style="position:absolute;left:0;top:0;bottom:0;width:145px;overflow:hidden;border-radius:.875rem 0 0 0;">
+                <img src="../images/banner-person-savings.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;"/>
+              </div>
+              <div style="display:flex;align-items:center;flex:1;min-width:0;padding-left:157px;padding-right:1.5rem;gap:.875rem;">
+                <div style="min-width:0;flex:1;">
+                  <span class="pc-tag" style="background:rgba(0,0,0,.12);color:#16303d;">Best Rate</span>
+                  <div class="pc-title" style="color:#16303d;">5.5% p.a. Fixed Deposit</div>
+                  <div class="pc-sub" style="color:#334155;">12-month term · No minimum balance · AED 1,218 potential earn</div>
+                </div>
+                <a href="term-deposit-account-opening.html?tenure=365&rate=5.50&amount=22150&source=bestrate" class="pc-cta" style="background:#16303d;flex-shrink:0;">Open Fixed Deposit</a>
+              </div>
+            </div>
+            <!-- Slide: Dining Cashback -->
+            <div class="pc-slide pc-slide-4">
+              <div style="position:absolute;right:-28px;top:-32px;width:115px;height:115px;border-radius:50%;background:#000;opacity:.15;pointer-events:none;"></div>
+              <div style="position:absolute;right:65px;bottom:-42px;width:88px;height:88px;border-radius:50%;background:#000;opacity:.10;pointer-events:none;"></div>
+              <div style="position:absolute;right:165px;top:-15px;width:58px;height:58px;border-radius:50%;background:#000;opacity:.08;pointer-events:none;"></div>
+              <div style="position:absolute;left:0;top:0;bottom:0;width:145px;overflow:hidden;border-radius:.875rem 0 0 0;">
+                <img src="../images/banner-person-dining.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;"/>
+              </div>
+              <div style="display:flex;align-items:center;flex:1;min-width:0;padding-left:157px;padding-right:1.5rem;gap:.875rem;">
+                <div style="min-width:0;flex:1;">
+                  <span class="pc-tag" style="background:rgba(255,255,255,.15);color:#fff;">Exclusive</span>
+                  <div class="pc-title" style="color:#fff;">10% Cashback on Dining</div>
+                  <div class="pc-sub" style="color:rgba(255,255,255,.85);">Gold Mastercard · Any restaurant · Valid till Dec 2026</div>
+                </div>
+                <a href="offer-dining-cashback.html" class="pc-cta" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);flex-shrink:0;">View Offer</a>
+              </div>
+            </div>
+          </div><!-- /pc-track -->
+          <div class="pc-footer">
+            <div class="pc-dots" id="pcDots">
+              <span class="pc-dot on" onclick="pcGo(0)"></span>
+              <span class="pc-dot" onclick="pcGo(1)"></span>
+              <span class="pc-dot" onclick="pcGo(2)"></span>
+              <span class="pc-dot" onclick="pcGo(3)"></span>
+            </div>
+            <div class="pc-btns">
+              <button class="pc-btn" onclick="pcMove(-1)"><span class="material-icons">chevron_left</span></button>
+              <button class="pc-btn" onclick="pcMove(1)"><span class="material-icons">chevron_right</span></button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /carousel -->
+      <!-- ── Col-1 wrapper: Total Balance + Recent Transactions stacked ── -->
+      <div style="grid-column:1;grid-row:2/4;display:flex;flex-direction:column;gap:.75rem;">
+
+      <!-- ── rd-d1: Total Balance ── -->
+      <div class="rd-panel rd-reveal rd-d1" style="display:flex;flex-direction:column;min-height:0;padding:.625rem 1.25rem .75rem;">
+        <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.5rem;">
+          <span class="rd-ph-title">Total Balance</span>
+          <button class="eye-btn-w" id="eyeBtn" onclick="toggleBalance()" title="Show/hide balance" style="margin-right:auto;">
+            <span class="material-icons" id="eyeIcon" style="font-size:16px;">visibility</span>
+          </button>
+        </div>
+        <div style="margin-bottom:.375rem;">
+          <div style="display:flex;align-items:baseline;gap:.375rem;margin-bottom:.2rem;">
+            <span style="font-size:.95rem;font-weight:500;color:var(--az-muted);line-height:1;">AED</span>
+            <span class="bal-amount" id="balAmount" style="font-size:clamp(1.6rem,2.4vw,2.1rem);font-weight:700;color:var(--az-navy);letter-spacing:-.02em;line-height:1;">248,350.00</span>
+          </div>
+          <div id="availBalRow" style="font-size:.75rem;color:var(--az-muted);">Available &nbsp;<span id="availBalAmt" style="font-weight:600;color:var(--az-navy);">AED 241,800.00</span></div>
+        </div>
+        <div style="height:.75rem;"></div>
+        <div style="display:flex;align-items:stretch;border:1px solid var(--az-border);border-radius:.5rem;overflow:hidden;margin-bottom:.375rem;">
+          <a href="accounts.html" class="bal-acc-item" style="flex:1;padding:.4rem .75rem;display:flex;flex-direction:column;text-decoration:none;">
+            <span class="bal-acc-lbl">Current</span>
+            <span class="bal-acc-val" data-orig="AED 84,200.00">AED 84,200.00</span>
+          </a>
+          <div style="width:1px;background:var(--az-border);flex-shrink:0;"></div>
+          <a href="accounts.html" class="bal-acc-item" style="flex:1;padding:.4rem .75rem;display:flex;flex-direction:column;text-decoration:none;">
+            <span class="bal-acc-lbl">Term Deposit</span>
+            <span class="bal-acc-val" data-orig="AED 22,150.00">AED 22,150.00</span>
+          </a>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.875rem;margin-bottom:.375rem;">
+          <a href="transfer-own-accounts.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:none;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#fff;text-decoration:none;background:#1AAD6E;transition:background .15s;">Transfer</a>
+          <a href="term-deposit-account-opening.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:1.5px solid #1AAD6E;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">Open Term Deposit</a>
+        </div>
+      </div>
+
+      <!-- ── Recent Transactions ── -->
+      <div class="rd-panel rd-reveal" id="rtPanel" style="padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="rd-ph-title">Recent Transactions</span>
+        </div>
+        <div id="rtList" style="display:block;margin-top:.75rem;">
+          <div style="display:flex;align-items:center;gap:.625rem;padding:.875rem 0;border-bottom:1px solid var(--az-border);">
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">directions_car</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">Careem</div><div style="font-size:.68rem;color:var(--az-muted);">Transport · Today, 10:30 AM</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:600;color:#e11d48;">− AED 45.00</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.625rem;padding:.875rem 0;border-bottom:1px solid var(--az-border);">
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">account_balance</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">Salary Credit</div><div style="font-size:.68rem;color:var(--az-muted);">Income · Yesterday, 09:15 AM</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:700;color:#1AAD6E;">+ AED 18,500.00</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.625rem;padding:.875rem 0;border-bottom:1px solid var(--az-border);">
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">shopping_bag</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">Amazon.ae</div><div style="font-size:.68rem;color:var(--az-muted);">Shopping · Yesterday, 08:45 PM</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:600;color:#e11d48;">− AED 125.50</div></div>
+          </div>
+          <div style="display:none;align-items:center;gap:.625rem;padding:.875rem 0;">
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">bolt</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">DEWA</div><div style="font-size:.68rem;color:var(--az-muted);">Utilities · 12 May 2025</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:600;color:#e11d48;">− AED 210.00</div></div>
+          </div>
+          <div style="display:flex;justify-content:flex-start;margin-top:.75rem;"><a href="transaction-history.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.5rem 1.1rem;border:1.5px solid #1AAD6E;border-radius:.5rem;font-size:.78rem;font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">View More Transactions</a></div>
+        </div>
+      </div>
+      </div><!-- /col-1 wrapper -->
+
+      <!-- ── Col-2 wrapper: My Cards + Spending Analysis ── -->
+      <div style="grid-column:2;grid-row:2/4;display:flex;flex-direction:column;gap:.75rem;align-self:stretch;">
+
+      <div class="rd-panel rd-reveal rd-d5" style="padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0;align-self:stretch !important;border-radius:.875rem !important;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.25rem .5rem;">
+          <span class="rd-ph-title">My Cards</span>
+          <a href="cards-my-cards.html" style="font-size:.72rem;color:var(--az-blue);font-weight:600;text-decoration:none;">View all</a>
+        </div>
+        <div style="margin:.125rem 1.25rem 0;border:1px solid var(--az-border);border-radius:.625rem;overflow:hidden;">
+          <div class="card-sel-row" onclick="goToCard(0)" style="display:flex;align-items:center;gap:.875rem;padding:.75rem 1rem;cursor:pointer;background:#f0f7ff;border-left:3px solid var(--az-blue);transition:background .15s;">
+            <div style="width:48px;height:30px;background:linear-gradient(135deg,#1a1f71,#00378b);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <span style="font-size:.65rem;font-weight:900;color:#fff;font-style:italic;letter-spacing:.02em;">VISA</span>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div class="card-sel-name" style="font-size:.8rem;font-weight:600;color:var(--az-navy);">Platinum Visa</div>
+              <div style="font-size:.68rem;color:var(--az-muted);">···· 5678 &nbsp;·&nbsp; Exp 09/27</div>
+            </div>
+            <span class="mc-status-chip mc-status-active" style="flex-shrink:0;">Active</span>
+          </div>
+          <div style="height:1px;background:var(--az-border);"></div>
+          <div class="card-sel-row" onclick="goToCard(1)" style="display:flex;align-items:center;gap:.875rem;padding:.75rem 1rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s;">
+            <div style="width:48px;height:30px;background:linear-gradient(135deg,#1a1f71,#0d2d45);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;">
+              <div style="width:18px;height:18px;border-radius:50%;background:#eb001b;position:absolute;left:5px;"></div>
+              <div style="width:18px;height:18px;border-radius:50%;background:#f79e1b;position:absolute;right:5px;opacity:.9;"></div>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div class="card-sel-name" style="font-size:.8rem;font-weight:600;color:var(--az-navy);">Gold Mastercard</div>
+              <div style="font-size:.68rem;color:var(--az-muted);">···· 9876 &nbsp;·&nbsp; Exp 12/26</div>
+            </div>
+            <span class="mc-status-chip mc-status-active" style="flex-shrink:0;">Active</span>
+          </div>
+        </div>
+        <div style="padding:.75rem 1.25rem .5rem;">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:.4rem;">
+            <div>
+              <div style="font-size:.63rem;color:var(--az-muted);text-transform:uppercase;letter-spacing:.04em;font-weight:500;margin-bottom:.2rem;">Available Credit</div>
+              <div style="font-size:.95rem;font-weight:700;color:var(--az-navy);letter-spacing:-.01em;" id="mcBalAmt">AED 8,240.00</div>
+            </div>
+            <div style="font-size:.68rem;color:var(--az-muted);padding-bottom:.15rem;" id="mcUsageLbl">24% of AED 35,000.00 total credit</div>
+          </div>
+          <div class="mc-usage-track" style="margin-bottom:.875rem;"><div class="mc-usage-fill" id="mcUsageFill" style="width:24%"></div></div>
+          <span id="mcBalSpent" style="display:none;">AED 8,240.00</span>
+        </div>
+        <div style="display:flex;gap:.5rem;padding:0 1.25rem .875rem;">
+          <a href="cards-manage.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:none;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#fff;text-decoration:none;background:#1AAD6E;transition:background .15s;">Manage Cards</a>
+          <a href="account-statement.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:1.5px solid #1AAD6E;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">View Statement</a>
+        </div>
+      </div>
+
+      <!-- ── Spending Analysis ── -->
+      <div id="spendingAnalysis" class="rd-panel rd-reveal" style="padding:1.25rem 1.25rem 1.125rem;border-radius:.875rem !important;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;">
+          <span class="rd-ph-title">Spending Analysis</span>
+          <span style="font-size:.68rem;color:var(--az-muted);">This month</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Housing</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 1,543.00</span></div>
+            <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:32%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Food &amp; Dining</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 1,158.00</span></div>
+            <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:24%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Transport</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 869.00</span></div>
+            <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:18%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Shopping</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 724.00</span></div>
+            <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:15%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:.875rem;padding-top:.75rem;border-top:1px solid var(--az-border);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:.72rem;color:var(--az-muted);">Monthly Budget</span>
+          <span style="font-size:.72rem;color:var(--az-navy);">AED 4,294.00 <span style="color:var(--az-muted);font-weight:400;">/ AED 6,000.00</span></span>
+        </div>
+      </div>
+
+      </div><!-- /col-2 wrapper -->
+
+      </div><!-- /rd-left -->
+      <!-- ── Right column: info & alerts ── -->
+      <div class="rd-right">
+
+      <!-- ── rd-d2: Upcoming Payments ── -->
+      <div class="rd-panel rd-reveal rd-d2">
+        <div class="rd-ph" style="margin-bottom:.75rem;">
+          <span class="rd-ph-title">Upcoming Payments</span>
+        </div>
+        <div class="ac-list">
+          <div class="ac-item ac-item-urgent">
+            <div class="ac-icon" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;font-size:18px;">bolt</span></div>
+            <div class="ac-body"><div class="ac-name">Electricity (DEWA)</div><div class="ac-due ac-due-urgent">Due in 2 days</div></div>
+            <div class="ac-amt">AED 210.00</div>
+            <a href="payments-bill-report.html" class="ac-pay-btn-urgent">Pay</a>
+          </div>
+          <div class="ac-item">
+            <div class="ac-icon" style="background:#f0fdf8;"><span class="material-icons" style="color:#1aad6e;font-size:18px;">wifi</span></div>
+            <div class="ac-body"><div class="ac-name">Internet · Etisalat</div><div class="ac-due">Due in 5 days</div></div>
+            <div class="ac-amt">AED 230.00</div>
+            <a href="payments-bill-report.html" class="ac-pay-btn">Pay</a>
+          </div>
+          <div class="ac-item" style="border-bottom:none;">
+            <div class="ac-icon" style="background:#f0fdf8;"><span class="material-icons" style="color:#1aad6e;font-size:18px;">credit_card</span></div>
+            <div class="ac-body"><div class="ac-name"><a href="cards-settlement-my.html" style="color:inherit;text-decoration:none;">Credit Card Bill</a></div><div class="ac-due">Due in 8 days</div></div>
+            <div class="ac-amt">AED 1,440.00</div>
+            <a href="cards-settlement-my.html" class="ac-pay-btn">Pay</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Explore More ── -->
+      <div class="rd-panel rd-reveal" style="padding:.5rem 0;overflow:hidden;">
+        <a href="#" style="display:flex;align-items:center;gap:.75rem;padding:.875rem 1.25rem;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+          <div style="width:38px;height:38px;border-radius:10px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-icons" style="font-size:20px;color:#1AAD6E;">flight</span>
+          </div>
+          <div style="min-width:0;flex:1;">
+            <div style="font-size:.82rem;font-weight:700;color:#16303d;margin-bottom:.1rem;">Visa Airport Companion</div>
+            <div style="font-size:.7rem;color:#64748b;">Airport &amp; Travel Benefits</div>
+          </div>
+          <span class="material-icons" style="font-size:18px;color:var(--az-muted);flex-shrink:0;">chevron_right</span>
+        </a>
+        <div style="border-top:1px solid var(--az-border);margin:0 1.25rem;"></div>
+        <a href="#" style="display:flex;align-items:center;gap:.75rem;padding:.875rem 1.25rem;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+          <div style="width:38px;height:38px;border-radius:10px;background:#e8f3fb;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-icons" style="font-size:20px;color:#00538A;">stars</span>
+          </div>
+          <div style="min-width:0;flex:1;">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.1rem;">
+              <span style="font-size:.82rem;font-weight:700;color:#16303d;">Rewards Hub</span>
+              <span style="font-size:.68rem;font-weight:700;color:#1AAD6E;background:#edf9f4;padding:.08rem .4rem;border-radius:20px;">17,345 pts</span>
+            </div>
+            <div style="font-size:.7rem;color:#64748b;">Travel, Shopping &amp; Lifestyle</div>
+          </div>
+          <span class="material-icons" style="font-size:18px;color:var(--az-muted);flex-shrink:0;">chevron_right</span>
+        </a>
+        <div style="border-top:1px solid var(--az-border);margin:0 1.25rem;"></div>
+        <a href="#" style="display:flex;align-items:center;gap:.75rem;padding:.875rem 1.25rem;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+          <div style="width:38px;height:38px;border-radius:10px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-icons" style="font-size:20px;color:#1AAD6E;">person_add</span>
+          </div>
+          <div style="min-width:0;flex:1;">
+            <div style="font-size:.82rem;font-weight:700;color:#16303d;margin-bottom:.1rem;">Invite &amp; Earn</div>
+            <div style="font-size:.7rem;color:#64748b;">Refer a friend and earn rewards</div>
+          </div>
+          <span class="material-icons" style="font-size:18px;color:var(--az-muted);flex-shrink:0;">chevron_right</span>
+        </a>
+      </div>
+
+      </div><!-- /rd-right -->
+
+    </div><!-- /rd-wrap -->
+
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright <span id="ftYear"></span>. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+        <button class="acc-btn" aria-label="Default font size">A</button>
+        <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+        <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+
+<script src="../js/app.js?v=3"></script>
+<script src="../js/shared.js"></script>
+<script>
+
+// ── Notification tabs ──
+function ntSwitch(tab, btn) {
+  document.querySelectorAll('.nt-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.nt-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  var panel = document.getElementById('nt-' + tab);
+  if (panel) panel.classList.add('active');
+  var badge = document.getElementById('ntb-' + tab);
+  if (badge) { badge.style.display = 'none'; _ntUpdateBadge(); }
+}
+function _ntUpdateBadge() {
+  var total = 0;
+  document.querySelectorAll('.nt-badge').forEach(function(b){
+    if (b.style.display !== 'none') total += parseInt(b.textContent) || 0;
+  });
+  var dot = document.getElementById('notifBadge');
+  if (dot) { dot.textContent = total; dot.style.display = total > 0 ? '' : 'none'; }
+}
+function ntClearTab() {
+  var active = document.querySelector('.nt-panel.active');
+  if (active) active.innerHTML = '<div style="padding:1.25rem;color:var(--az-muted);font-size:.8rem;text-align:center;">No notifications</div>';
+  var activeTab = document.querySelector('.nt-tab.active');
+  if (activeTab) {
+    var badge = activeTab.querySelector('.nt-badge');
+    if (badge) { badge.style.display = 'none'; _ntUpdateBadge(); }
+  }
+}
+
+
+// ── Dynamic last login date (3 days before today) ──
+(function() {
+  var d = new Date();
+  d.setDate(d.getDate() - 3);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var formatted = d.getDate() + ' ' + months[d.getMonth()] + ', ' + d.getFullYear();
+  var el = document.getElementById('lastLoginDate');
+  if (el) el.textContent = formatted;
+})();
+// ── Dynamic greeting date & copyright year ──
+(function() {
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+  var abDate = document.getElementById('abDate');
+  if (abDate) abDate.textContent = "Here is what's happening with your finances today.";
+  var ftYear = document.getElementById('ftYear');
+  if (ftYear) ftYear.textContent = now.getFullYear();
+})();
+
+// ── Clock ──
+function tick() {
+  var n = new Date();
+  var t = n.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  var el = document.getElementById('ssClock');
+  if (el) el.textContent = t + ' · GST+4';
+}
+tick(); setInterval(tick, 1000);
+
+// ── Balance toggle ──
+var DOTS = '••••••';
+var balVisible = true;
+// ── Recent Transactions toggle ──
+function rtToggle() {
+  var list = document.getElementById('rtList');
+  var chev = document.getElementById('rtChevron');
+  if (!list || !chev) return;
+  var collapsed = list.style.display === 'none';
+  list.style.display   = collapsed ? 'block' : 'none';
+  chev.style.transform = collapsed ? '' : 'rotate(180deg)';
+}
+
+function toggleBalance() {
+  balVisible = !balVisible;
+  var el  = document.getElementById('balAmount');
+  var ico = document.getElementById('eyeIcon');
+  var btn = document.getElementById('eyeBtn');
+  if (!el || !ico) return;
+  btn.classList.add('eye-spinning');
+  setTimeout(function() { btn.classList.remove('eye-spinning'); }, 300);
+  var availAmt = document.getElementById('availBalAmt');
+  if (balVisible) {
+    el.classList.remove('bal-hidden');
+    if (availAmt) { availAmt.textContent = availAmt.getAttribute('data-orig') || availAmt.textContent; }
+    document.querySelectorAll('.bal-acc-val').forEach(function(v) {
+      v.classList.remove('bal-hidden');
+      v.textContent = v.getAttribute('data-orig') || v.textContent;
+    });
+    setTimeout(function() { countUp(el, 248350.00, 600); }, 100);
+  } else {
+    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', el.textContent);
+    el.classList.add('bal-hidden'); el.textContent = DOTS;
+    if (availAmt) { if (!availAmt.getAttribute('data-orig')) availAmt.setAttribute('data-orig', availAmt.textContent); availAmt.textContent = DOTS; }
+    document.querySelectorAll('.bal-acc-val').forEach(function(v) {
+      v.classList.add('bal-hidden'); v.textContent = DOTS;
+    });
+  }
+  ico.textContent = balVisible ? 'visibility' : 'visibility_off';
+}
+
+function countUp(el, target, duration) {
+  const start = Date.now();
+  const startVal = 0;
+  function step() {
+    const progress = Math.min((Date.now() - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const val = startVal + (target - startVal) * ease;
+    el.textContent = val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ── Ripple on action pills ──
+document.addEventListener('click', function(e) {
+  const pill = e.target.closest('.bal-action-pill');
+  if (!pill) return;
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const rect = pill.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - rect.left - size/2) + 'px;top:' + (e.clientY - rect.top - size/2) + 'px;';
+  pill.appendChild(r);
+  setTimeout(function() { r.remove(); }, 500);
+});
+
+
+// ── Transaction tabs ──
+function setTab(el) {
+  document.querySelectorAll('.txn-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var filter = el.textContent.trim().toLowerCase(); // all | income | expenses | transfers
+  var typeMap = { 'income': 'income', 'expenses': 'expense', 'transfers': 'transfer' };
+  var wanted  = typeMap[filter] || null; // null = show all
+
+  var rows   = document.querySelectorAll('#txnList .txn-row');
+  var groups = document.querySelectorAll('#txnList .txn-date-group');
+
+  rows.forEach(function(r) {
+    var show = !wanted || r.dataset.type === wanted;
+    r.style.display = show ? '' : 'none';
+  });
+
+  // Hide date-group headers with no visible rows after them
+  groups.forEach(function(g) {
+    var sib = g.nextElementSibling;
+    var hasVisible = false;
+    while (sib && !sib.classList.contains('txn-date-group') && !sib.classList.contains('txn-view-all')) {
+      if (sib.classList.contains('txn-row') && sib.style.display !== 'none') {
+        hasVisible = true; break;
+      }
+      sib = sib.nextElementSibling;
+    }
+    g.style.display = hasVisible ? '' : 'none';
+  });
+
+  // Empty state
+  var list = document.getElementById('txnList');
+  var empty = document.getElementById('txnEmptyState');
+  var anyVisible = Array.from(rows).some(function(r){ return r.style.display !== 'none'; });
+  if (!anyVisible) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.id = 'txnEmptyState';
+      empty.style.cssText = 'text-align:center;padding:1.5rem 1rem;color:#707070;font-size:.82rem;';
+      empty.innerHTML = '<span class="material-icons" style="font-size:2rem;display:block;margin-bottom:.4rem;color:#c8d6de;">inbox</span>No ' + (el.textContent.trim()) + ' transactions this period';
+      list.insertBefore(empty, list.querySelector('.txn-view-all'));
+    }
+    empty.style.display = '';
+  } else {
+    if (empty) empty.style.display = 'none';
+  }
+}
+
+// ── Spending period tabs ──
+function setSpendTab(el) {
+  document.querySelectorAll('.spend-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+// ── Animate bars & goal progress on load ──
+setTimeout(function() {
+  document.querySelectorAll('.hbar-fill[data-w], .sb-fill[data-w], .goal-prog[data-w], .ins-bar-fill[data-w]').forEach(function(el) {
+    el.style.width = el.dataset.w;
+  });
+}, 450);
+
+// ── Balance count-up on page load ──
+setTimeout(function() {
+  const el = document.getElementById('balAmount');
+  if (el) countUp(el, 248350.00, 900);
+}, 600);
+
+// ── Transaction search ──
+function filterTxns(q) {
+  q = (q || '').trim().toLowerCase();
+  document.querySelectorAll('#txnList .txn-row').forEach(function(row) {
+    var text = (row.getAttribute('data-txn') || '') + ' ' + row.textContent.toLowerCase();
+    row.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+  // hide date groups with no visible rows
+  document.querySelectorAll('#txnList .txn-date-group').forEach(function(grp) {
+    var next = grp.nextElementSibling;
+    var hasVisible = false;
+    while (next && !next.classList.contains('txn-date-group')) {
+      if (next.classList.contains('txn-row') && next.style.display !== 'none') hasVisible = true;
+      next = next.nextElementSibling;
+    }
+    grp.style.display = hasVisible ? '' : 'none';
+  });
+}
+
+// ── Card Carousel ──
+var _ccIdx = 0;
+function goToCard(idx) {
+  var cards = document.querySelectorAll('.card-carousel-track .debit-card');
+  var dots  = document.querySelectorAll('.cc-dot');
+  if (!cards.length) return;
+  _ccIdx = (idx + cards.length) % cards.length;
+  cards.forEach(function(c,i){ c.classList.toggle('cc-active', i === _ccIdx); });
+  dots.forEach(function(d,i){ d.classList.toggle('active', i === _ccIdx); });
+}
+function shiftCard(dir) { goToCard(_ccIdx + dir); }
+document.addEventListener('DOMContentLoaded', function() { goToCard(0); });
+
+// ── Sidebar search ──
+function sbFilter(val) {
+  var q = val.trim().toLowerCase();
+  var clear = document.getElementById('sbSearchClear');
+  if (clear) clear.style.display = q ? 'flex' : 'none';
+
+  if (!q) {
+    document.querySelectorAll('.sb-item').forEach(function(el) { el.style.display = ''; });
+    document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+      var orig = el.getAttribute('data-sb-orig');
+      el.style.display = orig !== null ? orig : 'none';
+      el.removeAttribute('data-sb-orig');
+    });
+    document.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(el) {
+      el.style.display = '';
+    });
+    return;
+  }
+
+  document.querySelectorAll('.sb-sub, .sb-sub3').forEach(function(el) {
+    if (!el.hasAttribute('data-sb-orig')) {
+      el.setAttribute('data-sb-orig', el.style.display || 'none');
+    }
+  });
+
+  document.querySelectorAll('.sb-item').forEach(function(btn) {
+    var label = (btn.dataset.label || btn.textContent).trim().toLowerCase();
+    var parentMatch = label.includes(q);
+    var oc = btn.getAttribute('onclick') || '';
+    var m = oc.match(/toggleSub\(['"](\w+)['"]/);
+    var sub = m ? document.getElementById(m[1]) : null;
+
+    if (parentMatch) {
+      btn.style.display = '';
+      if (sub) {
+        sub.style.display = '';
+        sub.querySelectorAll('.sb-sub-item, .sb-sub2-hdr, .sb-sub3-item').forEach(function(si) { si.style.display = ''; });
+        sub.querySelectorAll('.sb-sub3').forEach(function(s3) { s3.style.display = ''; });
+      }
+    } else {
+      var anySubMatch = false;
+      if (sub) {
+        sub.querySelectorAll('.sb-sub-item').forEach(function(si) {
+          var match = si.textContent.trim().toLowerCase().includes(q);
+          si.style.display = match ? '' : 'none';
+          if (match) anySubMatch = true;
+        });
+        sub.querySelectorAll('.sb-sub2-hdr').forEach(function(hdr) {
+          var s3 = hdr.nextElementSibling;
+          if (!s3) return;
+          var s3Match = false;
+          s3.querySelectorAll('.sb-sub3-item').forEach(function(si) {
+            var match = si.textContent.trim().toLowerCase().includes(q);
+            si.style.display = match ? '' : 'none';
+            if (match) s3Match = true;
+          });
+          hdr.style.display = s3Match ? '' : 'none';
+          s3.style.display = s3Match ? '' : 'none';
+          if (s3Match) anySubMatch = true;
+        });
+      }
+      btn.style.display = anySubMatch ? '' : 'none';
+      if (sub) sub.style.display = anySubMatch ? '' : 'none';
+    }
+  });
+}
+
+function sbClearSearch() {
+  var inp = document.getElementById('sbSearch');
+  if (inp) { inp.value = ''; sbFilter(''); inp.focus(); }
+}
+
+// ── My Cards ──
+var _cardIdx = 0;
+var _mcData = [
+  { avail:'AED 8,240.00', spent:'AED 4,230.00', pct:34, limit:'AED 12,470.00', frozen:false },
+  { avail:'AED 5,810.00', spent:'AED 2,190.00', pct:27, limit:'AED 8,000.00',  frozen:false }
+];
+function goToCard(idx) {
+  var rows = document.querySelectorAll('.card-sel-row');
+  if (!rows.length) return;
+  _cardIdx = (idx + rows.length) % rows.length;
+  rows.forEach(function(row, i) {
+    var sel = i === _cardIdx;
+    row.style.background    = sel ? '#f0f7ff' : '';
+    row.style.borderLeftColor = sel ? 'var(--az-blue)' : 'transparent';
+  });
+  var d = _mcData[_cardIdx] || _mcData[0];
+  var ba = document.getElementById('mcBalAmt');
+  var bs = document.getElementById('mcBalSpent');
+  var uf = document.getElementById('mcUsageFill');
+  var ul = document.getElementById('mcUsageLbl');
+  if (ba) ba.textContent = d.avail;
+  if (bs) bs.textContent = d.spent;
+  if (uf) uf.style.width = d.pct + '%';
+  if (ul) ul.textContent = d.pct + '% of ' + d.limit + ' limit used';
+  var frozen = !!d.frozen;
+  var fb = document.getElementById('mcFreezeBtn');
+  if (fb) {
+    fb.classList.toggle('mc-pill-active', frozen);
+    var icon = fb.querySelector('.material-icons');
+    var lbl  = fb.querySelector('.mc-pill-lbl');
+    if (icon) icon.textContent = frozen ? 'lock_open' : 'credit_card_off';
+    if (lbl)  lbl.textContent  = frozen ? 'Unblock Card' : 'Block Card';
+  }
+}
+function shiftCard(dir) { goToCard(_cardIdx + dir); }
+function mcToggleFreeze() {
+  var d = _mcData[_cardIdx];
+  if (!d) return;
+  var frozen = !!d.frozen;
+  var action = frozen ? 'Unblock Card' : 'Block Card';
+  var rows = document.querySelectorAll('.card-sel-row');
+  var cardName = rows[_cardIdx] ? (rows[_cardIdx].querySelector('.card-sel-name') || {}).textContent || 'this card' : 'this card';
+  var mo = document.getElementById('freezeConfirmModal');
+  if (!mo) return;
+  document.getElementById('freezeModalTitle').textContent  = action;
+  document.getElementById('freezeModalBody').textContent   = action === 'Block Card'
+    ? 'Blocking will prevent all transactions on ' + cardName + '. You can unblock it at any time.'
+    : 'Unblocking will restore all transactions on ' + cardName + '.';
+  document.getElementById('freezeModalConfirm').textContent = action;
+  document.getElementById('freezeModalConfirm').style.background = action === 'Block Card' ? '#b91c1c' : '#16303d';
+  mo.classList.remove('hidden');
+}
+
+function mcTogglePan(btn) {
+  var card = btn.closest('.mc-card');
+  if (!card) return;
+  var numEl = card.querySelector('.mc-num');
+  if (!numEl) return;
+  var icon = btn.querySelector('.material-icons-outlined');
+  var isHidden = numEl.dataset.panVisible !== '1';
+  if (isHidden) {
+    numEl.innerHTML = numEl.dataset.full;
+    numEl.dataset.panVisible = '1';
+    if (icon) icon.textContent = 'visibility_off';
+    btn.setAttribute('aria-label', 'Hide card number');
+  } else {
+    numEl.innerHTML = numEl.dataset.masked;
+    numEl.dataset.panVisible = '0';
+    if (icon) icon.textContent = 'visibility';
+    btn.setAttribute('aria-label', 'Show card number');
+  }
+}
+
+function mcDoFreeze() {
+  document.getElementById('freezeConfirmModal').classList.add('hidden');
+  var d = _mcData[_cardIdx];
+  if (!d) return;
+  d.frozen = !d.frozen;
+  var frozen = d.frozen;
+  // update selector row status chip
+  var rows = document.querySelectorAll('.card-sel-row');
+  var chip = rows[_cardIdx] && rows[_cardIdx].querySelector('.mc-status-chip');
+  if (chip) { chip.textContent = frozen ? 'BLOCKED' : 'ACTIVE'; chip.className = 'mc-status-chip ' + (frozen ? 'mc-status-frozen' : 'mc-status-active'); }
+  var fb = document.getElementById('mcFreezeBtn');
+  if (fb) {
+    fb.classList.toggle('mc-pill-active', frozen);
+    var icon = fb.querySelector('.material-icons');
+    var lbl  = fb.querySelector('.mc-pill-lbl');
+    if (icon) icon.textContent = frozen ? 'lock_open' : 'credit_card_off';
+    if (lbl)  lbl.textContent  = frozen ? 'Unblock Card' : 'Block Card';
+  }
+}
+
+// ── Move dismissed carousel offers into the notification Offers tab ──
+function pcMoveOffersToNotifications() {
+  var panel = document.getElementById('nt-offers');
+  if (!panel) return 0;
+  var empty = panel.querySelector('.nt-empty');
+  if (empty) empty.remove();
+  var added = 0;
+  document.querySelectorAll('#pcTrack .pc-slide').forEach(function(slide){
+    var t = slide.querySelector('.pc-title');
+    if (!t) return;
+    var sub = slide.querySelector('.pc-sub');
+    var cta = slide.querySelector('.pc-cta');
+    var msg = t.textContent.trim() + (sub ? ' — ' + sub.textContent.trim() : '');
+    var item = document.createElement('div');
+    item.className = 'notif-item notif-unread';
+    item.innerHTML = '<div class="notif-content"><div class="notif-msg"></div><div class="notif-time">Just now</div></div>';
+    item.querySelector('.notif-msg').textContent = msg;
+    var a = document.createElement('a');
+    a.className = 'nt-cta';
+    a.href = cta ? cta.getAttribute('href') : '#';
+    a.textContent = cta ? cta.textContent.trim().split(' ')[0] : 'View';
+    item.appendChild(a);
+    panel.appendChild(item);
+    added++;
+  });
+  return added;
+}
+
+// ── Personalised Carousel ──
+(function() {
+  var cur = 0, total = 4, timer, dismissed = false;
+  function pcRender() {
+    var track = document.getElementById('pcTrack');
+    if (!track) return;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    document.querySelectorAll('.pc-dot').forEach(function(d,i){ d.classList.toggle('on', i===cur); });
+  }
+  window.pcMove = function(dir) { cur=(cur+dir+total)%total; pcRender(); pcResetTimer(); };
+  window.pcGo   = function(idx) { cur=idx; pcRender(); pcResetTimer(); };
+  window.pcDismiss = function() {
+    var w=document.getElementById('pcWrap');
+    if(w){w.style.display='none';dismissed=true;clearInterval(timer);}
+    var added = pcMoveOffersToNotifications();
+    if(added){
+      var b=document.getElementById('ntb-offers');
+      if(b){ b.textContent=(parseInt(b.textContent,10)||0)+added; b.style.display=''; }
+      if(typeof _ntUpdateBadge==='function') _ntUpdateBadge();
+    }
+    var btn=document.getElementById('notifBtn');if(!btn)return;
+    btn.style.transition='transform .15s';var pulses=0;
+    var iv=setInterval(function(){btn.style.transform=pulses%2===0?'scale(1.35)':'scale(1)';pulses++;if(pulses>=6){clearInterval(iv);btn.style.transform='';}},120);
+  };
+  window.pcResetTimer = function() {
+    clearInterval(timer);
+    if(!dismissed) timer=setInterval(function(){cur=(cur+1)%total;pcRender();},7000);
+  };
+  document.addEventListener('DOMContentLoaded', function(){pcRender();pcResetTimer();});
+})();
+
+</script>
+
+  <!-- ── Recent Transactions modal ── -->
+  <div id="recentTxnModal" class="modal-ov hidden" role="dialog" aria-modal="true" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="az-modal" style="max-width:640px;width:95%;padding:0;overflow:hidden;display:flex;flex-direction:column;max-height:80vh;">
+
+      <!-- Modal header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1.125rem 1.5rem;border-bottom:1px solid var(--az-border);flex-shrink:0;">
+        <div>
+          <div style="font-size:.95rem;font-weight:700;color:var(--az-navy);">Recent Transactions</div>
+          <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Last 7 days · All accounts</div>
+        </div>
+        <button onclick="document.getElementById('recentTxnModal').classList.add('hidden')" style="background:none;border:none;cursor:pointer;color:var(--az-muted);display:flex;align-items:center;padding:0;">
+          <span class="material-icons" style="font-size:22px;">close</span>
+        </button>
+      </div>
+
+      <!-- Scrollable transaction list -->
+      <div style="overflow-y:auto;flex:1;padding:.5rem 0;">
+
+        <!-- Today -->
+        <div style="padding:.5rem 0 .25rem 1.5rem;font-size:.65rem;font-weight:700;color:var(--az-muted);text-transform:uppercase;letter-spacing:.06em;background:#fafbfc;border-bottom:1px solid var(--az-border);">Today · 4 Aug 2026</div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;cursor:pointer;border-bottom:1px solid #f4f6f8;" onclick="location.href='transfer-receipt.html'">
+          <div style="width:40px;height:40px;border-radius:50%;background:#e6f9f0;color:#1a9e63;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">S</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Salary · Emirates Corp</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Income · Direct Deposit · Current A/C</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#1a9e63;">+AED 18,500.00</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">08:00</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#edfaf6;color:#16303d;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">N</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Noon.com</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Shopping · Visa contactless · Platinum Visa</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 280</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">10:22</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#f3e8ff;color:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">D</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">DEWA</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Utilities · Bill Payment · Savings A/C</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 320</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">13:45</div>
+          </div>
+        </div>
+
+        <!-- Yesterday -->
+        <div style="padding:.5rem 0 .25rem 1.5rem;font-size:.65rem;font-weight:700;color:var(--az-muted);text-transform:uppercase;letter-spacing:.06em;background:#fafbfc;border-bottom:1px solid var(--az-border);border-top:1px solid var(--az-border);">Yesterday · 3 Aug 2026</div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#eff6ff;color:#00538A;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">E</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Emirates Airlines</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Travel · DXB → LHR · Platinum Visa</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 1,200</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">14:05</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#fef3c7;color:#d97706;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">C</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Carrefour Market</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Groceries · Dubai Mall · Savings A/C</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 440</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">18:30</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#fce7f3;color:#be185d;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">S</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Starbucks</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Dining · Mall of Emirates · Platinum Visa</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 48</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">09:10</div>
+          </div>
+        </div>
+
+        <!-- 2 Aug -->
+        <div style="padding:.5rem 0 .25rem 1.5rem;font-size:.65rem;font-weight:700;color:var(--az-muted);text-transform:uppercase;letter-spacing:.06em;background:#fafbfc;border-bottom:1px solid var(--az-border);border-top:1px solid var(--az-border);">2 Aug 2026</div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#ecfdf5;color:#065f46;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">T</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Transfer to Savings</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Internal Transfer · Current → Savings</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 5,000</div>
+            <div style="font-size:.68rem;color:var(--az-muted);">11:00</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid #f4f6f8;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#fff7ed;color:#c2410c;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">A</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Amazon.ae</div>
+            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Shopping · Online · Gold Mastercard</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:.84rem;font-weight:700;color:#e53935;">−AED 196</div>
+
+<script>
+(function() {
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9998;';
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  var colors = ['#16a34a','#22c55e','#4ade80','#15803d','#86efac','#bbf7d0'];
+  var leaves = Array.from({length: 22}, function() {
+    return {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * -window.innerHeight,
+      size: 5 + Math.random() * 9,
+      speed: 0.7 + Math.random() * 1.1,
+      drift: (Math.random() - 0.5) * 0.6,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.035,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      opacity: 0.45 + Math.random() * 0.4
+    };
+  });
+  function drawLeaf(l) {
+    ctx.save();
+    ctx.globalAlpha = l.opacity;
+    ctx.translate(l.x, l.y);
+    ctx.rotate(l.rot);
+    ctx.beginPath();
+    ctx.moveTo(0, -l.size);
+    ctx.bezierCurveTo(l.size*0.8,-l.size*0.5,l.size*0.8,l.size*0.5,0,l.size);
+    ctx.bezierCurveTo(-l.size*0.8,l.size*0.5,-l.size*0.8,-l.size*0.5,0,-l.size);
+    ctx.fillStyle = l.color;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(0,-l.size);
+    ctx.lineTo(0,l.size);
+    ctx.strokeStyle='rgba(255,255,255,0.25)';
+    ctx.lineWidth=0.7;
+    ctx.stroke();
+    ctx.restore();
+  }
+  var startTime = Date.now();
+  var DURATION = 6000, FADE_START = 4000;
+  function animate() {
+    var elapsed = Date.now() - startTime;
+    if (elapsed >= DURATION) { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.remove(); return; }
+    canvas.style.opacity = elapsed > FADE_START ? 1-(elapsed-FADE_START)/(DURATION-FADE_START) : 1;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    leaves.forEach(function(l) {
+      l.y += l.speed; l.x += l.drift; l.rot += l.rotSpeed;
+      if (l.y > canvas.height+20) { l.y=-20; l.x=Math.random()*canvas.width; }
+      drawLeaf(l);
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
