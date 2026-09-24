@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>azentio – My Banking (Mobile)</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+  <script src="../js/theme.js"></script>
+<style>
+
+  /* ══ Mobile shell — fixed-height topbar aligned to --az-hdr-h so the real
+     .app-sidebar / .app-main offsets (which assume .app-hdr) still line up ══ */
+  .md-topbar{
+    position:fixed; top:0; left:0; right:0; height:var(--az-hdr-h);
+    background:#fff; border-bottom:1px solid var(--az-border);
+    display:flex; align-items:center; gap:.6rem; padding:0 1rem;
+    z-index:1050; box-shadow:0 1px 4px rgba(22,48,61,.06);
+  }
+  html.dark .md-topbar{ background:#111f2b; border-bottom-color:#243545; box-shadow:0 1px 4px rgba(0,0,0,.4); }
+  .md-hamburger{ width:36px; height:36px; border:none; background:none; border-radius:.5rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; margin-left:-.4rem; }
+  .md-hamburger:hover{ background:rgba(22,48,61,.07); }
+  .md-hamburger .material-icons{ font-size:22px; color:var(--az-navy); }
+  .md-logo{ display:flex; align-items:center; gap:.4rem; flex:1; min-width:0; text-decoration:none; }
+  .md-logo-word{ font-size:.9rem; font-weight:700; color:var(--az-navy); letter-spacing:-.01em; }
+  .md-topbar-right{ display:flex; align-items:center; gap:.5rem; flex-shrink:0; }
+  .md-icon-link{ position:relative; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--az-navy); text-decoration:none; }
+  .md-icon-link:hover{ background:rgba(22,48,61,.07); }
+  .md-bell-dot{ position:absolute; top:2px; right:2px; width:14px; height:14px; border-radius:50%; background:#e11d48; color:#fff; font-size:.55rem; font-weight:800; display:flex; align-items:center; justify-content:center; border:2px solid #fff; }
+  html.dark .md-bell-dot{ border-color:#111f2b; }
+  .md-avatar{ width:32px; height:32px; border-radius:50%; background:#334155; color:#fff; display:flex; align-items:center; justify-content:center; font-size:.68rem; font-weight:700; text-decoration:none; flex-shrink:0; }
+  .md-drawer-foot{ flex-shrink:0; padding:.75rem 1.25rem; font-size:.68rem; color:var(--az-muted); border-top:1px solid var(--az-border); }
+
+  /* ══ Page shell — this is a dedicated mobile page, so it stays in
+     "mobile mode" (sidebar as an off-canvas drawer, no left margin)
+     at any browser width, not only below the site's 768px breakpoint. ══ */
+  .pg-retail-mobile .app-sidebar{ left:0 !important; transform:translateX(-100%) !important; transition:transform .22s ease, width .22s ease; }
+  .pg-retail-mobile .app-sidebar.mobile-open{ transform:translateX(0) !important; width:var(--az-sidebar-w) !important; }
+  .pg-retail-mobile .app-sidebar.sb-collapsed:not(.mobile-open){ width:var(--az-sidebar-w) !important; }
+  .pg-retail-mobile .app-main{ margin-left:0 !important; padding-bottom:70px; }
+  .pg-retail-mobile .main-body{ padding:.85rem .85rem 0; }
+  .md-shell{ max-width:460px; margin:0 auto; }
+
+  /* Contain the fixed topbar to the same phone-width column once the
+     browser is wider than a phone, instead of stretching edge to edge. */
+  @media (min-width:520px){
+    /* `right:auto` + an explicit `width` matter here: the base rules set
+       left:0;right:0 (edge-to-edge), and without cancelling `right` too,
+       "left:50%" alone leaves the element stretching from the middle of
+       the viewport to its real right edge — not a centered 460px column,
+       just a narrower one still glued to the true edge. That mismatch is
+       what left the drawer looking detached from the phone frame. */
+    .md-topbar{ width:460px; left:50%; right:auto; transform:translateX(-50%); border-left:1px solid var(--az-border); border-right:1px solid var(--az-border); }
+    /* At these widths the drawer is docked inside the phone column, not
+       sliding in off-canvas from the real browser edge — the true edge
+       can be hundreds of pixels away from the phone frame, so a literal
+       slide-in reads as the tray flying in from across the page. Instead
+       it stays pinned at the phone column's left edge and the open/close
+       motion becomes a settle-in-place (opacity + a short local shift)
+       confined to that column, the way a docked panel behaves. */
+    .pg-retail-mobile .app-sidebar{
+      left:calc(50% - 230px) !important;
+      transform:translateX(-12px) !important;
+      opacity:0; pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease, width .22s ease;
+    }
+    .pg-retail-mobile .app-sidebar.mobile-open{
+      transform:translateX(0) !important;
+      opacity:1; pointer-events:auto;
+    }
+    .md-sidebar-backdrop{ left:calc(50% - 230px) !important; right:auto !important; width:460px; }
+  }
+
+  .md-sidebar-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:1039; display:none; }
+  .md-sidebar-backdrop.on{ display:block; }
+
+  .md-sec{ margin-bottom:1.7rem; }
+  .md-sec-hdr{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:.7rem; }
+  .md-sec-title{ font-size:.68rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--az-muted); }
+  .md-sec-link{ font-size:.7rem; font-weight:600; color:var(--az-blue); text-decoration:none; display:flex; align-items:center; }
+  .md-sec-link .material-icons{ font-size:14px; }
+
+  /* ---- balance hero: gradient-mesh glass card, greeting folded in.
+     Fixed, vivid, not theme-dependent — same convention as the app's own
+     promo/card art, which stays legible and on-brand in both themes. ---- */
+  .md-hero{
+    position:relative; overflow:hidden; border-radius:1.5rem; padding:1.15rem 1.25rem 1.3rem;
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(46,216,142,.55) 0%, rgba(46,216,142,0) 55%),
+      radial-gradient(110% 130% at 0% 100%, rgba(0,83,138,.5) 0%, rgba(0,83,138,0) 55%),
+      linear-gradient(160deg,#0f2632 0%,#16303d 55%,#173b42 100%);
+    box-shadow:0 20px 40px -22px rgba(16,32,41,.55);
+  }
+  .md-hero-top{ display:flex; align-items:center; gap:.6rem; position:relative; z-index:1; }
+  .md-hero-avatar{ width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.16); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; flex-shrink:0; border:1px solid rgba(255,255,255,.22); }
+  .md-hero-hi{ font-size:.65rem; color:rgba(255,255,255,.6); font-weight:600; }
+  .md-hero-name{ font-size:.85rem; color:#fff; font-weight:700; margin-top:.05rem; }
+  .md-bal-eye{ margin-left:auto; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .md-bal-eye .material-icons{ font-size:14px; }
+  .md-hero-bal-wrap{ margin-top:1.15rem; position:relative; z-index:1; }
+  .md-bal-lbl{ font-size:.64rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:.3rem; }
+  .md-bal-amt{ font-size:2.15rem; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums; color:#fff; }
+  .md-bal-cur{ font-size:.95rem; font-weight:500; color:rgba(255,255,255,.55); margin-right:.3rem; }
+  .md-bal-avail{ font-size:.73rem; color:rgba(255,255,255,.6); margin-top:.3rem; }
+  .md-bal-avail b{ color:#fff; font-weight:600; }
+  .md-acct-chips{ display:flex; gap:.5rem; margin-top:1rem; overflow-x:auto; scrollbar-width:none; position:relative; z-index:1; }
+  .md-acct-chips::-webkit-scrollbar{ display:none; }
+  .md-acct-chip{ flex-shrink:0; display:flex; align-items:center; gap:.4rem; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); border-radius:2rem; padding:.4rem .8rem .4rem .55rem; text-decoration:none; white-space:nowrap; }
+  .md-acct-dot{ width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .md-acct-chip-lbl{ font-size:.68rem; font-weight:600; color:rgba(255,255,255,.65); }
+  .md-acct-chip-val{ font-size:.68rem; font-weight:700; color:#fff; font-variant-numeric:tabular-nums; }
+
+  /* ---- quick actions: five equal-weight actions — Transfer is one of
+     the set, not the hero's headline move. ---- */
+  .md-qa-row{ display:flex; justify-content:space-between; gap:.4rem; padding:1.1rem .1rem 0; background:none; border:none; }
+  .md-qa{ display:flex; flex-direction:column; align-items:center; gap:.4rem; flex:1; text-decoration:none; cursor:pointer; background:none; border:none; }
+  .md-qa-ic{ width:46px; height:46px; border-radius:50%; background:rgba(26,173,110,.1); display:flex; align-items:center; justify-content:center; color:#1e8f5e; transition:background .15s; }
+  .md-qa:active .md-qa-ic{ background:rgba(26,173,110,.2); }
+  .md-qa-ic .material-icons{ font-size:19px; }
+  .md-qa-lbl{ font-size:.6rem; font-weight:600; color:var(--az-navy); text-align:center; line-height:1.15; }
+
+  /* ---- offer carousel ---- */
+  .md-offer-wrap{ position:relative; border-radius:1rem; overflow:hidden; }
+  .md-offer-track{ display:flex; transition:transform .4s cubic-bezier(.22,.61,.36,1); touch-action:pan-y; }
+  .md-offer-slide{ min-width:100%; padding:1rem 1.1rem; position:relative; overflow:hidden; min-height:92px; display:flex; align-items:center; }
+  .md-offer-slide.s1{ background:linear-gradient(115deg,#3a8fb0,#5aaec9); }
+  .md-offer-slide.s2{ background:linear-gradient(115deg,#b7b6b2,#cccbc7); }
+  .md-offer-slide.s3{ background:linear-gradient(115deg,#171012,#3a2c24); }
+  .md-offer-tag{ display:inline-block; font-size:.56rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:.15rem .5rem; border-radius:2rem; margin-bottom:.3rem; }
+  .md-offer-title{ font-size:.86rem; font-weight:800; line-height:1.25; margin-bottom:.2rem; }
+  .md-offer-sub{ font-size:.66rem; line-height:1.4; font-weight:500; }
+  .md-offer-cta{ display:inline-flex; margin-top:.5rem; padding:.32rem .8rem; border-radius:2rem; font-size:.66rem; font-weight:700; text-decoration:none; }
+  .md-offer-dots{ position:absolute; bottom:.55rem; left:0; right:0; display:flex; justify-content:center; gap:.3rem; z-index:2; }
+  .md-offer-dot{ width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.45); cursor:pointer; transition:transform .2s,background .2s; border:none; padding:0; }
+  .md-offer-dot.on{ background:#fff; transform:scale(1.5); }
+
+  /* ---- card carousel ---- */
+  .md-cc-wrap{ overflow:hidden; }
+  .md-cc-track{ display:flex; gap:.75rem; transition:transform .4s cubic-bezier(.22,.61,.36,1); touch-action:pan-y; padding-bottom:.2rem; }
+  .md-cc-card{ min-width:82%; }
+  .md-card-visual{ border-radius:1.15rem; padding:1rem 1.1rem; position:relative; overflow:hidden; height:122px; display:flex; flex-direction:column; justify-content:space-between; color:#fff; box-shadow:0 16px 28px -18px rgba(16,32,41,.5); }
+  .md-card-visual.visa{ background:linear-gradient(135deg,#1a1f71,#00378b 65%,#003e9e); }
+  .md-card-visual.mc{ background:linear-gradient(135deg,#1a1f71,#3a2410 70%,#4a2e14); }
+  .md-card-visual::before{ content:''; position:absolute; inset:0; background:linear-gradient(115deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 35%); }
+  .md-card-visual::after{ content:''; position:absolute; right:-30px; bottom:-30px; width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,.06); }
+  .md-card-top{ display:flex; align-items:flex-start; justify-content:space-between; position:relative; z-index:1; }
+  .md-card-badge{ font-size:.6rem; font-weight:800; letter-spacing:.03em; background:rgba(255,255,255,.16); padding:.1rem .4rem; border-radius:.3rem; }
+  .md-card-brand{ font-size:.8rem; font-weight:900; font-style:italic; letter-spacing:.01em; }
+  .md-card-brand.mc-dots{ display:flex; }
+  .md-card-brand.mc-dots span{ width:15px; height:15px; border-radius:50%; display:inline-block; }
+  .md-card-brand.mc-dots span:first-child{ background:#eb001b; margin-right:-6px; }
+  .md-card-brand.mc-dots span:last-child{ background:#f79e1b; opacity:.9; }
+  .md-card-num{ font-size:.78rem; letter-spacing:.09em; font-weight:500; position:relative; z-index:1; }
+  .md-card-bottom{ display:flex; align-items:flex-end; justify-content:space-between; position:relative; z-index:1; }
+  .md-card-name{ font-size:.68rem; font-weight:600; opacity:.9; }
+  .md-card-exp{ font-size:.63rem; opacity:.7; }
+  .md-cc-dots{ display:flex; justify-content:center; gap:.3rem; margin-top:.65rem; }
+  .md-cc-dot{ width:5px; height:5px; border-radius:50%; background:var(--az-border); cursor:pointer; transition:transform .2s,background .2s; border:none; padding:0; }
+  .md-cc-dot.on{ background:var(--az-green); transform:scale(1.5); }
+  .md-card-stats{ margin-top:.85rem; }
+  .md-card-stats-row{ display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:.45rem; }
+  .md-card-stats-lbl{ font-size:.6rem; color:var(--az-muted); text-transform:uppercase; letter-spacing:.03em; }
+  .md-card-stats-val{ font-size:.85rem; font-weight:700; color:var(--az-navy); font-variant-numeric:tabular-nums; }
+  .md-card-stats-pct{ font-size:.63rem; color:var(--az-muted); }
+  .md-track-bg{ height:4px; background:var(--az-border); border-radius:2px; overflow:hidden; }
+  .md-track-fill{ height:100%; background:linear-gradient(90deg,#1AAD6E,#2ed88e); border-radius:2px; transition:width .35s ease; }
+  .md-card-btns{ display:flex; gap:1.5rem; margin-top:.85rem; }
+  .md-btn-solid, .md-btn-outline{ font-size:.72rem; font-weight:700; text-decoration:none; padding-bottom:.15rem; background:none; border:none; cursor:pointer; }
+  .md-btn-solid{ color:var(--az-green); border-bottom:1.5px solid var(--az-green); }
+  .md-btn-outline{ color:var(--az-muted); border-bottom:1.5px solid var(--az-border); }
+
+  /* ---- flat list rows (payments / transactions / explore) ---- */
+  .md-list > *{ display:flex; align-items:center; gap:.65rem; padding:.75rem 0; border-top:1px solid var(--az-border); text-decoration:none; }
+  .md-list > *:first-child{ border-top:none; padding-top:0; }
+  .md-list > *:last-child{ padding-bottom:0; }
+  .md-row-ic{ width:30px; height:30px; border-radius:.55rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .md-row-ic .material-icons{ font-size:15px; }
+  .md-row-body{ flex:1; min-width:0; }
+  .md-row-title{ font-size:.76rem; font-weight:600; color:var(--az-navy); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .md-row-sub{ font-size:.63rem; color:var(--az-muted); margin-top:.05rem; }
+  .md-row-sub.urgent{ color:#d97706; font-weight:600; }
+  .md-row-amt{ font-size:.76rem; font-weight:700; flex-shrink:0; font-variant-numeric:tabular-nums; }
+  .md-row-amt.neg{ color:#e11d48; }
+  .md-row-amt.pos{ color:var(--az-green); }
+  .md-pay-chip{ font-size:.68rem; font-weight:700; color:var(--az-green); text-decoration:none; flex-shrink:0; margin-left:.3rem; }
+  .md-pay-chip.urgent{ color:#d97706; }
+
+  /* ---- spending: headline number + one segmented bar + colour-coded
+     legend, instead of four stacked bars — reads as a chart, not a list ---- */
+  .md-spend-head{ display:flex; align-items:baseline; gap:.4rem; margin-bottom:.15rem; }
+  .md-spend-total{ font-size:1.35rem; font-weight:800; color:var(--az-navy); letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .md-spend-budget{ font-size:.68rem; color:var(--az-muted); margin-bottom:.9rem; }
+  .md-spend-track{ display:flex; height:8px; border-radius:5px; overflow:hidden; background:var(--az-border); gap:2px; }
+  .md-spend-seg{ height:100%; }
+  .md-spend-legend{ display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin-top:.9rem; }
+  .md-legend-item{ display:flex; align-items:center; gap:.4rem; font-size:.68rem; }
+  .md-legend-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .md-legend-lbl{ color:var(--az-muted); }
+  .md-legend-val{ color:var(--az-navy); font-weight:600; font-variant-numeric:tabular-nums; }
+
+  /* ---- explore: horizontal snap-scroll cards ---- */
+  .md-explore-row{ display:flex; gap:.7rem; overflow-x:auto; scroll-snap-type:x proximity; scrollbar-width:none; margin:0 -.85rem; padding:0 .85rem; }
+  .md-explore-row::-webkit-scrollbar{ display:none; }
+  .md-explore-card{ flex-shrink:0; width:150px; scroll-snap-align:start; background:var(--az-panel,#fff); border:1px solid var(--az-border); border-radius:1rem; padding:.9rem .9rem 1rem; text-decoration:none; }
+  html.dark .md-explore-card{ background:#101d25; }
+  .md-explore-ic{ width:36px; height:36px; border-radius:.7rem; display:flex; align-items:center; justify-content:center; margin-bottom:.65rem; }
+  .md-explore-ic .material-icons{ font-size:18px; }
+  .md-explore-title{ font-size:.75rem; font-weight:700; color:var(--az-navy); line-height:1.25; }
+  .md-explore-sub{ font-size:.63rem; color:var(--az-muted); margin-top:.3rem; line-height:1.35; }
+  .md-explore-pts{ display:inline-block; font-size:.6rem; font-weight:700; color:var(--az-green); margin-top:.4rem; }
+
+  /* ---- bottom tab bar: five equal items, active state is a pill highlight
+     — no raised FAB, so Transfer carries the same weight as everything else ---- */
+  .md-tabbar{ position:fixed; left:0; right:0; bottom:0; z-index:1038; display:flex; justify-content:space-between; padding:.5rem .5rem calc(.5rem + env(safe-area-inset-bottom,0px)); background:#fff; border-top:1px solid var(--az-border); }
+  html.dark .md-tabbar{ background:#111f2b; border-top-color:#243545; }
+  .md-tab{ display:flex; flex-direction:column; align-items:center; gap:.2rem; background:none; border:none; color:var(--az-muted); flex:1; padding:.35rem 0; cursor:pointer; text-decoration:none; }
+  .md-tab-ic{ width:40px; height:22px; border-radius:1rem; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  .md-tab .material-icons, .md-tab .material-icons-outlined{ font-size:19px; }
+  .md-tab-lbl{ font-size:.56rem; font-weight:600; }
+  .md-tab.active{ color:var(--az-navy); }
+  .md-tab.active .md-tab-ic{ background:rgba(26,173,110,.16); color:var(--az-green); }
+  html.dark .md-tab.active{ color:#fff; }
+
+  @media (min-width:520px){
+    .md-tabbar{ width:460px; left:50%; right:auto; transform:translateX(-50%); border-left:1px solid var(--az-border); border-right:1px solid var(--az-border); border-radius:1rem 1rem 0 0; bottom:.75rem; box-shadow:0 10px 30px rgba(22,48,61,.18); }
+  }
+</style>
+</head>
+<body class="pg-retail-mobile">
+
+<!-- ████ TOPBAR ████ -->
+<header class="md-topbar" role="banner">
+  <button class="md-hamburger" onclick="mdOpenMenu()" aria-label="Open menu" title="Menu"><span class="material-icons">menu</span></button>
+  <a class="md-logo" href="retail-dashboard-mobile.html" title="Go to dashboard">
+    <svg width="20" height="20" viewBox="142 0 22 29" aria-hidden="true"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/></svg>
+    <span class="md-logo-word">azentio</span>
+  </a>
+  <div class="md-topbar-right">
+    <a class="md-icon-link" href="all-notifications.html" aria-label="Notifications" title="Notifications">
+      <span class="material-icons-outlined" style="font-size:20px;">notifications</span>
+      <span class="md-bell-dot">3</span>
+    </a>
+    <a class="md-avatar" href="my-profile-details.html" aria-label="My profile" title="Sara Rahman">SR</a>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR (drawer on mobile — real nav, reused as-is) ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Frequently Visited" onclick="toggleSub('sFU','cFU')"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Frequently Visited</span><span class="sb-chevron" id="cFU"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFU" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="transfer-own-accounts.html" class="sb-sub-item">Own Accounts Transfer</a></div>
+  <a href="retail-dashboard-mobile.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="services-report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div>
+  <a href="offer-dining-cashback.html" class="sb-item" data-label="Offers"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Offers</span></a>
+  <button class="sb-item" data-label="Dark Mode" onclick="toggleDarkMode()"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">contrast</span></span><span class="sb-label">Dark Mode</span></button>
+  <a href="../login.html" class="sb-item" data-label="Logout"><span class="sb-icon"><span class="material-icons" style="font-size:18px;">logout</span></span><span class="sb-label">Logout</span></a>
+</nav>
+<div class="md-drawer-foot">azentio · <span id="mdFtYear"></span></div>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="md-shell">
+
+      <!-- balance hero (greeting folded in) -->
+      <div class="md-sec" style="margin-top:.9rem;">
+        <div class="md-hero">
+          <div class="md-hero-top">
+            <div class="md-hero-avatar">SR</div>
+            <div>
+              <div class="md-hero-hi" id="mdGreetTime">Good morning</div>
+              <div class="md-hero-name">Sara Rahman</div>
+            </div>
+            <button class="md-bal-eye" id="mdEyeBtn" onclick="mdToggleBalance()" aria-label="Show or hide balance"><span class="material-icons" id="mdEyeIcon">visibility</span></button>
+          </div>
+          <div class="md-hero-bal-wrap">
+            <div class="md-bal-lbl">Total Balance</div>
+            <div><span class="md-bal-cur">AED</span><span class="md-bal-amt" id="mdBalAmt">248,350.00</span></div>
+            <div class="md-bal-avail">Available &nbsp;<b id="mdAvailAmt">AED 241,800.00</b></div>
+          </div>
+          <div class="md-acct-chips">
+            <a href="accounts.html" class="md-acct-chip"><span class="md-acct-dot" style="background:#2ed88e;"></span><span class="md-acct-chip-lbl">Current</span><span class="md-acct-chip-val" id="mdCurAmt">AED 84,200.00</span></a>
+            <a href="accounts.html" class="md-acct-chip"><span class="md-acct-dot" style="background:#4da6ff;"></span><span class="md-acct-chip-lbl">Term Deposit</span><span class="md-acct-chip-val" id="mdTdAmt">AED 22,150.00</span></a>
+          </div>
+        </div>
+        <div class="md-qa-row">
+          <a class="md-qa" href="transfer-own-accounts.html"><span class="md-qa-ic"><span class="material-icons">sync_alt</span></span><span class="md-qa-lbl">Transfer</span></a>
+          <a class="md-qa" href="payments-bill-payment.html"><span class="md-qa-ic"><span class="material-icons">receipt_long</span></span><span class="md-qa-lbl">Pay Bills</span></a>
+          <a class="md-qa" href="account-statement.html"><span class="md-qa-ic"><span class="material-icons">description</span></span><span class="md-qa-lbl">Statement</span></a>
+          <a class="md-qa" href="term-deposit-account-opening.html"><span class="md-qa-ic"><span class="material-icons">add_circle</span></span><span class="md-qa-lbl">Open TD</span></a>
+          <button class="md-qa" onclick="mdOpenMenu()"><span class="md-qa-ic"><span class="material-icons">more_horiz</span></span><span class="md-qa-lbl">More</span></button>
+        </div>
+      </div>
+
+      <!-- offer carousel -->
+      <div class="md-sec">
+        <div class="md-offer-wrap">
+          <div class="md-offer-track" id="mdOfferTrack">
+            <div class="md-offer-slide s1">
+              <div>
+                <span class="md-offer-tag" style="background:rgba(255,255,255,.2);color:#fff;">Limited time</span>
+                <div class="md-offer-title" style="color:#fff;">Personal Loan at 3.49% p.a.</div>
+                <div class="md-offer-sub" style="color:rgba(255,255,255,.85);">Up to AED 500,000 · Instant approval</div>
+                <a href="financing-facility-request.html" class="md-offer-cta" style="background:#00538A;color:#fff;">Apply now</a>
+              </div>
+            </div>
+            <div class="md-offer-slide s2">
+              <div>
+                <span class="md-offer-tag" style="background:rgba(0,0,0,.12);color:#16303d;">Best rate</span>
+                <div class="md-offer-title" style="color:#16303d;">5.5% p.a. Fixed Deposit</div>
+                <div class="md-offer-sub" style="color:#334155;">12-month term · No minimum balance</div>
+                <a href="term-deposit-account-opening.html?tenure=365&amp;rate=5.50&amp;amount=22150&amp;source=bestrate" class="md-offer-cta" style="background:#16303d;color:#fff;">Open deposit</a>
+              </div>
+            </div>
+            <div class="md-offer-slide s3">
+              <div>
+                <span class="md-offer-tag" style="background:rgba(255,255,255,.15);color:#fff;">Exclusive</span>
+                <div class="md-offer-title" style="color:#fff;">10% Cashback on Dining</div>
+                <div class="md-offer-sub" style="color:rgba(255,255,255,.85);">Gold Mastercard · Valid till Dec 2026</div>
+                <a href="offer-dining-cashback.html" class="md-offer-cta" style="background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.4);">View offer</a>
+              </div>
+            </div>
+          </div>
+          <div class="md-offer-dots" id="mdOfferDots">
+            <button class="md-offer-dot on" onclick="mdOfferGo(0)" aria-label="Slide 1"></button>
+            <button class="md-offer-dot" onclick="mdOfferGo(1)" aria-label="Slide 2"></button>
+            <button class="md-offer-dot" onclick="mdOfferGo(2)" aria-label="Slide 3"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- my cards -->
+      <div class="md-sec">
+        <div class="md-sec-hdr">
+          <span class="md-sec-title">My Cards</span>
+          <a class="md-sec-link" href="cards-my-cards.html">View all<span class="material-icons">chevron_right</span></a>
+        </div>
+        <div class="md-cc-wrap">
+          <div class="md-cc-track" id="mdCardTrack">
+            <div class="md-cc-card">
+              <div class="md-card-visual visa">
+                <div class="md-card-top"><span class="md-card-badge">Active</span><span class="md-card-brand">VISA</span></div>
+                <div class="md-card-num">•••• •••• •••• 5678</div>
+                <div class="md-card-bottom"><span class="md-card-name">Platinum Visa</span><span class="md-card-exp">Exp 09/27</span></div>
+              </div>
+            </div>
+            <div class="md-cc-card">
+              <div class="md-card-visual mc">
+                <div class="md-card-top"><span class="md-card-badge">Active</span><span class="md-card-brand mc-dots"><span></span><span></span></span></div>
+                <div class="md-card-num">•••• •••• •••• 9876</div>
+                <div class="md-card-bottom"><span class="md-card-name">Gold Mastercard</span><span class="md-card-exp">Exp 12/26</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md-cc-dots" id="mdCardDots">
+          <button class="md-cc-dot on" onclick="mdCardGo(0)" aria-label="Card 1"></button>
+          <button class="md-cc-dot" onclick="mdCardGo(1)" aria-label="Card 2"></button>
+        </div>
+        <div class="md-card-stats">
+          <div class="md-card-stats-row">
+            <div><div class="md-card-stats-lbl">Available credit</div><div class="md-card-stats-val" id="mdCardAvail">AED 8,240.00</div></div>
+            <div class="md-card-stats-pct" id="mdCardPct">24% of AED 35,000.00</div>
+          </div>
+          <div class="md-track-bg"><div class="md-track-fill" id="mdCardFill" style="width:24%"></div></div>
+          <div class="md-card-btns">
+            <a href="cards-manage.html" class="md-btn-solid">Manage</a>
+            <a href="account-statement.html" class="md-btn-outline">Statement</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- upcoming payments -->
+      <div class="md-sec">
+        <div class="md-sec-hdr"><span class="md-sec-title">Upcoming Payments</span></div>
+        <div class="md-list">
+          <a href="payments-bill-report.html">
+            <div class="md-row-ic" style="background:#fff4e5;"><span class="material-icons" style="color:#d97706;">bolt</span></div>
+            <div class="md-row-body"><div class="md-row-title">Electricity (DEWA)</div><div class="md-row-sub urgent">Due in 2 days</div></div>
+            <span class="md-pay-chip urgent">AED 210</span>
+          </a>
+          <a href="payments-bill-report.html">
+            <div class="md-row-ic" style="background:#f0fdf8;"><span class="material-icons" style="color:#1aad6e;">wifi</span></div>
+            <div class="md-row-body"><div class="md-row-title">Internet · Etisalat</div><div class="md-row-sub">Due in 5 days</div></div>
+            <span class="md-pay-chip">AED 230</span>
+          </a>
+          <a href="cards-settlement-my.html">
+            <div class="md-row-ic" style="background:#f0fdf8;"><span class="material-icons" style="color:#1aad6e;">credit_card</span></div>
+            <div class="md-row-body"><div class="md-row-title">Credit Card Bill</div><div class="md-row-sub">Due in 8 days</div></div>
+            <span class="md-pay-chip">AED 1,440</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- recent transactions -->
+      <div class="md-sec">
+        <div class="md-sec-hdr"><span class="md-sec-title">Recent Transactions</span><a class="md-sec-link" href="transaction-history.html">View all<span class="material-icons">chevron_right</span></a></div>
+        <div class="md-list">
+          <div>
+            <div class="md-row-ic" style="background:#edf9f4;"><span class="material-icons" style="color:#1AAD6E;">directions_car</span></div>
+            <div class="md-row-body"><div class="md-row-title">Careem</div><div class="md-row-sub">Today, 10:30 AM</div></div>
+            <div class="md-row-amt neg">− 45.00</div>
+          </div>
+          <div>
+            <div class="md-row-ic" style="background:#edf9f4;"><span class="material-icons" style="color:#1AAD6E;">account_balance</span></div>
+            <div class="md-row-body"><div class="md-row-title">Salary Credit</div><div class="md-row-sub">Yesterday, 09:15 AM</div></div>
+            <div class="md-row-amt pos">+ 18,500.00</div>
+          </div>
+          <div>
+            <div class="md-row-ic" style="background:#edf9f4;"><span class="material-icons" style="color:#1AAD6E;">shopping_bag</span></div>
+            <div class="md-row-body"><div class="md-row-title">Amazon.ae</div><div class="md-row-sub">Yesterday, 08:45 PM</div></div>
+            <div class="md-row-amt neg">− 125.50</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- spending analysis -->
+      <div class="md-sec">
+        <div class="md-sec-hdr"><span class="md-sec-title">Spending Analysis</span><span style="font-size:.63rem;color:var(--az-muted);">This month</span></div>
+        <div>
+          <div class="md-spend-head"><span class="md-spend-total">AED 4,294.00</span><span style="font-size:.7rem;color:var(--az-muted);">spent</span></div>
+          <div class="md-spend-budget">71% of your AED 6,000.00 monthly budget</div>
+          <div class="md-spend-track">
+            <div class="md-spend-seg" style="width:32%;background:#64748b;"></div>
+            <div class="md-spend-seg" style="width:24%;background:#1AAD6E;"></div>
+            <div class="md-spend-seg" style="width:18%;background:#0284c7;"></div>
+            <div class="md-spend-seg" style="width:15%;background:#f59e0b;"></div>
+          </div>
+          <div class="md-spend-legend">
+            <div class="md-legend-item"><span class="md-legend-dot" style="background:#64748b;"></span><span class="md-legend-lbl">Housing</span><span class="md-legend-val">AED 1,543.00</span></div>
+            <div class="md-legend-item"><span class="md-legend-dot" style="background:#1AAD6E;"></span><span class="md-legend-lbl">Food &amp; Dining</span><span class="md-legend-val">AED 1,158.00</span></div>
+            <div class="md-legend-item"><span class="md-legend-dot" style="background:#0284c7;"></span><span class="md-legend-lbl">Transport</span><span class="md-legend-val">AED 869.00</span></div>
+            <div class="md-legend-item"><span class="md-legend-dot" style="background:#f59e0b;"></span><span class="md-legend-lbl">Shopping</span><span class="md-legend-val">AED 724.00</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- explore more -->
+      <div class="md-sec">
+        <div class="md-sec-hdr"><span class="md-sec-title">Explore More</span></div>
+        <div class="md-explore-row">
+          <a href="#" class="md-explore-card">
+            <div class="md-explore-ic" style="background:#edf9f4;"><span class="material-icons" style="color:#1AAD6E;">flight</span></div>
+            <div class="md-explore-title">Visa Airport Companion</div>
+            <div class="md-explore-sub">Airport &amp; travel benefits</div>
+          </a>
+          <a href="#" class="md-explore-card">
+            <div class="md-explore-ic" style="background:#e8f3fb;"><span class="material-icons" style="color:#00538A;">stars</span></div>
+            <div class="md-explore-title">Rewards Hub</div>
+            <div class="md-explore-sub">Travel, shopping &amp; lifestyle</div>
+            <div class="md-explore-pts">17,345 pts</div>
+          </a>
+          <a href="#" class="md-explore-card">
+            <div class="md-explore-ic" style="background:#edf9f4;"><span class="material-icons" style="color:#1AAD6E;">person_add</span></div>
+            <div class="md-explore-title">Invite &amp; Earn</div>
+            <div class="md-explore-sub">Refer a friend, earn rewards</div>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /md-shell -->
+  </main>
+</div>
+
+<!-- ████ BOTTOM TAB BAR ████ -->
+<nav class="md-tabbar" aria-label="Primary">
+  <a class="md-tab active" href="retail-dashboard-mobile.html"><span class="md-tab-ic"><span class="material-icons">home</span></span><span class="md-tab-lbl">Home</span></a>
+  <a class="md-tab" href="accounts.html"><span class="md-tab-ic"><span class="material-icons-outlined">account_balance_wallet</span></span><span class="md-tab-lbl">Accounts</span></a>
+  <a class="md-tab" href="transfer-own-accounts.html"><span class="md-tab-ic"><span class="material-icons-outlined">sync_alt</span></span><span class="md-tab-lbl">Transfer</span></a>
+  <a class="md-tab" href="cards-my-cards.html"><span class="md-tab-ic"><span class="material-icons-outlined">credit_card</span></span><span class="md-tab-lbl">Cards</span></a>
+  <button class="md-tab" onclick="mdOpenMenu()"><span class="md-tab-ic"><span class="material-icons-outlined">apps</span></span><span class="md-tab-lbl">More</span></button>
+</nav>
+
+<script src="../js/app.js?v=3"></script>
+<script src="../js/shared.js"></script>
+<script>
+
+  /* Own drawer open/close — deliberately not app.js's toggleSidebar(),
+     which only slides the sidebar in below a 767px window width. This page
+     is mobile UI at any browser width, so the drawer must open the same
+     way whether the window is 375px or 1400px wide. */
+  function mdOpenMenu(){
+    var sb = document.getElementById('sidebar');
+    if (!sb) return;
+    sb.classList.remove('sb-collapsed');
+    sb.classList.add('mobile-open');
+    mdOverlay(true);
+  }
+  function mdCloseMenu(){
+    var sb = document.getElementById('sidebar');
+    if (sb) sb.classList.remove('mobile-open');
+    mdOverlay(false);
+  }
+  function mdOverlay(show){
+    var ov = document.getElementById('mdSidebarOverlay');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'mdSidebarOverlay';
+      ov.className = 'md-sidebar-backdrop';
+      ov.onclick = mdCloseMenu;
+      document.body.appendChild(ov);
+    }
+    ov.classList.toggle('on', show);
+  }
+
+  // time-based greeting + drawer footer year
+  (function(){
+    var d = new Date();
+    var h = d.getHours();
+    var greet = h < 12 ? 'Good morning' : (h < 18 ? 'Good afternoon' : 'Good evening');
+    var el = document.getElementById('mdGreetTime');
+    if (el) el.textContent = greet;
+    var y = document.getElementById('mdFtYear');
+    if (y) y.textContent = d.getFullYear();
+  })();
+
+  // balance visibility
+  var mdBalVisible = true;
+  var MD_DOTS = '••••••';
+  function mdToggleBalance(){
+    mdBalVisible = !mdBalVisible;
+    var amt = document.getElementById('mdBalAmt');
+    var avail = document.getElementById('mdAvailAmt');
+    var cur = document.getElementById('mdCurAmt');
+    var td = document.getElementById('mdTdAmt');
+    var icon = document.getElementById('mdEyeIcon');
+    [amt,avail,cur,td].forEach(function(el){
+      if(!el) return;
+      if(!el.getAttribute('data-orig')) el.setAttribute('data-orig', el.textContent);
+    });
+    if(mdBalVisible){
+      amt.textContent = amt.getAttribute('data-orig');
+      avail.textContent = avail.getAttribute('data-orig');
+      cur.textContent = cur.getAttribute('data-orig');
+      td.textContent = td.getAttribute('data-orig');
+    } else {
+      amt.textContent = MD_DOTS; avail.textContent = MD_DOTS; cur.textContent = MD_DOTS; td.textContent = MD_DOTS;
+    }
+    icon.textContent = mdBalVisible ? 'visibility' : 'visibility_off';
+  }
+
+  // generic swipe/dot carousel factory
+  function mdCarousel(trackId, dotsId, count, onChange){
+    var track = document.getElementById(trackId);
+    var dots = document.getElementById(dotsId) ? Array.from(document.getElementById(dotsId).children) : [];
+    var idx = 0, startX = 0, dx = 0, dragging = false;
+    function render(){
+      track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      dots.forEach(function(d,i){ d.classList.toggle('on', i===idx); });
+      if(onChange) onChange(idx);
+    }
+    function go(i){ idx = (i+count)%count; render(); }
+    track.addEventListener('pointerdown', function(e){ dragging = true; startX = e.clientX; track.style.transition='none'; });
+    window.addEventListener('pointermove', function(e){ if(!dragging) return; dx = e.clientX - startX; track.style.transform = 'translateX(calc(-' + (idx*100) + '% + ' + dx + 'px))'; });
+    window.addEventListener('pointerup', function(){
+      if(!dragging) return;
+      dragging = false; track.style.transition='';
+      if(dx < -40) idx = (idx+1)%count; else if(dx > 40) idx = (idx-1+count)%count;
+      dx = 0; render();
+    });
+    render();
+    return go;
+  }
+  var mdOfferGo = mdCarousel('mdOfferTrack','mdOfferDots',3);
+
+  var mdCardData = [
+    { avail:'AED 8,240.00', pct:24, limit:'AED 35,000.00' },
+    { avail:'AED 5,810.00', pct:27, limit:'AED 8,000.00' }
+  ];
+  var mdCardGo = mdCarousel('mdCardTrack','mdCardDots',2,function(i){
+    var d = mdCardData[i];
+    document.getElementById('mdCardAvail').textContent = d.avail;
+    document.getElementById('mdCardPct').textContent = d.pct + '% of ' + d.limit;
+    document.getElementById('mdCardFill').style.width = d.pct + '%';
+  });
+
+</script>
+</body>
+</html>

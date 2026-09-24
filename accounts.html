@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="azentio Banking – My Accounts"/>
+  <title>azentio – My Accounts</title>
+  <!-- Bootstrap 5 (local) -->
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <!-- Roboto Font (local @font-face + system fallback) -->
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <!-- Flag Icons (local self-contained) -->
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <!-- Date Picker styles -->
+  <link rel="stylesheet" href="../css/datepicker.css"/>
+  <!-- Application styles -->
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ ACCOUNTS — Modern UX (max 3 accounts) ══ */
+:root {
+  --az-green: #1aad6e;
+  --az-green-light: #edf9f4;
+}
+
+.page-top-bar { margin-bottom: 0; }
+
+/* Content card wrapper — no longer a bordered box, just spacing */
+.content-card { background: transparent; border: none; box-shadow: none; padding: 0; }
+
+/* Tabs — underline style matching retail dashboard */
+.tabs-header-row { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: .875rem .875rem 0 0; padding: 0 1.25rem; }
+.az-tabs { display: flex; gap: 0; }
+.az-tab { background: transparent; border: none; border-bottom: 3px solid transparent; padding: 1rem .25rem; margin-right: 1.75rem; font-size: .875rem; font-weight: 700; color: var(--az-muted,#707070); cursor: pointer; transition: all .2s; margin-bottom: -1px; }
+.az-tab:hover { color: var(--az-navy,#16303d); }
+.az-tab.active { color: var(--az-green); border-bottom-color: var(--az-green); }
+
+/* View toggle removed for simplified 3-account view; keep bal-toggle style */
+.view-toggle { display: none !important; }
+
+/* Body panel below tabs */
+#tabGeneral, #tabTerm { background: #fff; border-radius: 0 0 .875rem .875rem; padding: 1.25rem; }
+
+/* Filter bar removed (not needed for ≤3 accounts) */
+.acct-filter-bar { display: none !important; }
+.acct-summary-strip { display: none !important; }
+
+.bal-masked { font-size: 1.1rem; letter-spacing: .18em; vertical-align: middle; }
+.acct-field .lbl { font-size: .63rem; color: var(--az-muted,#707070); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .2rem; font-weight: 500; }
+.acct-field .val { font-size: .8rem; font-weight: 600; color: var(--az-navy,#16303d); white-space: nowrap; }
+
+/* ── Accounts hub — Quick Access + Active Account (max 3 accounts) ── */
+.acct-hub { display: grid; grid-template-columns: 260px 1fr; gap: 1.25rem; align-items: start; }
+.qa-panel { border: 1px solid var(--az-border,#e2e8ec); border-radius: 1rem; background: #fff; padding: 1rem; }
+.qa-hdr { font-size: .68rem; font-weight: 700; letter-spacing: .06em; color: var(--az-muted,#707070); text-transform: uppercase; margin-bottom: .75rem; padding: 0 .25rem; }
+.qa-list { display: flex; flex-direction: column; gap: .625rem; }
+.qa-item { display: block; width: 100%; text-align: left; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .75rem; background: #f8fafb; padding: .75rem .875rem; cursor: pointer; transition: all .15s; font-family: 'Roboto',sans-serif; }
+.qa-item:hover { border-color: var(--az-green); }
+.qa-item.active { border-color: var(--az-green); background: var(--az-green-light); box-shadow: 0 0 0 1px var(--az-green); }
+.qa-item-top { display: flex; align-items: center; gap: .375rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; margin-bottom: .35rem; }
+.qa-item.accent-green .qa-item-top { color: var(--az-green); }
+.qa-item.accent-blue .qa-item-top { color: #2563eb; }
+.qa-item.accent-purple .qa-item-top { color: #7c3aed; }
+.qa-item .val { font-size: 1rem; font-weight: 700; color: var(--az-navy,#16303d); margin-bottom: .15rem; display: block; }
+.qa-item-type { font-size: .7rem; color: var(--az-muted,#707070); margin-bottom: .35rem; }
+
+.acct-main-col { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* Hero — the active account */
+.acct-hero { border-radius: 1.1rem; padding: 1.5rem 1.75rem; background: linear-gradient(135deg,#1aad6e,#0f7a4d); color: #fff; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(26,173,110,.25); }
+.acct-hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,.08); }
+.hero-eyebrow { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .85; margin-bottom: .6rem; position: relative; z-index: 1; }
+.hero-name-row { display: flex; align-items: center; gap: .5rem; font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem; position: relative; z-index: 1; }
+.hero-name-row .material-icons { font-size: 20px; background: rgba(255,255,255,.18); width: 32px; height: 32px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hero-name-row .edit-name-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; opacity: .85; }
+.hero-name-row .edit-name-btn:hover { opacity: 1; }
+.hero-name-row .edit-name-btn .material-icons { font-size: 14px; color: #fff; background: none; width: auto; height: auto; border-radius: 0; }
+.hero-currency-chip { display: inline-flex; align-items: center; gap: .3rem; font-size: .85rem; font-weight: 700; opacity: .9; margin-left: .25rem; }
+.hero-name-row .ie-wrap .ie-btn .material-icons { font-size: 16px; color: #fff; }
+.hero-bal-row { display: flex; flex-wrap: wrap; gap: 1.75rem; position: relative; z-index: 1; margin-bottom: 1.4rem; }
+.hero-bal-block { position: relative; z-index: 1; }
+.acct-hero .hero-bal-row .val { font-size: 1.6rem; }
+.acct-hero .lbl { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .8; margin-bottom: .35rem; color: #fff; }
+.acct-hero .val { font-size: 2.1rem; font-weight: 700; letter-spacing: -.02em; color: #fff; white-space: normal; }
+.hero-foot-row { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; gap: .75rem; flex-wrap: wrap; }
+.hero-iban { font-size: .78rem; opacity: .9; display: flex; align-items: center; gap: .2rem; }
+.hero-iban .copy-iban-btn { color: #fff; }
+.hero-status-pill { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.35); border-radius: 2rem; padding: .3rem .8rem; font-size: .72rem; font-weight: 700; display: inline-flex; align-items: center; gap: .3rem; white-space: nowrap; }
+.hero-status-pill .material-icons { font-size: 14px; }
+.hero-td-badge { font-size: .68rem; font-weight: 700; background: rgba(255,255,255,.18); width: 32px; height: 32px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hero-stats-row { display: flex; gap: 1.75rem; flex-wrap: wrap; position: relative; z-index: 1; margin-bottom: 1.1rem; }
+.hero-stat-chip .hsc-lbl { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .8; margin-bottom: .35rem; }
+.hero-stat-chip .hsc-val { font-size: .85rem; font-weight: 700; }
+.hero-progress { position: relative; z-index: 1; margin-bottom: 1.1rem; }
+.hero-progress .hp-track { height: 6px; background: rgba(255,255,255,.25); border-radius: 99px; overflow: hidden; }
+.hero-progress .hp-fill { height: 100%; background: #fff; border-radius: 99px; }
+.hero-progress .hp-lbl { font-size: .72rem; opacity: .9; margin-top: .4rem; }
+
+/* Account actions panel — sectioned quick-action list below the hero */
+.acts-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; }
+.acts-sec-hdr { display: flex; align-items: center; gap: .3rem; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--az-muted,#707070); margin-bottom: .35rem; }
+.acts-sec-hdr .material-icons { font-size: 15px; color: var(--az-green); }
+.acts-item { display: block; padding: .5rem; margin: 0 -.5rem; width: calc(100% + 1rem); border: none; background: none; text-align: left; text-decoration: none !important; color: #00538A; font-size: .82rem; font-weight: 400; cursor: pointer; border-radius: .5rem; transition: background .12s; font-family: 'Roboto',sans-serif; }
+.acts-item:hover { background: var(--az-green-light); color: #00538A; }
+
+@media (max-width: 700px) {
+  .acts-cols { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 420px) {
+  .acts-cols { grid-template-columns: 1fr; }
+}
+
+/* Account information + recent transactions */
+.acct-info-tx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.aic-panel { border: 1px solid var(--az-border,#e2e8ec); border-radius: 1rem; background: #fff; padding: 1.25rem 1.5rem; }
+.aic-hdr { display: flex; align-items: center; gap: .5rem; font-size: .9rem; font-weight: 700; color: var(--az-navy,#16303d); margin-bottom: 1rem; }
+.aic-hdr .material-icons { font-size: 18px; color: var(--az-green); }
+.aic-row { display: flex; align-items: center; justify-content: space-between; padding: .7rem 0; border-bottom: 1px solid #f0f4f7; font-size: .82rem; }
+.aic-row:last-child { border-bottom: none; }
+.aic-lbl { color: var(--az-muted,#707070); }
+.aic-val { font-weight: 700; color: var(--az-navy,#16303d); }
+.aic-val.status-active { color: var(--az-green); }
+
+.tx-row { display: flex; align-items: center; gap: .625rem; padding: .75rem 0; border-bottom: 1px solid #f0f4f7; }
+.tx-row:last-child { border-bottom: none; }
+.tx-icon-wrap { width: 32px; height: 32px; border-radius: 8px; background: var(--az-green-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tx-icon-wrap .material-icons { font-size: 16px; color: var(--az-green); }
+.tx-info { flex: 1; min-width: 0; }
+.tx-title { font-size: .8rem; font-weight: 600; color: var(--az-navy,#16303d); }
+.tx-sub { font-size: .7rem; color: var(--az-muted,#707070); margin-top: .1rem; }
+.tx-amt { font-size: .82rem; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+.tx-amt.pos { color: var(--az-green); }
+.tx-amt.neg { color: #e11d48; }
+
+@media (max-width: 900px) {
+  .acct-hub { grid-template-columns: 1fr; }
+  .acct-info-tx-grid { grid-template-columns: 1fr; }
+}
+
+/* Maturity progress panel */
+.mp-track { height: 10px; background: #e2e8ec; border-radius: 99px; overflow: hidden; margin: .5rem 0 .75rem; }
+.mp-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#1aad6e,#2ed88e); }
+.mp-dates { display: flex; justify-content: space-between; font-size: .72rem; color: var(--az-muted,#707070); margin-bottom: 1rem; }
+
+/* Utility */
+.copy-iban-btn { background: none; border: none; padding: 0 0 0 5px; cursor: pointer; color: var(--az-muted,#707070); vertical-align: middle; line-height: 1; position: relative; }
+.copy-iban-btn:hover { color: var(--az-green); }
+.copy-iban-btn .material-icons { font-size: 13px; vertical-align: middle; }
+.hero-iban .copy-iban-btn:hover { color: #fff; opacity: .7; }
+
+/* Material Icons sizing inside icons previously rendered as <img> */
+.ctx-item .material-icons { font-size: 18px; color: var(--az-muted,#707070); flex-shrink: 0; }
+.m-tab .material-icons { font-size: 16px; }
+.tx-icon .material-icons { font-size: 22px; color: var(--az-blue,#2563eb); }
+.ie-btn .material-icons { font-size: 16px; }
+#heroNameArea, #tdHeroNameArea { display: inline-flex; align-items: center; gap: .4rem; }
+.copy-tip { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); background: var(--az-navy,#16303d); color: #fff; font-size: .65rem; padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .2s; font-family: 'Roboto',sans-serif; }
+.acct-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--az-navy,#16303d); color: #fff; padding: .7rem 1.25rem; border-radius: .5rem; font-size: .82rem; font-weight: 600; font-family: 'Roboto',sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 99999; }
+.acct-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.bal-toggle-btn { background: none; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .25rem; cursor: pointer; color: var(--az-muted,#707070); padding: 0 .75rem; height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; gap: .25rem; font-size: .75rem; font-family: 'Roboto',sans-serif; line-height: 1; transition: all .15s; }
+.bal-toggle-btn:hover { color: var(--az-green); border-color: var(--az-green); }
+.bal-toggle-btn .material-icons { font-size: 16px; }
+.btn-open-account { background: var(--az-navy,#16303d)!important; color: #fff!important; border: none; border-radius: .5rem; padding: .7rem 1.75rem; font-size: .9rem; font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: opacity .2s; letter-spacing: .01em; box-shadow: 0 2px 8px rgba(22,48,61,.3); }
+.btn-open-account:hover { opacity: .92; }
+.btn-open-account .material-icons { font-size: 17px; }
+
+/* Empty state (fewer than 3 accounts) */
+.acct-empty-slot { border: 2px dashed var(--az-border,#e2e8ec); border-radius: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; padding: 2rem 1rem; color: var(--az-muted); text-align: center; min-height: 220px; }
+.acct-empty-slot .material-icons { font-size: 2rem; color: var(--az-green); opacity: .6; }
+.acct-empty-slot .ae-title { font-size: .85rem; font-weight: 700; color: var(--az-navy); }
+.acct-empty-slot .ae-sub { font-size: .75rem; }
+.acct-empty-slot a { margin-top: .25rem; font-size: .78rem; font-weight: 700; color: var(--az-green); text-decoration: none; }
+
+</style>
+</head>
+<body>
+<!-- ████ HEADER ████ -->
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
+  <g id="logo" transform="translate(0.275 -0.84)">
+    <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12570" data-name="Path 12570" d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12571" data-name="Path 12571" d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12572" data-name="Path 12572" d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12573" data-name="Path 12573" d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12574" data-name="Path 12574" d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12575" data-name="Path 12575" d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
+    <path id="Path_12576" data-name="Path 12576" d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
+    <path id="Path_12577" data-name="Path 12577" d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
+  </g>
+</svg></span>
+  </div>
+  <div class="hdr-right">
+    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
+      <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-label="3 notifications">3</span>
+    </button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+          
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Contact Us" aria-label="Contact Us"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
+    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <div class="hdr-div" role="separator"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 Jul, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:42
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            My Tasks
+          </a>
+          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ████ SIDEBAR ████ -->
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sb-search-wrap">
+    <span class="material-icons sb-search-icon">search</span>
+    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
+    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item active-section" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron open" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item active">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub" style="display:none">
+    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
+    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+
+<!-- ████ MAIN ████ -->
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+<div class="az-bc">
+  <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><span class="cur">My Accounts</span>
+</div>
+<div class="page-top-bar">
+  <h1 class="page-title">My Accounts</h1>
+</div>
+<div class="content-card">
+  <div class="tabs-header-row">
+    <div class="az-tabs" role="tablist">
+      <button class="az-tab active" id="tabGenBtn" onclick="switchTab('general');acctsToggleCta('general')" role="tab" aria-selected="true" aria-controls="tabGeneral">General Accounts</button>
+      <button class="az-tab" id="tabTermBtn" onclick="switchTab('term');acctsToggleCta('term')" role="tab" aria-selected="false" aria-controls="tabTerm">Term Deposit Accounts</button>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button class="bal-toggle-btn" id="balToggleBtn" onclick="toggleBalVisibility()" title="Toggle balance visibility" aria-label="Toggle balance visibility"><span class="material-icons">visibility</span> Balance</button>
+      <a href="general-account-opening.html" class="btn-open-account" id="ctaGeneral"><span class="material-icons">add_circle_outline</span> Open New General Account</a>
+      <a href="term-deposit-account-opening.html" class="btn-open-account hidden" id="ctaTerm"><span class="material-icons">add_circle_outline</span> Create Term Deposit</a>
+    </div>
+  </div>
+  <!-- General Accounts Tab -->
+  <div id="tabGeneral" role="tabpanel" aria-labelledby="tabGenBtn">
+    <div class="acct-hub">
+      <div class="qa-panel">
+        <div class="qa-hdr">Quick Access</div>
+        <div class="qa-list" id="qaList"></div>
+      </div>
+      <div class="acct-main-col">
+        <div class="acct-hero" id="acctHero">
+          <div class="hero-eyebrow">Your Active Account</div>
+          <div class="hero-name-row">
+            <span class="material-icons" id="heroIcon">account_balance_wallet</span>
+            <span id="heroNameArea"></span>
+            <span class="hero-currency-chip"><span class="fi fi-us" id="heroFlag"></span> <span id="heroCurrency">USD</span></span>
+          </div>
+          <div class="hero-bal-row">
+            <div class="acct-field hero-bal-block">
+              <div class="lbl">Current Balance</div>
+              <div class="val" id="heroCurBal">5,240.50 USD</div>
+            </div>
+            <div class="acct-field hero-bal-block">
+              <div class="lbl">Available Balance</div>
+              <div class="val" id="heroBal">5,240.50 USD</div>
+            </div>
+          </div>
+          <div class="hero-foot-row">
+            <div class="hero-iban">IBAN: <span id="heroIban">IBAN8000</span><button class="copy-iban-btn" onclick="copyIBAN(this,accountsData[currentAcc].iban)" title="Copy account number" aria-label="Copy account number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div>
+            <span class="hero-status-pill" id="heroStatus"><span class="material-icons">check_circle</span> Active</span>
+          </div>
+        </div>
+
+        <div class="aic-panel">
+          <div class="aic-hdr"><span class="material-icons">bolt</span> Account Actions</div>
+          <div class="acts-cols">
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">swap_horiz</span> Transfers</div>
+              <button class="acts-item" onclick="openTransfer()">Transfer Money</button>
+              <a href="transfer-pending-list.html" class="acts-item">View Pending Transfers</a>
+            </div>
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">assignment</span> Requests</div>
+              <button class="acts-item" onclick="requestChequebook()">Request Chequebook</button>
+              <a href="cards-debit-request.html" class="acts-item">Request Debit Card</a>
+              <a href="cards-credit-request.html" class="acts-item">Request Credit Card</a>
+            </div>
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">description</span> Statements</div>
+              <a href="services-e-statement-request.html" class="acts-item">Request e-Statement</a>
+              <a href="request-hard-copy-statement.html" class="acts-item">Request Hard Copy Statement</a>
+            </div>
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">info</span> Account Information</div>
+              <button class="acts-item" onclick="shareAccountDetails()">Share Account Details</button>
+              <button class="acts-item" onclick="downloadRibReport()">Download RIB/IBAN Report</button>
+              <button class="acts-item" onclick="openQR()">Generate QR Code</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="acct-info-tx-grid">
+          <div class="aic-panel">
+            <div class="aic-hdr"><span class="material-icons">info</span> Account Information</div>
+            <div class="aic-row"><span class="aic-lbl">Account Holder</span><span class="aic-val" id="infoHolder">Sara Rahman</span></div>
+            <div class="aic-row"><span class="aic-lbl">Account Number</span><span class="aic-val" id="infoNumber">IBAN8000</span></div>
+            <div class="aic-row"><span class="aic-lbl">Account Type</span><span class="aic-val" id="infoType">Current Account</span></div>
+            <div class="aic-row"><span class="aic-lbl">Status</span><span class="aic-val status-active" id="infoStatus">&#10003; Active</span></div>
+          </div>
+          <div class="aic-panel">
+            <div class="aic-hdr"><span class="material-icons">history</span> Recent Transactions</div>
+            <div id="acctTxList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Term Deposit Tab -->
+  <div id="tabTerm" class="hidden" role="tabpanel" aria-labelledby="tabTermBtn">
+    <div class="acct-hub">
+      <div class="qa-panel">
+        <div class="qa-hdr">Quick Access</div>
+        <div class="qa-list" id="tdQaList"></div>
+      </div>
+      <div class="acct-main-col">
+        <div class="acct-hero" id="tdHero">
+          <div class="hero-eyebrow">Your Active Term Deposit</div>
+          <div class="hero-name-row">
+            <span class="hero-td-badge" id="tdHeroIcon">12M</span>
+            <span id="tdHeroNameArea"></span>
+            <span class="hero-currency-chip"><span class="fi fi-us"></span> <span id="tdHeroCurrency">USD</span></span>
+          </div>
+          <div class="hero-stats-row">
+            <div class="hero-stat-chip"><div class="hsc-lbl">Principal</div><div class="hsc-val" id="tdHeroPrincipal">25,000.00 USD</div></div>
+            <div class="hero-stat-chip"><div class="hsc-lbl">Interest Rate</div><div class="hsc-val" id="tdHeroRate">4.50% p.a.</div></div>
+            <div class="hero-stat-chip"><div class="hsc-lbl">Tenure</div><div class="hsc-val" id="tdHeroTenure">12 Months</div></div>
+          </div>
+          <div class="acct-field hero-bal-block">
+            <div class="lbl">Maturity Value</div>
+            <div class="val" id="tdHeroMaturityVal">26,125.00 USD</div>
+          </div>
+          <div class="hero-progress">
+            <div class="hp-track"><div class="hp-fill" id="tdHeroProgFill" style="width:85%"></div></div>
+            <div class="hp-lbl" id="tdHeroProgLbl">85% elapsed · Matures 31 Dec 2025</div>
+          </div>
+          <div class="hero-foot-row">
+            <div class="hero-iban">Account No: <span id="tdHeroAcctNo">TD001-2024</span></div>
+            <span class="hero-status-pill" id="tdHeroStatus"><span class="material-icons">check_circle</span> Active</span>
+          </div>
+        </div>
+
+        <div class="aic-panel">
+          <div class="aic-hdr"><span class="material-icons">bolt</span> Account Actions</div>
+          <div class="acts-cols">
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">assignment</span> Requests</div>
+              <a href="change-maturity-instructions.html" class="acts-item">Change Maturity Instructions</a>
+              <a href="break-term-deposit.html" class="acts-item">Break Term Deposit</a>
+            </div>
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">description</span> Statements</div>
+              <a href="services-e-statement-request.html" class="acts-item">Request e-Statement</a>
+              <a href="request-hard-copy-statement.html" class="acts-item">Request Hard Copy Statement</a>
+            </div>
+            <div class="acts-sec">
+              <div class="acts-sec-hdr"><span class="material-icons">info</span> Account Information</div>
+              <button class="acts-item" onclick="shareTermDetails()">Share Account Details</button>
+              <button class="acts-item" onclick="downloadTdRibReport()">Download RIB/IBAN Report</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="acct-info-tx-grid">
+          <div class="aic-panel">
+            <div class="aic-hdr"><span class="material-icons">info</span> Deposit Information</div>
+            <div class="aic-row"><span class="aic-lbl">Account Holder</span><span class="aic-val" id="tdInfoHolder">Sara Rahman</span></div>
+            <div class="aic-row"><span class="aic-lbl">Account Number</span><span class="aic-val" id="tdInfoNumber">TD001-2024</span></div>
+            <div class="aic-row"><span class="aic-lbl">Interest Rate</span><span class="aic-val" id="tdInfoRate">4.50% p.a.</span></div>
+            <div class="aic-row"><span class="aic-lbl">Tenure</span><span class="aic-val" id="tdInfoTenure">12 Months</span></div>
+            <div class="aic-row"><span class="aic-lbl">Status</span><span class="aic-val status-active" id="tdInfoStatus">&#10003; Active</span></div>
+          </div>
+          <div class="aic-panel">
+            <div class="aic-hdr"><span class="material-icons">trending_up</span> Maturity Progress</div>
+            <div class="mp-track"><div class="mp-fill" id="tdProgFill" style="width:85%"></div></div>
+            <div class="mp-dates"><span id="tdProgPct">85% elapsed</span><span id="tdProgDate">Matures 31 Dec 2025</span></div>
+            <div class="aic-row"><span class="aic-lbl">Interest Earned to Date</span><span class="aic-val" id="tdInfoEarned">956.25 USD</span></div>
+            <div class="aic-row"><span class="aic-lbl">Expected Maturity Value</span><span class="aic-val" id="tdInfoMaturity">26,125.00 USD</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
+  <footer class="app-footer" role="contentinfo">
+  <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+  <div class="d-flex align-items-center gap-2">
+    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <div class="acc-btns">
+      <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
+      <button class="acc-btn" aria-label="Default font size">A</button>
+      <button class="acc-btn" aria-label="Increase font size">A<sup>+</sup></button>
+      <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()" aria-label="Toggle dark mode">&#9681;</button>
+    </div>
+  </div>
+</footer>
+</div>
+
+<!-- QR Modal -->
+<div class="modal-ov hidden" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+  <div class="az-modal modal-sm text-center" style="padding:28px">
+    <button class="modal-close" onclick="closeModal('qrModal')" aria-label="Close">&#215;</button>
+    <div id="qrModalTitle" class="modal-title text-start">QR Code</div>
+    <div class="d-flex justify-content-center py-3"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><rect x="10" y="10" width="60" height="60" fill="none" stroke="#000" stroke-width="6"/><rect x="22" y="22" width="36" height="36" fill="#000"/><rect x="130" y="10" width="60" height="60" fill="none" stroke="#000" stroke-width="6"/><rect x="142" y="22" width="36" height="36" fill="#000"/><rect x="10" y="130" width="60" height="60" fill="none" stroke="#000" stroke-width="6"/><rect x="22" y="142" width="36" height="36" fill="#000"/><rect x="82" y="10" width="10" height="10" fill="#000"/><rect x="96" y="10" width="10" height="10" fill="#000"/><rect x="110" y="10" width="10" height="10" fill="#000"/><rect x="82" y="24" width="10" height="10" fill="#000"/><rect x="110" y="24" width="10" height="10" fill="#000"/><rect x="96" y="38" width="10" height="10" fill="#000"/><rect x="82" y="52" width="10" height="10" fill="#000"/><rect x="96" y="52" width="10" height="10" fill="#000"/><rect x="110" y="52" width="10" height="10" fill="#000"/><rect x="82" y="82" width="10" height="10" fill="#000"/><rect x="96" y="82" width="10" height="10" fill="#000"/><rect x="82" y="96" width="10" height="10" fill="#000"/><rect x="110" y="96" width="10" height="10" fill="#000"/><rect x="96" y="110" width="10" height="10" fill="#000"/><rect x="110" y="110" width="10" height="10" fill="#000"/><rect x="130" y="82" width="10" height="10" fill="#000"/><rect x="158" y="82" width="10" height="10" fill="#000"/><rect x="130" y="96" width="10" height="10" fill="#000"/><rect x="144" y="96" width="10" height="10" fill="#000"/><rect x="158" y="110" width="10" height="10" fill="#000"/><rect x="82" y="130" width="10" height="10" fill="#000"/><rect x="96" y="130" width="10" height="10" fill="#000"/><rect x="110" y="130" width="10" height="10" fill="#000"/><rect x="82" y="158" width="10" height="10" fill="#000"/><rect x="96" y="158" width="10" height="10" fill="#000"/><rect x="110" y="144" width="10" height="10" fill="#000"/><rect x="130" y="130" width="10" height="10" fill="#000"/><rect x="158" y="130" width="10" height="10" fill="#000"/><rect x="144" y="158" width="10" height="10" fill="#000"/><rect x="130" y="158" width="10" height="10" fill="#000"/><rect x="158" y="158" width="10" height="10" fill="#000"/><rect x="144" y="144" width="10" height="10" fill="#000"/></svg></div>
+    <div class="d-flex gap-3 justify-content-center">
+      <button class="btn-action btn-cancel" onclick="closeModal('qrModal')" style="padding:10px 36px">CLOSE</button>
+      <button class="btn-action btn-submit" style="padding:10px 22px">SAVE TO PHOTOS</button>
+    </div>
+  </div>
+</div>
+<!-- Transfer Modal -->
+<div class="modal-ov hidden" id="transferModal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle">
+  <div class="az-modal modal-md">
+    <button class="modal-close" onclick="closeModal('transferModal')" aria-label="Close">&#215;</button>
+    <div id="transferModalTitle" class="modal-title">Select Transfer Option</div>
+    <div class="modal-tabs" role="tablist">
+      <button class="m-tab active" id="mTabImm" onclick="switchTxTab('imm')" role="tab" aria-selected="true"><span class="material-icons">swap_horiz</span> Immediate Transfer</button>
+      <button class="m-tab" id="mTabSch" onclick="switchTxTab('sch')" role="tab" aria-selected="false"><span class="material-icons">calendar_today</span> Scheduled Transfer</button>
+    </div>
+    <button class="tx-opt sel"><div class="tx-icon"><span class="material-icons">sync_alt</span></div><div><div class="tx-title">Own Account Transfer</div><div class="tx-sub">Transfer between your accounts.</div></div></button>
+    <button class="tx-opt"><div class="tx-icon"><span class="material-icons">person</span></div><div><div class="tx-title">Internal Transfer</div><div class="tx-sub">Transfer within our bank to another user.</div></div></button>
+    <button class="tx-opt"><div class="tx-icon"><span class="material-icons">account_balance</span></div><div><div class="tx-title">Local Country Transfer</div><div class="tx-sub">Transfer to a local bank account.</div></div></button>
+    <button class="tx-opt"><div class="tx-icon"><span class="material-icons">public</span></div><div><div class="tx-title">International Transfer</div><div class="tx-sub">Transfer to an international bank account.</div></div></button>
+    <div class="text-center mt-4"><button class="btn-action btn-cancel" onclick="closeModal('transferModal')" style="padding:10px 60px">CANCEL</button></div>
+  </div>
+</div>
+<!-- Map Modal -->
+<div class="modal-ov hidden" id="mapModal" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle">
+  <div class="az-modal modal-lg">
+    <button class="modal-close" onclick="closeModal('mapModal')" aria-label="Close">&#215;</button>
+    <div id="mapModalTitle" class="modal-title">Locate the Branch</div>
+    <div style="width:100%;height:300px;background:linear-gradient(135deg,#b2dfdb,#e8f5e9);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px;gap:8px"><span class="material-icons" style="font-size:20px">info</span> Map — Branch Locator</div>
+    <div class="text-center mt-4"><button class="btn-action btn-submit" onclick="closeModal('mapModal')" style="padding:10px 60px">OK</button></div>
+  </div>
+</div>
+
+<!-- ████ ACCOUNTS UX JS ████ -->
+<script>
+/* ── Swap top-bar CTA to match active tab ── */
+function acctsToggleCta(t){
+  var cg=document.getElementById('ctaGeneral'), ct=document.getElementById('ctaTerm');
+  if(cg) cg.classList.toggle('hidden', t!=='general');
+  if(ct) ct.classList.toggle('hidden', t!=='term');
+}
+
+/* ── Balance visibility toggle (star mask) ── */
+function toggleBalVisibility(){
+  var maskable=/Balance|Principal|Maturity|Interest Earned/;
+  var balVals=[];
+  document.querySelectorAll('.acct-field').forEach(function(f){
+    var lbl=f.querySelector('.lbl');
+    if(lbl&&maskable.test(lbl.textContent)){
+      var val=f.querySelector('.val');
+      if(val) balVals.push(val);
+    }
+  });
+  document.querySelectorAll('.aic-row').forEach(function(r){
+    var lbl=r.querySelector('.aic-lbl');
+    if(lbl&&maskable.test(lbl.textContent)){
+      var val=r.querySelector('.aic-val');
+      if(val) balVals.push(val);
+    }
+  });
+  var isHiding=balVals.length&&!balVals[0].hasAttribute('data-orig');
+  balVals.forEach(function(val){
+    if(isHiding){
+      val.setAttribute('data-orig',val.textContent.trim());
+      val.textContent='••• ••• ••';
+      val.classList.add('bal-masked');
+    } else {
+      val.textContent=val.getAttribute('data-orig')||val.textContent;
+      val.removeAttribute('data-orig');
+      val.classList.remove('bal-masked');
+    }
+  });
+  var btn=document.getElementById('balToggleBtn');
+  if(btn){var ic=btn.querySelector('.material-icons');
+    if(ic) ic.textContent=isHiding?'visibility_off':'visibility';}
+}
+
+/* ── Copy IBAN ── */
+function copyIBAN(btn,iban){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(iban).then(function(){showCopyTip(btn);});
+  } else {
+    var t=document.createElement('textarea');
+    t.value=iban;document.body.appendChild(t);t.select();
+    document.execCommand('copy');document.body.removeChild(t);
+    showCopyTip(btn);
+  }
+}
+function showCopyTip(btn){
+  var tip=btn.querySelector('.copy-tip');
+  if(!tip) return;
+  tip.style.opacity='1';
+  setTimeout(function(){tip.style.opacity='0';},1400);
+}
+
+/* ── Lightweight toast for actions with no dedicated page ── */
+function showActionToast(msg){
+  var t=document.getElementById('acctActionToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='acctActionToast';
+    t.className='acct-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer=setTimeout(function(){t.classList.remove('show');},2400);
+}
+
+function requestChequebook(){
+  var a=accountsData[currentAcc];
+  showActionToast('Chequebook request submitted for '+a.name);
+}
+
+function shareAccountDetails(){
+  var a=accountsData[currentAcc];
+  var text='Account: '+a.name+'\nIBAN: '+a.iban+'\nCurrency: '+a.currency;
+  if(navigator.share){
+    navigator.share({title:'Account Details',text:text}).catch(function(){});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){showActionToast('Account details copied to clipboard');});
+  } else {
+    showActionToast('IBAN: '+a.iban);
+  }
+}
+
+function downloadRibReport(){
+  var a=accountsData[currentAcc];
+  var content='RIB / IBAN REPORT\n\n'+
+    'Account Holder: '+a.holder+'\n'+
+    'Account Name: '+a.name+'\n'+
+    'Account Type: '+a.type+'\n'+
+    'IBAN: '+a.iban+'\n'+
+    'Currency: '+a.currency+'\n'+
+    'Status: '+a.status+'\n';
+  var blob=new Blob([content],{type:'text/plain'});
+  var url=URL.createObjectURL(blob);
+  var link=document.createElement('a');
+  link.href=url;
+  link.download='RIB_IBAN_'+a.iban+'.txt';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showActionToast('RIB/IBAN report downloaded');
+}
+
+function shareTermDetails(){
+  var t=termData[currentTerm];
+  var text='Term Deposit: '+t.name+'\nAccount No: '+t.acctNo+'\nCurrency: '+t.currency;
+  if(navigator.share){
+    navigator.share({title:'Term Deposit Details',text:text}).catch(function(){});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){showActionToast('Deposit details copied to clipboard');});
+  } else {
+    showActionToast('Account No: '+t.acctNo);
+  }
+}
+
+function downloadTdRibReport(){
+  var t=termData[currentTerm];
+  var content='RIB / IBAN REPORT\n\n'+
+    'Account Holder: '+t.holder+'\n'+
+    'Deposit Name: '+t.name+'\n'+
+    'Account Number: '+t.acctNo+'\n'+
+    'Currency: '+t.currency+'\n'+
+    'Status: '+t.status+'\n';
+  var blob=new Blob([content],{type:'text/plain'});
+  var url=URL.createObjectURL(blob);
+  var link=document.createElement('a');
+  link.href=url;
+  link.download='RIB_IBAN_'+t.acctNo+'.txt';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showActionToast('RIB/IBAN report downloaded');
+}
+
+/* ── Accounts hub: Quick Access + Active Account ── */
+var accountsData={
+  gc0:{name:'Current Account',type:'Current Account',icon:'account_balance_wallet',accent:'green',currency:'USD',flag:'us',balance:5240.50,available:5240.50,iban:'IBAN8000',status:'Active',holder:'Sara Rahman',
+    tx:[
+      {icon:'shopping_bag',title:'Amazon.ae',sub:'Shopping · Today, 2:30 PM',amt:-45.99},
+      {icon:'restaurant',title:'Starbucks',sub:'Dining · Yesterday, 8:10 AM',amt:-12.50},
+      {icon:'account_balance',title:'Salary Credit',sub:'Income · 01 Sep, 9:00 AM',amt:3500.00}
+    ]},
+  gc1:{name:'Savings Account',type:'Savings Account',icon:'savings',accent:'blue',currency:'USD',flag:'us',balance:8120.00,available:8120.00,iban:'IBAN8001',status:'Active',holder:'Sara Rahman',
+    tx:[
+      {icon:'trending_up',title:'Interest Credit',sub:'Income · 01 Sep, 12:00 AM',amt:24.36},
+      {icon:'swap_horiz',title:'Transfer to Current Account',sub:'Transfer · 28 Aug, 4:15 PM',amt:-500.00}
+    ]},
+  gc2:{name:'Salary Account',type:'Salary Account',icon:'payments',accent:'purple',currency:'USD',flag:'us',balance:3800.00,available:3600.00,iban:'IBAN8002',status:'Active',holder:'Sara Rahman',
+    tx:[
+      {icon:'account_balance',title:'Salary Credit',sub:'Income · 01 Sep, 9:00 AM',amt:3800.00},
+      {icon:'bolt',title:'DEWA',sub:'Utilities · 30 Aug, 6:45 PM',amt:-210.00}
+    ]}
+};
+var currentAcc='gc0';
+
+function fmtMoney(n){
+  return Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function renderQuickAccess(){
+  var list=document.getElementById('qaList');
+  if(!list) return;
+  list.innerHTML=Object.keys(accountsData).map(function(id){
+    var a=accountsData[id];
+    return '<button type="button" class="qa-item accent-'+a.accent+(id===currentAcc?' active':'')+'" data-acc="'+id+'" onclick="selectAccount(\''+id+'\')">'+
+      '<div class="qa-item-type">'+escapeHtml(a.name)+'</div>'+
+      '<div class="qa-item-top"><span class="fi fi-'+a.flag+'"></span> '+a.currency+'</div>'+
+      '<div class="acct-field"><span class="lbl" style="display:none">Balance</span><span class="val">'+fmtMoney(a.balance)+' '+a.currency+'</span></div>'+
+    '</button>';
+  }).join('');
+}
+
+function renderHeroNameArea(){
+  var a=accountsData[currentAcc];
+  var area=document.getElementById('heroNameArea');
+  area.innerHTML='<span id="heroName">'+escapeHtml(a.name)+'</span>'+
+    '<button class="edit-name-btn" onclick="startEditAccountName()" aria-label="Edit account name"><span class="material-icons">edit</span></button>';
+}
+
+function renderHero(){
+  var a=accountsData[currentAcc];
+  if(!a) return;
+  document.getElementById('heroIcon').textContent=a.icon;
+  document.getElementById('heroCurrency').textContent=a.currency;
+  renderHeroNameArea();
+  document.getElementById('heroCurBal').textContent=fmtMoney(a.balance)+' '+a.currency;
+  document.getElementById('heroBal').textContent=fmtMoney(a.available)+' '+a.currency;
+  document.getElementById('heroIban').textContent=a.iban;
+  document.getElementById('heroStatus').innerHTML='<span class="material-icons">check_circle</span> '+a.status;
+
+  document.getElementById('infoHolder').textContent=a.holder;
+  document.getElementById('infoNumber').textContent=a.iban;
+  document.getElementById('infoType').textContent=a.type;
+  document.getElementById('infoStatus').innerHTML='&#10003; '+a.status;
+
+  var txWrap=document.getElementById('acctTxList');
+  if(txWrap){
+    txWrap.innerHTML=a.tx.map(function(t){
+      var pos=t.amt>=0;
+      return '<div class="tx-row">'+
+        '<div class="tx-icon-wrap"><span class="material-icons">'+t.icon+'</span></div>'+
+        '<div class="tx-info"><div class="tx-title">'+t.title+'</div><div class="tx-sub">'+t.sub+'</div></div>'+
+        '<div class="tx-amt '+(pos?'pos':'neg')+'">'+(pos?'+ ':'− ')+fmtMoney(t.amt)+' '+a.currency+'</div>'+
+      '</div>';
+    }).join('');
+  }
+}
+
+function selectAccount(id){
+  if(!accountsData[id]) return;
+  currentAcc=id;
+  document.querySelectorAll('#qaList .qa-item').forEach(function(el){
+    el.classList.toggle('active',el.getAttribute('data-acc')===id);
+  });
+  renderHero();
+}
+
+function startEditAccountName(){
+  var a=accountsData[currentAcc];
+  var area=document.getElementById('heroNameArea');
+  area.innerHTML='<span class="ie-wrap">'+
+    '<input id="heroNameInput" value="'+escapeHtml(a.name)+'" aria-label="Edit account name"/>'+
+    '<button class="ie-btn ie-btn-save" onclick="confirmEditAccountName()" title="Save" aria-label="Save name"><span class="material-icons">check</span></button>'+
+    '<button class="ie-btn ie-btn-cancel" onclick="cancelEditAccountName()" title="Cancel" aria-label="Cancel edit"><span class="material-icons">close</span></button>'+
+  '</span>';
+  var inp=document.getElementById('heroNameInput');
+  inp.focus();
+  inp.select();
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter') confirmEditAccountName();
+    if(e.key==='Escape') cancelEditAccountName();
+  });
+}
+function confirmEditAccountName(){
+  var inp=document.getElementById('heroNameInput');
+  var val=inp?inp.value.trim():'';
+  if(val) accountsData[currentAcc].name=val;
+  renderQuickAccess();
+  renderHero();
+}
+function cancelEditAccountName(){
+  renderHero();
+}
+
+/* ── Term deposit hub: Quick Access + Active Term Deposit ── */
+var termData={
+  tc0:{name:'12-Month Deposit',badge:'12M',currency:'USD',principal:25000.00,rate:'4.50% p.a.',tenure:'12 Months',maturityDate:'31 Dec 2025',elapsedPct:85,acctNo:'TD001-2024',status:'Active',holder:'Sara Rahman',maturityValue:26125.00,earnedToDate:956.25},
+  tc1:{name:'6-Month Growth Plan',badge:'6M',currency:'USD',principal:10000.00,rate:'5.00% p.a.',tenure:'6 Months',maturityDate:'30 Jun 2025',elapsedPct:62,acctNo:'TD002-2024',status:'Active',holder:'Sara Rahman',maturityValue:10250.00,earnedToDate:155.00}
+};
+var currentTerm='tc0';
+
+function renderTdQuickAccess(){
+  var list=document.getElementById('tdQaList');
+  if(!list) return;
+  list.innerHTML=Object.keys(termData).map(function(id){
+    var t=termData[id];
+    return '<button type="button" class="qa-item accent-green'+(id===currentTerm?' active':'')+'" data-td="'+id+'" onclick="selectTerm(\''+id+'\')">'+
+      '<div class="qa-item-type">'+escapeHtml(t.name)+'</div>'+
+      '<div class="qa-item-top"><span class="fi fi-us"></span> '+t.currency+'</div>'+
+      '<div class="acct-field"><span class="lbl" style="display:none">Principal</span><span class="val">'+fmtMoney(t.principal)+' '+t.currency+'</span></div>'+
+    '</button>';
+  }).join('');
+}
+
+function renderTdHeroNameArea(){
+  var t=termData[currentTerm];
+  var area=document.getElementById('tdHeroNameArea');
+  area.innerHTML='<span id="tdHeroName">'+escapeHtml(t.name)+'</span>'+
+    '<button class="edit-name-btn" onclick="startEditTermName()" aria-label="Edit term deposit name"><span class="material-icons">edit</span></button>';
+}
+
+function renderTdHero(){
+  var t=termData[currentTerm];
+  if(!t) return;
+  document.getElementById('tdHeroIcon').textContent=t.badge;
+  document.getElementById('tdHeroCurrency').textContent=t.currency;
+  renderTdHeroNameArea();
+  document.getElementById('tdHeroPrincipal').textContent=fmtMoney(t.principal)+' '+t.currency;
+  document.getElementById('tdHeroRate').textContent=t.rate;
+  document.getElementById('tdHeroTenure').textContent=t.tenure;
+  document.getElementById('tdHeroMaturityVal').textContent=fmtMoney(t.maturityValue)+' '+t.currency;
+  document.getElementById('tdHeroProgFill').style.width=t.elapsedPct+'%';
+  document.getElementById('tdHeroProgLbl').textContent=t.elapsedPct+'% elapsed · Matures '+t.maturityDate;
+  document.getElementById('tdHeroAcctNo').textContent=t.acctNo;
+  document.getElementById('tdHeroStatus').innerHTML='<span class="material-icons">check_circle</span> '+t.status;
+
+  document.getElementById('tdInfoHolder').textContent=t.holder;
+  document.getElementById('tdInfoNumber').textContent=t.acctNo;
+  document.getElementById('tdInfoRate').textContent=t.rate;
+  document.getElementById('tdInfoTenure').textContent=t.tenure;
+  document.getElementById('tdInfoStatus').innerHTML='&#10003; '+t.status;
+  document.getElementById('tdProgFill').style.width=t.elapsedPct+'%';
+  document.getElementById('tdProgPct').textContent=t.elapsedPct+'% elapsed';
+  document.getElementById('tdProgDate').textContent='Matures '+t.maturityDate;
+  document.getElementById('tdInfoEarned').textContent=fmtMoney(t.earnedToDate)+' '+t.currency;
+  document.getElementById('tdInfoMaturity').textContent=fmtMoney(t.maturityValue)+' '+t.currency;
+}
+
+function selectTerm(id){
+  if(!termData[id]) return;
+  currentTerm=id;
+  document.querySelectorAll('#tdQaList .qa-item').forEach(function(el){
+    el.classList.toggle('active',el.getAttribute('data-td')===id);
+  });
+  renderTdHero();
+}
+
+function startEditTermName(){
+  var t=termData[currentTerm];
+  var area=document.getElementById('tdHeroNameArea');
+  area.innerHTML='<span class="ie-wrap">'+
+    '<input id="tdHeroNameInput" value="'+escapeHtml(t.name)+'" aria-label="Edit term deposit name"/>'+
+    '<button class="ie-btn ie-btn-save" onclick="confirmEditTermName()" title="Save" aria-label="Save name"><span class="material-icons">check</span></button>'+
+    '<button class="ie-btn ie-btn-cancel" onclick="cancelEditTermName()" title="Cancel" aria-label="Cancel edit"><span class="material-icons">close</span></button>'+
+  '</span>';
+  var inp=document.getElementById('tdHeroNameInput');
+  inp.focus();
+  inp.select();
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter') confirmEditTermName();
+    if(e.key==='Escape') cancelEditTermName();
+  });
+}
+function confirmEditTermName(){
+  var inp=document.getElementById('tdHeroNameInput');
+  var val=inp?inp.value.trim():'';
+  if(val) termData[currentTerm].name=val;
+  renderTdQuickAccess();
+  renderTdHero();
+}
+function cancelEditTermName(){
+  renderTdHero();
+}
+
+renderQuickAccess();
+renderHero();
+renderTdQuickAccess();
+renderTdHero();
+</script>
+<!-- Bootstrap JS (local) -->
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/shared.js"></script>
+<script>
+  (function() {
+    var tab = new URLSearchParams(window.location.search).get('tab');
+    if (tab === 'term') { switchTab('term'); acctsToggleCta('term'); }
+  })();
+</script>
+</body>
+</html>
