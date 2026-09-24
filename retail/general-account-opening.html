@@ -19,6 +19,114 @@
   <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/general-account-opening.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ Modern, box-free restyle — scoped to this page only ══
+   (general-account-opening.css is shared with corporate pages,
+   so overrides live here instead of in the shared file) ══ */
+
+.page-top-bar { margin-bottom: .25rem; }
+
+/* Sections: no card box, no divider between sections */
+.gao-card {
+  background: transparent; border: none; border-radius: 0;
+  box-shadow: none; overflow: visible;
+  margin-bottom: .75rem; padding-bottom: 0;
+  opacity: 0; animation: gaoFadeIn .45s cubic-bezier(.22,1,.36,1) forwards;
+}
+.gao-card:nth-of-type(1) { animation-delay: .05s; }
+.gao-card:nth-of-type(2) { animation-delay: .12s; }
+@keyframes gaoFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.gao-card-hdr { background: none; border-bottom: 1px solid #e5e9ee; padding: 0 0 1rem; margin-bottom: .75rem; cursor: default; user-select: auto; }
+.gao-card-title { font-size: 1.1rem; font-weight: 700; }
+.gao-card-subtitle { font-size: .82rem; }
+
+.gao-card-body { padding: 0; }
+
+/* Field group labels — no underline rule, just weight + color for grouping */
+.gao-field-group-lbl { border-bottom: none; padding-bottom: 0; color: var(--az-blue, #2563eb); }
+
+/* Opening-balance toggle — plain row, no box */
+.gao-toggle-row { background: none; border: none; border-radius: 0; padding: 0; margin-bottom: 0; }
+
+/* Footer — flat, separated by a hairline instead of a bordered box */
+.gao-footer {
+  background: none; border: none; border-top: 1px solid #eef1f4;
+  border-radius: 0; box-shadow: none;
+  padding: 1.5rem 0 0; margin-bottom: 0;
+}
+
+/* Modern CTA row — corporate blue primary, ghost/outline secondaries.
+   Scoped to this form's footer only (global .btn-* classes are shared
+   across the whole app, including this page's own modals). */
+.gao-footer .btn-action {
+  border-radius: .5rem;
+  padding: .7rem 1.75rem;
+  font-size: .9rem;
+  transition: background .15s, box-shadow .15s, transform .15s, border-color .15s, color .15s;
+}
+.gao-footer .btn-cancel, .gao-footer .btn-save {
+  background: #f1f3f5; border: none;
+  color: var(--az-muted, #707070);
+}
+.gao-footer .btn-cancel:hover, .gao-footer .btn-save:hover {
+  background: #e4e7eb; color: var(--az-navy, #16303d);
+}
+.gao-footer .btn-submit {
+  background: linear-gradient(135deg, var(--az-navy, #16303D), #0d1f28);
+  color: #fff; border: none;
+  box-shadow: 0 6px 16px rgba(22,48,61,.3);
+}
+.gao-footer .btn-submit:hover {
+  background: linear-gradient(135deg, #0f232e, #081820);
+  box-shadow: 0 8px 20px rgba(22,48,61,.38);
+  transform: translateY(-1px);
+}
+.gao-footer .btn-submit:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(22,48,61,.32); }
+
+/* ══ Spacious, modern fintech feel — more air, softer/larger controls ══ */
+
+/* Breathing room between groups and sections */
+.gao-field-group { margin-bottom: 2rem; }
+.gao-field-group:last-child { margin-bottom: 0; }
+.gao-field-group-lbl { font-size: .75rem; margin-bottom: 1.1rem; }
+.gao-card { margin-bottom: 2.25rem; }
+.gao-card-hdr { margin-bottom: 1.5rem; }
+.gao-footer { padding-top: 2rem; }
+.page-top-bar { margin-bottom: 1.5rem; }
+
+/* Larger, softer inputs — less dense, more premium */
+.gao-card-body .f-label { font-size: .82rem; margin-bottom: .5rem; }
+.gao-card-body .f-input,
+.gao-card-body .f-select,
+.gao-card-body .f-currency {
+  border-radius: .625rem; border-color: #e2e7ee;
+}
+.gao-card-body .f-input,
+.gao-card-body .f-currency .fp,
+.gao-card-body .f-currency input {
+  padding: .75rem .95rem; font-size: .875rem;
+}
+.gao-card-body .f-select { padding-right: 2.25rem; }
+.gao-card-body .f-input::placeholder,
+.gao-card-body .f-currency input::placeholder {
+  text-shadow: none; -webkit-text-fill-color: currentColor; opacity: 1;
+}
+.gao-card-body .f-input:focus,
+.gao-card-body .f-currency:focus-within {
+  border-color: var(--az-blue, #00538A);
+  box-shadow: none;
+}
+
+/* Roomier field-group background block, no borders — a soft surface, not a "box" */
+.gao-toggle-info .gao-toggle-title { font-size: .9rem; }
+.gao-locate-btn { border-radius: .625rem; padding: .625rem 1.25rem; margin-top: 1.75rem; }
+
+/* Let the 4-across rows breathe at typical laptop widths: 2-up on md/lg, 4-up only on xl+ */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .gao-card-body .row > .col-md-3 { width: 50%; }
+}
+</style>
 </head>
 <body>
 <!-- ████ HEADER ████ -->
@@ -197,31 +305,22 @@
 
 <!-- Section 1: Account Details -->
 <div class="gao-card" id="cardGenDet">
-  <div class="gao-card-hdr" onclick="toggleSec('secGenDet')" role="button" aria-expanded="true" aria-controls="secGenDet">
+  <div class="gao-card-hdr">
     <div class="gao-hdr-left">
-      <span class="gao-step-num">1</span>
       <span class="gao-card-title">Account Details</span>
       <span class="gao-card-subtitle">— Configure your new account</span>
     </div>
-    <svg class="gao-chev chev" viewBox="0 0 10.53 7" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/>
-    </svg>
   </div>
   <div class="gao-card-body" id="secGenDet">
-
-    <div class="gao-note">
-      <span class="material-icons">info</span>
-      Please select the account type and currency. Opening balance is optional and can be added now or later.
-    </div>
 
     <div class="gao-field-group">
       <div class="gao-field-group-lbl">Account Configuration</div>
       <div class="row g-3">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <label class="f-label" for="branch">Branch</label>
           <input id="branch" class="f-input" value="Agence Tevragh Zeina" readonly aria-readonly="true"/>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <label class="f-label" for="acctType">Account Type <span style="color:#c62828">*</span></label>
           <select id="acctType" class="f-input f-select">
             <option value="" disabled selected>Select account type</option>
@@ -231,14 +330,14 @@
             <option>Joint Account</option>
           </select>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <label class="f-label" for="currency">Currency</label>
           <div class="f-currency">
             <span class="fp"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</span>
             <input id="currency" value="US Dollar" readonly aria-readonly="true" style="text-align:left"/>
           </div>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <label class="f-label" for="refNum">Reference Number</label>
           <input id="refNum" class="f-input" placeholder="Enter reference number (optional)"/>
         </div>
@@ -248,34 +347,30 @@
     <div class="gao-field-group">
       <div class="gao-field-group-lbl">Opening Balance</div>
       <div class="row g-3 align-items-end">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <div class="gao-toggle-row" style="margin-bottom:0">
             <div class="gao-toggle-info">
               <span class="gao-toggle-title">Add Opening Balance</span>
-              <span class="gao-toggle-desc">Fund this account immediately upon opening</span>
+              <span class="gao-toggle-desc">Optional — fund this account now, or add money later</span>
             </div>
             <label class="az-toggle">
-              <input type="checkbox" id="addBalTgl" onchange="toggleBalFields()" role="switch"/>
+              <input type="checkbox" id="addBalTgl" onchange="toggleGaoBalFields(this)" role="switch"/>
               <span class="az-slider"></span>
             </label>
           </div>
         </div>
-        <div id="balFields" class="col-12 col-md-8 hidden">
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="f-label" for="fromAcct">From Account</label>
-              <select id="fromAcct" class="f-input f-select">
-                <option>Current Account — AED 248,350.00</option>
-                <option>Savings Account — AED 84,200.00</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="f-label" for="openBal">Opening Balance Amount</label>
-              <div class="f-currency">
-                <span class="fp">USD</span>
-                <input id="openBal" placeholder="0.00" style="text-align:right"/>
-              </div>
-            </div>
+        <div class="col-12 col-md-3 gao-bal-field hidden">
+          <label class="f-label" for="fromAcct">From Account</label>
+          <select id="fromAcct" class="f-input f-select">
+            <option>Current Account — AED 248,350.00</option>
+            <option>Savings Account — AED 84,200.00</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3 gao-bal-field hidden">
+          <label class="f-label" for="openBal">Opening Balance Amount</label>
+          <div class="f-currency">
+            <span class="fp">USD</span>
+            <input id="openBal" placeholder="0.00" style="text-align:right"/>
           </div>
         </div>
       </div>
@@ -286,27 +381,23 @@
 
 <!-- Section 2: Select Branch -->
 <div class="gao-card" id="cardGenBranch">
-  <div class="gao-card-hdr" onclick="toggleSec('secGenBranch')" role="button" aria-expanded="true" aria-controls="secGenBranch">
+  <div class="gao-card-hdr">
     <div class="gao-hdr-left">
-      <span class="gao-step-num">2</span>
       <span class="gao-card-title">Branch Selection</span>
       <span class="gao-card-subtitle">— Choose your preferred branch</span>
     </div>
-    <svg class="gao-chev chev" viewBox="0 0 10.53 7" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/>
-    </svg>
   </div>
   <div class="gao-card-body" id="secGenBranch">
 
     <div class="row g-3">
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="country">Country</label>
         <div class="f-currency">
           <span class="fp"><span class="fi fi-mr" title="MRU" aria-label="MRU flag"></span></span>
           <input id="country" value="Mauritania" style="text-align:left" readonly aria-readonly="true"/>
         </div>
       </div>
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="province">Province <span style="color:#c62828">*</span></label>
         <select id="province" class="f-input f-select">
           <option value="" disabled selected>Select province</option>
@@ -314,14 +405,14 @@
           <option>Hodh El Gharbi</option>
         </select>
       </div>
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="city">City <span style="color:#c62828">*</span></label>
         <select id="city" class="f-input f-select">
           <option value="" disabled selected>Select city</option>
           <option>Nouakchott</option>
         </select>
       </div>
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="branch2">Account Opening Branch <span style="color:#c62828">*</span></label>
         <select id="branch2" class="f-input f-select">
           <option value="" disabled selected>Select branch</option>
@@ -346,13 +437,13 @@
   </div>
   <div class="gao-footer-right">
     <a href="accounts.html" class="btn-action btn-cancel" role="button">
-      <span class="material-icons">close</span> Cancel
+      Cancel
     </a>
     <button type="button" class="btn-action btn-save">
-      <span class="material-icons">bookmark_border</span> Save Draft
+      Save Draft
     </button>
     <button type="submit" class="btn-action btn-submit" onclick="window.location.href='accounts.html'">
-      Submit <span class="material-icons">arrow_forward</span>
+      Submit
     </button>
   </div>
 </div>
@@ -418,5 +509,12 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/shared.js"></script>
+<script>
+function toggleGaoBalFields(tgl) {
+  document.querySelectorAll('.gao-bal-field').forEach(function(el) {
+    el.classList.toggle('hidden', !tgl.checked);
+  });
+}
+</script>
 </body>
 </html>
