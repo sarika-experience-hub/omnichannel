@@ -185,6 +185,7 @@ function openMap()      { openModal('mapModal'); }
       var el = e.target.closest('a[target="_blank"]');
       if (!el) return;
       if (el.classList.contains('hdr-icon-btn')) return; /* header icons open directly */
+      if (el.hasAttribute('data-direct')) return;        /* opted out of the confirm step */
       e.preventDefault();
       _pendingHref = el.href;
       openModal('extLinkModal');
@@ -410,11 +411,10 @@ function applyFilter() { /* hook for real filtering logic */ }
 
 /* ── App-header language selector ───────────────────────── */
 function setHdrLang(code, flagCode, optBtn) {
-  // Update button label + flag
+  // Update the button label. The trigger shows the language code only (no flag),
+  // so flagCode is unused here and kept only for call-site compatibility.
   document.querySelectorAll('.hdr-lang').forEach(function(btn) {
-    var flagEl = btn.querySelector('.fi');
     var codeEl = btn.querySelector('.lang-txt');
-    if (flagEl) { flagEl.className = 'fi fi-' + flagCode; }
     if (codeEl) { codeEl.textContent = code; }
     else { btn.childNodes.forEach(function(n){ if (n.nodeType===3) n.textContent = ' ' + code + ' '; }); }
   });
