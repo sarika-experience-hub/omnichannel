@@ -2,23 +2,120 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>azentio – Pending Transfer List</title>
+  <title>azentio – My Transfers</title>
   <link rel="stylesheet" href="../css/bootstrap.min.css"/>
   <link rel="stylesheet" href="../css/fonts.css"/>
   <link rel="stylesheet" href="../css/flag-icons.min.css"/>
   <link rel="stylesheet" href="../css/styles.css"/>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ Pending Transfers — modern redesign, scoped to this page only ══
+   (.tr-row / .tr-f etc. are shared globally across 8+ other pages,
+   so this page uses its own dedicated classes instead) ══ */
+
+.ptl-search-wrap { position: relative; width: 260px; max-width: 100%; }
+.ptl-search-wrap .material-icons { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--az-muted,#707070); }
+.ptl-search { width: 100%; height: 2.5rem; padding: 0 .75rem 0 2.25rem; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .5rem; font-size:var(--fs-small); font-family: 'Poppins','Roboto',sans-serif; color: var(--az-navy,#16303d); outline: none; transition: border-color .15s; box-sizing: border-box; }
+.ptl-search:focus { border-color: var(--az-blue,#00538A); }
+.ptl-new-btn { background: var(--az-navy,#16303d)!important; color: #fff!important; border: none; border-radius: .5rem; padding: 0 1.75rem; height: 2.5rem; box-sizing: border-box; font-size:var(--fs-body); font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: opacity .2s; letter-spacing: .01em; box-shadow: 0 1px 3px rgba(22,48,61,.18); white-space: nowrap; }
+.ptl-new-btn:hover { opacity: .92; color: #fff!important; }
+.ptl-new-btn .material-icons { font-size: 17px; }
+
+/* ── Toolbar — search + filter chips, matching beneficiary-management.html ── */
+.ptl-toolbar { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.ptl-filters { display: flex; gap: .4rem; flex-wrap: wrap; }
+.ptl-filter-chip { display: inline-flex; align-items: center; gap: .3rem; border: 1.5px solid var(--az-border,#e2e8ec); background: #fff; border-radius: 999px; padding: .4rem .9rem; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy,#16303d); cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ptl-filter-chip:hover { border-color: var(--az-green,#1aad6e); }
+.ptl-filter-chip.active { border-color: var(--az-green,#1aad6e); background: var(--az-green-light,#edf9f4); color: var(--az-green,#1aad6e); }
+
+/* ── Quick Access (transfer list) + Hero detail scaffold, matching accounts.html ── */
+.ptl-hub { display: grid; grid-template-columns: 300px 1fr; gap: 1.25rem; align-items: start; }
+.ptl-qa-panel { border: none; border-radius: 1rem; background: transparent; padding: 1rem; }
+.ptl-qa-hdr { display: flex; align-items: baseline; gap: .35rem; font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; color: var(--az-muted,#707070); text-transform: uppercase; margin-bottom: .75rem; padding: 0 .25rem; }
+.ptl-qa-hdr-count { font-weight: 700; color: var(--az-navy,#16303d); }
+.ptl-qa-list { display: flex; flex-direction: column; gap: .625rem; }
+.ptl-qa-item { position: relative; overflow: hidden; display: block; width: 100%; text-align: left; border: 1px solid var(--az-border,#e2e8ec); border-radius: .75rem; background: #fcfdfd; padding: .75rem .875rem; cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ptl-qa-item:hover { background: #f4f7f7; }
+.ptl-qa-item.active { background: var(--az-green-light,#edf9f4); border: 1.5px solid var(--az-green,#1aad6e); box-shadow: 0 3px 10px rgba(26,173,110,.18); }
+.ptl-qa-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--az-green,#1aad6e); }
+.ptl-qa-item-top { display: flex; align-items: center; gap: .4rem; font-size:var(--fs-small); font-weight:600; color: var(--az-navy,#16303d); margin-bottom: .3rem; }
+.ptl-qa-item-top .material-icons { font-size: 16px; color: var(--az-green,#1aad6e); flex-shrink: 0; }
+.ptl-qa-item-type { font-size:var(--fs-micro); color: var(--az-muted,#707070); margin-bottom: .4rem; }
+.ptl-qa-item-amt { font-size:var(--fs-subhead); font-weight: 700; color: var(--az-navy,#16303d); margin-bottom: .4rem; }
+.ptl-qa-item-badge { font-size:var(--fs-micro); padding: .15rem .5rem; }
+
+.ptl-main-col { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.ptl-hero { border-radius: 1.1rem; padding: 1.5rem 1.75rem; background: #e3f7ec; color: var(--az-navy,#16303d); position: relative; overflow: hidden; box-shadow: 0 3px 8px rgba(26,173,110,.1); border: 1px solid #bfeed7; }
+.ptl-hero::before {
+  content: ''; position: absolute; top: -10px; right: -10px; width: 170px; height: 170px;
+  background:
+    var(--az-hero-mark) no-repeat center/78%,
+    radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%;
+}
+.ptl-hero-top-row { display: flex; align-items: flex-start; gap: 2.5rem; margin-bottom: 1.1rem; position: relative; z-index: 1; flex-wrap: wrap; }
+.ptl-hero-eyebrow { font-size:var(--fs-micro); font-weight:600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .6rem; color: #1a7a55; }
+.ptl-hero-name-row { display: flex; align-items: center; gap: .6rem; font-size:var(--fs-section); font-weight: 600; color: var(--az-navy,#16303d); }
+.ptl-hero-name-row .material-icons { font-size: 20px; background: var(--az-green-light,#edf9f4); color: var(--az-green,#1aad6e); width: 32px; height: 32px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ptl-hero-status-pill { display: inline-flex; align-items: center; gap: .3rem; border-radius: 2rem; padding: .3rem .8rem; font-size:var(--fs-micro); font-weight:600; white-space: nowrap; position: absolute; top: 1.5rem; right: 1.75rem; z-index: 2; }
+.ptl-hero-status-pill.s-pending { background: #fffbeb; color: #b45309; border: 1px solid rgba(180,83,9,.3); }
+.ptl-hero-status-pill.s-active { background: #fff; color: var(--az-green,#1aad6e); border: 1px solid var(--az-green,#1aad6e); }
+.ptl-hero-status-pill.s-active .material-icons { font-size: 14px; }
+.ptl-hero-field .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem; color: #1a7a55; }
+.ptl-hero-field .val { font-size:var(--fs-section); font-weight: 600; letter-spacing: -.02em; color: var(--az-navy,#16303d); }
+.ptl-hero-flow { display: flex; align-items: center; gap: .75rem; position: relative; z-index: 1; }
+.ptl-hero-flow-acct { flex: 0 1 auto; min-width: 0; max-width: 220px; }
+.ptl-hero-flow .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem; color: #1a7a55; }
+.ptl-hero-flow .val { font-size:var(--fs-section); font-weight: 600; color: var(--az-navy,#16303d); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ptl-hero-flow .material-icons { font-size: 18px; color: var(--az-green,#1aad6e); opacity: .85; flex-shrink: 0; }
+
+.ptl-detail-panel { border: 1px solid var(--az-border,#e2e8ec); border-radius: 1rem; background: #fff; padding: 1.25rem 1.5rem; }
+.ptl-detail-hdr { display: flex; align-items: center; gap: .5rem; font-size:var(--fs-body); font-weight: 700; color: var(--az-navy,#16303d); margin-bottom: 1rem; }
+.ptl-detail-hdr .material-icons { font-size: 18px; color: var(--az-green,#1aad6e); }
+
+.ptl-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: .75rem 1rem; margin-bottom: 1.1rem; }
+.ptl-meta-field .lbl { font-size:var(--fs-micro); font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--az-muted,#707070); margin-bottom: .2rem; }
+.ptl-meta-field .val { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy,#16303d); }
+
+.ptl-detail-footer { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; padding-top: .9rem; border-top: 1px solid #f0f4f7; }
+.ptl-act-btn { display: inline-flex; align-items: center; gap: .35rem; padding: .4375rem 1rem; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .5rem; background: #fff; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy,#16303d); cursor: pointer; text-decoration: none!important; transition: all .15s; }
+.ptl-act-btn:hover { border-color: var(--az-blue,#00538A); color: var(--az-blue,#00538A); background: #eff6ff; }
+.ptl-act-btn.ptl-act-delete:hover { border-color: #dc2626; color: #dc2626; background: #fef2f2; }
+.ptl-act-btn .material-icons { font-size: 15px; }
+
+.ptl-empty { display: none; grid-column: 1 / -1; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; text-align: center; padding: 3.5rem 1rem; border: 1.5px dashed var(--az-border,#e2e8ec); border-radius: 1rem; color: var(--az-muted,#707070); }
+.ptl-empty.show { display: flex; }
+.ptl-empty .material-icons { font-size: 2.25rem; color: var(--az-green,#1aad6e); opacity: .6; }
+.ptl-empty .ptl-empty-title { font-size:var(--fs-subhead); font-weight: 700; color: var(--az-navy,#16303d); }
+.ptl-empty .ptl-empty-sub { font-size:var(--fs-small); max-width: 320px; }
+
+/* ── Delete confirmation modal + toast ── */
+.ptl-delete-icon { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.ptl-delete-icon .material-icons { font-size: 30px; color: #dc2626; }
+.ptl-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--az-navy,#16303d); color: #fff; padding: .7rem 1.25rem; border-radius: .5rem; font-size:var(--fs-small); font-weight: 600; font-family: 'Poppins','Roboto',sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 99999; }
+.ptl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 900px) {
+  .ptl-hub { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .page-top-bar { flex-direction: column; align-items: stretch; }
+  .ptl-toolbar { flex-direction: column; align-items: stretch; }
+  .ptl-search-wrap { width: 100%; }
+}
+</style>
 </head>
 <body>
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
-  <div class="hdr-right">    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div"></div>
     <div class="notif-wrap">
-      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="../images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr">
           <span class="notif-panel-title">Notifications</span>
@@ -52,11 +149,11 @@
         </div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
     <div class="hdr-div"></div>
     <div class="hdr-lang-wrap">
-    <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+    <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
         <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
           <span class="fi fi-us"></span> English
@@ -106,9 +203,9 @@
             <div class="av-nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             </div>
-            My Tasks
+            My Saved Drafts
           </a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -119,100 +216,105 @@
     </div></div>
 </header>
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item active-section" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron open" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub">
-    <a href="transfer-pending-list.html" class="sb-sub-item active">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item active">My Transfers</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
-    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><span class="cur">Pending Transfer List</span></div>
-    <h1 class="page-title mb-4">Pending Transfer List</h1>
-    <div class="d-flex justify-content-end mb-3">
-      <div class="view-toggle">
-        <button class="view-btn active"><img src="../images/icons/cards_view.svg" width="18" height="18" alt=""/></button>
-        <button class="view-btn"><img src="../images/icons/table_view.svg" width="18" height="18" alt=""/></button>
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><span class="cur">My Transfers</span></div>
+    <div class="page-top-bar">
+      <h1 class="page-title">My Transfers</h1>
+    </div>
+
+    <div class="ptl-toolbar">
+      <div class="ptl-search-wrap" id="ptlSearchWrap">
+        <span class="material-icons">search</span>
+        <input type="text" class="ptl-search" id="ptlSearch" placeholder="Search by reference, account or type…" oninput="ptlApplyFilters()" aria-label="Search transfers"/>
+      </div>
+      <div class="ptl-filters" id="ptlFilters">
+        <button type="button" class="ptl-filter-chip active" data-kind="all" onclick="ptlSetFilter('all',this)">All</button>
+        <button type="button" class="ptl-filter-chip" data-kind="pending" onclick="ptlSetFilter('pending',this)">Pending</button>
+        <button type="button" class="ptl-filter-chip" data-kind="scheduled" onclick="ptlSetFilter('scheduled',this)">Scheduled</button>
+      </div>
+      <div style="flex:1"></div>
+      <a href="fund-transfer.html" class="ptl-new-btn" id="ptlNewBtn"><span class="material-icons">add_circle_outline</span> New Transfer</a>
+    </div>
+
+    <div class="ptl-hub">
+      <div class="ptl-qa-panel" id="ptlQaPanel">
+        <div class="ptl-qa-hdr">Transfers <span class="ptl-qa-hdr-count" id="qaTotalCount">(3)</span></div>
+        <div class="ptl-qa-list" id="ptlQaList"></div>
+      </div>
+
+      <div class="ptl-main-col" id="ptlDetailWrap">
+        <div class="ptl-hero">
+          <span class="ptl-hero-status-pill s-pending" id="heroStatusPill">Pending</span>
+          <div class="ptl-hero-top-row">
+            <div>
+              <div class="ptl-hero-eyebrow" id="heroEyebrow">Transfer Details</div>
+              <div class="ptl-hero-name-row">
+                <span class="material-icons" id="heroTypeIcon">swap_horiz</span>
+                <span id="heroRef">TRF-2026-0871</span>
+              </div>
+            </div>
+            <div class="ptl-hero-field"><div class="lbl">Amount</div><div class="val" id="heroAmount">LKR 5,000.00</div></div>
+          </div>
+          <div class="ptl-hero-flow">
+            <div class="ptl-hero-flow-acct"><div class="lbl">From</div><div class="val" id="heroFrom">Current Account •••• 7040</div></div>
+            <span class="material-icons">arrow_forward</span>
+            <div class="ptl-hero-flow-acct"><div class="lbl">To</div><div class="val" id="heroTo">Savings Account •••• 7136</div></div>
+          </div>
+        </div>
+
+        <div class="ptl-detail-panel">
+          <div class="ptl-detail-hdr"><span class="material-icons">info</span> <span id="detailHdrLabel">Transfer Information</span></div>
+          <div class="ptl-meta" id="ptlMetaGrid"></div>
+          <div class="ptl-detail-footer">
+            <a href="fund-transfer.html" class="ptl-act-btn" id="detailEditLink"><span class="material-icons">edit</span> Edit</a>
+            <button type="button" class="ptl-act-btn ptl-act-delete" id="detailDeleteLink" onclick="ptlOpenDeleteModal()"><span class="material-icons">delete_outline</span> Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ptl-empty" id="ptlEmpty">
+        <span class="material-icons">search_off</span>
+        <div class="ptl-empty-title">No matching transfers</div>
+        <div class="ptl-empty-sub">Try a different reference, account name, or transfer type.</div>
       </div>
     </div>
-    <div class="content-card">
-      <div class="tr-row">
-        <div class="tr-ref">1230115467040</div>
-        <span class="badge-s s-active">Active</span>
-        <div class="tr-row-data">
-          <div class="tr-row-inner">
-            <div class="tr-f"><div class="tv">646999</div><div class="tl">Transaction Number</div></div>
-            <div class="tr-f"><div class="tv">1230115467040</div><div class="tl">From Account</div></div>
-            <div class="tr-f"><div class="tv">5000 (LKR)</div><div class="tl">Amount</div></div>
-            <div class="tr-f"><div class="tv">06/07/2022</div><div class="tl">Trade Date</div></div>
-            <div class="tr-f"><div class="tv">06/07/2022</div><div class="tl">Value Date</div></div>
-          </div>
-          <div class="tr-row-line2">
-            <div class="tr-f"><div class="tv">1230115467136</div><div class="tl">To Account</div></div>
-            <div class="tr-f"><div class="tv">Transfer Within Own Accounts</div><div class="tl">Type</div></div>
-            <div class="tr-f"><div class="tv">------</div><div class="tl">Reference</div></div>
-          </div>
-        </div>
-        <div class="ben-actions" style="margin-left:auto">
-          <div class="ctx-wrap position-relative">
-            <button class="btn-more" onclick="toggleCtx('ctx1')">&#8226;&#8226;&#8226;</button>
-            <div class="ctx-menu hidden" id="ctx1">
-              <a href="transfer-edit-pending.html" class="ctx-item"><img src="../images/icons/edit.svg" width="14" height="14" alt=""/> Edit</a>
-              <a href="transfer-delete-pending.html" class="ctx-item ctx-delete"><img src="../images/icons/delete.svg" width="14" height="14" alt=""/> Delete</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tr-row">
-        <div class="tr-ref">1230115467040</div>
-        <span class="badge-s s-active">Active</span>
-        <div class="tr-row-data">
-          <div class="tr-row-inner">
-            <div class="tr-f"><div class="tv">646999</div><div class="tl">Transaction Number</div></div>
-            <div class="tr-f"><div class="tv">1230115467040</div><div class="tl">From Account</div></div>
-            <div class="tr-f"><div class="tv">5000 (LKR)</div><div class="tl">Amount</div></div>
-            <div class="tr-f"><div class="tv">06/07/2022</div><div class="tl">Trade Date</div></div>
-            <div class="tr-f"><div class="tv">06/07/2022</div><div class="tl">Value Date</div></div>
-          </div>
-          <div class="tr-row-line2">
-            <div class="tr-f"><div class="tv">1230115467136</div><div class="tl">To Account</div></div>
-            <div class="tr-f"><div class="tv">Transfer Within Own Accounts</div><div class="tl">Type</div></div>
-            <div class="tr-f"><div class="tv">------</div><div class="tl">Reference</div></div>
-          </div>
-        </div>
-        <div class="ben-actions" style="margin-left:auto">
-          <div class="ctx-wrap position-relative">
-            <button class="btn-more" onclick="toggleCtx('ctx2')">&#8226;&#8226;&#8226;</button>
-            <div class="ctx-menu hidden" id="ctx2">
-              <a href="transfer-edit-pending.html" class="ctx-item"><img src="../images/icons/edit.svg" width="14" height="14" alt=""/> Edit</a>
-              <a href="transfer-delete-pending.html" class="ctx-item ctx-delete"><img src="../images/icons/delete.svg" width="14" height="14" alt=""/> Delete</a>
-            </div>
-          </div>
+
+    <div class="modal-ov hidden" id="ptlDeleteModal" role="dialog" aria-modal="true" aria-label="Delete transfer" onclick="if(event.target===this)ptlCloseDeleteModal()">
+      <div class="az-modal modal-sm" style="text-align:center;">
+        <div class="ptl-delete-icon"><span class="material-icons">delete_outline</span></div>
+        <p style="font-weight:700;color:var(--az-navy,#16303d);margin-bottom:.4rem;">Delete this transfer?</p>
+        <p style="font-size:var(--fs-small);color:var(--az-muted,#707070);margin-bottom:1.5rem;" id="ptlDeleteMsg">This action can't be undone.</p>
+        <div style="display:flex;gap:.6rem;justify-content:center;">
+          <button class="btn-action btn-cancel" onclick="ptlCloseDeleteModal()">CANCEL</button>
+          <button class="btn-action" style="background:#dc2626;color:#fff;" onclick="ptlConfirmDelete()">DELETE</button>
         </div>
       </div>
     </div>
@@ -231,50 +333,152 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/app.js"></script>
 <script>
-function toggleTrTab(tab){
-  document.querySelectorAll('.tr-tab').forEach(function(t){t.classList.remove('active')});
-  document.querySelectorAll('.tr-panel').forEach(function(p){p.classList.add('hidden')});
-  tab.classList.add('active');
-  var panel=document.getElementById('panel_'+tab.dataset.tab);
-  if(panel)panel.classList.remove('hidden');
+/* ── Combined Pending + Scheduled Transfers — one list, search + filter chips (matches beneficiary-management.html) ── */
+var ptlAll=[
+  {id:'0871',kind:'pending',ref:'TRF-2026-0871',type:'Own Account Transfer',icon:'swap_horiz',status:'Pending',statusClass:'s-pending',amount:'LKR 5,000.00',from:'Current Account •••• 7040',to:'Savings Account •••• 7136',txnNo:'646999',tradeDate:'06 Jul 2026',valueDate:'06 Jul 2026',reference:'——',editHref:'fund-transfer.html?type=own&edit=1',search:'trf-2026-0871 own account current savings 646999 pending'},
+  {id:'S01',kind:'scheduled',ref:'STR-2026-0142',type:'Own Account Transfer',icon:'event_repeat',status:'Active',statusClass:'s-active',amount:'LKR 5,000.00',from:'Current Account •••• 7040',to:'Savings Account •••• 7136',txnNo:'646999',freq:'Monthly',nextDate:'06 Aug 2026',endDate:'06 Jul 2027',reference:'——',editHref:'fund-transfer.html?type=own&edit=1&when=later',search:'str-2026-0142 own account current savings monthly 646999 scheduled'},
+  {id:'S02',kind:'scheduled',ref:'STR-2026-0158',type:'Internal Transfer',icon:'event_repeat',status:'Active',statusClass:'s-active',amount:'AED 2,500.00',from:'Current Account •••• 7040',to:'Ahmed Al Farsi',txnNo:'647301',freq:'Weekly',nextDate:'05 Oct 2026',endDate:'—',reference:'Rent',editHref:'fund-transfer.html?type=internal&edit=1&when=later',search:'str-2026-0158 internal ahmed al farsi weekly rent 647301 scheduled'}
+];
+var ptlCurrentId=ptlAll[0].id;
+var ptlActiveFilter='all';
+
+function renderPtlList(){
+  var wrap=document.getElementById('ptlQaList');
+  wrap.innerHTML=ptlAll.map(function(t){
+    var typeLine=t.kind==='scheduled'?(t.type+' • '+t.freq):t.type;
+    return '<button class="ptl-qa-item'+(t.id===ptlCurrentId?' active':'')+'" data-id="'+t.id+'" data-kind="'+t.kind+'" data-search="'+t.search+'" onclick="selectPtl(\''+t.id+'\')">'+
+      '<div class="ptl-qa-item-top"><span class="material-icons">'+t.icon+'</span>'+t.ref+'</div>'+
+      '<div class="ptl-qa-item-type">'+typeLine+'</div>'+
+      '<div class="ptl-qa-item-amt">'+t.amount+'</div>'+
+      '<span class="badge-s '+t.statusClass+' ptl-qa-item-badge">'+t.status+'</span>'+
+      '</button>';
+  }).join('');
 }
-function toggleLov(dropId){
-  var d=document.getElementById(dropId);if(!d)return;
-  var was=d.classList.contains('hidden');
-  document.querySelectorAll('.lov-dropdown').forEach(function(x){x.classList.add('hidden')});
-  if(was)d.classList.remove('hidden');
+
+function selectPtl(id){
+  ptlCurrentId=id;
+  document.querySelectorAll('.ptl-qa-item').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-id')===id);});
+  renderPtlDetail();
 }
-function lovSelect(el,selId,dropId){
-  var val=el.querySelector('.lv');
-  var sel=document.getElementById(selId);
-  if(sel&&val)sel.textContent=val.textContent;
-  document.getElementById(dropId).classList.add('hidden');
+
+function renderPtlDetail(){
+  var t=ptlAll.find(function(x){return x.id===ptlCurrentId;});
+  var detailWrap=document.getElementById('ptlDetailWrap');
+  var qaPanel=document.getElementById('ptlQaPanel');
+  var empty=document.getElementById('ptlEmpty');
+  if(!t){
+    detailWrap.classList.add('hidden');
+    qaPanel.classList.add('hidden');
+    empty.classList.add('show');
+    return;
+  }
+  detailWrap.classList.remove('hidden');
+  qaPanel.classList.remove('hidden');
+  empty.classList.remove('show');
+  var isSch=t.kind==='scheduled';
+  document.getElementById('heroEyebrow').textContent=isSch?'Scheduled Transfer Details':'Transfer Details';
+  document.getElementById('heroTypeIcon').textContent=t.icon;
+  document.getElementById('heroRef').textContent=t.ref;
+  var heroStatusPill=document.getElementById('heroStatusPill');
+  heroStatusPill.className='ptl-hero-status-pill '+t.statusClass;
+  heroStatusPill.innerHTML=t.statusClass==='s-active'?'<span class="material-icons">check_circle</span> '+t.status:t.status;
+  document.getElementById('heroAmount').textContent=t.amount;
+  document.getElementById('heroFrom').textContent=t.from;
+  document.getElementById('heroTo').textContent=t.to;
+  document.getElementById('detailHdrLabel').textContent=isSch?'Schedule Information':'Transfer Information';
+  document.getElementById('ptlMetaGrid').innerHTML=isSch?
+    '<div class="ptl-meta-field"><div class="lbl">Transaction No.</div><div class="val">'+t.txnNo+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">Frequency</div><div class="val">'+t.freq+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">Next Run Date</div><div class="val">'+t.nextDate+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">End Date</div><div class="val">'+t.endDate+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">Reference</div><div class="val">'+t.reference+'</div></div>'
+    :
+    '<div class="ptl-meta-field"><div class="lbl">Transaction No.</div><div class="val">'+t.txnNo+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">Trade Date</div><div class="val">'+t.tradeDate+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">Value Date</div><div class="val">'+t.valueDate+'</div></div>'+
+    '<div class="ptl-meta-field"><div class="lbl">Reference</div><div class="val">'+t.reference+'</div></div>';
+  document.getElementById('detailEditLink').href=t.editHref;
 }
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.lov-wrap'))document.querySelectorAll('.lov-dropdown').forEach(function(d){d.classList.add('hidden')});
+
+function ptlApplyFilters(){
+  var q=document.getElementById('ptlSearch').value.trim().toLowerCase();
+  var items=document.querySelectorAll('#ptlQaList .ptl-qa-item');
+  var visibleIds=[];
+  items.forEach(function(item){
+    var kindMatch=ptlActiveFilter==='all'||item.getAttribute('data-kind')===ptlActiveFilter;
+    var searchMatch=!q||item.getAttribute('data-search').indexOf(q)>-1;
+    var match=kindMatch&&searchMatch;
+    item.style.display=match?'':'none';
+    if(match) visibleIds.push(item.getAttribute('data-id'));
+  });
+  document.getElementById('qaTotalCount').textContent='('+visibleIds.length+')';
+  if(visibleIds.length===0){
+    ptlCurrentId=null;
+  } else if(visibleIds.indexOf(ptlCurrentId)===-1){
+    ptlCurrentId=visibleIds[0];
+    document.querySelectorAll('#ptlQaList .ptl-qa-item').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-id')===ptlCurrentId);});
+  }
+  renderPtlDetail();
+}
+
+function ptlSetFilter(kind,btn){
+  ptlActiveFilter=kind;
+  document.querySelectorAll('.ptl-filter-chip').forEach(function(c){c.classList.toggle('active',c===btn);});
+  ptlApplyFilters();
+}
+
+/* ── Delete confirmation ── */
+var ptlDeletePending=null;
+function ptlOpenDeleteModal(){
+  var t=ptlAll.find(function(x){return x.id===ptlCurrentId;});
+  if(!t) return;
+  ptlDeletePending=t.id;
+  document.getElementById('ptlDeleteMsg').textContent=t.kind==='scheduled'
+    ? 'This will stop all future occurrences of '+t.ref+'.'
+    : 'This will permanently delete '+t.ref+'.';
+  document.getElementById('ptlDeleteModal').classList.remove('hidden');
+}
+function ptlCloseDeleteModal(){
+  document.getElementById('ptlDeleteModal').classList.add('hidden');
+  ptlDeletePending=null;
+}
+function ptlShowToast(msg){
+  var t=document.getElementById('ptlToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='ptlToast';
+    t.className='ptl-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer=setTimeout(function(){t.classList.remove('show');},2600);
+}
+function ptlConfirmDelete(){
+  if(!ptlDeletePending) return;
+  var idx=ptlAll.findIndex(function(x){return x.id===ptlDeletePending;});
+  if(idx===-1){ ptlCloseDeleteModal(); return; }
+  var t=ptlAll[idx];
+  ptlAll.splice(idx,1);
+  ptlCloseDeleteModal();
+  renderPtlList();
+  ptlApplyFilters();
+  ptlShowToast(t.ref+' has been deleted.');
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderPtlList();
+  renderPtlDetail();
 });
-function updateCurrFlag(sel){
-  var flagMap={'USD':'us','EUR':'eu','GBP':'gb','IQD':'iq','LBP':'lb','MRU':'mr','CHF':'ch','AED':'ae','SAR':'sa'};
-  var flag=sel.closest('.amount-curr').querySelector('.amount-flag');
-  if(flag){var fc=flagMap[sel.value]||'us';flag.className='fi fi-'+fc+' amount-flag';}
-}
-var _calYear=2025,_calMonth=0,_calSel=15;
-var _months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-function renderCal(){
-  var lbl=document.getElementById('calLbl');if(lbl)lbl.textContent=_months[_calMonth]+' '+_calYear;
-  var g=document.getElementById('calDays');if(!g)return;
-  var days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  var html='<div class="cal-day-hdr">';days.forEach(function(d){html+='<span>'+d+'</span>'});html+='</div><div class="cal-days">';
-  var first=new Date(_calYear,_calMonth,1).getDay(),total=new Date(_calYear,_calMonth+1,0).getDate(),prevTotal=new Date(_calYear,_calMonth,0).getDate();
-  for(var i=0;i<first;i++)html+='<button class="cal-day muted">'+(prevTotal-first+1+i)+'</button>';
-  for(var d=1;d<=total;d++){var sel=(d===_calSel)?' selected':'';html+='<button class="cal-day'+sel+'" onclick="calSel('+d+')">'+String(d).padStart(2,'0')+'</button>';}
-  var rem=(7-((first+total)%7))%7;for(var i=1;i<=rem;i++)html+='<button class="cal-day muted">'+String(i).padStart(2,'0')+'</button>';
-  html+='</div>';g.innerHTML=html;
-}
-function calSel(d){_calSel=d;renderCal();}
-function calPrev(){_calMonth--;if(_calMonth<0){_calMonth=11;_calYear--;}_calSel=null;renderCal();}
-function calNext(){_calMonth++;if(_calMonth>11){_calMonth=0;_calYear++;}_calSel=null;renderCal();}
-document.addEventListener('DOMContentLoaded',renderCal);
+
+(function() {
+  var filter = new URLSearchParams(window.location.search).get('tab');
+  if (filter === 'scheduled') {
+    var btn = document.querySelector('.ptl-filter-chip[data-kind="scheduled"]');
+    if (btn) ptlSetFilter('scheduled', btn);
+  }
+})();
 </script>
 </body>
 </html>

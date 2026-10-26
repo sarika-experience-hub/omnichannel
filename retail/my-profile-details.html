@@ -24,18 +24,18 @@
 .hdr-avatar-wrap:hover .avatar-dropdown { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .av-drop-top { background: #e6f5ee; padding: 1rem 1.125rem; display: flex; align-items: center; gap: .875rem; }
 .av-drop-photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(46,216,142,.4); flex-shrink: 0; }
-.av-drop-name { font-weight: 700; font-size: .9375rem; color: var(--az-navy); line-height: 1.2; }
-.av-drop-login-lbl { font-size: .75rem; color: #5a7060; margin-top: .25rem; }
-.av-drop-login-time { display: flex; align-items: center; gap: .625rem; font-size: .75rem; color: var(--az-navy); margin-top: .1875rem; flex-wrap: wrap; }
+.av-drop-name { font-weight: 600; font-size:var(--fs-body); color: var(--az-navy); line-height: 1.2; }
+.av-drop-login-lbl { font-size:var(--fs-caption); color: #5a7060; margin-top: .25rem; }
+.av-drop-login-time { display: flex; align-items: center; gap: .625rem; font-size:var(--fs-caption); color: var(--az-navy); margin-top: .1875rem; flex-wrap: wrap; }
 .av-drop-login-time .t-part { display: flex; align-items: center; gap: .25rem; }
 .av-drop-login-time svg { width: 12px; height: 12px; color: #1ea065; flex-shrink: 0; }
 .av-drop-login-time .t-sep { color: #b0c4b8; }
 .av-drop-details { padding: .75rem 1.125rem .625rem; border-bottom: 1px solid var(--az-border); }
-.av-detail-row { display: flex; align-items: baseline; gap: .375rem; font-size: .8125rem; line-height: 1.5; }
+.av-detail-row { display: flex; align-items: baseline; gap: .375rem; font-size:var(--fs-small); line-height: 1.5; }
 .av-detail-lbl { color: var(--az-muted); min-width: 70px; flex-shrink: 0; }
 .av-detail-val { color: var(--az-navy); font-weight: 600; }
 .av-drop-nav { padding: .375rem 0; }
-.av-nav-link { display: flex; align-items: center; gap: .75rem; padding: .625rem 1.125rem; font-size: .875rem; color: var(--az-navy); text-decoration: none; font-family: 'Roboto', sans-serif; transition: background .1s; }
+.av-nav-link { display: flex; align-items: center; gap: .75rem; padding: .625rem 1.125rem; font-size:var(--fs-body); color: var(--az-navy); text-decoration: none; font-family: 'Poppins','Roboto',sans-serif; transition: background .1s; }
 .av-nav-link:hover { background: #f0faf5; color: var(--az-navy); }
 .av-nav-icon { width: 32px; height: 32px; border-radius: 50%; background: #f0faf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .av-nav-icon svg { width: 16px; height: 16px; color: var(--az-green); }
@@ -58,14 +58,14 @@
 .profile-avatar-edit:hover { background: var(--az-green-hover); }
 .profile-avatar-edit svg { width: 11px; height: 11px; color: #fff; }
 .profile-user-info { flex: 1; min-width: 0; }
-.profile-user-name { font-size: 1.25rem; font-weight: 700; color: var(--az-navy); margin-bottom: .375rem; }
+.profile-user-name { font-size:var(--fs-heading); font-weight: 700; color: var(--az-navy); margin-bottom: .375rem; }
 .profile-meta {
   display: flex; align-items: center; gap: .5rem 1.5rem;
-  flex-wrap: wrap; margin-top: .5rem; font-size: .8125rem;
+  flex-wrap: wrap; margin-top: .5rem; font-size:var(--fs-small);
 }
 .profile-meta-item { color: var(--az-muted); display: flex; align-items: center; gap: .3rem; }
 .profile-meta-item strong { color: var(--az-navy); font-weight: 500; }
-.profile-last-login { font-size: .75rem; color: var(--az-muted); margin-top: .625rem; }
+.profile-last-login { font-size:var(--fs-caption); color: var(--az-muted); margin-top: .625rem; }
 
 /* ── Expandable detail sections ────────────────────── */
 .detail-section {
@@ -84,15 +84,15 @@
   background: #f0faf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .detail-sec-icon svg { width: 17px; height: 17px; color: var(--az-green); }
-.detail-sec-title { font-weight: 700; font-size: .9375rem; color: var(--az-navy); }
-.detail-sec-subtitle { font-size: .75rem; color: var(--az-muted); margin-top: .1875rem; }
+.detail-sec-title { font-weight: 600; font-size:var(--fs-body); color: var(--az-navy); }
+.detail-sec-subtitle { font-size:var(--fs-caption); color: var(--az-muted); margin-top: .1875rem; }
 .detail-sec-hdr-right { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
 .detail-sec-edit-btn {
   display: inline-flex; align-items: center; gap: .3125rem;
-  font-size: .8125rem; font-weight: 600; color: var(--az-blue);
+  font-size:var(--fs-small); font-weight: 600; color: var(--az-blue);
   background: none; border: 1.5px solid var(--az-blue); cursor: pointer;
   padding: .25rem .75rem; border-radius: .375rem;
-  font-family: 'Roboto', sans-serif; transition: background .1s;
+  font-family: 'Poppins','Roboto',sans-serif; transition: background .1s;
 }
 .detail-sec-edit-btn:hover { background: #edf6ff; }
 .detail-sec-edit-btn svg { width: 12px; height: 12px; }
@@ -105,8 +105,8 @@
 @media (max-width: 900px) { .fields-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 600px) { .fields-grid { grid-template-columns: 1fr; } }
 .field-full { grid-column: 1/-1; }
-.pf-label { font-size: .6875rem; font-weight: 700; color: var(--az-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3125rem; }
-.pf-value { font-size: .875rem; font-weight: 500; color: var(--az-navy); display: flex; align-items: center; gap: .375rem; }
+.pf-label { font-size:var(--fs-micro); font-weight:600; color: var(--az-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3125rem; }
+.pf-value { font-size:var(--fs-body); font-weight: 500; color: var(--az-navy); display: flex; align-items: center; gap: .375rem; }
 .pf-value.muted-val { color: var(--az-muted); font-style: italic; }
 .pf-value.masked { letter-spacing: .2em; color: var(--az-muted); }
 .pf-edit-inline { background: none; border: none; cursor: pointer; padding: .125rem; opacity: .6; transition: opacity .12s; display: inline-flex; flex-shrink: 0; }
@@ -116,28 +116,91 @@
 /* Toggle rows */
 .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: .875rem 0; border-bottom: 1px solid var(--az-border); }
 .toggle-row:last-child { border-bottom: none; }
-.tr-title { font-size: .875rem; font-weight: 500; color: var(--az-navy); }
-.tr-sub   { font-size: .75rem; color: var(--az-muted); margin-top: .1875rem; }
+.tr-title { font-size:var(--fs-body); font-weight: 500; color: var(--az-navy); }
+.tr-sub   { font-size:var(--fs-caption); color: var(--az-muted); margin-top: .1875rem; }
 
 /* Security rows */
 .security-row { display: flex; align-items: center; justify-content: space-between; padding: .875rem 0; border-bottom: 1px solid var(--az-border); flex-wrap: wrap; gap: .5rem; }
 .security-row:last-child { border-bottom: none; }
-.sr-title { font-size: .875rem; font-weight: 500; color: var(--az-navy); }
-.sr-sub   { font-size: .75rem; color: var(--az-muted); margin-top: .1875rem; }
-.sr-action { display: inline-flex; align-items: center; gap: .375rem; font-size: .8125rem; font-weight: 600; color: var(--az-blue); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Roboto', sans-serif; white-space: nowrap; }
+.sr-title { font-size:var(--fs-body); font-weight: 500; color: var(--az-navy); }
+.sr-sub   { font-size:var(--fs-caption); color: var(--az-muted); margin-top: .1875rem; }
+.sr-action { display: inline-flex; align-items: center; gap: .375rem; font-size:var(--fs-small); font-weight: 600; color: var(--az-blue); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Poppins','Roboto',sans-serif; white-space: nowrap; }
 .sr-action:hover { color: var(--az-navy); }
 .sr-action svg { width: 13px; height: 13px; }
 
 /* Session cards */
 .session-card { display: flex; align-items: center; gap: 1rem; padding: .75rem 1rem; background: #fafbfc; border: 1px solid var(--az-border); border-radius: .375rem; margin-bottom: .5rem; flex-wrap: wrap; }
 .session-device { flex: 1; min-width: 0; }
-.sd-name { font-size: .8125rem; font-weight: 600; color: var(--az-navy); }
-.sd-meta { font-size: .75rem; color: var(--az-muted); margin-top: .125rem; }
-.sd-current { font-size: .75rem; font-weight: 700; color: var(--az-green); margin-left: .375rem; }
-.btn-end-session { font-size: .75rem; font-weight: 600; color: #dc3545; background: none; border: 1px solid #dc3545; border-radius: 20px; padding: .1875rem .75rem; cursor: pointer; font-family: 'Roboto', sans-serif; white-space: nowrap; transition: background .1s; }
+.sd-name { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy); }
+.sd-meta { font-size:var(--fs-caption); color: var(--az-muted); margin-top: .125rem; }
+.sd-current { font-size:var(--fs-caption); font-weight:600; color: var(--az-green); margin-left: .375rem; }
+.btn-end-session { font-size:var(--fs-caption); font-weight: 600; color: #dc3545; background: none; border: 1px solid #dc3545; border-radius: 20px; padding: .1875rem .75rem; cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; white-space: nowrap; transition: background .1s; }
 .btn-end-session:hover { background: #fff5f5; }
+
+/* ══ Hero — same treatment as the accounts hero (post-login triangle mark) ══ */
+.pf-hero { position: relative; border-radius: 1.1rem; padding: 1.25rem 9rem 1.3rem 1.5rem; background: #e3f7ec; border: 1px solid #bfeed7; box-shadow: 0 3px 8px rgba(26,173,110,.1); margin-bottom: 1.25rem; }
+.pf-hero-clip { position: absolute; inset: 0; border-radius: 1.1rem; overflow: hidden; pointer-events: none; z-index: 0; }
+.pf-hero-clip::before {
+  content: ''; position: absolute; top: -10px; right: -10px; width: 170px; height: 170px;
+  background:
+    var(--az-hero-mark) no-repeat center/78%,
+    radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%;
+}
+.pf-hero > *:not(.pf-hero-clip) { position: relative; z-index: 1; }
+.pf-hero-row { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; }
+.pf-hero-name { font-size:var(--fs-section); font-weight: 600; color: var(--az-navy); }
+.pf-hero-eyebrow { font-size:var(--fs-micro); font-weight:600; letter-spacing: .08em; text-transform: uppercase; color: #1a7a55; margin-bottom: .2rem; }
+.pf-hero-meta { display: flex; flex-wrap: wrap; gap: .35rem 1.5rem; margin-top: .7rem; }
+.pf-hero-meta-i { font-size:var(--fs-caption); color: #2c4f42; }
+.pf-hero-meta-i strong { color: var(--az-navy); font-weight: 700; }
+.pf-hero-login { font-size:var(--fs-micro); color: #4a6b5d; margin-top: .55rem; }
+
+/* ══ Revised form controls, matching general-account-opening.html ══ */
+.pf-edit-grid .f-label { display: block; font-size: var(--fs-label); font-weight: 500; color: var(--az-navy); margin-bottom: .5rem; }
+.pf-edit-grid .f-input,
+.pf-edit-grid .f-select {
+  width: 100%; border: 1.5px solid #e2e7ee; border-radius: .625rem;
+  padding: .65rem .9rem; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small);
+  color: var(--az-navy); background: #fff; outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.pf-edit-grid .f-input:focus,
+.pf-edit-grid .f-select:focus { border-color: #1aad6e; box-shadow: 0 0 0 3px rgba(26,173,110,.12); }
+.pf-edit-grid .f-input[readonly] { background: #f7f9fa; color: var(--az-muted); cursor: not-allowed; }
+.pf-edit-grid select.f-select {
+  appearance: none; -webkit-appearance: none; padding-right: 2.2rem; cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%231aad6e'/%3E%3C/svg%3E") no-repeat right 12px center;
+}
+.pf-edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem 1.25rem; }
+
+/* Edit-mode footer — the modern CTA row */
+.pf-edit-foot { display: flex; align-items: center; justify-content: flex-end; gap: .75rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid #eef1f4; }
+.pf-btn { border-radius: .5rem; padding: .6rem 1.5rem; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight:600; cursor: pointer; border: none; transition: background .15s, transform .15s; }
+.pf-btn-ghost { background: #f1f3f5; color: var(--az-muted); }
+.pf-btn-ghost:hover { background: #e4e7eb; color: var(--az-navy); }
+.pf-btn-save { background: linear-gradient(135deg, var(--az-navy), #0d1f28); color: #fff; }
+.pf-btn-save:hover { background: linear-gradient(135deg, #0f232e, #081820); transform: translateY(-1px); }
+
+/* Edit button picks up the corporate green outline used elsewhere */
+.detail-sec-edit-btn { border: 1.5px solid #1aad6e; background: #fff; color: var(--az-navy); border-radius: .5rem; }
+.detail-sec-edit-btn:hover { background: #f2fcf7; border-color: #148c58; }
+.detail-section.is-editing .detail-sec-edit-btn { display: none; }
+
+/* Toast */
+.pf-toast { position: fixed; left: 50%; bottom: 2rem; transform: translate(-50%, 16px); background: #16303d; color: #fff; border-radius: .6rem; padding: .65rem 1rem; font-size:var(--fs-small); font-weight: 600; display: flex; align-items: center; gap: .45rem; box-shadow: 0 10px 30px rgba(10,28,38,.3); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 3000; }
+.pf-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.pf-toast svg { width: 16px; height: 16px; color: #2ed88e; flex-shrink: 0; }
+
+@media (max-width: 760px) { .pf-hero { padding: 1.1rem 1.1rem 1.2rem; } .pf-hero-clip { display: none; } }
+@media (prefers-reduced-motion: reduce) { .pf-btn, .pf-toast { transition: none; } }
+
+html.dark .pf-hero { background: #12302a; border-color: #1d5243; }
+html.dark .pf-hero-name { color: #e6eef3; }
+html.dark .pf-hero-meta-i strong { color: #e6eef3; }
+html.dark .pf-edit-grid .f-input, html.dark .pf-edit-grid .f-select { background: #0d1b24; border-color: #243545; color: #e6eef3; }
   </style>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
@@ -146,15 +209,15 @@
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
   </div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
       <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
-      <img src="../images/icons/notification.svg" width="18" height="18" alt=""/><span class="notif-dot" aria-label="3 notifications">3</span>
+      <span class="material-icons">notifications</span><span class="notif-dot" aria-label="3 notifications">3</span>
     </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr">
@@ -189,11 +252,11 @@
         </div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
     <div class="hdr-div" role="separator"></div>
     <div class="hdr-lang-wrap">
-    <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+    <button class="hdr-lang" aria-label="Language: English"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
         <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
           <span class="fi fi-us"></span> English
@@ -232,9 +295,9 @@
             <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile
           </a>
           <a href="my-tasks.html" class="av-nav-link" role="menuitem">
-            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks
+            <div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Saved Drafts
           </a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -248,36 +311,33 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 
 <!-- ████ MAIN ████ -->
@@ -291,27 +351,32 @@
       <div class="page-title">My Profile</div>
     </div>
 
-    <!-- User summary card -->
-    <div class="profile-user-card">
-      <div class="profile-avatar-wrap">
-        <svg class="profile-avatar" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#1e3a4a;flex-shrink:0;"><circle cx="44" cy="44" r="44" fill="#1e3a4a"/><text x="44" y="57" text-anchor="middle" font-family="Roboto,sans-serif" font-size="30" font-weight="700" fill="#2ed88e">SR</text></svg>
-        <button class="profile-avatar-edit" title="Change profile photo" aria-label="Change profile photo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-      </div>
-      <div class="profile-user-info">
-        <div class="profile-user-name">Sara Rahman</div>
-        <div style="margin-top:.3125rem"><span class="badge-s s-active" style="font-size:.75rem;padding:.1875rem .875rem">Active</span></div>
-        <div class="profile-meta">
-          <div class="profile-meta-item">Customer ID: <strong>CIF-1023847</strong></div>
-          <div class="profile-meta-item">Email: <strong>sara.rahman@email.com</strong></div>
-          <div class="profile-meta-item">Mobile: <strong>+971 55 987 6543</strong></div>
-          <div class="profile-meta-item">User Type: <strong>Retail Premium</strong></div>
+    <!-- User summary — standard hero panel -->
+    <div class="pf-hero">
+      <span class="pf-hero-clip" aria-hidden="true"></span>
+      <div class="pf-hero-row">
+        <div class="profile-avatar-wrap">
+          <svg class="profile-avatar" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#1e3a4a;flex-shrink:0;"><circle cx="44" cy="44" r="44" fill="#1e3a4a"/><text x="44" y="57" text-anchor="middle" font-family="Roboto,sans-serif" font-size="30" font-weight="700" fill="#2ed88e">SR</text></svg>
+          <button class="profile-avatar-edit" title="Change profile photo" aria-label="Change profile photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
         </div>
-        <div class="profile-last-login">Last login: 05 May 2026, 09:42 AM &nbsp;&middot;&nbsp; IP: 192.168.1.45 &nbsp;&middot;&nbsp; Dubai, UAE</div>
+        <div style="flex:1;min-width:0">
+          <div class="pf-hero-eyebrow">Your profile</div>
+          <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+            <span class="pf-hero-name" id="pfHeroName">Sara Rahman</span>
+            <span class="badge-s s-active" style="font-size:var(--fs-micro);padding:.15rem .75rem">Active</span>
+          </div>
+          <div class="pf-hero-meta">
+            <span class="pf-hero-meta-i">Customer ID: <strong>CIF-1023847</strong></span>
+            <span class="pf-hero-meta-i">Email: <strong id="pfHeroEmail">sara.rahman@email.com</strong></span>
+            <span class="pf-hero-meta-i">Mobile: <strong id="pfHeroMobile">+971 55 987 6543</strong></span>
+            <span class="pf-hero-meta-i">User Type: <strong>Retail Premium</strong></span>
+          </div>
+          <div class="pf-hero-login">Last login: 05 May 2026, 09:42 AM &nbsp;&middot;&nbsp; IP: 192.168.1.45 &nbsp;&middot;&nbsp; Dubai, UAE</div>
+        </div>
       </div>
     </div>
-
     <!-- ── 1. Personal Information ── -->
     <div class="detail-section">
       <div class="detail-sec-hdr" onclick="toggleSec('ds1','dc1')" aria-expanded="true">
@@ -323,7 +388,7 @@
           </div>
         </div>
         <div class="detail-sec-hdr-right">
-          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+          <button class="detail-sec-edit-btn" onclick="pfEdit(event,'ds1')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Edit
           </button>
@@ -356,7 +421,7 @@
           </div>
         </div>
         <div class="detail-sec-hdr-right">
-          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+          <button class="detail-sec-edit-btn" onclick="pfEdit(event,'ds2')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Edit
           </button>
@@ -398,7 +463,7 @@
           </div>
         </div>
         <div class="detail-sec-hdr-right">
-          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+          <button class="detail-sec-edit-btn" onclick="pfEdit(event,'ds3')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Edit
           </button>
@@ -442,7 +507,7 @@
         </div>
         <div class="security-row">
           <div><div class="sr-title">Security Questions</div><div class="sr-sub">3 security questions configured</div></div>
-          <span class="badge-s s-active" style="font-size:.7rem;padding:.125rem .75rem">Configured</span>
+          <span class="badge-s s-active" style="font-size:var(--fs-micro);padding:.125rem .75rem">Configured</span>
           <button class="sr-action">Manage</button>
         </div>
         <div class="security-row">
@@ -518,7 +583,7 @@
           </div>
         </div>
         <div class="detail-sec-hdr-right">
-          <button class="detail-sec-edit-btn" onclick="event.stopPropagation()">
+          <button class="detail-sec-edit-btn" onclick="pfEdit(event,'ds6')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Edit
           </button>
@@ -566,6 +631,141 @@ function toggleSec(bodyId, chevId) {
   if (c) c.classList.toggle('open', !open);
   if (h) h.setAttribute('aria-expanded', String(!open));
 }
+
+/* ══ Section editing ═══════════════════════════════════════════
+   Each section renders as read-only label/value pairs. Pressing Edit
+   swaps that body for the same fields as real form controls, keeping
+   the original markup so Cancel is a straight restore. Fields whose
+   value the customer cannot change (customer segment, ID numbers)
+   stay read-only and are visibly marked so.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Values the customer may not edit themselves */
+var PF_LOCKED = ['Customer Segment', 'ID Number', 'ID Type', 'Issue Date', 'Expiry Date',
+                 'Issuing Country', 'Place of Issue'];
+/* Fields that should render as a picker rather than free text */
+var PF_CHOICES = {
+  'Gender':               ['Female', 'Male', 'Prefer not to say'],
+  'Marital Status':       ['Single', 'Married', 'Divorced', 'Widowed'],
+  'Nationality':          ['Indian', 'Emirati', 'British', 'Lebanese', 'Pakistani'],
+  'Country of Residence': ['United Arab Emirates', 'Saudi Arabia', 'India', 'United Kingdom'],
+  'Language':             ['English', 'French', 'العربية'],
+  'Preferred Language':   ['English', 'French', 'العربية'],
+  'Currency':             ['AED', 'USD', 'EUR', 'GBP'],
+  'Base Currency':        ['AED', 'USD', 'EUR', 'GBP'],
+  'Statement Frequency':  ['Monthly', 'Quarterly', 'Half-yearly', 'Yearly'],
+  'Statement Delivery':   ['Email', 'Post', 'Both']
+};
+
+var pfSnapshot = {};
+
+function pfToast(msg) {
+  var t = document.getElementById('pfToast');
+  document.getElementById('pfToastTxt').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(pfToast._t);
+  pfToast._t = setTimeout(function () { t.classList.remove('show'); }, 2200);
+}
+
+function pfEdit(e, bodyId) {
+  if (e) e.stopPropagation();
+  var body = document.getElementById(bodyId);
+  if (!body || body.dataset.editing === '1') return;
+
+  /* make sure the section is open before swapping it */
+  if (body.style.display === 'none') {
+    var chev = document.getElementById('dc' + bodyId.slice(2));
+    body.style.display = '';
+    if (chev) chev.classList.add('open');
+  }
+
+  pfSnapshot[bodyId] = body.innerHTML;
+  body.dataset.editing = '1';
+  body.closest('.detail-section').classList.add('is-editing');
+
+  var pairs = Array.prototype.map.call(body.querySelectorAll('.pf-label'), function (lbl) {
+    var valEl = lbl.parentElement.querySelector('.pf-value');
+    var raw = valEl ? valEl.textContent.replace(/\s+/g, ' ').trim() : '';
+    if (raw.indexOf('— Not provided') === 0) raw = '';
+    return { label: lbl.textContent.trim(), value: raw, masked: valEl && valEl.classList.contains('masked') };
+  });
+
+  var html = '<div class="pf-edit-grid">';
+  pairs.forEach(function (p, i) {
+    var id = bodyId + '_f' + i;
+    var locked = PF_LOCKED.indexOf(p.label) > -1;
+    html += '<div><label class="f-label" for="' + id + '">' + p.label +
+            (locked ? ' <span style="font-weight:400;color:#8a979e">(not editable)</span>' : '') + '</label>';
+    if (PF_CHOICES[p.label] && !locked) {
+      html += '<select class="f-select" id="' + id + '" data-label="' + p.label + '">' +
+              PF_CHOICES[p.label].map(function (o) {
+                return '<option' + (o === p.value ? ' selected' : '') + '>' + o + '</option>';
+              }).join('') + '</select>';
+    } else {
+      html += '<input class="f-input" id="' + id + '" data-label="' + p.label + '" value="' +
+              p.value.replace(/"/g, '&quot;') + '"' + (locked ? ' readonly' : '') +
+              (p.value ? '' : ' placeholder="Not provided"') + '/>';
+    }
+    html += '</div>';
+  });
+  html += '</div>' +
+    '<div class="pf-edit-foot">' +
+      '<button type="button" class="pf-btn pf-btn-ghost" onclick="pfCancel(\'' + bodyId + '\')">Cancel</button>' +
+      '<button type="button" class="pf-btn pf-btn-save" onclick="pfSave(\'' + bodyId + '\')">Save changes</button>' +
+    '</div>';
+
+  body.innerHTML = html;
+  var first = body.querySelector('.f-input:not([readonly]), .f-select');
+  if (first) first.focus();
+}
+
+function pfCancel(bodyId) {
+  var body = document.getElementById(bodyId);
+  if (!body || !pfSnapshot[bodyId]) return;
+  body.innerHTML = pfSnapshot[bodyId];
+  body.dataset.editing = '';
+  body.closest('.detail-section').classList.remove('is-editing');
+}
+
+function pfSave(bodyId) {
+  var body = document.getElementById(bodyId);
+  if (!body) return;
+
+  /* read the edited values back out, then rebuild the read-only view
+     from the snapshot so nothing else about the markup shifts */
+  var edited = {};
+  body.querySelectorAll('[data-label]').forEach(function (el) {
+    edited[el.getAttribute('data-label')] = el.value.trim();
+  });
+
+  var tmp = document.createElement('div');
+  tmp.innerHTML = pfSnapshot[bodyId];
+  tmp.querySelectorAll('.pf-label').forEach(function (lbl) {
+    var key = lbl.textContent.trim();
+    if (!(key in edited)) return;
+    var valEl = lbl.parentElement.querySelector('.pf-value');
+    if (!valEl) return;
+    var v = edited[key];
+    /* keep any flag chip that was part of the original value */
+    var flag = valEl.querySelector('.fi');
+    valEl.textContent = v || '— Not provided';
+    valEl.classList.toggle('muted-val', !v);
+    if (flag && v) valEl.insertBefore(flag, valEl.firstChild);
+  });
+
+  body.innerHTML = tmp.innerHTML;
+  body.dataset.editing = '';
+  body.closest('.detail-section').classList.remove('is-editing');
+
+  /* keep the hero in step with the fields it mirrors */
+  var nameParts = [edited['First Name'], edited['Middle Name'], edited['Last Name']].filter(Boolean);
+  if (nameParts.length) document.getElementById('pfHeroName').textContent = nameParts.join(' ');
+  if (edited['Primary Email'])  document.getElementById('pfHeroEmail').textContent  = edited['Primary Email'];
+  if (edited['Primary Mobile']) document.getElementById('pfHeroMobile').textContent = edited['Primary Mobile'];
+
+  pfToast('Changes saved');
+}
 </script>
+<div class="pf-toast" id="pfToast" role="status" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span id="pfToastTxt"></span></div>
 </body>
 </html>

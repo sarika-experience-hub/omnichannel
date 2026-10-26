@@ -7,42 +7,23 @@
   <link rel="stylesheet" href="../css/fonts.css"/>
   <link rel="stylesheet" href="../css/flag-icons.min.css"/>
   <link rel="stylesheet" href="../css/styles.css"/>
-  <style>
-    .upload-area { border:2px dashed var(--az-green); border-radius:.5rem; padding:2.5rem 1.5rem; text-align:center; cursor:pointer; background:#f8fafb; transition:background .12s; }
-    .upload-area:hover { background:#edfaf6; }
-    .upload-area svg { display:block; margin:0 auto .75rem; }
-    .upload-area .upload-lbl { color:var(--az-green); font-weight:600; font-size:.875rem; }
-    .form-footer-bar { border-top:1px solid var(--az-border); padding:1.125rem 0 0; margin-top:1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem; }
-    .terms-chk { display:flex; align-items:center; gap:.5rem; font-size:.8125rem; cursor:pointer; }
-    .terms-chk input { width:16px; height:16px; accent-color:var(--az-green); cursor:pointer; }
-    .terms-chk span { color:#0067AB; font-weight:500; }
-    .az-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:1050; }
-    .az-modal { background:#fff; border-radius:.75rem; box-shadow:0 8px 32px rgba(0,0,0,.18); width:100%; overflow:hidden; }
-    .az-modal-hdr { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--az-border); }
-    .az-modal-hdr span { font-weight:600; font-size:.9375rem; color:var(--az-navy); }
-    .az-modal-hdr button { background:none; border:none; font-size:1.125rem; cursor:pointer; color:var(--az-muted); line-height:1; }
-    .az-modal-hdr button:hover { color:var(--az-navy); }
-    .iban-input-wrap { position:relative; display:flex; align-items:center; }
-    .iban-input-wrap .f-input { flex:1; padding-right:2.5rem; }
-    .iban-scan-btn { position:absolute; right:.5rem; background:none; border:none; cursor:pointer; color:var(--az-green); display:flex; align-items:center; padding:.25rem; }
-    .iban-scan-btn:hover { color:var(--az-navy); }
-    /* Bootstrap-style toggle */
-    .form-switch .form-check-input { width:2.5em; height:1.25em; cursor:pointer; }
-    .form-switch .form-check-input:checked { background-color:var(--az-green); border-color:var(--az-green); }
-  </style>
+  <link rel="stylesheet" href="../css/request-form.css"/>
+  <link rel="stylesheet" href="../css/qr-payment.css"/>
+  <link rel="stylesheet" href="../css/attachment.css"/>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div"></div>
     <div class="notif-wrap">
-      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="../images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span></div>
         <div class="notif-list">
@@ -53,11 +34,11 @@
         <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
     <div class="hdr-div"></div>
     <div class="hdr-lang-wrap">
-      <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
         <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
         <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
@@ -86,8 +67,8 @@
         </div>
         <div class="av-drop-nav">
           <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
-          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Saved Drafts</a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -99,129 +80,214 @@
   </div>
 </header>
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item active-section" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron open" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item active">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item active">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
-    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Payments</a><span class="sep">&#8250;</span><span class="cur">QR Code Payments</span></div>
-    <h1 class="page-title mb-4">QR Code Payments</h1>
+    <div class="az-bc">
+      <a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span>
+      <a href="payments-favorites.html">Payments</a><span class="sep">&#8250;</span>
+      <span class="cur">QR Code Payment</span>
+    </div>
+    <div class="page-top-bar">
+      <h1 class="page-title" style="margin-bottom:0">QR Code Payment</h1>
+      <a href="payments-favorites.html" class="frs-back-btn">
+        <span class="material-icons" aria-hidden="true">arrow_back</span> Back
+      </a>
+    </div>
 
-    <!-- Section 1: Transfer Details -->
-    <div class="sec-card mb-3">
-      <div class="sec-hdr open" onclick="toggleSec('secTransfer')" role="button">
-        <span>Transfer Details</span>
-        <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-      </div>
-      <div class="sec-body" id="secTransfer">
-        <!-- From Account full-width -->
-        <div class="row g-3 mb-3">
-          <div class="col-12">
-            <label class="f-label" for="fromAcct">From Account</label>
-            <select id="fromAcct" class="f-input f-select">
-              <option selected>Savings Account – ••••7001</option>
-              <option>Current Account – ••••7002</option>
-            </select>
+    <form id="qrForm" novalidate>
+
+      <!-- Section 1 — Transfer Details -->
+      <div class="gao-card">
+        <div class="gao-card-hdr">
+          <div class="gao-hdr-left">
+            <span class="gao-card-title">Transfer Details</span>
+            <span class="gao-card-subtitle">&mdash; Scan a code or enter the beneficiary</span>
           </div>
         </div>
-        <!-- IBAN / Recipient / Currency row -->
-        <div class="row g-3 mb-3">
-          <div class="col-md-4">
-            <label class="f-label" for="ibanNum">IBAN / Account Number</label>
-            <div class="iban-input-wrap">
-              <input id="ibanNum" class="f-input" placeholder="Enter IBAN or Account Number"/>
-              <button class="iban-scan-btn" onclick="openModal('qrModal')" title="Scan QR Code" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14" y2="14"/><line x1="17" y1="14" x2="21" y2="14"/><line x1="14" y1="17" x2="14" y2="21"/><line x1="21" y1="17" x2="17" y2="17"/><line x1="21" y1="21" x2="17" y2="21"/></svg>
-              </button>
+        <div class="gao-card-body">
+
+          <div class="gao-field-group">
+            <!-- From Account through Beneficiary Currency share one row -->
+            <div class="row g-3">
+              <div class="col-12 col-md-3">
+                <label class="f-label" for="fromAcct">From Account <span class="gao-req">*</span></label>
+                <select id="fromAcct" class="f-input f-select" data-required="true" onchange="qrSyncBalance()">
+                  <option value="Savings Account — ••••7001" selected>Savings Account &mdash; &bull;&bull;&bull;&bull;7001</option>
+                  <option value="Current Account — ••••7002">Current Account &mdash; &bull;&bull;&bull;&bull;7002</option>
+                </select>
+                <div class="rf-bal" id="qrBal">Available <strong>AED 42,500.00</strong></div>
+              </div>
+
+              <div class="col-12 col-md-3">
+                <label class="f-label" for="ibanNum">IBAN / Account Number <span class="gao-req">*</span></label>
+                <div class="qr-scan-wrap">
+                  <input id="ibanNum" class="f-input" placeholder="Enter or scan" data-required="true" autocomplete="off"/>
+                  <button type="button" class="qr-scan-btn" onclick="openModal('qrModal')" title="Scan QR code" aria-label="Scan QR code">
+                    <span class="material-icons" aria-hidden="true">qr_code_scanner</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-3">
+                <label class="f-label" for="recipientName">Recipient Name <span class="gao-req">*</span></label>
+                <input id="recipientName" class="f-input" placeholder="Beneficiary name" data-required="true" autocomplete="off"/>
+              </div>
+
+              <div class="col-12 col-md-3">
+                <label class="f-label" for="beneCurr">Beneficiary Currency <span class="gao-req">*</span></label>
+                <select id="beneCurr" class="f-input f-select" data-required="true" onchange="qrSyncRate()">
+                  <option value="" disabled selected>Select</option>
+                  <option>AED</option><option>USD</option><option>EUR</option><option>GBP</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="toggle-wrap mt-3" for="saveBene">
+              <span class="az-toggle">
+                <input type="checkbox" id="saveBene" checked/>
+                <span class="az-toggle-slider"></span>
+              </span>
+              <span>Save this beneficiary for next time</span>
+            </label>
+          </div>
+
+          <div class="gao-field-group">
+            <div class="gao-field-group-lbl">Amount</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-5">
+                <label class="f-label" for="qrAmount">You send <span class="gao-req">*</span></label>
+                <div class="amount-field rf-amt-field">
+                  <div class="amount-curr" onclick="qrOpenSelect('qrSendCurr')">
+                    <span class="fi fi-ae amount-flag" id="qrSendFlag" aria-hidden="true"></span>
+                    <select id="qrSendCurr" aria-label="Sending currency" onchange="qrSyncCurrency(this);qrSyncRate()">
+                      <option value="AED" data-flag="ae" selected>AED</option>
+                      <option value="USD" data-flag="us">USD</option>
+                      <option value="EUR" data-flag="eu">EUR</option>
+                      <option value="GBP" data-flag="gb">GBP</option>
+                    </select>
+                    <svg width="10" height="7" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#8a979e"/></svg>
+                  </div>
+                  <input id="qrAmount" class="amount-inp" inputmode="decimal" placeholder="0.00" data-required="true" oninput="qrSyncRate()" autocomplete="off"/>
+                </div>
+                <!-- Quick amounts save typing for the common cases -->
+                <div class="rf-quick" role="group" aria-label="Quick amounts">
+                  <button type="button" class="rf-quick-btn" onclick="qrSetAmount(100)">100</button>
+                  <button type="button" class="rf-quick-btn" onclick="qrSetAmount(500)">500</button>
+                  <button type="button" class="rf-quick-btn" onclick="qrSetAmount(1000)">1,000</button>
+                  <button type="button" class="rf-quick-btn" onclick="qrSetAmount(5000)">5,000</button>
+                </div>
+                <div class="rf-amt-err" id="qrAmtErr"></div>
+              </div>
+
+              <div class="col-12 col-md-7">
+                <!-- What actually lands, and what it costs -->
+                <div class="rf-rate" id="qrRate">
+                  <div class="rf-rate-row">
+                    <span class="rf-rate-k">Beneficiary receives</span>
+                    <span class="rf-rate-v" id="qrReceives">&mdash;</span>
+                  </div>
+                  <div class="rf-rate-row">
+                    <span class="rf-rate-k">Exchange rate</span>
+                    <span class="rf-rate-v" id="qrRateVal">&mdash;</span>
+                  </div>
+                  <div class="rf-rate-row">
+                    <span class="rf-rate-k">Transfer fee</span>
+                    <span class="rf-rate-v" id="qrFee">Free</span>
+                  </div>
+                  <div class="rf-rate-row rf-rate-total">
+                    <span class="rf-rate-k">Total debited</span>
+                    <span class="rf-rate-v" id="qrTotal">&mdash;</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-0">
+              <div class="col-12 col-md-5">
+                <label class="f-label" for="purpose">Purpose <span class="gao-req">*</span></label>
+                <select id="purpose" class="f-input f-select" data-required="true">
+                  <option value="" disabled selected>Select a purpose</option>
+                  <option>Family support</option>
+                  <option>Goods and services</option>
+                  <option>Salary</option>
+                  <option>Education</option>
+                  <option>Other</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div class="col-md-4">
-            <label class="f-label" for="recipientName">Recipient Name</label>
-            <input id="recipientName" class="f-input" placeholder="Recipient Name"/>
-          </div>
-          <div class="col-md-4">
-            <label class="f-label" for="beneCurr">Beneficiary Currency</label>
-            <select id="beneCurr" class="f-input f-select"><option value="">Currency</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option></select>
+
+        </div>
+      </div>
+
+      <!-- Section 2 — Attachment -->
+      <div class="gao-card">
+        <div class="gao-card-hdr">
+          <div class="gao-hdr-left">
+            <span class="gao-card-title">Attachment</span>
+            <span class="gao-card-subtitle">&mdash; Invoice or supporting document, if you have one</span>
           </div>
         </div>
-        <!-- Save Beneficiary toggle -->
-        <div class="mb-3">
-          <div class="form-check form-switch d-flex align-items-center gap-2" style="padding-left:0;">
-            <input class="form-check-input" type="checkbox" id="saveBene" checked style="margin-left:0;cursor:pointer;"/>
-            <label class="form-check-label f-label mb-0" for="saveBene" style="cursor:pointer;">Save Beneficiary</label>
-          </div>
-        </div>
-        <!-- Amount & Purpose -->
-        <div class="row g-3">
-          <div class="col-md-4">
-            <label class="f-label" for="amount">Amount</label>
-            <div class="f-currency">
-              <div class="fp"><select style="border:none;background:none;font-size:.8125rem;font-family:'Roboto',sans-serif;cursor:pointer;outline:none;color:var(--az-navy);padding:0;min-width:70px;"><option>Currency</option><option>USD</option><option>EUR</option><option>GBP</option></select></div>
-              <input id="amount" class="f-input" style="border:none;flex:1;padding:.5rem .75rem;outline:none;" placeholder="00.00"/>
+        <div class="gao-card-body">
+          <div class="gao-field-group">
+            <div class="attach-zone" id="dropZone" onclick="document.getElementById('fileInp').click()">
+              <span class="ob-upload-ico"><span class="material-icons" aria-hidden="true">cloud_upload</span></span>
+              <span class="ob-upload-txt">
+                <span class="ob-upload-lead">Drag and drop your document</span>
+                <span class="ob-upload-hint">JPEG, PNG or PDF &middot; up to 10&nbsp;MB</span>
+              </span>
+              <button type="button" class="ob-upload-btn" onclick="event.stopPropagation();document.getElementById('fileInp').click()"><span class="material-icons" style="font-size:15px;">upload</span> Browse</button>
             </div>
-          </div>
-          <div class="col-md-4">
-            <label class="f-label" for="purpose">Purpose</label>
-            <input id="purpose" class="f-input" placeholder="Enter Purpose"/>
+            <input type="file" id="fileInp" accept=".jpg,.jpeg,.png,.pdf" multiple style="display:none" onchange="obHandleFile(this.files)"/>
+            <div id="fileChipWrap"></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Section 2: Attachment -->
-    <div class="sec-card mb-3">
-      <div class="sec-hdr open" onclick="toggleSec('secAttach')" role="button">
-        <span>Attachement</span>
-        <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-      </div>
-      <div class="sec-body" id="secAttach">
-        <div class="upload-area" onclick="document.getElementById('qrFile').click()" role="button" tabindex="0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--az-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <div class="upload-lbl">Choose file</div>
+      <!-- CTA panel -->
+      <div class="gao-footer">
+        <div>
+          <div class="gao-footer-left">
+            <input type="checkbox" id="tcAgree" data-required="true"/>
+            <label for="tcAgree">I agree to the <a href="javascript:;" onclick="event.stopPropagation();openModal('tcModal')">Terms and Conditions</a> for this payment</label>
+          </div>
+          <div class="gao-tc-error" id="tcError">Please accept the Terms and Conditions to continue.</div>
         </div>
-        <input id="qrFile" type="file" style="display:none" multiple/>
+        <div class="gao-footer-right">
+          <a href="payments-favorites.html" class="btn-action btn-cancel">Cancel</a>
+          <button type="button" class="btn-action btn-save" onclick="qrSaveDraft()">Save Draft</button>
+          <button type="button" class="btn-action btn-submit" onclick="qrSubmit()">Submit</button>
+        </div>
       </div>
-    </div>
-
-    <!-- Footer bar -->
-    <div class="form-footer-bar">
-      <label class="terms-chk">
-        <input type="checkbox" style="accent-color:var(--az-green);cursor:pointer;width:16px;height:16px;"/> <span>I Agree On Terms And Conditions</span>
-      </label>
-      <div class="d-flex gap-2">
-        <a href="#" class="btn-action btn-cancel">CANCEL</a>
-        <button class="btn-action btn-save">SAVE</button>
-        <button class="btn-action btn-submit">SUBMIT</button>
-      </div>
-    </div>
+    </form>
   </main>
   <footer class="app-footer" role="contentinfo">
     <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
@@ -235,33 +301,274 @@
 </div>
 
 <!-- QR Scanner Modal -->
-<div class="az-modal-backdrop" id="qrModal" style="display:none">
-  <div class="az-modal" style="max-width:420px;text-align:center">
-    <div class="az-modal-hdr"><span>QR Code</span><button onclick="closeModal('qrModal')" type="button">&#10005;</button></div>
-    <div style="padding:2rem 3rem">
-      <svg width="220" height="220" viewBox="0 0 220 220">
-        <!-- corner brackets -->
-        <path d="M20,50 L20,20 L50,20" stroke="#999" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M170,20 L200,20 L200,50" stroke="#999" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M200,170 L200,200 L170,200" stroke="#999" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M50,200 L20,200 L20,170" stroke="#999" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <!-- camera icon circle -->
-        <circle cx="110" cy="150" r="26" fill="var(--az-green)"/>
-        <path d="M100,150 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0" fill="white"/>
-        <path d="M95,143 h6 l3,-4 h12 l3,4 h6 a3,3 0 0,1 3,3 v16 a3,3 0 0,1,-3,3 h-30 a3,3 0 0,1,-3,-3 v-16 a3,3 0 0,1,3,-3z" fill="none" stroke="white" stroke-width="1.5"/>
-      </svg>
+<!-- ══ Scan QR code ══ -->
+<div class="modal-ov hidden" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle" onclick="if(event.target===this)closeModal('qrModal')">
+  <div class="az-modal modal-md" style="max-width:460px">
+    <button class="modal-close" onclick="closeModal('qrModal')" aria-label="Close">&#215;</button>
+    <div class="modal-title" id="qrModalTitle">Scan QR code</div>
+    <div style="margin-top:.35rem;font-size:var(--fs-body);color:var(--az-muted);line-height:1.6">
+      Point your camera at the beneficiary's code, or upload an image of it.
     </div>
-    <div style="padding:0 2rem 1.5rem">
-      <button class="btn-action btn-submit w-100" type="button">UPLOAD FROM THE DEVICE</button>
+
+    <div class="qr-frame" id="qrFrame">
+      <span class="qr-corner tl" aria-hidden="true"></span>
+      <span class="qr-corner tr" aria-hidden="true"></span>
+      <span class="qr-corner bl" aria-hidden="true"></span>
+      <span class="qr-corner br" aria-hidden="true"></span>
+      <span class="qr-sweep" aria-hidden="true"></span>
+      <div class="qr-frame-idle" id="qrFrameIdle">
+        <span class="material-icons" aria-hidden="true">qr_code_scanner</span>
+        <span>Camera preview appears here</span>
+      </div>
+    </div>
+    <div class="qr-scan-status" id="qrScanStatus" role="status">Ready to scan</div>
+
+    <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1.25rem;flex-wrap:wrap">
+      <button type="button" class="gao-locate-btn" onclick="document.getElementById('qrImage').click()">
+        <span class="material-icons" aria-hidden="true">image</span> Upload from device
+      </button>
+      <button type="button" class="btn-action btn-submit" id="qrScanBtn" onclick="qrScan()">Start scanning</button>
+    </div>
+    <input type="file" id="qrImage" accept="image/*" style="display:none" onchange="qrFromImage(this.files)"/>
+  </div>
+</div>
+
+<!-- ══ Terms ══ -->
+<div class="modal-ov hidden" id="tcModal" role="dialog" aria-modal="true" aria-labelledby="tcModalTitle" onclick="if(event.target===this)closeModal('tcModal')">
+  <div class="az-modal modal-md">
+    <button class="modal-close" onclick="closeModal('tcModal')" aria-label="Close">&#215;</button>
+    <div class="modal-title" id="tcModalTitle">Terms and Conditions</div>
+    <div style="margin-top:.75rem;max-height:52vh;overflow-y:auto;font-size:var(--fs-small);color:#55707e;line-height:1.7;">
+      <p>Payments made by QR code are processed immediately and cannot be recalled once submitted. Check the beneficiary name and amount before you confirm.</p>
+      <p style="margin-top:.75rem;">Where the beneficiary currency differs from the debit currency, the rate shown is indicative and the rate applied is the one in force at the time of processing.</p>
+      <p style="margin-top:.75rem;">Transfers are subject to your daily limit and to the bank's sanctions screening. A payment may be held where further checks are required.</p>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.5rem;">
+      <button type="button" class="btn-action btn-cancel" onclick="closeModal('tcModal')">Close</button>
+      <button type="button" class="btn-action btn-submit" onclick="document.getElementById('tcAgree').checked=true;document.getElementById('tcError').classList.remove('show');closeModal('tcModal')">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Submitted ══ -->
+<div class="modal-ov hidden" id="qrDone" role="dialog" aria-modal="true" aria-labelledby="qrDoneTitle">
+  <div class="az-modal modal-md" style="text-align:center;max-width:420px">
+    <button class="modal-close" onclick="closeModal('qrDone')" aria-label="Close">&#215;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#e4f9ee;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+      <span class="material-icons" style="color:#1aad6e;font-size:32px;">check_circle</span>
+    </div>
+    <div id="qrDoneTitle" class="modal-title">Payment submitted</div>
+    <div id="qrDoneSub" style="margin-top:.5rem;font-size:var(--fs-body);color:var(--az-muted);line-height:1.6"></div>
+    <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1.75rem;">
+      <a href="transaction-history.html" class="btn-action btn-cancel" style="text-decoration:none;">View history</a>
+      <a href="payments-favorites.html" class="btn-action btn-submit" style="text-decoration:none;">Done</a>
     </div>
   </div>
 </div>
 
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/app.js"></script>
+<script src="../js/attachment.js"></script>
 <script>
-function openModal(id){ document.getElementById(id).style.display='flex'; }
-function closeModal(id){ document.getElementById(id).style.display='none'; }
+'use strict';
+/* ══ QR Code Payment ══════════════════════════════════════════════
+   The amount block is the point of the screen, so it answers the
+   three questions a payer actually has: what lands, at what rate,
+   and what leaves the account. Figures recalculate as you type. */
+
+var QR_BALANCES = {
+  'Savings Account — ••••7001': { ccy: 'AED', amount: 42500 },
+  'Current Account — ••••7002': { ccy: 'AED', amount: 8750.4 }
+};
+
+/* Indicative rates against AED, enough to show the mechanic. */
+var QR_RATES = { AED: 1, USD: 0.2723, EUR: 0.2512, GBP: 0.2145 };
+
+function qrMoney(n, ccy) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + ccy;
+}
+function qrNum(id) {
+  var v = (document.getElementById(id).value || '').replace(/[^0-9.]/g, '');
+  var n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
+function qrOpenSelect(id) {
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  if (sel.showPicker) { try { sel.showPicker(); return; } catch (e) {} }
+  sel.focus();
+}
+
+/* Flag follows the chosen currency, as it does on fund transfer. */
+function qrSyncCurrency(sel) {
+  var opt = sel.options[sel.selectedIndex];
+  var flag = document.getElementById('qrSendFlag');
+  if (flag && opt) flag.className = 'fi fi-' + (opt.getAttribute('data-flag') || 'ae') + ' amount-flag';
+}
+
+function qrSyncBalance() {
+  var acct = document.getElementById('fromAcct').value;
+  var b = QR_BALANCES[acct];
+  var el = document.getElementById('qrBal');
+  if (b && el) el.innerHTML = 'Available <strong>' + qrMoney(b.amount, b.ccy) + '</strong>';
+  qrSyncRate();
+}
+
+function qrSyncRate() {
+  var amount = qrNum('qrAmount');
+  var from = document.getElementById('qrSendCurr').value;
+  var to = document.getElementById('beneCurr').value;
+  var recEl = document.getElementById('qrReceives');
+  var rateEl = document.getElementById('qrRateVal');
+  var totEl = document.getElementById('qrTotal');
+  var errEl = document.getElementById('qrAmtErr');
+  var fieldEl = document.querySelector('.rf-amt-field');
+
+  /* Balance check runs as you type, not only on submit — finding
+     out at the end that it never could have gone through is the
+     worst moment to learn it. */
+  var acct = QR_BALANCES[document.getElementById('fromAcct').value];
+  var over = acct && from === acct.ccy && amount > acct.amount;
+  errEl.textContent = over ? 'That is more than the available balance.' : '';
+  if (fieldEl) fieldEl.classList.toggle('is-invalid', !!over);
+
+  if (!amount || !to) {
+    recEl.innerHTML = '&mdash;';
+    rateEl.innerHTML = '&mdash;';
+    totEl.innerHTML = '&mdash;';
+    return;
+  }
+
+  var rate = QR_RATES[to] / QR_RATES[from];
+  recEl.textContent = qrMoney(amount * rate, to);
+  rateEl.textContent = from === to ? 'Same currency' : '1 ' + from + ' = ' + rate.toFixed(4) + ' ' + to;
+  totEl.textContent = qrMoney(amount, from);
+}
+
+function qrSetAmount(v) {
+  document.getElementById('qrAmount').value = v.toLocaleString('en-US', { minimumFractionDigits: 2 });
+  qrSyncRate();
+}
+
+/* ── Scan dialog ── */
+var QR_SAMPLE = { iban: 'AE07 0331 2345 6789 0123 456', name: 'Al Noor Trading LLC', ccy: 'AED' };
+
+function qrScan() {
+  var frame = document.getElementById('qrFrame');
+  var status = document.getElementById('qrScanStatus');
+  var btn = document.getElementById('qrScanBtn');
+  frame.classList.add('is-scanning');
+  document.getElementById('qrFrameIdle').innerHTML =
+    '<span class="material-icons" aria-hidden="true">photo_camera</span><span>Looking for a code…</span>';
+  status.textContent = 'Hold the code inside the frame';
+  status.className = 'qr-scan-status';
+  btn.disabled = true;
+
+  setTimeout(function () {
+    frame.classList.remove('is-scanning');
+    status.textContent = 'Code recognised';
+    status.className = 'qr-scan-status ok';
+    btn.disabled = false;
+    qrApply(QR_SAMPLE);
+    setTimeout(function () { closeModal('qrModal'); qrResetScan(); }, 700);
+  }, 2200);
+}
+
+function qrFromImage(files) {
+  if (!files || !files.length) return;
+  var status = document.getElementById('qrScanStatus');
+  status.textContent = 'Reading ' + files[0].name + '…';
+  status.className = 'qr-scan-status';
+  setTimeout(function () {
+    status.textContent = 'Code recognised';
+    status.className = 'qr-scan-status ok';
+    qrApply(QR_SAMPLE);
+    setTimeout(function () { closeModal('qrModal'); qrResetScan(); }, 700);
+  }, 900);
+}
+
+function qrApply(d) {
+  document.getElementById('ibanNum').value = d.iban;
+  document.getElementById('recipientName').value = d.name;
+  document.getElementById('beneCurr').value = d.ccy;
+  qrSyncRate();
+  if (typeof qrToast === 'function') qrToast('Beneficiary filled from the code');
+}
+
+function qrResetScan() {
+  var frame = document.getElementById('qrFrame');
+  if (!frame) return;
+  frame.classList.remove('is-scanning');
+  document.getElementById('qrFrameIdle').innerHTML =
+    '<span class="material-icons" aria-hidden="true">qr_code_scanner</span><span>Camera preview appears here</span>';
+  var s = document.getElementById('qrScanStatus');
+  s.textContent = 'Ready to scan';
+  s.className = 'qr-scan-status';
+}
+
+/* ── Submit ── */
+function qrValidate() {
+  var ok = true, first = null;
+  document.querySelectorAll('#qrForm [data-required]').forEach(function (el) {
+    if (el.type === 'checkbox') return;
+    var empty = !el.value || !el.value.trim();
+    el.classList.toggle('is-invalid', empty);
+    if (empty) { ok = false; if (!first) first = el; }
+  });
+  var amtField = document.querySelector('.rf-amt-field');
+  if (amtField && amtField.classList.contains('is-invalid')) ok = false;
+
+  var tc = document.getElementById('tcAgree');
+  document.getElementById('tcError').classList.toggle('show', !tc.checked);
+  document.querySelector('.gao-footer-left').classList.toggle('is-invalid', !tc.checked);
+  if (!tc.checked) { ok = false; if (!first) first = tc; }
+
+  if (!ok && first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); first.focus(); }
+  return ok;
+}
+
+function qrSubmit() {
+  if (!qrValidate()) return;
+  var amt = document.getElementById('qrAmount').value;
+  var ccy = document.getElementById('qrSendCurr').value;
+  var name = document.getElementById('recipientName').value;
+  document.getElementById('qrDoneSub').innerHTML =
+    '<strong>' + ccy + ' ' + amt + '</strong> is on its way to <strong>' + name + '</strong>.';
+  openModal('qrDone');
+}
+
+function qrSaveDraft() {
+  var d = {};
+  document.querySelectorAll('#qrForm input, #qrForm select').forEach(function (el) {
+    if (el.id) d[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  try { localStorage.setItem('qr_payment_draft', JSON.stringify(d)); } catch (e) {}
+  qrToast('Draft saved');
+}
+
+/* ── Toast ── */
+function qrToast(msg) {
+  var t = document.getElementById('qrToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'qrToast';
+    t.setAttribute('role', 'status');
+    t.style.cssText = 'position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(1rem);' +
+      'background:#16303d;color:#fff;padding:.6rem 1.1rem;border-radius:.5rem;font-size:var(--fs-small);' +
+      'font-family:var(--az-font);box-shadow:0 8px 24px rgba(16,32,48,.22);opacity:0;' +
+      'transition:opacity .2s,transform .2s;z-index:2000;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
+  clearTimeout(qrToast._t);
+  qrToast._t = setTimeout(function () {
+    t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(1rem)';
+  }, 2200);
+}
+
+qrSyncBalance();
 </script>
 </body>
 </html>

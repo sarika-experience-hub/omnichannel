@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – Fund Transfer</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ Fund Transfer — one journey for Own / Internal / Local / International ══
+   Single source of truth per concept: one From Account, one Amount, one Purpose,
+   one When block. Recipient identification is the only thing that varies by type.
+   Scoped with .ntf- ; shared globals (.f-label, .f-input, .amount-field, .tr-tabs,
+   .cal-xxx, .az-modal, .form-footer) are reused as-is, never redefined. ══ */
+
+:root {
+  --ntf-surface: #fff;
+  --ntf-surface-2: #f8fafb;
+  --ntf-rail: #f4faf8;
+  --ntf-danger: #dc2626;
+  --ntf-danger-bg: #fef2f2;
+  --ntf-warn: #b45309;
+  --ntf-warn-bg: #fffbeb;
+  --ntf-ok: #1a9e63;
+}
+html.dark {
+  --ntf-surface: #111f2b;
+  --ntf-surface-2: #16242f;
+  --ntf-rail: #142029;
+  --ntf-danger: #f87171;
+  --ntf-danger-bg: #2a1518;
+  --ntf-warn: #fbbf24;
+  --ntf-warn-bg: #2a2314;
+  --ntf-ok: #34d399;
+}
+
+/* ── Page shell: form column + sticky side panel
+      (grid + sticky behaviour copied from term-deposit-account-opening.html's .gao-td-grid) ── */
+.ntf-layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 2rem; align-items: start; }
+.ntf-side { position: sticky; top: 1rem; align-self: start; height: fit-content; }
+@media (max-width: 991.98px) {
+  .ntf-layout { grid-template-columns: minmax(0,1fr); }
+  .ntf-side { position: static; height: auto; }
+}
+
+/* ── Transfer type segmented control — same pill treatment as accounts.html's .az-tabs-pill ── */
+.ntf-type-switch { display: flex; gap: .3rem; background: var(--az-green-light,#edf9f4); border-radius: 22px; padding: 4px; margin-bottom: 1.25rem; max-width: 860px; min-height: 44px; box-sizing: border-box; }
+.ntf-type-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: .4rem; min-height: 36px; padding: 0 .75rem; border: none; background: transparent; border-radius: 18px; font-size:var(--fs-body); font-weight: 700; color: var(--az-muted); cursor: pointer; transition: background .18s, color .18s; font-family: 'Poppins','Roboto',sans-serif; white-space: nowrap; }
+.ntf-type-btn .material-icons { font-size: 17px; }
+.ntf-type-btn:hover { color: var(--az-navy); }
+.ntf-type-btn:focus-visible { outline: 2px solid var(--az-green); outline-offset: 2px; }
+.ntf-type-btn.active { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; }
+.ntf-type-btn.active:hover { color: #fff; }
+.ntf-type-btn.active .material-icons { color: #2ed88e; }
+
+/* ── Cash collection: the two places this journey differs on screen ── */
+.ntf-cash-note { display: flex; gap: .55rem; align-items: flex-start; padding: .7rem .85rem; border-radius: .6rem; background: var(--az-green-light,#edf9f4); font-size: var(--fs-caption); color: var(--az-navy); line-height: 1.55; margin-bottom: 1rem; }
+.ntf-cash-note .material-icons { font-size: 17px; color: var(--az-navy); flex: none; }
+.ntf-collect { display: flex; gap: .6rem; align-items: flex-start; margin-top: 1rem; padding: .8rem .95rem; border: 1px solid var(--az-border); border-left: 3px solid var(--az-green,#2ed88e); border-radius: .6rem; background: #fff; }
+.ntf-collect .material-icons { font-size: 18px; color: var(--az-green,#2ed88e); flex: none; margin-top: 1px; }
+.ntf-collect-t { font-size: var(--fs-small); font-weight: 600; color: var(--az-navy); }
+.ntf-collect-s { margin-top: .15rem; font-size: var(--fs-caption); color: var(--az-muted); line-height: 1.55; }
+
+/* ── Form cards (no headings — field labels carry the meaning) ── */
+.ntf-card { background: var(--ntf-surface); border: 1px solid var(--az-border); border-radius: .875rem; padding: 1.25rem; margin-bottom: 1rem; }
+.ntf-card-hd { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+.ntf-card-title { font-size:var(--fs-body); font-weight: 600; color: var(--az-navy); }
+.ntf-card-sub { font-size:var(--fs-caption); color: var(--az-muted); font-weight: 400; margin-left: auto; text-align: right; }
+
+/* ── Accessible account / beneficiary picker (listbox pattern) ── */
+.ntf-picker { position: relative; }
+.ntf-trigger { display: flex; align-items: center; gap: .65rem; width: 100%; background: var(--ntf-surface); border: 1.5px solid var(--az-border); border-radius: .5rem; padding: .5rem .75rem; cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; text-align: left; transition: border-color .15s, box-shadow .15s; min-height: 52px; }
+.ntf-trigger:hover { border-color: var(--az-green); }
+.ntf-trigger[aria-expanded="true"] { border-color: var(--az-green); box-shadow: 0 0 0 3px rgba(46,216,142,.1); }
+.ntf-trigger:focus-visible { outline: none; border-color: var(--az-green); box-shadow: 0 0 0 3px rgba(46,216,142,.18); }
+.ntf-trigger.ntf-invalid { border-color: var(--ntf-danger); }
+.ntf-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--ntf-rail); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size:var(--fs-caption); font-weight:600; color: var(--az-navy); }
+.ntf-avatar .material-icons { font-size: 17px; color: var(--az-green); }
+.ntf-trigger-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .1rem; }
+.ntf-trigger-main { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ntf-trigger-sub { font-size:var(--fs-micro); color: var(--az-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ntf-trigger-amt { font-size:var(--fs-caption); font-weight:600; color: var(--az-navy); white-space: nowrap; flex-shrink: 0; }
+.ntf-chevron { font-size: 19px; color: var(--az-muted); transition: transform .15s; flex-shrink: 0; }
+.ntf-trigger[aria-expanded="true"] .ntf-chevron { transform: rotate(180deg); }
+
+.ntf-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--ntf-surface); border: 1px solid var(--az-border); border-radius: .625rem; box-shadow: 0 10px 30px rgba(22,48,61,.16); z-index: 60; overflow: hidden auto; max-height: 300px; padding: .25rem; }
+html.dark .ntf-list { box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+.ntf-opt { display: flex; align-items: center; gap: .65rem; width: 100%; background: none; border: none; border-radius: .5rem; padding: .55rem .6rem; cursor: pointer; text-align: left; font-family: 'Poppins','Roboto',sans-serif; }
+.ntf-opt:hover, .ntf-opt.ntf-active { background: var(--ntf-rail); }
+.ntf-opt[aria-selected="true"] .ntf-opt-main { color: var(--az-green); }
+.ntf-opt-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .1rem; }
+.ntf-opt-main { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ntf-opt-sub { font-size:var(--fs-micro); color: var(--az-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ntf-opt-amt { font-size:var(--fs-caption); font-weight:600; color: var(--az-navy); white-space: nowrap; flex-shrink: 0; text-align: right; }
+.ntf-opt-amt small { display: block; font-size:var(--fs-micro); font-weight: 500; color: var(--az-muted); }
+.ntf-list-empty { padding: .85rem .6rem; font-size:var(--fs-caption); color: var(--az-muted); }
+
+/* ── Recent recipients (right-hand column beside the beneficiary picker) ── */
+/* Header shares the label row's box so the chips top-align with the picker */
+.ntf-recent-hdr { display: flex; align-items: center; min-height: 1.25rem; margin-bottom: .3125rem;
+  font-size:var(--fs-micro); font-weight:600; text-transform: uppercase; letter-spacing: .06em; color: var(--az-muted); }
+.ntf-recent-list { display: flex; gap: .55rem; overflow-x: auto; padding-bottom: .35rem; scrollbar-width: thin; }
+.ntf-recent-chip { display: flex; align-items: center; gap: .55rem; flex-shrink: 0; border: 1px solid var(--az-border); background: var(--ntf-surface); border-radius: .75rem; padding: .45rem .7rem; cursor: pointer; transition: border-color .15s, background .15s; font-family: 'Poppins','Roboto',sans-serif; text-align: left; }
+.ntf-recent-chip:hover { border-color: var(--az-green); background: var(--ntf-rail); }
+.ntf-recent-chip:focus-visible { outline: 2px solid var(--az-green); outline-offset: 1px; }
+.ntf-recent-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--az-navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size:var(--fs-micro); font-weight:600; flex-shrink: 0; }
+html.dark .ntf-recent-avatar { background: var(--az-green); color: #0d1b24; }
+.ntf-recent-info { display: flex; flex-direction: column; min-width: 0; }
+.ntf-recent-name { font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy); white-space: nowrap; }
+.ntf-recent-amt { font-size:var(--fs-micro); color: var(--az-muted); white-space: nowrap; }
+
+/* ── Sub-tabs (saved vs new recipient) ── */
+.tr-tab:focus-visible { outline: 2px solid var(--az-green); outline-offset: -2px; }
+
+/* Field label with an action link on the same line */
+.ntf-field-lbl-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; min-height: 1.25rem; margin-bottom: .3125rem; }
+.ntf-field-lbl-row .f-label { margin-bottom: 0; }
+.ntf-add-ben-link { font-size:var(--fs-caption); font-weight: 600; color: var(--az-blue,#00538A); text-decoration: none; white-space: nowrap; }
+.ntf-add-ben-link:hover { text-decoration: underline; }
+
+/* ── Amount ── */
+.ntf-amt-field { height: 3.25rem; }
+/* min-width:0 lets the input shrink below its intrinsic size — without it a flex
+   item keeps its default ~20-character width and overflows the card on mobile. */
+.ntf-amt-field .amount-inp { font-size:var(--fs-heading); font-weight: 600; padding-right: .9rem; min-width: 0; width: 100%; }
+.ntf-amt-field .amount-inp::placeholder { font-weight: 500; color: var(--az-placeholder); }
+.ntf-curr-badge { display: flex; align-items: center; gap: .4rem; cursor: default; background: var(--ntf-surface-2); min-width: 92px; }
+.ntf-curr-code { font-size:var(--fs-small); font-weight:600; color: var(--az-navy); }
+.ntf-amt-field.ntf-invalid { border-color: var(--ntf-danger); }
+.ntf-amt-field.ntf-invalid:focus-within { box-shadow: 0 0 0 3px rgba(220,38,38,.12); }
+
+.ntf-chips { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .6rem; }
+.ntf-chip { border: 1.5px solid var(--az-border); background: var(--ntf-surface); border-radius: 999px; padding: .3rem .85rem; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy); cursor: pointer; transition: border-color .15s, color .15s, background .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ntf-chip:hover { border-color: var(--az-green); color: var(--az-green); background: var(--ntf-rail); }
+.ntf-chip:focus-visible { outline: 2px solid var(--az-green); outline-offset: 1px; }
+
+.ntf-help { display: flex; align-items: center; gap: .35rem; font-size:var(--fs-micro); color: var(--az-muted); margin-top: .5rem; }
+.ntf-help .material-icons { font-size: 14px; }
+.ntf-help.ntf-help-err { color: var(--ntf-danger); font-weight: 600; }
+.ntf-help.ntf-help-warn { color: var(--ntf-warn); font-weight: 600; }
+
+/* ── FX block ── */
+.ntf-fx { margin-top: 1rem; border: 1px dashed var(--az-border); border-radius: .75rem; padding: .9rem 1rem; background: var(--ntf-surface-2); }
+.ntf-fx-hd { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .65rem; flex-wrap: wrap; }
+.ntf-fx-lbl { font-size:var(--fs-caption); font-weight:600; color: var(--az-navy); }
+.ntf-rate-chip { display: inline-flex; align-items: center; gap: .3rem; background: #eff6ff; color: var(--az-blue); border-radius: 999px; padding: .2rem .6rem; font-size:var(--fs-micro); font-weight: 600; white-space: nowrap; font-family: 'Poppins','Roboto',sans-serif; border: none; cursor: pointer; }
+html.dark .ntf-rate-chip { background: #16303d; }
+.ntf-rate-chip:hover { filter: brightness(.96); }
+.ntf-rate-chip:focus-visible { outline: 2px solid var(--az-green); outline-offset: 1px; }
+.ntf-rate-chip .material-icons { font-size: 13px; }
+.ntf-fx-note { font-size:var(--fs-micro); color: var(--az-muted); margin-top: .5rem; }
+
+/* ── When: Now / Schedule (radiogroup) ── */
+.ntf-when-row { display: flex; gap: .75rem; flex-wrap: wrap; }
+.ntf-when-card { flex: 1 1 240px; min-width: 210px; display: flex; align-items: flex-start; gap: .6rem; text-align: left; border: 1.5px solid var(--az-border); border-radius: .75rem; background: var(--ntf-surface); padding: .7rem .85rem; cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ntf-when-card:hover { border-color: var(--az-green); }
+.ntf-when-card:focus-visible { outline: none; border-color: var(--az-green); box-shadow: 0 0 0 3px rgba(46,216,142,.18); }
+.ntf-when-card[aria-checked="true"] { border-color: var(--az-green); background: var(--ntf-rail); box-shadow: 0 0 0 1px var(--az-green); }
+.ntf-when-radio .material-icons { font-size: 20px; color: #c8d1d8; }
+.ntf-when-card[aria-checked="true"] .ntf-when-radio .material-icons { color: var(--az-green); }
+.ntf-when-text { display: flex; flex-direction: column; gap: .15rem; }
+.ntf-when-title { font-size:var(--fs-small); font-weight:600; color: var(--az-navy); }
+.ntf-when-sub { font-size:var(--fs-micro); color: var(--az-muted); }
+.ntf-schedule { margin-top: 1rem; }
+/* The date picker is a button, not an .f-input — match its box to the two fields
+   beside it so Periodicity / Transfer Date / Number Of Payments line up. */
+#schedDateBtn {
+  width: 100%; justify-content: flex-start; gap: .5rem;
+  height: 2.375rem; padding: .5rem .75rem; box-sizing: border-box;
+  border: 1.5px solid var(--az-border); border-radius: .375rem;
+  background: var(--ntf-surface); color: var(--az-navy); font-weight: 400;
+}
+#schedDateBtn:hover { border-color: var(--az-green); background: var(--ntf-surface); }
+#schedDateBtn:focus-visible { outline: none; border-color: var(--az-green); box-shadow: 0 0 0 .1875rem rgba(46,216,142,.12); }
+#schedDateBtn .material-icons { color: var(--az-green); flex-shrink: 0; }
+.ntf-schedule .f-input { height: 2.375rem; box-sizing: border-box; }
+
+/* ── Attachment ── */
+.ntf-attach { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--az-border); border-radius: .5rem; padding: .5rem .75rem; background: var(--ntf-rail); cursor: pointer; transition: border-color .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ntf-attach:hover { border-color: var(--az-green); }
+.ntf-attach:focus-visible { outline: 2px solid var(--az-green); outline-offset: 1px; }
+.ntf-attach .material-icons { font-size: 18px; color: var(--az-green); }
+.ntf-attach-hint { font-size:var(--fs-micro); color: var(--az-muted); }
+
+/* ── Summary side panel — same treatment as term-deposit-account-opening.html's .gao-preview ── */
+.ntf-preview {
+  background: rgba(46,216,142,.07); border: 1px solid rgba(26,173,110,.18); border-left: 3px solid var(--az-green, #1aad6e);
+  border-radius: .625rem; padding: 1.1rem 1.25rem;
+  display: flex; flex-direction: column; gap: .9rem;
+}
+.ntf-preview-hdr {
+  display: flex; align-items: center; gap: .4rem;
+  font-size:var(--fs-caption); font-weight:600; color: var(--az-navy, #16303d);
+  padding-bottom: .75rem; margin-bottom: .1rem; border-bottom: 1px solid rgba(26,173,110,.18);
+}
+.ntf-preview-hdr .material-icons { font-size: 16px; color: var(--az-green, #1aad6e); }
+/* Label and value sit on one row; the limit bar wraps onto its own full-width line. */
+.ntf-preview-item { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+.ntf-preview-item:not(:last-child) { padding-bottom: .9rem; border-bottom: 1px solid rgba(26,173,110,.15); }
+.ntf-preview-item .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; text-transform: uppercase; color: var(--az-muted,#707070); flex-shrink: 0; }
+.ntf-preview-item .val { font-size:var(--fs-body); font-weight: 600; color: var(--az-navy,#16303d); line-height: 1.35; text-align: right; }
+.ntf-preview-item.ntf-preview-main .val { font-size:var(--fs-heading); font-weight: 600; color: var(--az-green, #1aad6e); }
+
+.ntf-limit-bar { flex: 0 0 100%; height: 5px; border-radius: 3px; background: rgba(26,173,110,.18); overflow: hidden; margin-top: .45rem; }
+.ntf-limit-fill { height: 100%; width: 0; background: var(--az-green, #1aad6e); border-radius: 3px; transition: width .2s, background .2s; }
+.ntf-limit-fill.over { background: var(--ntf-danger); }
+
+/* ── Validation banner ── */
+.ntf-errors { background: var(--ntf-danger-bg); border: 1px solid var(--ntf-danger); border-radius: .625rem; padding: .75rem .9rem; margin-bottom: 1rem; }
+.ntf-errors-hd { display: flex; align-items: center; gap: .4rem; font-size:var(--fs-caption); font-weight:600; color: var(--ntf-danger); margin-bottom: .35rem; }
+.ntf-errors-hd .material-icons { font-size: 17px; }
+.ntf-errors ul { margin: 0; padding-left: 1.5rem; }
+.ntf-errors li { font-size:var(--fs-caption); color: var(--ntf-danger); }
+
+/* ── Footer CTAs ── */
+.form-footer { background: none; border: none; border-top: 1px solid var(--az-border); padding: 1.25rem 0 0; }
+.form-footer .btn-action { border-radius: .5rem; padding: .7rem 1.6rem; font-size:var(--fs-body); transition: background .15s, box-shadow .15s, transform .15s, opacity .15s; }
+.form-footer .btn-cancel, .form-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.form-footer .btn-cancel:hover, .form-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.form-footer .btn-submit { background: linear-gradient(135deg, var(--az-navy), #0d1f28); color: #fff; border: none; }
+.form-footer .btn-submit:hover:not(:disabled) { transform: translateY(-1px); }
+.form-footer .btn-submit:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
+html.dark .form-footer .btn-submit { background: var(--az-green); color: #0d1b24; }
+/* Terms checkbox — match the redesigned .terms-chk control used elsewhere in the app */
+.form-footer .tc { font-size: var(--fs-body); }
+.form-footer .tc a { color: var(--az-blue); font-weight: 500; }
+.form-footer .tc input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none; margin: 0; flex-shrink: 0;
+  width: 18px; height: 18px; border: 1.5px solid var(--az-border); border-radius: .25rem;
+  background: #fff center/12px no-repeat; cursor: pointer;
+  transition: background-color .15s, border-color .15s, box-shadow .15s;
+}
+.form-footer .tc input[type="checkbox"]:hover { border-color: var(--az-green); }
+.form-footer .tc input[type="checkbox"]:focus-visible { outline: none; box-shadow: 0 0 0 .1875rem rgba(46,216,142,.25); }
+.form-footer .tc input[type="checkbox"]:checked {
+  background-color: var(--az-green); border-color: var(--az-green);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.2 3.2L11 1' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+html.dark .form-footer .tc input[type="checkbox"] { background-color: #162530; border-color: #243545; }
+html.dark .form-footer .tc input[type="checkbox"]:checked { background-color: var(--az-green); border-color: var(--az-green); }
+
+/* ── Review step ── */
+.ntf-review-amt { text-align: center; padding: 1.25rem 0 1rem; }
+.ntf-review-amt .ra-main { font-size:var(--fs-display); font-weight: 600; color: var(--az-navy); line-height: 1.1; }
+.ntf-review-amt .ra-sub { font-size:var(--fs-small); color: var(--az-muted); margin-top: .3rem; }
+.ntf-review-flow { display: flex; align-items: center; gap: .75rem; padding: 1rem 0; border-top: 1px solid var(--az-border); border-bottom: 1px solid var(--az-border); }
+.ntf-review-party { flex: 1; min-width: 0; }
+.ntf-review-party .rp-lbl { font-size:var(--fs-micro); text-transform: uppercase; letter-spacing: .06em; color: var(--az-muted); font-weight:600; margin-bottom: .25rem; }
+.ntf-review-party .rp-main { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy); overflow: hidden; text-overflow: ellipsis; }
+.ntf-review-party .rp-sub { font-size:var(--fs-micro); color: var(--az-muted); }
+.ntf-review-arrow { color: var(--az-green); flex-shrink: 0; }
+.ntf-review-dl { margin: 1rem 0 0; }
+.ntf-dl-row { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; padding: .55rem 0; font-size:var(--fs-small); border-bottom: 1px dashed var(--az-border); }
+.ntf-dl-row:last-child { border-bottom: none; }
+.ntf-dl-row dt { color: var(--az-muted); font-weight: 400; margin: 0; }
+.ntf-dl-row dd { color: var(--az-navy); font-weight: 600; margin: 0; text-align: right; }
+
+.ntf-link-btn { background: none; border: none; padding: 0; color: var(--az-blue); font-weight: 600; font-size:var(--fs-caption); cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; text-decoration: underline; }
+.ntf-link-btn:disabled { color: var(--az-muted); cursor: not-allowed; text-decoration: none; }
+
+/* ── Success ── */
+.ntf-done { text-align: center; padding: 2rem 1rem 1.5rem; }
+.ntf-done-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--ntf-ok); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.ntf-done-icon .material-icons { font-size: 34px; }
+.ntf-done-title { font-size:var(--fs-section); font-weight: 600; color: var(--az-navy); }
+.ntf-done-sub { font-size:var(--fs-small); color: var(--az-muted); margin-top: .35rem; }
+.ntf-done-ref { display: inline-flex; align-items: center; gap: .4rem; margin-top: .9rem; background: var(--ntf-rail); border-radius: 999px; padding: .35rem .9rem; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy); }
+.ntf-done-actions { display: flex; gap: .625rem; justify-content: center; flex-wrap: wrap; margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid #eef1f4; }
+.ntf-done-actions .btn-action { border-radius: .5rem; padding: .7rem 1.6rem; font-size: var(--fs-body); font-weight: 600; border: none; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; transition: background .15s, box-shadow .15s, transform .15s; }
+.ntf-done-actions .btn-cancel, .ntf-done-actions .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.ntf-done-actions .btn-cancel:hover, .ntf-done-actions .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.ntf-done-actions .btn-submit { background: linear-gradient(135deg, var(--az-navy), #0d1f28); color: #fff; }
+.ntf-done-actions .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(16,32,48,.18); }
+
+/* ── Visually hidden (for live regions) ── */
+.ntf-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 700px) {
+  .ntf-type-switch { flex-wrap: wrap; border-radius: .75rem; }
+  .ntf-type-btn { flex: 1 1 45%; }
+  /* The currency selector is wider than the static badge — narrow both, or the
+     amount gets clipped by .amount-field's overflow:hidden at 375px. */
+  .ntf-amt-field .amount-curr { min-width: 82px; padding: .5rem .45rem; }
+  .ntf-amt-field .amount-curr select { min-width: 42px; }
+  .ntf-amt-field .amount-inp { font-size:var(--fs-heading); }
+  .ntf-card { padding: 1rem .9rem 1.1rem; }
+  .ntf-review-flow { flex-direction: column; align-items: stretch; gap: .5rem; }
+  .ntf-review-arrow { transform: rotate(90deg); align-self: center; }
+}
+</style>
+</head>
+<body>
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 Jul, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:42
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            My Saved Drafts
+          </a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div></div>
+</header>
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
+  <button class="sb-item active-section" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron open" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub">
+    <a href="fund-transfer.html" class="sb-sub-item active">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><span class="cur">Fund Transfer</span></div>
+    <h1 class="page-title mb-3">Fund Transfer <span class="badge-s hidden" id="ntfEditBadge" style="background:#eaf2fb;color:var(--az-blue,#00538A);border:1px solid rgba(0,83,138,.3);vertical-align:middle;"><span class="material-icons" style="font-size:1.1em">edit</span> Editing</span></h1>
+
+    <p class="ntf-sr" role="status" aria-live="polite" id="ntfLive"></p>
+
+    <!-- ══════════════ STEP 1 — DETAILS ══════════════ -->
+    <section id="stepDetails">
+      <div class="ntf-type-switch" role="tablist" aria-label="Transfer type">
+        <button class="ntf-type-btn active" data-type="own" id="tab-own" role="tab" aria-selected="true" aria-controls="toCard" tabindex="0"><span class="material-icons" aria-hidden="true">swap_horiz</span> Own Account</button>
+        <button class="ntf-type-btn" data-type="internal" id="tab-internal" role="tab" aria-selected="false" aria-controls="toCard" tabindex="-1"><span class="material-icons" aria-hidden="true">person</span> Internal</button>
+        <button class="ntf-type-btn" data-type="local" id="tab-local" role="tab" aria-selected="false" aria-controls="toCard" tabindex="-1"><span class="material-icons" aria-hidden="true">account_balance</span> Local</button>
+        <button class="ntf-type-btn" data-type="international" id="tab-international" role="tab" aria-selected="false" aria-controls="toCard" tabindex="-1"><span class="material-icons" aria-hidden="true">public</span> International</button>
+        <button class="ntf-type-btn" data-type="cash" id="tab-cash" role="tab" aria-selected="false" aria-controls="toCard" tabindex="-1"><span class="material-icons" aria-hidden="true">payments</span> Cash</button>
+      </div>
+
+      <div class="ntf-layout">
+        <div>
+          <div class="ntf-errors hidden" id="ntfErrors" role="alert" tabindex="-1">
+            <div class="ntf-errors-hd"><span class="material-icons" aria-hidden="true">error_outline</span> Please fix the following</div>
+            <ul id="ntfErrorList"></ul>
+          </div>
+
+          <!-- ── From Account first, then the destination ── -->
+          <div class="ntf-card" id="toCard" role="tabpanel" aria-labelledby="tab-own">
+            <div class="row g-3" id="fromToRow">
+              <div class="col-md-6">
+                <label class="f-label" id="lblFrom">From Account</label>
+                <div class="ntf-picker" id="pickFromWrap">
+                  <button type="button" class="ntf-trigger" id="pickFromTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lblFrom pickFromTrigger">
+                    <span class="ntf-avatar" aria-hidden="true"><span class="material-icons">account_balance_wallet</span></span>
+                    <span class="ntf-trigger-body">
+                      <span class="ntf-trigger-main" id="pickFromMain">Select account</span>
+                      <span class="ntf-trigger-sub" id="pickFromSub">Choose which account to debit</span>
+                    </span>
+                    <span class="ntf-trigger-amt" id="pickFromAmt"></span>
+                    <span class="material-icons ntf-chevron" aria-hidden="true">expand_more</span>
+                  </button>
+                  <div class="ntf-list hidden" id="pickFromList" role="listbox" aria-labelledby="lblFrom"></div>
+                </div>
+              </div>
+
+              <!-- Own-account destination sits beside From Account -->
+              <div class="col-md-6" id="toOwnBlock">
+                <label class="f-label" id="lblToOwn">To Account</label>
+                <div class="ntf-picker" id="pickToWrap">
+                  <button type="button" class="ntf-trigger" id="pickToTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lblToOwn pickToTrigger">
+                    <span class="ntf-avatar" aria-hidden="true"><span class="material-icons">account_balance_wallet</span></span>
+                    <span class="ntf-trigger-body">
+                      <span class="ntf-trigger-main" id="pickToMain">Select account</span>
+                      <span class="ntf-trigger-sub" id="pickToSub">Choose which account to credit</span>
+                    </span>
+                    <span class="ntf-trigger-amt" id="pickToAmt"></span>
+                    <span class="material-icons ntf-chevron" aria-hidden="true">expand_more</span>
+                  </button>
+                  <div class="ntf-list hidden" id="pickToList" role="listbox" aria-labelledby="lblToOwn"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Beneficiary types: tabs below From Account, then the chosen panel -->
+            <div id="toBeneTabs" class="hidden" style="margin-top:1.25rem">
+              <div class="tr-tabs" role="tablist" aria-label="How to identify the recipient">
+                <button class="tr-tab active" id="subtab-saved" role="tab" aria-selected="true" aria-controls="panelSaved" tabindex="0" data-sub="saved">Select Beneficiary</button>
+                <button class="tr-tab" id="subtab-new" role="tab" aria-selected="false" aria-controls="panelNew" tabindex="-1" data-sub="new">New Recipient</button>
+              </div>
+            </div>
+
+            <div class="hidden" id="panelSaved" role="tabpanel" aria-labelledby="subtab-saved" style="margin-top:1rem">
+              <div class="row g-3">
+                <!-- Left: the beneficiary picker -->
+                <div class="col-md-6">
+                  <div class="ntf-field-lbl-row">
+                    <label class="f-label" id="lblBene">Select Beneficiary</label>
+                    <a href="beneficiary-management.html?mode=add" class="ntf-add-ben-link">+ Add New Beneficiary</a>
+                  </div>
+                  <div class="ntf-picker" id="pickBeneWrap">
+                    <button type="button" class="ntf-trigger" id="pickBeneTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lblBene pickBeneTrigger">
+                      <span class="ntf-avatar" id="pickBeneAvatar" aria-hidden="true"><span class="material-icons">person</span></span>
+                      <span class="ntf-trigger-body">
+                        <span class="ntf-trigger-main" id="pickBeneMain">Select Beneficiary</span>
+                        <span class="ntf-trigger-sub" id="pickBeneSub">Choose a saved recipient</span>
+                      </span>
+                      <span class="ntf-trigger-amt" id="pickBeneAmt"></span>
+                      <span class="material-icons ntf-chevron" aria-hidden="true">expand_more</span>
+                    </button>
+                    <div class="ntf-list hidden" id="pickBeneList" role="listbox" aria-labelledby="lblBene"></div>
+                  </div>
+                </div>
+
+                <!-- Right: recent recipients -->
+                <div class="col-md-6 ntf-recent" id="recentRow">
+                  <div class="ntf-recent-hdr" id="recentHdr">Recent Recipients</div>
+                  <div class="ntf-recent-list" id="recentList"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="panelNew" class="hidden" role="tabpanel" aria-labelledby="subtab-new" style="margin-top:1rem">
+                  <!-- Internal -->
+                  <div class="ntf-new-fields" data-new="internal">
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-4"><label class="f-label" for="nInAcct">Iban/ Account Number</label><div class="acct-qr-wrap"><input id="nInAcct" class="f-input ntf-new-req" placeholder="Enter IBAN / Account Number" style="padding-right:2.5rem" autocomplete="off"/><button type="button" class="qr-icon-btn" title="Scan QR Code" aria-label="Scan QR code"><span class="material-icons" style="font-size:20px;color:var(--az-green)">qr_code_scanner</span></button></div></div>
+                      <div class="col-md-4"><label class="f-label" for="nInName">Recipient Name</label><input id="nInName" class="f-input ntf-new-req" placeholder="Enter Recipient Name" autocomplete="off"/></div>
+                      <div class="col-md-4"><label class="f-label" for="nInCcy">Beneficiary Currency</label><select id="nInCcy" class="f-input f-select"><option value="AED" selected>AED</option></select></div>
+                    </div>
+                  </div>
+                  <!-- Local -->
+                  <div class="ntf-new-fields hidden" data-new="local">
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-3"><label class="f-label" for="nLoBank">Bank</label><select id="nLoBank" class="f-input f-select ntf-new-req"><option value="">Select Bank</option><option>Bank of Beirut</option><option>BLOM Bank</option><option>Byblos Bank</option></select></div>
+                      <div class="col-md-3"><label class="f-label" for="nLoBranch">Enter Branch</label><input id="nLoBranch" class="f-input" placeholder="Enter Branch" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nLoBvn">Bank Verification Number</label><input id="nLoBvn" class="f-input" placeholder="Enter BVN" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nLoAcct">Iban/ Account Number</label><input id="nLoAcct" class="f-input ntf-new-req" placeholder="Enter Iban/ Account Number" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nLoName">Recipient Name</label><input id="nLoName" class="f-input ntf-new-req" placeholder="Enter Recipient Name" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nLoCcy">Beneficiary Currency</label><select id="nLoCcy" class="f-input f-select"><option value="AED" selected>AED</option></select></div>
+                      <div class="col-md-3"><label class="f-label" for="nLoRef">Reference Number</label><input id="nLoRef" class="f-input" placeholder="Enter Reference Number" autocomplete="off"/></div>
+                    </div>
+                  </div>
+                  <!-- International -->
+                  <div class="ntf-new-fields hidden" data-new="international">
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-3"><label class="f-label" for="nItSwift">BIC Swift Code</label><input id="nItSwift" class="f-input ntf-new-req" placeholder="Enter BIC Swift Code" autocomplete="off" style="text-transform:uppercase"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nItAcct">Iban/ Account Number</label><input id="nItAcct" class="f-input ntf-new-req" placeholder="Enter Iban / Account Number" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nItName">Recipient Name</label><input id="nItName" class="f-input ntf-new-req" placeholder="Enter Recipient Name" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nItCcy">Beneficiary Currency</label><select id="nItCcy" class="f-input f-select ntf-new-req"><option value="">Select Currency</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="SAR">SAR</option><option value="INR">INR</option></select></div>
+                    </div>
+                  </div>
+
+                  <!-- Cash — no account to credit, so the ID document is what
+                       identifies the person at the counter. -->
+                  <div class="ntf-new-fields hidden" data-new="cash">
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-3"><label class="f-label" for="nCaName">Recipient Name</label><input id="nCaName" class="f-input ntf-new-req" placeholder="Full name as per ID" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nCaIdType">ID Type</label><select id="nCaIdType" class="f-input f-select ntf-new-req"><option value="">Select ID Type</option><option>Passport</option><option>National ID</option><option>Driver License</option></select></div>
+                      <div class="col-md-3"><label class="f-label" for="nCaIdNum">ID Number</label><input id="nCaIdNum" class="f-input ntf-new-req" placeholder="Enter ID Number" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nCaCountry">Country Of Issuance</label><select id="nCaCountry" class="f-input f-select"><option value="">Select Country</option><option>United Arab Emirates</option><option>Saudi Arabia</option><option>India</option><option>Philippines</option><option>Pakistan</option><option>Egypt</option><option>Sudan</option></select></div>
+                      <div class="col-md-3"><label class="f-label" for="nCaIssue">ID Issue Date</label><input id="nCaIssue" class="f-input" placeholder="DD / MM / YYYY" inputmode="numeric" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nCaExpiry">ID Expiry Date</label><input id="nCaExpiry" class="f-input" placeholder="DD / MM / YYYY" inputmode="numeric" autocomplete="off"/></div>
+                      <div class="col-md-3"><label class="f-label" for="nCaMobile">Mobile Number</label><input id="nCaMobile" class="f-input" type="tel" placeholder="e.g. +971 55 987 6543" autocomplete="off"/></div>
+                    </div>
+                    <div class="ntf-cash-note">
+                      <span class="material-icons" aria-hidden="true">badge</span>
+                      <span>The counter checks this document before releasing the cash. Make sure the name matches it exactly.</span>
+                    </div>
+                  </div>
+
+                  <div class="toggle-wrap">
+                    <label class="az-toggle"><input type="checkbox" id="saveBene" checked/><span class="az-toggle-slider"></span></label>
+                    <span>Save Beneficiary</span>
+                  </div>
+            </div>
+          </div>
+
+          <!-- ── Amount / Purpose, side by side ── -->
+          <div class="ntf-card">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="f-label" for="amtInp">Amount</label>
+                <div class="amount-field ntf-amt-field" id="amtField">
+                  <!-- Own transfers debit in AED only (static badge); the other types keep
+                       their original currency selector. -->
+                  <div class="amount-curr ntf-curr-badge" id="amtBadge">
+                    <span class="fi amount-flag" id="amtFlag" aria-hidden="true"></span>
+                    <span class="ntf-curr-code" id="amtCcy">AED</span>
+                  </div>
+                  <div class="amount-curr hidden" id="amtSelWrap" onclick="ntfOpenSelect('amtCurr')">
+                    <span class="fi amount-flag" id="amtSelFlag" aria-hidden="true"></span>
+                    <select id="amtCurr" aria-label="Currency"></select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="amtInp" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="amtHelp"/>
+                </div>
+                <div class="ntf-chips" id="amtChips"></div>
+                <div class="ntf-help" id="amtHelp" aria-live="polite"><span class="material-icons" aria-hidden="true">info_outline</span><span id="amtHelpTxt">Select a debit account to see your available balance.</span></div>
+              </div>
+
+              <div class="col-md-6" id="purposeCol">
+                <label class="f-label" for="purposeTxt">Purpose</label>
+                <input id="purposeTxt" class="f-input" placeholder="Enter Purpose" autocomplete="off"/>
+                <div class="ntf-help" id="purposeHelp"><span class="material-icons" aria-hidden="true">info_outline</span><span id="purposeHelpTxt">Appears on your statement.</span></div>
+              </div>
+            </div>
+
+            <!-- Exchanged Amount — Own Account only, as in the original -->
+            <div class="ntf-fx hidden" id="fxBlock">
+              <div class="ntf-fx-hd">
+                <label class="f-label ntf-fx-lbl" for="exchAmtInp" style="margin-bottom:0">Exchanged Amount</label>
+                <button type="button" class="ntf-rate-chip" id="fxRateChip"><span class="material-icons" aria-hidden="true">sync_alt</span> <span id="fxRateTxt">—</span></button>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="amount-field ntf-amt-field">
+                    <div class="amount-curr" onclick="ntfOpenSelect('exchAmtCurr')">
+                      <span class="fi amount-flag" id="exchAmtFlag" aria-hidden="true"></span>
+                      <select id="exchAmtCurr" aria-label="Currency">
+                        <option value="USD" selected>USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="AED">AED</option>
+                      </select>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                    </div>
+                    <input class="amount-inp" id="exchAmtInp" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00"/>
+                  </div>
+                </div>
+              </div>
+              <div class="ntf-fx-note">Type in either box — we'll work out the other. Indicative rate, refreshed every 60 seconds.</div>
+            </div>
+          </div>
+
+          <!-- ── When ── -->
+          <div class="ntf-card">
+            <div class="ntf-when-row" role="radiogroup" aria-label="When to transfer">
+              <button type="button" class="ntf-when-card" id="whenNow" role="radio" aria-checked="true" tabindex="0">
+                <span class="ntf-when-radio" aria-hidden="true"><span class="material-icons">check_circle</span></span>
+                <span class="ntf-when-text"><span class="ntf-when-title">Transfer now</span><span class="ntf-when-sub" id="whenNowSub">Send straight away</span></span>
+              </button>
+              <button type="button" class="ntf-when-card" id="whenLater" role="radio" aria-checked="false" tabindex="-1">
+                <span class="ntf-when-radio" aria-hidden="true"><span class="material-icons">radio_button_unchecked</span></span>
+                <span class="ntf-when-text"><span class="ntf-when-title">Schedule</span><span class="ntf-when-sub">Pick a future date, or repeat it</span></span>
+              </button>
+            </div>
+
+            <div class="ntf-schedule hidden" id="scheduleBlock">
+              <div class="row g-3">
+                <div class="col-md-4"><label class="f-label" for="schedFreq">Periodicity</label><select id="schedFreq" class="f-input f-select"><option value="once">Single Future Date</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div>
+                <div class="col-md-4"><label class="f-label" id="lblSchedDate">Transfer Date</label><button type="button" class="btn-schedule" id="schedDateBtn" aria-labelledby="lblSchedDate schedDateBtn"><span class="material-icons" style="font-size:16px" aria-hidden="true">calendar_today</span> <span id="schedDateLbl">Select Transfer Date</span></button></div>
+                <div class="col-md-4 hidden" id="schedCountCol"><label class="f-label" for="schedCount">Number Of Payments</label><input id="schedCount" class="f-input" type="number" value="12" min="2" max="120"/></div>
+              </div>
+              <div class="ntf-help" id="schedHelp"><span class="material-icons" aria-hidden="true">event_repeat</span><span id="schedHelpTxt">Scheduled transfers run at 09:00 on the chosen date.</span></div>
+            </div>
+
+            <div id="attachWrap" class="hidden" style="margin-top:1.25rem">
+              <label class="f-label">Supporting document</label>
+              <button type="button" class="ntf-attach" id="attachBtn">
+                <span class="material-icons" aria-hidden="true">attach_file</span>
+                <span class="attach-link" id="attachLbl">Choose file</span>
+                <span class="ntf-attach-hint">Optional — invoice or contract, PDF/JPG up to 5 MB</span>
+              </button>
+              <input type="file" id="fileInp" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── Sticky summary side panel ── -->
+        <aside class="ntf-side" aria-label="Transfer summary">
+          <div class="ntf-preview">
+            <div class="ntf-preview-hdr"><span class="material-icons" aria-hidden="true">receipt_long</span> Transfer Summary</div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="sumSendLbl">You Send</div>
+              <div class="val" id="sumSend">—</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="sumFeeLbl">Transfer Fee</div>
+              <div class="val" id="sumFee">—</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="sumGetLbl">They Receive</div>
+              <div class="val" id="sumGet">—</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="sumEtaLbl">Arrives</div>
+              <div class="val" id="sumEta">Choose a transfer type</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl">Daily Transfer Limit</div>
+              <div class="val" id="limitTxt">—</div>
+              <div class="ntf-limit-bar"><div class="ntf-limit-fill" id="limitFill"></div></div>
+            </div>
+            <div class="ntf-preview-item ntf-preview-main">
+              <div class="lbl">Total Debit</div>
+              <div class="val" id="sumTotal">—</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="form-footer">
+        <div class="tc" id="tcWrap"><input type="checkbox" id="tc"/><label for="tc">I agree to the <a href="javascript:;" onclick="event.stopPropagation();openModal('tcModal')">Terms and Conditions</a> <span id="tcSuffix">for this transfer</span></label></div>
+        <a href="retail-dashboard.html" class="btn-action btn-cancel">Cancel</a>
+        <button type="button" class="btn-action btn-save" id="btnDraft">Save Draft</button>
+        <button type="button" class="btn-action btn-submit" id="btnContinue">Continue</button>
+      </div>
+    </section>
+
+    <!-- ══════════════ STEP 2 — REVIEW & AUTHORISE ══════════════ -->
+    <section id="stepReview" class="hidden">
+      <div class="ntf-layout">
+        <div>
+          <div class="ntf-card">
+            <div class="ntf-card-hd">
+              <span class="ntf-card-title">Check the details</span>
+              <span class="ntf-card-sub"><button type="button" class="ntf-link-btn" id="btnEdit">Edit</button></span>
+            </div>
+
+            <div class="ntf-review-amt">
+              <div class="ra-main" id="revAmount">—</div>
+              <div class="ra-sub" id="revAmountSub"></div>
+            </div>
+
+            <div class="ntf-review-flow">
+              <div class="ntf-review-party">
+                <div class="rp-lbl">From</div>
+                <div class="rp-main" id="revFromMain">—</div>
+                <div class="rp-sub" id="revFromSub"></div>
+              </div>
+              <span class="material-icons ntf-review-arrow" aria-hidden="true">arrow_forward</span>
+              <div class="ntf-review-party">
+                <div class="rp-lbl" id="revToLbl">To</div>
+                <div class="rp-main" id="revToMain">—</div>
+                <div class="rp-sub" id="revToSub"></div>
+              </div>
+            </div>
+
+            <dl class="ntf-review-dl" id="revDetails"></dl>
+
+            <div class="ntf-collect hidden" id="revCollect">
+              <span class="material-icons" aria-hidden="true">schedule</span>
+              <div>
+                <div class="ntf-collect-t" id="revCollectT">&mdash;</div>
+                <div class="ntf-collect-s" id="revCollectS">&mdash;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="ntf-side" aria-label="Transfer summary">
+          <div class="ntf-preview">
+            <div class="ntf-preview-hdr"><span class="material-icons" aria-hidden="true">receipt_long</span> Transfer Summary</div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="rSumSendLbl">You Send</div>
+              <div class="val" id="rSumSend">—</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="rSumFeeLbl">Transfer Fee</div>
+              <div class="val" id="rSumFee">—</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="rSumGetLbl">They Receive</div>
+              <div class="val" id="rSumGet">—</div>
+            </div>
+            <div class="ntf-preview-item">
+              <div class="lbl" id="rSumEtaLbl">Arrives</div>
+              <div class="val" id="rSumEta">—</div>
+            </div>
+            <div class="ntf-preview-item ntf-preview-main">
+              <div class="lbl">Total Debit</div>
+              <div class="val" id="rSumTotal">—</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="form-footer">
+        <div class="tc"></div>
+        <button type="button" class="btn-action btn-cancel" id="btnBack">Back</button>
+        <button type="button" class="btn-action btn-submit" id="btnAuthorise">Confirm</button>
+      </div>
+    </section>
+
+    <!-- ══════════════ STEP 3 — DONE ══════════════ -->
+    <section id="stepDone" class="hidden">
+      <div class="ntf-card" style="max-width:640px;margin:0 auto">
+        <div class="ntf-done">
+          <div class="ntf-done-icon"><span class="material-icons" aria-hidden="true">check</span></div>
+          <div class="ntf-done-title" id="doneTitle">Transfer sent</div>
+          <div class="ntf-done-sub" id="doneSub">—</div>
+          <div class="ntf-done-ref"><span class="material-icons" style="font-size:15px" aria-hidden="true">receipt_long</span> Reference <span id="doneRef">—</span></div>
+        </div>
+        <dl class="ntf-review-dl" id="doneDetails" style="max-width:460px;margin:0 auto"></dl>
+        <div class="ntf-done-actions">
+          <a href="transfer-pending-list.html" class="btn-action btn-cancel">View Transfers</a>
+          <button type="button" class="btn-action btn-save" id="btnNewTransfer">New Transfer</button>
+          <a href="retail-dashboard.html" class="btn-action btn-submit">Back to Dashboard</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn">A<sup>-</sup></button><button class="acc-btn">A</button><button class="acc-btn">A<sup>+</sup></button>
+        <button class="acc-btn" style="background:var(--az-navy);color:#fff">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ Date picker modal ══ -->
+<div class="modal-ov hidden" id="calModal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle">
+  <div class="az-modal" style="max-width:420px">
+    <button class="modal-close" id="calClose" aria-label="Close">&#215;</button>
+    <div class="modal-title" id="calModalTitle">Select transfer date</div>
+    <div class="cal-wrap">
+      <div class="cal-nav"><button type="button" class="cal-nav-btn" id="calPrev" aria-label="Previous month">&#8249;</button><span class="cal-month-label" id="calLbl" aria-live="polite">—</span><button type="button" class="cal-nav-btn" id="calNext" aria-label="Next month">&#8250;</button></div>
+      <div id="calDays"></div>
+    </div>
+    <div class="d-flex gap-2 justify-content-center mt-3">
+      <button type="button" class="btn-action btn-cancel" id="calCancel" style="padding:.5rem 1.75rem">CANCEL</button>
+      <button type="button" class="btn-action btn-submit" id="calSave" style="padding:.5rem 1.75rem">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Terms and Conditions modal ══ -->
+<div class="modal-ov hidden" id="tcModal" role="dialog" aria-modal="true" aria-labelledby="tcModalTitle">
+  <div class="az-modal modal-md">
+    <button class="modal-close" onclick="closeModal('tcModal')" aria-label="Close">&#215;</button>
+    <div id="tcModalTitle" class="modal-title">Terms and Conditions — Fund Transfer</div>
+    <div style="font-size:var(--fs-small);color:var(--az-navy,#16303d);line-height:1.6;max-height:50vh;overflow-y:auto;margin:.5rem 0 0;padding-right:.5rem;">
+      <p><strong>1. Accuracy.</strong> You confirm that the account, beneficiary and amount details provided are accurate, and authorize azentio Bank to debit the selected account accordingly.</p>
+      <p><strong>2. Irrevocability.</strong> Once processed, a transfer may not be reversible; instant and same-day transfers cannot be cancelled after submission.</p>
+      <p><strong>3. Fees &amp; Exchange Rates.</strong> Applicable transfer fees and, where currencies differ, indicative exchange rates are shown before you submit and may vary slightly at execution.</p>
+      <p><strong>4. Scheduled Transfers.</strong> For scheduled or recurring transfers, you authorize azentio Bank to debit the source account automatically on each scheduled date, subject to available balance.</p>
+      <p><strong>5. Screening.</strong> All transfers are subject to sanctions and compliance screening in accordance with applicable banking regulations.</p>
+      <p><strong>6. Amendments.</strong> azentio Bank reserves the right to update these terms at any time; continued use of this service constitutes acceptance of the revised terms.</p>
+      <div id="tcCash" class="hidden">
+        <p><strong>7. Cash collection &mdash; identification.</strong> The named recipient must present the identification recorded on this request to collect the cash. The bank may refuse release if the document presented does not match.</p>
+        <p><strong>8. Cash collection &mdash; reservation and lapse.</strong> Funds are reserved from the debit account when the request is approved and returned if the cash is not collected within seven days. The service charge is debited with the amount and is not refunded if the collection lapses.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;">
+      <button class="btn-action btn-submit" onclick="closeModal('tcModal')" style="padding:.6rem 1.5rem">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ════════════════════════════════════════════════════════════
+   DEMO DATA
+   ════════════════════════════════════════════════════════════ */
+var ACCOUNTS = [
+  { id:'ca1',  nick:'Salary Account',  type:'Current', num:'8989 8765 4523', mask:'•••• 4523', ccy:'AED', bal:84200.00  },
+  { id:'sa1',  nick:'Rainy Day Saver', type:'Savings', num:'8989 8765 4524', mask:'•••• 4524', ccy:'AED', bal:152380.50 },
+  { id:'usd1', nick:'Travel Account',  type:'Current', num:'8989 8765 7001', mask:'•••• 7001', ccy:'USD', bal:12450.75  }
+];
+
+var BENES = {
+  internal: [
+    { id:'b1', name:'Ahmed Al Farsi',     sub:'Savings · •••• 4523',              ccy:'AED' },
+    { id:'b2', name:'Mohammed Al Farsi',  sub:'Current · •••• 4524',              ccy:'AED' },
+    { id:'b3', name:'Fatima Noor',        sub:'Savings · •••• 8810',              ccy:'AED' }
+  ],
+  local: [
+    { id:'b4', name:'Khalid Traders',     sub:'BLOM Bank · •••• 2210',            ccy:'AED' },
+    { id:'b5', name:'Layla Hassan',       sub:'Bank of Beirut · •••• 7734',       ccy:'AED' },
+    { id:'b6', name:'Omar Nasser',        sub:'Byblos Bank · •••• 9015',          ccy:'LBP' }
+  ],
+  international: [
+    { id:'b7', name:'John Smith',         sub:'Chase Bank, New York · •••• 1182', ccy:'USD' },
+    { id:'b8', name:'Global Traders LLC', sub:'Barclays, London · •••• 6630',     ccy:'GBP' },
+    { id:'b9', name:'Anita Desai',        sub:'HDFC Bank, Mumbai · •••• 4409',    ccy:'INR' }
+  ],
+  /* Cash recipients hold no account — the ID on file is what identifies them */
+  cash: [
+    { id:'c1', name:'Ravi Kumar',         sub:'Passport · •••• 8841',             ccy:'AED', idType:'Passport',    idNum:'N4412881', country:'India' },
+    { id:'c2', name:'Maria Santos',       sub:'National ID · •••• 2309',          ccy:'AED', idType:'National ID', idNum:'784199122309', country:'Philippines' },
+    { id:'c3', name:'Yusuf Abdallah',     sub:'Passport · •••• 1764',             ccy:'AED', idType:'Passport',    idNum:'P9931764', country:'Sudan' }
+  ]
+};
+
+/* How many recent recipients to show beside the picker, per transfer type */
+var RECENT_LIMIT = { own:2, internal:2, local:2, international:1, cash:2 };
+
+var RECENTS = {
+  own:           [ { acct:'sa1', amount:2000 }, { acct:'usd1', amount:500 } ],
+  internal:      [ { bene:'b1', amount:12500 }, { bene:'b2', amount:3200 }, { bene:'b3', amount:850 } ],
+  local:         [ { bene:'b4', amount:5000 },  { bene:'b5', amount:1750 }, { bene:'b6', amount:9300 } ],
+  international: [ { bene:'b7', amount:1500 },  { bene:'b8', amount:900 },  { bene:'b9', amount:2400 } ],
+  cash:          [ { bene:'c1', amount:1200 },  { bene:'c2', amount:800 },  { bene:'c3', amount:2500 } ]
+};
+
+/* Units of each currency per 1 AED */
+var RATES = { AED:1, USD:0.2723, EUR:0.2512, GBP:0.2145, SAR:1.0211, INR:22.68, IQD:356.40, LBP:24380, MRU:10.82 };
+
+/* Amount-field currency options, exactly as each original journey offered them.
+   Own Account had a fixed AED badge rather than a selector. */
+var AMT_CURRENCIES = {
+  own:           null,
+  internal:      ['AED','IQD','LBP'],
+  local:         ['AED','IQD','LBP'],
+  international: ['AED','USD','EUR','IQD','LBP','MRU','GBP'],
+  /* Cash is counted out at the branch, so only currencies held in the till */
+  cash:          ['AED','USD','EUR','GBP']
+};
+
+/* Fee in AED, by transfer type */
+var FEES = { own:0, internal:0, local:5.00, international:26.25 };
+
+/* Cash is priced on handling, not on a rail: a percentage with a floor.
+   feeAed() computes it from the amount rather than reading FEES. */
+var CASH_FEE  = { pct:0.01, min:10 };
+var CASH_DAYS = 7;          /* collection window before the funds come back */
+
+/* Kept short so the label and value stay on one row in the summary panel */
+var ETA = {
+  own:           'Instant',
+  internal:      'Instant',
+  local:         'Same business day',
+  international: '1–2 business days',
+  cash:          'Collect within ' + 7 + ' days'
+};
+
+var TYPE_LABEL = { own:'Own account', internal:'Internal', local:'Local', international:'International', cash:'Cash collection' };
+
+var DAILY_LIMIT = 50000;   /* AED */
+var LIMIT_USED  = 7500;    /* AED already used today */
+
+/* Quick-amount presets per currency, so the chips always mean something */
+var CHIP_PRESETS = {
+  AED:[100,500,1000,5000], USD:[50,100,500,1000], EUR:[50,100,500,1000], GBP:[50,100,500,1000],
+  SAR:[100,500,1000,5000], INR:[1000,5000,10000,25000], IQD:[50000,100000,500000,1000000],
+  LBP:[500000,1000000,5000000,10000000], MRU:[1000,5000,10000,50000]
+};
+
+var CCY_FLAG = { AED:'ae', USD:'us', EUR:'eu', GBP:'gb', SAR:'sa', INR:'in', IQD:'iq', LBP:'lb', MRU:'mr', CHF:'ch' };
+
+/* ════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════ */
+var S = {
+  type:'own',
+  fromId:null,
+  toAcctId:null,       /* own transfers */
+  beneId:null,         /* saved beneficiary */
+  mode:'saved',        /* 'saved' | 'new' */
+  sendAmt:0,           /* in the amount-field currency */
+  purpose:'',
+  when:'now',
+  schedDate:null,      /* Date */
+  schedFreq:'once',
+  schedCount:12,
+  attachment:null,
+  tcAccepted:false
+};
+
+var $ = function(id){ return document.getElementById(id); };
+window.ntfOpenSelect = function(id){
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  if (sel.showPicker) { try { sel.showPicker(); return; } catch(e) {} }
+  sel.focus();
+};
+
+/* ════════════════════════════════════════════════════════════
+   HELPERS
+   ════════════════════════════════════════════════════════════ */
+function money(n, ccy){
+  var dp = (ccy === 'LBP' || ccy === 'IQD') ? 0 : 2;
+  return (ccy ? ccy + ' ' : '') + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits:dp, maximumFractionDigits:dp });
+}
+function parseAmt(str){ return parseFloat(String(str || '').replace(/,/g,'')) || 0; }
+
+function formatAmtInput(input, ccy){
+  var dp = (ccy === 'LBP' || ccy === 'IQD') ? 0 : 2;
+  var raw = input.value.replace(/[^0-9.]/g,'');
+  var dot = raw.indexOf('.');
+  if (dot > -1) raw = raw.slice(0, dot + 1) + raw.slice(dot + 1).replace(/\./g,'');
+  if (dp === 0) raw = raw.replace(/\./g,'');
+  var parts = raw.split('.');
+  var intPart = parts[0].replace(/^0+(?=\d)/,'');
+  var decPart = (parts.length > 1) ? '.' + parts[1].slice(0, dp) : '';
+  input.value = (intPart ? intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '') + decPart;
+}
+
+/* Convert between currencies via AED */
+function convert(amount, from, to){
+  if (!amount || from === to) return amount || 0;
+  var inAed = amount / (RATES[from] || 1);
+  return inAed * (RATES[to] || 1);
+}
+function rateBetween(from, to){ return convert(1, from, to); }
+
+function paintFlag(span, ccy){
+  var code = CCY_FLAG[ccy] || 'ae';
+  span.className = 'fi fi-' + code + ' amount-flag';
+}
+
+function announce(msg){ var l = $('ntfLive'); if (l) l.textContent = msg; }
+
+function fromAccount(){ return ACCOUNTS.filter(function(a){ return a.id === S.fromId; })[0] || null; }
+function toAccount(){ return ACCOUNTS.filter(function(a){ return a.id === S.toAcctId; })[0] || null; }
+function beneById(id){
+  var all = [];
+  Object.keys(BENES).forEach(function(k){ all = all.concat(BENES[k]); });
+  return all.filter(function(b){ return b.id === id; })[0] || null;
+}
+function currentBene(){ return beneById(S.beneId); }
+
+/* Currency the amount is entered in: a fixed AED badge on Own, the selector elsewhere */
+function sendCcy(){
+  if (S.type === 'own') return 'AED';
+  var sel = $('amtCurr');
+  return (sel && sel.value) || 'AED';
+}
+
+/* The currency the recipient is credited in */
+function receiveCcy(){
+  if (S.type === 'own') return ($('exchAmtCurr') || {}).value || 'USD';
+  /* Nothing is converted — the recipient is handed the same notes */
+  if (S.type === 'cash') return sendCcy();
+  if (S.mode === 'new'){
+    if (S.type === 'internal') return ($('nInCcy') || {}).value || 'AED';
+    if (S.type === 'local') return ($('nLoCcy') || {}).value || 'AED';
+    return ($('nItCcy') || {}).value || '';
+  }
+  var b = currentBene();
+  return b ? b.ccy : '';
+}
+
+function feeAed(){
+  /* Cash is charged on handling: a percentage of the amount with a floor,
+     so the fee moves as the amount is typed rather than being a constant. */
+  if (S.type === 'cash'){
+    if (!S.sendAmt) return 0;
+    return Math.max(convert(S.sendAmt, sendCcy(), 'AED') * CASH_FEE.pct, CASH_FEE.min);
+  }
+  return FEES[S.type] || 0;
+}
+
+/* Cash is handed over in the currency it was reserved in */
+function isCash(){ return S.type === 'cash'; }
+
+/* The date the reservation lapses and the funds come back */
+function collectBy(){
+  var d = new Date();
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + CASH_DAYS);
+  return d;
+}
+function feeInSendCcy(){ return convert(feeAed(), 'AED', sendCcy()); }
+
+function receiveAmount(){
+  var rc = receiveCcy();
+  if (!rc) return 0;
+  return Math.max(0, convert(S.sendAmt, sendCcy(), rc));
+}
+
+function totalDebit(){ return S.sendAmt + feeInSendCcy(); }
+
+function isExternal(){ return S.type !== 'own'; }
+
+/* ════════════════════════════════════════════════════════════
+   ACCESSIBLE PICKER (listbox pattern)
+   ════════════════════════════════════════════════════════════ */
+function Picker(key, triggerId, listId, onPick){
+  this.trigger = $(triggerId);
+  this.list    = $(listId);
+  this.onPick  = onPick;
+  this.items   = [];
+  this.active  = -1;
+  var self = this;
+
+  this.trigger.addEventListener('click', function(e){ e.stopPropagation(); self.toggle(); });
+  this.trigger.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' '){ e.preventDefault(); self.open(0); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); self.open(self.items.length - 1); }
+  });
+  this.list.addEventListener('keydown', function(e){ self.onKey(e); });
+}
+Picker.prototype.render = function(items, selectedId){
+  this.items = items || [];
+  var html = '';
+  if (!this.items.length){
+    html = '<div class="ntf-list-empty">Nothing to show yet.</div>';
+  } else {
+    this.items.forEach(function(it, i){
+      html += '<button type="button" class="ntf-opt" role="option" data-i="' + i + '" tabindex="-1" aria-selected="' + (it.id === selectedId ? 'true' : 'false') + '">'
+            +   '<span class="ntf-avatar" aria-hidden="true">' + (it.icon ? '<span class="material-icons">' + it.icon + '</span>' : it.initial) + '</span>'
+            +   '<span class="ntf-opt-body"><span class="ntf-opt-main">' + it.main + '</span><span class="ntf-opt-sub">' + it.sub + '</span></span>'
+            +   (it.amt ? '<span class="ntf-opt-amt">' + it.amt + (it.amtSub ? '<small>' + it.amtSub + '</small>' : '') + '</span>' : '')
+            + '</button>';
+    });
+  }
+  this.list.innerHTML = html;
+  var self = this;
+  Array.prototype.forEach.call(this.list.querySelectorAll('.ntf-opt'), function(el){
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      self.pick(parseInt(el.getAttribute('data-i'), 10));
+    });
+  });
+};
+Picker.prototype.open = function(focusIndex){
+  closeAllPickers();
+  this.list.classList.remove('hidden');
+  this.trigger.setAttribute('aria-expanded','true');
+  var nodes = this.list.querySelectorAll('.ntf-opt');
+  if (nodes.length){
+    this.active = Math.max(0, Math.min(focusIndex || 0, nodes.length - 1));
+    this.highlight();
+    nodes[this.active].focus();
+  }
+};
+Picker.prototype.close = function(returnFocus){
+  this.list.classList.add('hidden');
+  this.trigger.setAttribute('aria-expanded','false');
+  this.active = -1;
+  if (returnFocus) this.trigger.focus();
+};
+Picker.prototype.toggle = function(){
+  if (this.trigger.getAttribute('aria-expanded') === 'true') this.close(true); else this.open(0);
+};
+Picker.prototype.highlight = function(){
+  var nodes = this.list.querySelectorAll('.ntf-opt');
+  var self = this;
+  Array.prototype.forEach.call(nodes, function(n, i){ n.classList.toggle('ntf-active', i === self.active); });
+};
+Picker.prototype.onKey = function(e){
+  var nodes = this.list.querySelectorAll('.ntf-opt');
+  if (!nodes.length) return;
+  if (e.key === 'ArrowDown'){ e.preventDefault(); this.active = (this.active + 1) % nodes.length; this.highlight(); nodes[this.active].focus(); }
+  else if (e.key === 'ArrowUp'){ e.preventDefault(); this.active = (this.active - 1 + nodes.length) % nodes.length; this.highlight(); nodes[this.active].focus(); }
+  else if (e.key === 'Home'){ e.preventDefault(); this.active = 0; this.highlight(); nodes[0].focus(); }
+  else if (e.key === 'End'){ e.preventDefault(); this.active = nodes.length - 1; this.highlight(); nodes[this.active].focus(); }
+  else if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); this.pick(this.active); }
+  else if (e.key === 'Escape' || e.key === 'Tab'){ this.close(e.key === 'Escape'); }
+};
+Picker.prototype.pick = function(i){
+  var it = this.items[i];
+  if (!it) return;
+  this.close(true);
+  this.onPick(it);
+};
+
+var pickers = [];
+function closeAllPickers(){ pickers.forEach(function(p){ p.close(false); }); }
+document.addEventListener('click', function(e){ if (!e.target.closest('.ntf-picker')) closeAllPickers(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeAllPickers(); });
+
+/* ════════════════════════════════════════════════════════════
+   RENDERING
+   ════════════════════════════════════════════════════════════ */
+function acctToItem(a){
+  return { id:a.id, icon:'account_balance_wallet', main:a.nick + ' · ' + a.type,
+           sub:a.mask + ' · ' + a.ccy, amt:money(a.bal, a.ccy), amtSub:'Available' };
+}
+function beneToItem(b){
+  return { id:b.id, initial:b.name.charAt(0).toUpperCase(), main:b.name, sub:b.sub,
+           amt:b.ccy, amtSub: isCash() ? 'Collects in' : 'Receives in' };
+}
+
+function renderFromPicker(){
+  pFrom.render(ACCOUNTS.map(acctToItem), S.fromId);
+}
+function renderToPicker(){
+  /* Own transfers credit another of the customer's own accounts — never a beneficiary */
+  var options = ACCOUNTS.filter(function(a){ return a.id !== S.fromId; });
+  pTo.render(options.map(acctToItem), S.toAcctId);
+}
+function renderBenePicker(){
+  pBene.render((BENES[S.type] || []).map(beneToItem), S.beneId);
+}
+
+function renderRecents(){
+  var list = $('recentList');
+  var data = (RECENTS[S.type] || []).slice(0, RECENT_LIMIT[S.type] || 2);
+  var html = '';
+  data.forEach(function(r, i){
+    var name, sub, ccy;
+    if (r.acct){
+      var a = ACCOUNTS.filter(function(x){ return x.id === r.acct; })[0];
+      if (!a) return;
+      name = a.nick; ccy = a.ccy; sub = money(r.amount, ccy);
+    } else {
+      var b = beneById(r.bene);
+      if (!b) return;
+      name = b.name; ccy = b.ccy; sub = money(r.amount, ccy);
+    }
+    html += '<button type="button" class="ntf-recent-chip" data-i="' + i + '">'
+          +   '<span class="ntf-recent-avatar" aria-hidden="true">' + name.charAt(0).toUpperCase() + '</span>'
+          +   '<span class="ntf-recent-info"><span class="ntf-recent-name">' + name + '</span><span class="ntf-recent-amt">' + sub + '</span></span>'
+          + '</button>';
+  });
+  list.innerHTML = html;
+  Array.prototype.forEach.call(list.querySelectorAll('.ntf-recent-chip'), function(el){
+    el.addEventListener('click', function(){ applyRecent(data[parseInt(el.getAttribute('data-i'), 10)]); });
+  });
+  $('recentRow').classList.toggle('hidden', !html);
+}
+
+/* Repeat a past transfer — updates only the inner label spans, never the trigger's markup */
+function applyRecent(r){
+  if (!r) return;
+  if (r.acct){
+    if (r.acct === S.fromId){ S.fromId = ACCOUNTS.filter(function(a){ return a.id !== r.acct; })[0].id; }
+    S.toAcctId = r.acct;
+  } else {
+    setSubMode('saved');
+    S.beneId = r.bene;
+  }
+  var target = r.acct ? (toAccount() ? toAccount().ccy : 'AED') : (beneById(r.bene) || {}).ccy;
+  /* The chip amount is in the recipient's currency — express it in the debit currency */
+  S.sendAmt = convert(r.amount, target, sendCcy());
+  $('amtInp').value = '';
+  $('amtInp').value = S.sendAmt.toFixed((sendCcy() === 'LBP' || sendCcy() === 'IQD') ? 0 : 2);
+  formatAmtInput($('amtInp'), sendCcy());
+  syncAll();
+  announce('Recipient and amount filled in from your recent transfer.');
+}
+
+function renderTriggers(){
+  var f = fromAccount();
+  $('pickFromMain').textContent = f ? f.nick + ' · ' + f.type : 'Select Account';
+  $('pickFromSub').textContent  = f ? f.mask + ' · ' + f.ccy : 'Choose which account to debit';
+  $('pickFromAmt').textContent  = f ? money(f.bal, f.ccy) : '';
+
+  var t = toAccount();
+  $('pickToMain').textContent = t ? t.nick + ' · ' + t.type : 'Select Account';
+  $('pickToSub').textContent  = t ? t.mask + ' · ' + t.ccy : 'Choose which account to credit';
+  $('pickToAmt').textContent  = t ? money(t.bal, t.ccy) : '';
+
+  var b = currentBene();
+  $('pickBeneMain').textContent = b ? b.name : 'Select Beneficiary';
+  $('pickBeneSub').textContent  = b ? b.sub : 'Choose a saved recipient';
+  $('pickBeneAmt').textContent  = b ? b.ccy : '';
+}
+
+function renderChips(){
+  var ccy = sendCcy();
+  var presets = CHIP_PRESETS[ccy] || CHIP_PRESETS.AED;
+  var wrap = $('amtChips');
+  var html = '';
+  presets.forEach(function(v){
+    html += '<button type="button" class="ntf-chip" data-v="' + v + '">' + money(v, '').trim() + '</button>';
+  });
+  wrap.innerHTML = html;
+  Array.prototype.forEach.call(wrap.querySelectorAll('.ntf-chip'), function(el){
+    el.addEventListener('click', function(){ setSendAmount(parseFloat(el.getAttribute('data-v'))); });
+  });
+}
+
+function setSendAmount(v){
+  var ccy = sendCcy();
+  var dp = (ccy === 'LBP' || ccy === 'IQD') ? 0 : 2;
+  S.sendAmt = v;
+  $('amtInp').value = v ? v.toFixed(dp) : '';
+  if (v) formatAmtInput($('amtInp'), ccy);
+  syncAll();
+}
+
+/* ── Type / mode switching ── */
+function switchType(type){
+  S.type = type;
+  S.beneId = null;
+  S.toAcctId = null;
+  setSubMode('saved');
+
+  Array.prototype.forEach.call(document.querySelectorAll('.ntf-type-btn'), function(b){
+    var on = b.getAttribute('data-type') === type;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+    b.tabIndex = on ? 0 : -1;
+  });
+  $('toCard').setAttribute('aria-labelledby', 'tab-' + type);
+
+  var own = (type === 'own');
+  $('toOwnBlock').classList.toggle('hidden', !own);
+  $('toBeneTabs').classList.toggle('hidden', own);
+
+  /* Only the new-recipient fieldset for this type */
+  Array.prototype.forEach.call(document.querySelectorAll('.ntf-new-fields'), function(el){
+    el.classList.toggle('hidden', el.getAttribute('data-new') !== type);
+  });
+
+  /* Amount currency: fixed AED badge on Own, the journey's own selector elsewhere */
+  var currencies = AMT_CURRENCIES[type];
+  $('amtBadge').classList.toggle('hidden', !!currencies);
+  $('amtSelWrap').classList.toggle('hidden', !currencies);
+  if (currencies){
+    var sel = $('amtCurr');
+    sel.innerHTML = currencies.map(function(c, i){
+      return '<option value="' + c + '"' + (i === 0 ? ' selected' : '') + '>' + c + '</option>';
+    }).join('');
+    paintFlag($('amtSelFlag'), currencies[0]);
+  }
+
+  S.purpose = '';
+  $('purposeTxt').value = '';
+
+  var cash = (type === 'cash');
+  $('attachWrap').classList.toggle('hidden', type !== 'international' && !cash);
+
+  /* A cash reservation already carries its own clock — the seven-day
+     collection window — so scheduling it on top would mean two deadlines. */
+  $('whenLater').classList.toggle('hidden', cash);
+  if (cash && S.when === 'later') setWhen('now');
+
+  $('tcCash').classList.toggle('hidden', !cash);
+  $('tcSuffix').textContent = cash ? 'for cash collection' : 'for this transfer';
+
+  $('lblBene').textContent = cash ? 'Select Recipient' : 'Select Beneficiary';
+  $('subtab-saved').textContent = cash ? 'Saved Recipient' : 'Select Beneficiary';
+  $('pickBeneSub').textContent = cash ? 'Choose someone you have paid in cash before' : 'Choose a saved recipient';
+
+  $('whenNowSub').textContent = own ? 'Moves instantly between your accounts'
+                             : cash ? 'Reserve the cash today'
+                             : 'Send straight away';
+
+  renderToPicker();
+  renderBenePicker();
+  renderRecents();
+  syncAll();
+  announce(TYPE_LABEL[type] + ' transfer selected.');
+}
+
+function setSubMode(mode){
+  S.mode = mode;
+  var saved = (mode === 'saved');
+  $('subtab-saved').classList.toggle('active', saved);
+  $('subtab-saved').setAttribute('aria-selected', saved ? 'true' : 'false');
+  $('subtab-saved').tabIndex = saved ? 0 : -1;
+  $('subtab-new').classList.toggle('active', !saved);
+  $('subtab-new').setAttribute('aria-selected', saved ? 'false' : 'true');
+  $('subtab-new').tabIndex = saved ? -1 : 0;
+  /* The saved-beneficiary picker is the To Account column; the new-recipient
+     grid sits full width below the row. Neither shows on own-account transfers. */
+  $('panelSaved').classList.toggle('hidden', !saved || S.type === 'own');
+  $('panelNew').classList.toggle('hidden', saved || S.type === 'own');
+}
+
+/* ── Exchanged Amount (Own Account only, as in the original) ── */
+function syncFx(){
+  var show = (S.type === 'own');
+  $('fxBlock').classList.toggle('hidden', !show);
+  if (!show) return;
+  var sc = sendCcy(), rc = receiveCcy();
+  paintFlag($('exchAmtFlag'), rc);
+  $('fxRateTxt').textContent = '1 ' + sc + ' = ' + rateBetween(sc, rc).toFixed(4) + ' ' + rc;
+  if (document.activeElement !== $('exchAmtInp')){
+    var recv = receiveAmount();
+    $('exchAmtInp').value = recv ? recv.toFixed((rc === 'LBP' || rc === 'IQD') ? 0 : 2) : '';
+    if (recv) formatAmtInput($('exchAmtInp'), rc);
+  }
+}
+
+/* ── Summary rail ── */
+function syncSummary(){
+  var sc = sendCcy(), rc = receiveCcy();
+  var cash = isCash();
+
+  /* The rail says what each figure means, and for cash three of them mean
+     something else: nothing is sent, nothing arrives, and the charge scales. */
+  $('sumSendLbl').textContent = cash ? 'Cash Amount'    : 'You Send';
+  $('sumFeeLbl').textContent  = cash ? 'Service Charge' : 'Transfer Fee';
+  $('sumGetLbl').textContent  = cash ? 'They Collect'   : 'They Receive';
+  $('sumEtaLbl').textContent  = cash ? 'Collect By'     : 'Arrives';
+
+  $('sumSend').textContent  = S.sendAmt ? money(S.sendAmt, sc) : '—';
+  $('sumTotal').textContent = S.sendAmt ? money(totalDebit(), sc) : '—';
+
+  if (cash){
+    $('sumFee').textContent = S.sendAmt
+      ? money(feeInSendCcy(), sc) + ' · 1%, min AED ' + CASH_FEE.min
+      : '—';
+    $('sumGet').textContent = S.sendAmt ? money(S.sendAmt, sc) + ' in cash' : '—';
+  } else {
+    $('sumFee').textContent = feeAed() === 0 ? 'Free' : money(feeInSendCcy(), sc);
+    $('sumGet').textContent = (S.sendAmt && rc && rc !== sc) ? money(receiveAmount(), rc) : '—';
+  }
+
+  var eta = cash ? fmtDate(collectBy()) : ETA[S.type];
+  if (S.when === 'later' && S.schedDate){
+    eta = 'Scheduled for ' + fmtDate(S.schedDate) + (S.schedFreq !== 'once' ? ', then ' + S.schedFreq : '');
+  }
+  $('sumEta').textContent = eta;
+
+  var usedAed = LIMIT_USED + convert(S.sendAmt, sc, 'AED');
+  var pct = Math.min(100, (usedAed / DAILY_LIMIT) * 100);
+  var over = usedAed > DAILY_LIMIT;
+  $('limitFill').style.width = pct + '%';
+  $('limitFill').classList.toggle('over', over);
+  $('limitTxt').textContent = over
+    ? money(usedAed - DAILY_LIMIT, 'AED') + ' over'
+    : money(Math.max(0, DAILY_LIMIT - usedAed), 'AED') + ' left';
+}
+
+/* ── Amount helper text: balance, then limit, then the plain hint ── */
+function syncAmountHelp(){
+  var f = fromAccount();
+  var help = $('amtHelp'), txt = $('amtHelpTxt'), field = $('amtField');
+  help.classList.remove('ntf-help-err','ntf-help-warn');
+  field.classList.remove('ntf-invalid');
+
+  if (!f){ txt.textContent = 'Select a debit account to see your available balance.'; return; }
+
+  var sc = f.ccy;
+  var usedAed = LIMIT_USED + convert(S.sendAmt, sc, 'AED');
+
+  if (S.sendAmt && totalDebit() > f.bal){
+    help.classList.add('ntf-help-err');
+    field.classList.add('ntf-invalid');
+    txt.textContent = 'That is more than the ' + money(f.bal, sc) + ' available in this account.';
+  } else if (S.sendAmt && usedAed > DAILY_LIMIT){
+    help.classList.add('ntf-help-err');
+    field.classList.add('ntf-invalid');
+    txt.textContent = 'Over your ' + money(DAILY_LIMIT, 'AED') + ' daily limit by ' + money(usedAed - DAILY_LIMIT, 'AED') + '.';
+  } else if (S.sendAmt && usedAed > DAILY_LIMIT * 0.9){
+    help.classList.add('ntf-help-warn');
+    txt.textContent = 'Only ' + money(DAILY_LIMIT - usedAed, 'AED') + ' of your daily limit left after this.';
+  } else {
+    txt.textContent = money(f.bal, sc) + ' available · ' + money(DAILY_LIMIT - LIMIT_USED, 'AED') + ' of your daily limit remaining';
+  }
+}
+
+/* ── Validation ── */
+function validate(){
+  var errs = [];
+  var f = fromAccount();
+
+  if (!f) errs.push('Choose the account to debit.');
+
+  if (S.type === 'own'){
+    if (!S.toAcctId) errs.push('Choose the account to credit.');
+  } else if (S.mode === 'saved'){
+    if (!S.beneId) errs.push('Choose a beneficiary, or switch to “New recipient”.');
+  } else {
+    var missing = false;
+    var pane = document.querySelector('.ntf-new-fields[data-new="' + S.type + '"]');
+    if (pane){
+      Array.prototype.forEach.call(pane.querySelectorAll('.ntf-new-req'), function(el){
+        if (!String(el.value || '').trim()) missing = true;
+      });
+    }
+    if (missing) errs.push('Fill in all the recipient details.');
+  }
+
+  if (!S.sendAmt || S.sendAmt <= 0) errs.push('Enter an amount to send.');
+  else if (f && totalDebit() > f.bal) errs.push('The total debit is more than your available balance.');
+  else if (f && (LIMIT_USED + convert(S.sendAmt, f.ccy, 'AED')) > DAILY_LIMIT) errs.push('This transfer exceeds your daily limit.');
+
+  /* The counter checks the document, so a lapsed one would fail on collection */
+  if (S.type === 'cash' && S.mode === 'new'){
+    var exp = parseDmy($('nCaExpiry').value);
+    if (exp && exp <= collectBy()){
+      errs.push('That ID expires before the seven-day collection window ends.');
+    }
+  }
+
+  if (S.when === 'later' && !S.schedDate) errs.push('Pick the date for the scheduled transfer.');
+  if (S.when === 'later' && S.schedFreq !== 'once' && (!S.schedCount || S.schedCount < 2)) errs.push('Enter how many payments to make.');
+  if (!S.tcAccepted) errs.push('Accept the terms and conditions.');
+
+  return errs;
+}
+
+/* CONTINUE stays enabled: a disabled button can't be focused and tells the user
+   nothing about what is missing. Validation runs on click and names every gap. */
+function showErrors(errs){
+  var box = $('ntfErrors');
+  if (!errs.length){ box.classList.add('hidden'); return; }
+  $('ntfErrorList').innerHTML = errs.map(function(e){ return '<li>' + e + '</li>'; }).join('');
+  box.classList.remove('hidden');
+}
+function syncValidity(){
+  /* Keep an open banner honest as the user fixes things, but never raise one unprompted */
+  if (!$('ntfErrors').classList.contains('hidden')) showErrors(validate());
+}
+
+function syncAll(){
+  renderTriggers();
+  renderChips();
+  var sc = sendCcy();
+  $('amtCcy').textContent = sc;
+  paintFlag($('amtFlag'), sc);
+  syncFx();
+  syncAmountHelp();
+  syncSummary();
+  syncValidity();
+}
+
+/* DD/MM/YYYY as typed, spaces and separators ignored; null if unreadable */
+function parseDmy(v){
+  var m = String(v || '').match(/^\s*(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{4})\s*$/);
+  if (!m) return null;
+  var d = new Date(+m[3], +m[2] - 1, +m[1]);
+  d.setHours(0,0,0,0);
+  return (d.getDate() === +m[1] && d.getMonth() === +m[2] - 1) ? d : null;
+}
+
+function fmtDate(d){
+  var m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return String(d.getDate()).padStart(2,'0') + ' ' + m[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+/* ════════════════════════════════════════════════════════════
+   WIRING — step 1
+   ════════════════════════════════════════════════════════════ */
+var pFrom = new Picker('from','pickFromTrigger','pickFromList', function(it){
+  S.fromId = it.id;
+  if (S.toAcctId === it.id) S.toAcctId = null;
+  renderFromPicker(); renderToPicker();
+  syncAll();
+});
+var pTo = new Picker('to','pickToTrigger','pickToList', function(it){
+  S.toAcctId = it.id;
+  renderToPicker();
+  syncAll();
+});
+var pBene = new Picker('bene','pickBeneTrigger','pickBeneList', function(it){
+  S.beneId = it.id;
+  renderBenePicker();
+  syncAll();
+});
+pickers = [pFrom, pTo, pBene];
+
+/* Type tabs — click plus arrow-key roving focus */
+var typeBtns = Array.prototype.slice.call(document.querySelectorAll('.ntf-type-btn'));
+typeBtns.forEach(function(btn, i){
+  btn.addEventListener('click', function(){ switchType(btn.getAttribute('data-type')); });
+  btn.addEventListener('keydown', function(e){
+    var next = null;
+    if (e.key === 'ArrowRight') next = typeBtns[(i + 1) % typeBtns.length];
+    else if (e.key === 'ArrowLeft') next = typeBtns[(i - 1 + typeBtns.length) % typeBtns.length];
+    else if (e.key === 'Home') next = typeBtns[0];
+    else if (e.key === 'End') next = typeBtns[typeBtns.length - 1];
+    if (next){ e.preventDefault(); next.focus(); switchType(next.getAttribute('data-type')); }
+  });
+});
+
+/* Saved / new sub-tabs */
+['subtab-saved','subtab-new'].forEach(function(id, i, arr){
+  var el = $(id);
+  el.addEventListener('click', function(){ setSubMode(el.getAttribute('data-sub')); syncAll(); });
+  el.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+      e.preventDefault();
+      var other = $(arr[(i + 1) % 2]);
+      other.focus(); setSubMode(other.getAttribute('data-sub')); syncAll();
+    }
+  });
+});
+
+/* Amount — send side */
+$('amtInp').addEventListener('input', function(){
+  formatAmtInput(this, sendCcy());
+  S.sendAmt = parseAmt(this.value);
+  syncAll();
+});
+/* Amount currency selector (Internal / Local / International) */
+$('amtCurr').addEventListener('change', function(){
+  paintFlag($('amtSelFlag'), this.value);
+  syncAll();
+});
+
+/* Exchanged Amount — back-calculated into the amount, so either box can be typed in */
+$('exchAmtInp').addEventListener('input', function(){
+  var rc = receiveCcy(), sc = sendCcy();
+  formatAmtInput(this, rc);
+  S.sendAmt = convert(parseAmt(this.value), rc, sc);
+  var dp = (sc === 'LBP' || sc === 'IQD') ? 0 : 2;
+  $('amtInp').value = S.sendAmt ? S.sendAmt.toFixed(dp) : '';
+  if (S.sendAmt) formatAmtInput($('amtInp'), sc);
+  syncAmountHelp(); syncSummary(); syncValidity();
+});
+$('exchAmtCurr').addEventListener('change', function(){ syncAll(); });
+$('fxRateChip').addEventListener('click', function(){ syncFx(); announce('Exchange rate refreshed.'); });
+
+/* Purpose */
+$('purposeTxt').addEventListener('input', function(){ S.purpose = this.value; syncValidity(); });
+
+/* New-recipient fields affect currency and validity */
+document.addEventListener('input', function(e){
+  if (e.target.closest('.ntf-new-fields')) syncAll();
+});
+document.addEventListener('change', function(e){
+  if (e.target.closest('.ntf-new-fields')) syncAll();
+});
+
+/* When — radiogroup */
+function setWhen(mode){
+  S.when = mode;
+  var later = (mode === 'later');
+  $('whenNow').setAttribute('aria-checked', later ? 'false' : 'true');
+  $('whenNow').tabIndex = later ? -1 : 0;
+  $('whenLater').setAttribute('aria-checked', later ? 'true' : 'false');
+  $('whenLater').tabIndex = later ? 0 : -1;
+  $('whenNow').querySelector('.material-icons').textContent = later ? 'radio_button_unchecked' : 'check_circle';
+  $('whenLater').querySelector('.material-icons').textContent = later ? 'check_circle' : 'radio_button_unchecked';
+  $('scheduleBlock').classList.toggle('hidden', !later);
+  syncAll();
+}
+[['whenNow','now'],['whenLater','later']].forEach(function(pair){
+  var el = $(pair[0]);
+  el.addEventListener('click', function(){ setWhen(pair[1]); });
+  el.addEventListener('keydown', function(e){
+    if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'].indexOf(e.key) > -1){
+      e.preventDefault();
+      var other = (pair[1] === 'now') ? 'later' : 'now';
+      setWhen(other);
+      $(other === 'now' ? 'whenNow' : 'whenLater').focus();
+    } else if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); setWhen(pair[1]); }
+  });
+});
+
+/* Number of payments only matters for a repeating schedule */
+$('schedFreq').addEventListener('change', function(){
+  S.schedFreq = this.value;
+  var repeating = this.value !== 'once';
+  $('schedCountCol').classList.toggle('hidden', !repeating);
+  $('lblSchedDate').textContent = repeating ? 'First Transfer Date' : 'Transfer Date';
+  $('schedHelpTxt').textContent = repeating
+    ? 'Runs at 09:00 on each due date. We will tell you before each one.'
+    : 'Runs at 09:00 on the chosen date.';
+  syncAll();
+});
+$('schedCount').addEventListener('input', function(){ S.schedCount = parseInt(this.value, 10) || 0; syncValidity(); });
+
+/* Attachment */
+$('attachBtn').addEventListener('click', function(){ $('fileInp').click(); });
+$('fileInp').addEventListener('change', function(){
+  S.attachment = this.files && this.files[0] ? this.files[0].name : null;
+  $('attachLbl').textContent = S.attachment || 'Choose file';
+});
+
+/* Terms */
+$('tc').addEventListener('change', function(){ S.tcAccepted = this.checked; syncValidity(); });
+
+$('btnDraft').addEventListener('click', function(){
+  announce('Saved as a draft. You can pick it up from My Transfers.');
+  alert('Saved as a draft.\nYou can finish it later from Transfers › My Transfers.');
+});
+
+/* ════════════════════════════════════════════════════════════
+   CALENDAR
+   ════════════════════════════════════════════════════════════ */
+var calToday = new Date(); calToday.setHours(0,0,0,0);
+var calYear = calToday.getFullYear(), calMonth = calToday.getMonth(), calPick = null;
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function renderCal(){
+  $('calLbl').textContent = MONTHS[calMonth] + ' ' + calYear;
+  var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var html = '<div class="cal-day-hdr">';
+  days.forEach(function(d){ html += '<span>' + d + '</span>'; });
+  html += '</div><div class="cal-days">';
+  var first = new Date(calYear, calMonth, 1).getDay();
+  var total = new Date(calYear, calMonth + 1, 0).getDate();
+  for (var i = 0; i < first; i++) html += '<button type="button" class="cal-day muted" disabled tabindex="-1"></button>';
+  for (var d = 1; d <= total; d++){
+    var dt = new Date(calYear, calMonth, d);
+    var past = dt <= calToday;                       /* a scheduled transfer must be in the future */
+    var sel = calPick && calPick.getTime() === dt.getTime();
+    html += '<button type="button" class="cal-day' + (sel ? ' selected' : '') + (past ? ' muted' : '') + '"'
+          + (past ? ' disabled' : ' data-d="' + d + '"') + '>' + String(d).padStart(2,'0') + '</button>';
+  }
+  var rem = (7 - ((first + total) % 7)) % 7;
+  for (var j = 0; j < rem; j++) html += '<button type="button" class="cal-day muted" disabled tabindex="-1"></button>';
+  html += '</div>';
+  $('calDays').innerHTML = html;
+  Array.prototype.forEach.call($('calDays').querySelectorAll('[data-d]'), function(el){
+    el.addEventListener('click', function(){
+      calPick = new Date(calYear, calMonth, parseInt(el.getAttribute('data-d'), 10));
+      renderCal();
+    });
+  });
+}
+var calOpener = null;
+function openCal(){
+  calOpener = document.activeElement;
+  calPick = S.schedDate ? new Date(S.schedDate) : null;
+  if (calPick){ calYear = calPick.getFullYear(); calMonth = calPick.getMonth(); }
+  renderCal();
+  $('calModal').classList.remove('hidden');
+  $('calClose').focus();
+}
+function closeCal(){
+  $('calModal').classList.add('hidden');
+  if (calOpener) calOpener.focus();
+}
+$('schedDateBtn').addEventListener('click', openCal);
+$('calPrev').addEventListener('click', function(){ calMonth--; if (calMonth < 0){ calMonth = 11; calYear--; } renderCal(); });
+$('calNext').addEventListener('click', function(){ calMonth++; if (calMonth > 11){ calMonth = 0; calYear++; } renderCal(); });
+$('calClose').addEventListener('click', closeCal);
+$('calCancel').addEventListener('click', closeCal);
+$('calSave').addEventListener('click', function(){
+  if (calPick){
+    S.schedDate = calPick;
+    $('schedDateLbl').textContent = fmtDate(calPick);
+  }
+  closeCal();
+  syncAll();
+});
+$('calModal').addEventListener('keydown', function(e){ if (e.key === 'Escape') closeCal(); });
+$('calModal').addEventListener('click', function(e){ if (e.target === $('calModal')) closeCal(); });
+
+/* ════════════════════════════════════════════════════════════
+   STEPS
+   ════════════════════════════════════════════════════════════ */
+function setStep(n){
+  $('stepDetails').classList.toggle('hidden', n !== 1);
+  $('stepReview').classList.toggle('hidden', n !== 2);
+  $('stepDone').classList.toggle('hidden', n !== 3);
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function recipientLabel(){
+  if (S.type === 'own'){ var t = toAccount(); return t ? { main:t.nick + ' · ' + t.type, sub:t.mask + ' · ' + t.ccy } : { main:'—', sub:'' }; }
+  if (S.mode === 'saved'){ var b = currentBene(); return b ? { main:b.name, sub:b.sub } : { main:'—', sub:'' }; }
+  if (S.type === 'cash') return {
+    main: $('nCaName').value || '—',
+    sub:  [$('nCaIdType').value, $('nCaIdNum').value].filter(Boolean).join(' · ')
+  };
+  if (S.type === 'internal') return { main:$('nInName').value || '—', sub:$('nInAcct').value || '' };
+  if (S.type === 'local')    return { main:$('nLoName').value || '—', sub:($('nLoBank').value || '') + ' · ' + ($('nLoAcct').value || '') };
+  return { main:$('nItName').value || '—', sub:($('nItBank').value || '') + ' · ' + ($('nItAcct').value || '') };
+}
+
+function row(label, value){
+  return '<div class="ntf-dl-row"><dt>' + label + '</dt><dd>' + value + '</dd></div>';
+}
+
+function buildReview(){
+  var sc = sendCcy(), rc = receiveCcy();
+  var f = fromAccount(), rcp = recipientLabel();
+
+  var cash = isCash();
+
+  $('revAmount').textContent = money(S.sendAmt, sc);
+  $('revAmountSub').textContent = cash
+    ? 'Handed over in cash at any branch'
+    : ((rc && rc !== sc) ? 'Recipient gets ' + money(receiveAmount(), rc) : '');
+
+  $('revToLbl').textContent = cash ? 'Collected by' : 'To';
+
+  $('revFromMain').textContent = f ? f.nick + ' · ' + f.type : '—';
+  $('revFromSub').textContent  = f ? f.mask + ' · ' + f.ccy : '';
+  $('revToMain').textContent   = rcp.main;
+  $('revToSub').textContent    = rcp.sub;
+
+  var html = '';
+  html += row('Transfer type', TYPE_LABEL[S.type]);
+  if (S.purpose) html += row('Purpose', S.purpose);
+  if (!cash && rc && rc !== sc) html += row('Exchange rate', '1 ' + sc + ' = ' + rateBetween(sc, rc).toFixed(4) + ' ' + rc);
+
+  if (cash){
+    /* The document is the whole control on a counter payout, so it is
+       spelled out here rather than left to the party block's subtitle. */
+    var idT, idN, idC;
+    if (S.mode === 'saved'){
+      var cb = currentBene() || {};
+      idT = cb.idType; idN = cb.idNum; idC = cb.country;
+    } else {
+      idT = $('nCaIdType').value; idN = $('nCaIdNum').value; idC = $('nCaCountry').value;
+    }
+    if (idT) html += row('ID type', idT);
+    if (idN) html += row('ID number', idN);
+    if (idC) html += row('Country of issuance', idC);
+    html += row('Service charge', money(feeInSendCcy(), sc) + ' · 1% of the amount, minimum AED ' + CASH_FEE.min);
+    html += row('Reserved on', fmtDate(new Date()));
+    html += row('Collect by', fmtDate(collectBy()));
+  } else {
+    html += row('Transfer fee', feeAed() === 0 ? 'Free' : money(feeInSendCcy(), sc));
+    html += row('When', S.when === 'now'
+        ? 'Immediately'
+        : fmtDate(S.schedDate) + (S.schedFreq !== 'once' ? ' · ' + S.schedFreq + ' × ' + S.schedCount : ''));
+    html += row('Arrives', ETA[S.type]);
+  }
+
+  if (S.attachment) html += row('Attachment', S.attachment);
+  if (S.mode === 'new' && $('saveBene').checked) html += row('Recipient', 'Will be saved to your beneficiaries');
+  $('revDetails').innerHTML = html;
+
+  $('revCollect').classList.toggle('hidden', !cash);
+  if (cash){
+    $('revCollectT').textContent = 'Collectable until ' + fmtDate(collectBy());
+    $('revCollectS').textContent = 'The amount is held on your account until then. If it is not collected, '
+      + 'it is returned automatically — the service charge is not refunded.';
+  }
+
+  $('rSumSendLbl').textContent = cash ? 'Cash Amount'    : 'You Send';
+  $('rSumFeeLbl').textContent  = cash ? 'Service Charge' : 'Transfer Fee';
+  $('rSumGetLbl').textContent  = cash ? 'They Collect'   : 'They Receive';
+  $('rSumEtaLbl').textContent  = cash ? 'Collect By'     : 'Arrives';
+
+  $('rSumSend').textContent  = money(S.sendAmt, sc);
+  $('rSumTotal').textContent = money(totalDebit(), sc);
+  $('rSumFee').textContent   = cash ? money(feeInSendCcy(), sc)
+                                    : (feeAed() === 0 ? 'Free' : money(feeInSendCcy(), sc));
+  $('rSumGet').textContent   = cash ? money(S.sendAmt, sc) + ' in cash'
+                                    : ((rc && rc !== sc) ? money(receiveAmount(), rc) : '—');
+  $('rSumEta').textContent   = cash ? fmtDate(collectBy())
+                                    : (S.when === 'later' && S.schedDate ? 'Scheduled for ' + fmtDate(S.schedDate) : ETA[S.type]);
+}
+
+$('btnContinue').addEventListener('click', function(){
+  var errs = validate();
+  if (errs.length){
+    showErrors(errs);
+    $('ntfErrors').focus();
+    announce(errs.length + ' thing' + (errs.length > 1 ? 's' : '') + ' still needed before you can continue.');
+    return;
+  }
+  showErrors([]);
+  buildReview();
+  setStep(2);
+  announce('Check your transfer details, then confirm.');
+});
+$('btnBack').addEventListener('click', function(){ setStep(1); });
+$('btnEdit').addEventListener('click', function(){ setStep(1); });
+
+$('btnAuthorise').addEventListener('click', function(){
+  buildDone();
+  setStep(3);
+  announce('Transfer completed.');
+});
+
+/* ════════════════════════════════════════════════════════════
+   DONE
+   ════════════════════════════════════════════════════════════ */
+function buildDone(){
+  var sc = sendCcy(), rc = receiveCcy(), rcp = recipientLabel();
+  var scheduled = (S.when === 'later');
+  var cash = isCash();
+  var f = fromAccount();
+  var html = '';
+
+  if (cash){
+    /* Nothing has been paid yet — what the customer leaves with is a
+       reference the recipient quotes at the counter. */
+    $('doneTitle').textContent = 'Cash ready to collect';
+    $('doneSub').textContent = money(S.sendAmt, sc) + ' is reserved for ' + rcp.main
+      + ' to collect by ' + fmtDate(collectBy()) + '. Share the reference below.';
+    $('doneRef').textContent = 'CSH-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000) + 10000);
+
+    html += row('Reserved from your account', money(totalDebit(), sc));
+    html += row('Recipient collects', money(S.sendAmt, sc) + ' in cash');
+    html += row('Service charge', money(feeInSendCcy(), sc));
+    html += row('Collect by', fmtDate(collectBy()));
+    html += row('If not collected', 'Returned to your account automatically');
+    if (f) html += row('Available balance', money(f.bal - totalDebit(), sc));
+    $('doneDetails').innerHTML = html;
+    return;
+  }
+
+  $('doneTitle').textContent = scheduled ? 'Transfer scheduled' : 'Transfer sent';
+  $('doneSub').textContent = scheduled
+    ? money(S.sendAmt, sc) + ' to ' + rcp.main + ' on ' + fmtDate(S.schedDate)
+    : money(S.sendAmt, sc) + ' sent to ' + rcp.main;
+  $('doneRef').textContent = 'TRF-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000) + 10000);
+
+  html += row('Total debited', money(totalDebit(), sc));
+  if (rc && rc !== sc) html += row('Recipient receives', money(receiveAmount(), rc));
+  html += row('Arrives', scheduled ? fmtDate(S.schedDate) : ETA[S.type]);
+  if (f) html += row('New balance', money(f.bal - totalDebit(), sc));
+  $('doneDetails').innerHTML = html;
+}
+
+$('btnNewTransfer').addEventListener('click', function(){
+  S.toAcctId = null; S.beneId = null; S.sendAmt = 0; S.purpose = '';
+  S.when = 'now'; S.schedDate = null; S.schedFreq = 'once'; S.attachment = null;
+  $('amtInp').value = ''; $('exchAmtInp').value = '';
+  $('purposeTxt').value = '';
+  ['nCaName','nCaIdType','nCaIdNum','nCaCountry','nCaIssue','nCaExpiry','nCaMobile'].forEach(function(id){ $(id).value = ''; });
+  $('schedDateLbl').textContent = 'Select Transfer Date';
+  $('schedFreq').value = 'once';
+  $('attachLbl').textContent = 'Choose file';
+  $('tc').checked = false;
+  setWhen('now');
+  setSubMode('saved');
+  switchType(S.type);
+  setStep(1);
+});
+
+/* ════════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════════ */
+S.fromId = ACCOUNTS[0].id;
+renderFromPicker();
+renderToPicker();
+renderBenePicker();
+
+var qParams = new URLSearchParams(window.location.search);
+var qType = qParams.get('type');
+setWhen(qParams.get('when') === 'later' ? 'later' : 'now');
+if (qParams.get('edit') === '1') $('ntfEditBadge').classList.remove('hidden');
+switchType(TYPE_LABEL[qType] ? qType : 'own');
+setStep(1);
+
+})();
+</script>
+</body>
+</html>

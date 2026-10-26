@@ -15,7 +15,51 @@
   <link rel="stylesheet" href="../css/datepicker.css"/>
   <!-- Application styles -->
   <link rel="stylesheet" href="../css/styles.css"/>
+  <style>
+    /* Match request-hard-copy-statement.html's page treatment (scoped to this page — these classes are shared globally) */
+    .page-top-bar { margin-bottom: 1rem; }
+    .sec-card {
+      background: #fff; border: 1px solid var(--az-border,#e2e8ec); border-radius: .875rem;
+      box-shadow: 0 1px 3px rgba(22,48,61,.04);
+      padding: 1rem 1.5rem 1.2rem; margin-bottom: 1.5rem;
+    }
+    .sec-hdr { font-size:var(--fs-subhead); border-bottom: 1px solid #e5e9ee; padding: 0 0 .75rem; margin-bottom: 1rem; cursor: default; }
+    .sec-hdr:hover { color: inherit; }
+    .sec-body { padding: 0; }
+    .sec-body .f-label { font-size: var(--fs-label); font-weight: 500; margin-bottom: .5rem; }
+    .form-footer .btn-action {
+      border-radius: .5rem; padding: .7rem 1.75rem; font-size:var(--fs-body);
+      transition: background .15s, box-shadow .15s, transform .15s, border-color .15s, color .15s;
+    }
+    .form-footer .btn-cancel, .form-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+    .form-footer .btn-cancel:hover, .form-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+    .form-footer .btn-submit { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; border: none; }
+    .form-footer .btn-submit:hover { background: linear-gradient(135deg, #0f232e, #081820); transform: translateY(-1px); }
+    .form-footer .btn-submit:active { transform: translateY(0); }
+    .cmi-back-btn { display: inline-flex; align-items: center; gap: .3rem; background: #fff; border: 1.5px solid var(--az-border,#e2e8ec); color: var(--az-navy,#16303d); border-radius: 20px; padding: .375rem .875rem; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight: 500; cursor: pointer; transition: background .12s, border-color .12s; text-decoration: none; }
+    .cmi-back-btn:hover { background: #f4f6f8; border-color: #c9d2d8; color: var(--az-navy,#16303d); }
+    .cmi-back-btn .material-icons { font-size: 16px; }
+    /* Hero panel — matches request-hard-copy-statement.html's gradient hero language */
+    .cmi-hero { border-radius: 1.1rem; padding: 1.5rem 1.75rem; background: #e3f7ec; color: var(--az-navy,#16303d); position: relative; overflow: hidden; box-shadow: 0 3px 8px rgba(26,173,110,.1); border: 1px solid #bfeed7; margin-bottom: 1.5rem; }
+    .cmi-hero::before {
+      content: ''; position: absolute; top: -10px; right: -10px; width: 170px; height: 170px;
+      background:
+        var(--az-hero-mark) no-repeat center/78%,
+        radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%;
+    }
+    .cmi-hero-top-row { position: relative; z-index: 1; margin-bottom: 1.1rem; }
+    .cmi-hero-eyebrow { font-size:var(--fs-micro); font-weight:600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .6rem; color: var(--az-muted,#707070); }
+    .cmi-hero-name-row { display: flex; align-items: center; gap: .6rem; font-size:var(--fs-section); font-weight: 600; color: var(--az-navy,#16303d); flex-wrap: wrap; }
+    .cmi-hero-name-row > .material-icons { font-size: 20px; background: #edf9f4; color: #1aad6e; width: 32px; height: 32px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cmi-hero-currency { display: inline-flex; align-items: center; gap: .3rem; font-size:var(--fs-small); font-weight:600; color: var(--az-navy,#16303d); }
+    .cmi-hero-status-pill { background: #fff; color: #1aad6e; border: 1px solid #1aad6e; border-radius: 2rem; padding: .3rem .8rem; font-size:var(--fs-micro); font-weight:600; display: inline-flex; align-items: center; gap: .3rem; white-space: nowrap; }
+    .cmi-hero-status-pill .material-icons { font-size: 14px; }
+    .cmi-hero-flow { display: flex; align-items: center; gap: 2.5rem; position: relative; z-index: 1; flex-wrap: wrap; }
+    .cmi-hero-flow .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem; color: var(--az-muted,#707070); }
+    .cmi-hero-flow .val { font-size:var(--fs-subhead); font-weight: 700; color: var(--az-navy,#16303d); }
+  </style>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
@@ -23,7 +67,7 @@
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
     <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
@@ -39,11 +83,11 @@
 </svg></span>
   </div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
       <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
-      <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-hidden="true"></span>
+      <span class="material-icons">notifications</span><span class="notif-dot" aria-hidden="true"></span>
     </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr">
@@ -78,8 +122,8 @@
         </div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><span class="material-icons">help</span></a>
     <div class="hdr-div" role="separator"></div>
     <div class="hdr-lang-wrap">
     <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
@@ -132,9 +176,9 @@
             <div class="av-nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             </div>
-            My Tasks
+            My Saved Drafts
           </a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -148,36 +192,33 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
-  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item active-section" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron open" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item active">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 
 <!-- ████ MAIN ████ -->
@@ -188,32 +229,40 @@
   <a href="accounts.html">My Accounts</a><span class="sep">&#8250;</span>
   <span class="cur">Change Maturity Instructions</span>
 </div>
-<h1 class="page-title mb-4">Change Maturity Instructions</h1>
-<div class="acct-strip" role="region" aria-label="Account details">
-  <div>
-    <div class="fw-bold">SARIKA DESAI</div>
-    <div class="acct-currency mt-1"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span></div>
+<div class="page-top-bar">
+  <h1 class="page-title" style="margin-bottom:0">Change Maturity Instructions</h1>
+  <a href="accounts.html?tab=term" class="cmi-back-btn">
+    <span class="material-icons" aria-hidden="true">arrow_back</span> Back
+  </a>
+</div>
+<div class="cmi-hero" role="region" aria-label="Account details">
+  <div class="cmi-hero-top-row">
+    <div class="cmi-hero-eyebrow">Account Details</div>
+    <div class="cmi-hero-name-row">
+      <span class="material-icons" aria-hidden="true">person</span>
+      <span>Sarika Desai</span>
+      <span class="cmi-hero-currency"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> USD</span>
+      <span class="cmi-hero-status-pill"><span class="material-icons" aria-hidden="true">check_circle</span> Active</span>
+    </div>
   </div>
-  <span class="badge-s s-active">Active</span>
-  <div class="strip-f"><div class="sl">Account Number</div><div class="sv">0032100345</div></div>
-  <div class="strip-f"><div class="sl">Current balance</div><div class="sv">0.00 USD</div></div>
-  <div class="strip-f"><div class="sl">Available balance</div><div class="sv">0.00 USD</div></div>
+  <div class="cmi-hero-flow">
+    <div><div class="lbl">Account Number</div><div class="val">0032100345</div></div>
+    <div><div class="lbl">Current Balance</div><div class="val">0.00 USD</div></div>
+    <div><div class="lbl">Available Balance</div><div class="val">0.00 USD</div></div>
+  </div>
 </div>
 <div class="sec-card" role="region" aria-labelledby="secMat_title">
-  <div class="sec-hdr" onclick="toggleSec('secMat')" role="button" aria-expanded="true" aria-controls="secMat">
+  <div class="sec-hdr">
     <span id="secMat_title">Maturity Instructions</span>
-    <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7" aria-hidden="true">
-      <path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/>
-    </svg>
   </div>
   <div class="sec-body" id="secMat">
 <div class="row g-4 mb-3">
-  <div class="col-12 col-md-4 d-flex align-items-center gap-3"><label class="f-label mb-0">Reinvest upon maturity</label><label class="az-toggle"><input type="checkbox" checked role="switch"/><span class="az-slider"></span></label></div>
-  <div class="col-12 col-md-4"><label class="f-label" for="matAC">Select Maturity AC</label><select id="matAC" class="f-input f-select"><option value="" disabled selected>Select</option><option>AE07 0331 0102 3847 0010 0 – Sara Rahman</option></select></div>
+  <div class="col-12 col-md-4 d-flex align-items-center gap-3"><label class="f-label mb-0">Reinvest upon maturity</label><label class="az-toggle"><input type="checkbox" id="reinvestToggle" onchange="cmiToggleField('reinvestToggle','matACCol')" role="switch"/><span class="az-slider"></span></label></div>
+  <div class="col-12 col-md-4 hidden" id="matACCol"><label class="f-label" for="matAC">Select Maturity AC</label><select id="matAC" class="f-input f-select"><option value="" disabled selected>Select</option><option>AE07 0331 0102 3847 0010 0 – Sara Rahman</option></select></div>
 </div>
 <div class="row g-4">
-  <div class="col-12 col-md-4 d-flex align-items-center gap-3"><label class="f-label mb-0">Post profit to same account</label><label class="az-toggle"><input type="checkbox" checked role="switch"/><span class="az-slider"></span></label></div>
-  <div class="col-12 col-md-4"><label class="f-label" for="profAC">Select Profit Account</label><select id="profAC" class="f-input f-select"><option value="" disabled selected>Select</option><option>AE07 0331 0102 3847 0010 0 – Sara Rahman</option></select></div>
+  <div class="col-12 col-md-4 d-flex align-items-center gap-3"><label class="f-label mb-0">Post profit to same account</label><label class="az-toggle"><input type="checkbox" id="profitToggle" onchange="cmiToggleField('profitToggle','profACCol')" role="switch"/><span class="az-slider"></span></label></div>
+  <div class="col-12 col-md-4 hidden" id="profACCol"><label class="f-label" for="profAC">Select Profit Account</label><select id="profAC" class="f-input f-select"><option value="" disabled selected>Select</option><option>AE07 0331 0102 3847 0010 0 – Sara Rahman</option></select></div>
 </div></div>
 </div>
 <div class="form-footer" role="group" aria-label="Form actions">
@@ -222,7 +271,7 @@
     <label for="tcAgree"><a href="#" class="text-decoration-none" style="color:#0067AB">I Agree On Terms And Conditions</a></label>
   </div>
   <a href="accounts.html" class="btn-action btn-cancel" role="button">CANCEL</a>
-  <button type="button" class="btn-action btn-save">SAVE</button>
+  <button type="button" class="btn-action btn-save">Save Draft</button>
   <button type="submit" class="btn-action btn-submit">SUBMIT</button>
 </div>
   </main>
@@ -284,5 +333,11 @@
 <script src="../js/datepicker.min.js"></script>
 <!-- Application logic -->
 <script src="../js/app.js"></script>
+<script>
+function cmiToggleField(toggleId, fieldColId){
+  var on = document.getElementById(toggleId).checked;
+  document.getElementById(fieldColId).classList.toggle('hidden', !on);
+}
+</script>
 </body>
 </html>

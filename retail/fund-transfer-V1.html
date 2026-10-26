@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – Fund Transfer</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
+  <script src="../js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ New Transfer — combined Own/Internal/Local/International, modern box-free fintech UI ══
+   (scoped to this page; .tr-tabs/.tr-tab/.tr-panel/.f-input/.amount-field/etc. are shared
+   global classes used as-is, not modified here) ══ */
+
+.ntf-type-switch { display: flex; gap: .3rem; background: var(--az-green-light,#edf9f4); border-radius: 22px; padding: 4px; margin-bottom: 1.5rem; max-width: 700px; height: 44px; box-sizing: border-box; }
+.ntf-type-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: .4rem; height: 36px; padding: 0 .75rem; border: none; background: transparent; border-radius: 18px; font-size:var(--fs-body); font-weight: 700; color: var(--az-muted,#707070); cursor: pointer; transition: all .18s; font-family: 'Poppins','Roboto',sans-serif; white-space: nowrap; box-sizing: border-box; }
+.ntf-type-btn .material-icons { font-size: 17px; transition: color .18s; }
+.ntf-type-btn:hover { color: var(--az-navy,#16303d); }
+.ntf-type-btn.active { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; }
+.ntf-type-btn.active:hover { color: #fff; }
+.ntf-type-btn.active .material-icons { color: #2ed88e; }
+
+/* Section headings — copied from general-account-opening.html's field-group label style */
+.ntf-section { margin-bottom: 1.25rem; }
+.ntf-section-lbl { font-size:var(--fs-caption); font-weight:600; text-transform: uppercase; letter-spacing: .07em; color: var(--az-blue, #2563eb); margin-bottom: .75rem; }
+
+.ntf-type-panel.hidden { display: none; }
+.ntf-sub-tabs-wrap { margin-top: .85rem; }
+
+/* CTA row — copied from general-account-opening.html's footer treatment, for a unified look */
+.form-footer { background: none; border: none; border-top: 1px solid #eef1f4; padding: 1.5rem 0 0; }
+.form-footer .btn-action { border-radius: .5rem; padding: .7rem 1.75rem; font-size:var(--fs-body); transition: background .15s, box-shadow .15s, transform .15s, border-color .15s, color .15s; }
+.form-footer .btn-cancel, .form-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.form-footer .btn-cancel:hover, .form-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.form-footer .btn-submit { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; border: none; }
+.form-footer .btn-submit:hover { background: linear-gradient(135deg, #0f232e, #081820); transform: translateY(-1px); }
+.form-footer .btn-submit:active { transform: translateY(0); }
+
+/* Amount usability upgrades */
+.ntf-section .amount-inp { font-size:var(--fs-heading); font-weight: 600; color: var(--az-navy,#16303d); }
+.ntf-section .amount-field { height: 2.75rem; box-sizing: border-box; }
+.ntf-section input[id^="purpose"]:not(#purposeLocOther), .ntf-section #ownPurpose { height: 2.75rem; box-sizing: border-box; }
+.ntf-amt-chips { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .5rem; }
+.ntf-amt-chip { border: 1.5px solid var(--az-border,#e2e8ec); background: #fff; border-radius: 999px; padding: .3rem .85rem; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy,#16303d); cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ntf-amt-chip:hover { border-color: var(--az-green,#1aad6e); color: var(--az-green,#1aad6e); background: var(--az-green-light,#edf9f4); }
+.amount-field.ntf-limit-exceeded { border-color: #dc2626; }
+.ntf-limit-note { font-size:var(--fs-micro); color: var(--az-muted,#707070); margin-top: .4rem; }
+.ntf-limit-note.ntf-limit-warn { color: #dc2626; font-weight: 600; }
+
+/* Static single-option currency badge (no dropdown where there's no real choice) */
+.ntf-curr-badge { display: flex; align-items: center; gap: .35rem; cursor: default; }
+.ntf-curr-code { font-size:var(--fs-caption); font-weight:600; color: var(--az-navy,#16303d); }
+
+/* Exchange rate shown inline next to the label it applies to, not as a footer caption */
+.ntf-exch-label-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; }
+.ntf-exch-label-row .f-label { margin-bottom: 0; }
+.ntf-rate-chip { display: inline-flex; align-items: center; gap: .25rem; background: #eff6ff; color: var(--az-blue,#00538A); border-radius: 999px; padding: .15rem .55rem; font-size:var(--fs-micro); font-weight: 600; cursor: pointer; white-space: nowrap; font-family: 'Poppins','Roboto',sans-serif; transition: background .15s; }
+.ntf-rate-chip .material-icons { font-size: 12px; }
+.ntf-rate-chip:hover { background: #dbeafe; }
+
+/* Recent recipients — quick repeat-transfer shortcut */
+.ntf-recent-row { margin-bottom: 1.1rem; }
+.ntf-recent-hdr { font-size:var(--fs-micro); font-weight:600; text-transform: uppercase; letter-spacing: .06em; color: var(--az-muted,#707070); margin-bottom: .6rem; }
+.ntf-recent-list { display: flex; gap: .6rem; overflow-x: auto; padding-bottom: .2rem; }
+.ntf-recent-chip { display: flex; align-items: center; gap: .55rem; flex-shrink: 0; border: 1px solid var(--az-border,#e2e8ec); background: #fff; border-radius: .75rem; padding: .5rem .75rem; cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; text-align: left; }
+.ntf-recent-chip:hover { border-color: var(--az-green,#1aad6e); background: var(--az-green-light,#edf9f4); }
+.ntf-recent-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--az-navy,#16303d); color: #fff; display: flex; align-items: center; justify-content: center; font-size:var(--fs-micro); font-weight:600; flex-shrink: 0; }
+.ntf-recent-info { display: flex; flex-direction: column; min-width: 0; }
+.ntf-recent-name { font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy,#16303d); white-space: nowrap; }
+.ntf-recent-amt { font-size:var(--fs-micro); color: var(--az-muted,#707070); }
+
+/* Transfer Now / Schedule for Later — sits after Amount; date fields appear on their own line below the cards */
+.ntf-when-block { display: flex; flex-direction: column; gap: 1.25rem; }
+.ntf-when-row { display: flex; gap: 1rem; margin-bottom: 0; flex-wrap: wrap; }
+.ntf-schedule-inline { width: 100%; }
+.ntf-schedule-inline.hidden { display: none; }
+.ntf-when-card { flex: 0 1 240px; min-width: 200px; display: flex; align-items: flex-start; gap: .6rem; text-align: left; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .75rem; background: #fff; padding: .7rem .85rem; cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.ntf-when-card:hover { border-color: var(--az-green,#1aad6e); }
+.ntf-when-card.active { border-color: var(--az-green,#1aad6e); background: var(--az-green-light,#edf9f4); box-shadow: 0 0 0 1px var(--az-green,#1aad6e); }
+.ntf-when-radio { flex-shrink: 0; margin-top: 1px; }
+.ntf-when-radio .material-icons { font-size: 20px; color: #c8d1d8; }
+.ntf-when-card.active .ntf-when-radio .material-icons { color: var(--az-green,#1aad6e); }
+.ntf-when-text { display: flex; flex-direction: column; gap: .15rem; }
+.ntf-when-title { font-size:var(--fs-small); font-weight:600; color: var(--az-navy,#16303d); }
+.ntf-when-sub { font-size:var(--fs-micro); color: var(--az-muted,#707070); }
+
+/* Simple account picker — single-line rows instead of the dense balance-grid LOV */
+.ntf-acct-picker { position: relative; }
+.ntf-acct-trigger { display: flex; align-items: center; gap: .6rem; width: 100%; background: #fff; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .5rem; padding: .5rem .75rem; cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; text-align: left; transition: border-color .15s; }
+.ntf-acct-trigger:hover { border-color: var(--az-green,#1aad6e); }
+.ntf-acct-trigger.open { border-color: var(--az-green,#1aad6e); }
+.ntf-acct-trigger-text { flex: 1; font-size:var(--fs-small); font-weight: 600; color: var(--az-navy,#16303d); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ntf-acct-chevron { font-size: 18px; color: var(--az-muted,#707070); transition: transform .15s; flex-shrink: 0; }
+.ntf-acct-trigger.open .ntf-acct-chevron { transform: rotate(180deg); }
+.ntf-acct-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--az-green-light,#edf9f4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ntf-acct-avatar .material-icons { font-size: 15px; color: var(--az-green,#1aad6e); }
+.ntf-acct-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid var(--az-border,#e2e8ec); border-radius: .625rem; box-shadow: 0 8px 24px rgba(22,48,61,.14); z-index: 50; overflow: hidden; }
+.ntf-acct-item { display: flex; align-items: center; gap: .6rem; width: 100%; background: none; border: none; border-bottom: 1px solid #f0f4f7; padding: .625rem .75rem; cursor: pointer; text-align: left; font-family: 'Poppins','Roboto',sans-serif; transition: background .15s; }
+.ntf-acct-item:last-child { border-bottom: none; }
+.ntf-acct-item:hover { background: var(--az-green-light,#edf9f4); }
+.ntf-acct-item-text { display: flex; flex-direction: column; min-width: 0; }
+.ntf-acct-item-name { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy,#16303d); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ntf-acct-item-num { font-size:var(--fs-micro); color: var(--az-muted,#707070); }
+
+.ntf-field-lbl-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.ntf-field-lbl-row .f-label { margin-bottom: .5rem; }
+.ntf-add-ben-link { font-size:var(--fs-caption); font-weight: 600; color: var(--az-blue,#00538A); text-decoration: none; margin-bottom: .5rem; white-space: nowrap; }
+.ntf-add-ben-link:hover { text-decoration: underline; }
+
+/* Compact attachment — International only, not the full dashed dropzone */
+.ntf-attach-compact { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--az-border,#e2e8ec); border-radius: .5rem; padding: .5rem .75rem; background: #f7fcfa; cursor: pointer; transition: border-color .15s, background .15s; }
+.ntf-attach-compact:hover { border-color: var(--az-green,#1aad6e); background: #edfaf6; }
+.ntf-attach-compact .material-icons { font-size: 18px; color: var(--az-green,#1aad6e); }
+.ntf-attach-compact .attach-link { font-size:var(--fs-small); text-decoration: none; font-weight: 600; }
+.ntf-attach-hint { font-size:var(--fs-micro); color: var(--az-muted,#707070); margin-left: .25rem; }
+
+@media (max-width: 700px) {
+  .ntf-type-switch { flex-wrap: wrap; border-radius: .75rem; }
+  .ntf-type-btn { flex: 1 1 45%; }
+}
+</style>
+</head>
+<body>
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr">
+          <span class="notif-panel-title">Notifications</span>
+
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div>
+              <div class="notif-time">1 hr ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-content">
+              <div class="notif-msg">Investment maturing notification</div>
+              <div class="notif-time">2 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-content">
+              <div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div>
+              <div class="notif-time">6 hrs ago</div>
+            </div>
+            <span class="notif-ind"></span>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button>
+        </div>
+      </div>
+    </div>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+    <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true">
+          <span class="fi fi-us"></span> English
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false">
+          <span class="fi fi-fr"></span> French
+        </button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false">
+          <span class="fi fi-sa"></span> عربي
+        </button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                27 Jul, 2026
+              </span>
+              <span class="t-sep">|</span>
+              <span class="t-part">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                09:42
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            My Profile
+          </a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem">
+            <div class="av-nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            My Saved Drafts
+          </a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
+            <div class="av-nav-icon">
+              <span class="material-icons" style="font-size:18px;">logout</span>
+            </div>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div></div>
+</header>
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sb-nav">
+  <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+  <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
+  <button class="sb-item active-section" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron open" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sTr" class="sb-sub">
+    <a href="fund-transfer.html" class="sb-sub-item active">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+  </div>
+  <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Transfer</a><span class="sep">&#8250;</span><span class="cur">Fund Transfer</span></div>
+    <h1 class="page-title mb-4">Fund Transfer</h1>
+
+    <div class="ntf-type-switch" role="tablist">
+      <button class="ntf-type-btn active" data-type="own" onclick="ntfSwitchType('own')" role="tab" aria-selected="true"><span class="material-icons">swap_horiz</span> Own Account</button>
+      <button class="ntf-type-btn" data-type="internal" onclick="ntfSwitchType('internal')" role="tab" aria-selected="false"><span class="material-icons">person</span> Internal</button>
+      <button class="ntf-type-btn" data-type="local" onclick="ntfSwitchType('local')" role="tab" aria-selected="false"><span class="material-icons">account_balance</span> Local</button>
+      <button class="ntf-type-btn" data-type="international" onclick="ntfSwitchType('international')" role="tab" aria-selected="false"><span class="material-icons">public</span> International</button>
+    </div>
+
+
+    <div class="ntf-section hidden" id="sharedFromAcctSection">
+      <div class="row g-3">
+        <div class="col-md-4"><label class="f-label">From Account</label><div class="ntf-acct-picker" onclick="event.stopPropagation()">
+            <button type="button" class="ntf-acct-trigger" id="selFromAcct" onclick="ntfToggleAcctPicker('lovFromAcct',this)">
+              <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+              <span class="ntf-acct-trigger-text">Select Account</span>
+              <span class="material-icons ntf-acct-chevron">expand_more</span>
+            </button>
+            <div class="ntf-acct-dropdown hidden" id="lovFromAcct">
+              <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selFromAcct','lovFromAcct')">
+                <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Sara Rahman</span><span class="ntf-acct-item-num">898987654523</span></span>
+              </button>
+              <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selFromAcct','lovFromAcct')">
+                <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Sara Rahman</span><span class="ntf-acct-item-num">898987654524</span></span>
+              </button>
+            </div>
+          </div></div>
+      </div>
+    </div>
+
+    <div class="ntf-type-panel" data-type="own">
+      <div class="ntf-section">
+        <div class="row g-3">
+          <div class="col-md-4"><label class="f-label">From Account</label><div class="ntf-acct-picker" onclick="event.stopPropagation()">
+              <button type="button" class="ntf-acct-trigger" id="selFromAcctOwn" onclick="ntfToggleAcctPicker('lovFromAcctOwn',this)">
+                <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                <span class="ntf-acct-trigger-text">Select Account</span>
+                <span class="material-icons ntf-acct-chevron">expand_more</span>
+              </button>
+              <div class="ntf-acct-dropdown hidden" id="lovFromAcctOwn">
+                <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selFromAcctOwn','lovFromAcctOwn')">
+                  <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                  <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Sara Rahman</span><span class="ntf-acct-item-num">898987654523</span></span>
+                </button>
+                <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selFromAcctOwn','lovFromAcctOwn')">
+                  <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                  <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Sara Rahman</span><span class="ntf-acct-item-num">898987654524</span></span>
+                </button>
+              </div>
+            </div></div>
+          <div class="col-md-4"><label class="f-label">To Account</label><div class="ntf-acct-picker" onclick="event.stopPropagation()">
+              <button type="button" class="ntf-acct-trigger" id="selToAcctOwn" onclick="ntfToggleAcctPicker('lovToAcctOwn',this)">
+                <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                <span class="ntf-acct-trigger-text">Select Account</span>
+                <span class="material-icons ntf-acct-chevron">expand_more</span>
+              </button>
+              <div class="ntf-acct-dropdown hidden" id="lovToAcctOwn">
+                <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selToAcctOwn','lovToAcctOwn')">
+                  <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                  <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Mohammed Al Farsi</span><span class="ntf-acct-item-num">Beneficiary Account</span></span>
+                </button>
+                <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selToAcctOwn','lovToAcctOwn')">
+                  <span class="ntf-acct-avatar"><span class="material-icons">account_balance_wallet</span></span>
+                  <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Savings Account</span><span class="ntf-acct-item-num">•••• 7001</span></span>
+                </button>
+              </div>
+            </div></div>
+        </div>
+      </div>
+      <div class="ntf-section">
+        <div class="row g-3">
+          <div class="col-md-4"><label class="f-label">Amount</label><div class="amount-field" id="ownAmtField">
+              <div class="amount-curr ntf-curr-badge">
+                <span class="fi fi-ae amount-flag"></span>
+                <span class="ntf-curr-code">AED</span>
+              </div>
+              <input class="amount-inp" id="ownAmtInp" type="text" value="00.00" oninput="ntfFormatAmount(this);ntfRecalcExchange();ntfCheckLimit();"/>
+            </div>
+            <div class="ntf-amt-chips">
+              <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('ownAmtInp',100)">100</button>
+              <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('ownAmtInp',500)">500</button>
+              <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('ownAmtInp',1000)">1,000</button>
+              <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('ownAmtInp',5000)">5,000</button>
+            </div>
+            <div class="ntf-limit-note" id="ownLimitRow">AED 50,000.00 remaining of your daily limit</div></div>
+          <div class="col-md-4">
+            <div class="ntf-exch-label-row">
+              <label class="f-label">Exchanged Amount</label>
+              <span class="ntf-rate-chip" id="ownRateChip" onclick="ntfRecalcExchange()" title="Refresh rate"><span class="material-icons">sync_alt</span> 1 AED = 0.27 USD</span>
+            </div>
+            <div class="amount-field">
+              <div class="amount-curr">
+                <span class="fi fi-us amount-flag" id="exchAmtFlag" onclick="ntfOpenSelect('exchAmtCurr')"></span>
+                <select id="exchAmtCurr" onchange="updateCurrFlag(this);ntfRecalcExchange();">
+                  <option value="USD" selected>USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="AED">AED</option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('exchAmtCurr')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+              </div>
+              <input class="amount-inp" id="exchAmtInp" type="text" value="00.00" oninput="ntfFormatAmount(this)"/>
+            </div>
+          </div>
+          <div class="col-md-4"><label class="f-label" for="ownPurpose">Purpose</label><input id="ownPurpose" class="f-input" placeholder="Add transfer purpose"/></div>
+        </div>
+      </div>
+      <div class="ntf-section">
+        <div class="ntf-when-block">
+          <div class="ntf-when-row">
+            <button type="button" class="ntf-when-card active" id="ntfWhenNow_own" onclick="ntfSetWhen('now','own')">
+              <span class="ntf-when-radio"><span class="material-icons">check_circle</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Transfer Now</span><span class="ntf-when-sub">Send money instantly</span></span>
+            </button>
+            <button type="button" class="ntf-when-card" id="ntfWhenLater_own" onclick="ntfSetWhen('later','own')">
+              <span class="ntf-when-radio"><span class="material-icons">radio_button_unchecked</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Schedule for Later</span><span class="ntf-when-sub">Send on a future date, or repeat it</span></span>
+            </button>
+          </div>
+          <div class="ntf-schedule-inline hidden" id="ntfScheduleSection_own">
+            <div class="row g-3">
+              <div class="col-md-4"><label class="f-label">Periodicity</label><select id="ntfPeriodicity_own" class="f-input f-select"><option>Single Future Date</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select></div>
+              <div class="col-md-4"><label class="f-label">Number Of Payments</label><input id="ntfNumPayments_own" class="f-input" type="number" value="1" min="1"/></div>
+              <div class="col-md-4"><label class="f-label">Transfer Date</label><button type="button" class="btn-schedule" onclick="ntfOpenModal('own')"><span class="material-icons" style="font-size:16px">calendar_today</span> <span id="ntfDateBtnLbl_own">Select Transfer Date</span></button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ntf-type-panel hidden" data-type="internal">
+      <div class="ntf-section">
+        <div class="tr-tabs">
+          <button class="tr-tab active" data-target="panelBenInternal" onclick="ntfToggleSubTab(this)">Select Beneficiary</button>
+          <button class="tr-tab" data-target="panelOtherInternal" onclick="ntfToggleSubTab(this)">New Recipient</button>
+        </div>
+        <div class="ntf-sub-tabs-wrap">
+          <div id="panelBenInternal" class="tr-panel">
+            <div class="ntf-recent-row">
+              <div class="ntf-recent-hdr">Recent Recipients</div>
+              <div class="ntf-recent-list">
+                <button type="button" class="ntf-recent-chip" onclick="ntfPrefillRecent(this,'internal')" data-name="Ahmed Al Farsi" data-amount="12500"><span class="ntf-recent-avatar">A</span><span class="ntf-recent-info"><span class="ntf-recent-name">Ahmed Al Farsi</span><span class="ntf-recent-amt">AED 12,500.00</span></span></button>
+                <button type="button" class="ntf-recent-chip" onclick="ntfPrefillRecent(this,'internal')" data-name="Mohammed Al Farsi" data-amount="3200"><span class="ntf-recent-avatar">M</span><span class="ntf-recent-info"><span class="ntf-recent-name">Mohammed Al Farsi</span><span class="ntf-recent-amt">AED 3,200.00</span></span></button>
+                <button type="button" class="ntf-recent-chip" onclick="ntfPrefillRecent(this,'internal')" data-name="Fatima Noor" data-amount="850"><span class="ntf-recent-avatar">F</span><span class="ntf-recent-info"><span class="ntf-recent-name">Fatima Noor</span><span class="ntf-recent-amt">AED 850.00</span></span></button>
+              </div>
+            </div>
+            <div class="row g-3"><div class="col-md-4"><div class="ntf-field-lbl-row"><label class="f-label">Select Beneficiary</label><a href="beneficiary-management.html?mode=add" class="ntf-add-ben-link">+ Add New Beneficiary</a></div><div class="ntf-acct-picker" onclick="event.stopPropagation()">
+                <button type="button" class="ntf-acct-trigger" id="selIntBen" onclick="ntfToggleAcctPicker('lovIntBen',this)">
+                  <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                  <span class="ntf-acct-trigger-text">Select Beneficiary</span>
+                  <span class="material-icons ntf-acct-chevron">expand_more</span>
+                </button>
+                <div class="ntf-acct-dropdown hidden" id="lovIntBen">
+                  <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selIntBen','lovIntBen')">
+                    <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                    <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Ahmed's Savings</span><span class="ntf-acct-item-num">898987654523</span></span>
+                  </button>
+                  <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selIntBen','lovIntBen')">
+                    <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                    <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Mohammed's Current</span><span class="ntf-acct-item-num">898987654524</span></span>
+                  </button>
+                </div>
+              </div></div>
+              <div class="col-md-4"><label class="f-label">Amount</label><div class="amount-field">
+                  <div class="amount-curr">
+                    <span class="fi fi-ae amount-flag" id="intAmtCurrFlag" onclick="ntfOpenSelect('intAmtCurr')"></span>
+                    <select id="intAmtCurr" onchange="updateCurrFlag(this)" aria-label="Currency">
+                      <option value="AED" selected>AED</option>
+                      <option value="IQD">IQD</option>
+                      <option value="LBP">LBP</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('intAmtCurr')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="intAmtInp" type="text" value="00.00" aria-label="Amount"/>
+                </div>
+                <div class="ntf-amt-chips">
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInp',100)">100</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInp',500)">500</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInp',1000)">1,000</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInp',5000)">5,000</button>
+                </div></div>
+              <div class="col-md-4"><label class="f-label" for="purposeInt">Purpose</label><input id="purposeInt" class="f-input" placeholder="Enter Purpose"/></div>
+            </div>
+          </div>
+          <div id="panelOtherInternal" class="tr-panel hidden">
+            <div class="row g-3 mb-2">
+              <div class="col-md-4"><label class="f-label">Iban/ Account Number</label><div class="acct-qr-wrap"><input class="f-input" placeholder="Enter IBAN / Account Number" style="padding-right:2.5rem"/><button class="qr-icon-btn" title="Scan QR Code" aria-label="Scan QR code"><span class="material-icons" style="font-size:20px;color:var(--az-green,#1aad6e)">qr_code_scanner</span></button></div></div>
+              <div class="col-md-4"><label class="f-label">Recipient Name</label><input class="f-input" placeholder="Enter Recipient Name"/></div>
+              <div class="col-md-4"><label class="f-label">Beneficiary Currency</label><select class="f-input f-select"><option value="AED" selected>AED</option></select></div>
+            </div>
+            <div class="row g-3 mb-2">
+              <div class="col-md-6"><label class="f-label">Amount</label><div class="amount-field">
+                  <div class="amount-curr">
+                    <span class="fi fi-ae amount-flag" id="intAmtCurrFlagOther" onclick="ntfOpenSelect('intAmtCurrOther')"></span>
+                    <select id="intAmtCurrOther" onchange="updateCurrFlag(this)" aria-label="Currency">
+                      <option value="AED" selected>AED</option>
+                      <option value="IQD">IQD</option>
+                      <option value="LBP">LBP</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('intAmtCurrOther')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="intAmtInpOther" type="text" value="00.00" aria-label="Amount"/>
+                </div>
+                <div class="ntf-amt-chips">
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInpOther',100)">100</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInpOther',500)">500</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInpOther',1000)">1,000</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intAmtInpOther',5000)">5,000</button>
+                </div></div>
+              <div class="col-md-6"><label class="f-label" for="purposeIntOther">Purpose</label><input id="purposeIntOther" class="f-input" placeholder="Enter Purpose"/></div>
+            </div>
+            <div class="row g-3"><div class="col-auto"><div class="toggle-wrap">
+                  <label class="az-toggle"><input type="checkbox" checked/><span class="az-toggle-slider"></span></label>
+                  <span>Save Beneficiary</span>
+                </div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="ntf-section">
+        <div class="ntf-when-block">
+          <div class="ntf-when-row">
+            <button type="button" class="ntf-when-card active" id="ntfWhenNow_internal" onclick="ntfSetWhen('now','internal')">
+              <span class="ntf-when-radio"><span class="material-icons">check_circle</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Transfer Now</span><span class="ntf-when-sub">Send money instantly</span></span>
+            </button>
+            <button type="button" class="ntf-when-card" id="ntfWhenLater_internal" onclick="ntfSetWhen('later','internal')">
+              <span class="ntf-when-radio"><span class="material-icons">radio_button_unchecked</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Schedule for Later</span><span class="ntf-when-sub">Send on a future date, or repeat it</span></span>
+            </button>
+          </div>
+          <div class="ntf-schedule-inline hidden" id="ntfScheduleSection_internal">
+            <div class="row g-3">
+              <div class="col-md-4"><label class="f-label">Periodicity</label><select id="ntfPeriodicity_internal" class="f-input f-select"><option>Single Future Date</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select></div>
+              <div class="col-md-4"><label class="f-label">Number Of Payments</label><input id="ntfNumPayments_internal" class="f-input" type="number" value="1" min="1"/></div>
+              <div class="col-md-4"><label class="f-label">Transfer Date</label><button type="button" class="btn-schedule" onclick="ntfOpenModal('internal')"><span class="material-icons" style="font-size:16px">calendar_today</span> <span id="ntfDateBtnLbl_internal">Select Transfer Date</span></button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ntf-type-panel hidden" data-type="local">
+      <div class="ntf-section">
+        <div class="tr-tabs">
+          <button class="tr-tab active" data-target="panelBenLocal" onclick="ntfToggleSubTab(this)">Select Beneficiary</button>
+          <button class="tr-tab" data-target="panelOtherLocal" onclick="ntfToggleSubTab(this)">New Recipient</button>
+        </div>
+        <div class="ntf-sub-tabs-wrap">
+          <div id="panelBenLocal" class="tr-panel">
+            <div class="ntf-recent-row">
+              <div class="ntf-recent-hdr">Recent Recipients</div>
+              <div class="ntf-recent-list">
+                <button type="button" class="ntf-recent-chip" onclick="ntfPrefillRecent(this,'local')" data-name="Khalid Traders" data-amount="5000"><span class="ntf-recent-avatar">K</span><span class="ntf-recent-info"><span class="ntf-recent-name">Khalid Traders</span><span class="ntf-recent-amt">AED 5,000.00</span></span></button>
+                <button type="button" class="ntf-recent-chip" onclick="ntfPrefillRecent(this,'local')" data-name="Layla Hassan" data-amount="1750"><span class="ntf-recent-avatar">L</span><span class="ntf-recent-info"><span class="ntf-recent-name">Layla Hassan</span><span class="ntf-recent-amt">AED 1,750.00</span></span></button>
+                <button type="button" class="ntf-recent-chip" onclick="ntfPrefillRecent(this,'local')" data-name="Omar Nasser" data-amount="9300"><span class="ntf-recent-avatar">O</span><span class="ntf-recent-info"><span class="ntf-recent-name">Omar Nasser</span><span class="ntf-recent-amt">AED 9,300.00</span></span></button>
+              </div>
+            </div>
+            <div class="row g-3"><div class="col-md-4"><div class="ntf-field-lbl-row"><label class="f-label">Select Beneficiary</label><a href="beneficiary-management.html?mode=add" class="ntf-add-ben-link">+ Add New Beneficiary</a></div><div class="ntf-acct-picker" onclick="event.stopPropagation()">
+                <button type="button" class="ntf-acct-trigger" id="selLocBen" onclick="ntfToggleAcctPicker('lovLocBen',this)">
+                  <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                  <span class="ntf-acct-trigger-text">Select Beneficiary</span>
+                  <span class="material-icons ntf-acct-chevron">expand_more</span>
+                </button>
+                <div class="ntf-acct-dropdown hidden" id="lovLocBen">
+                  <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selLocBen','lovLocBen')">
+                    <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                    <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Khalid Traders</span><span class="ntf-acct-item-num">898987654523</span></span>
+                  </button>
+                  <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selLocBen','lovLocBen')">
+                    <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                    <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Layla Hassan</span><span class="ntf-acct-item-num">898987654524</span></span>
+                  </button>
+                </div>
+              </div></div>
+              <div class="col-md-4"><label class="f-label">Amount</label><div class="amount-field">
+                  <div class="amount-curr">
+                    <span class="fi fi-ae amount-flag" id="locAmtCurrFlag" onclick="ntfOpenSelect('locAmtCurr')"></span>
+                    <select id="locAmtCurr" onchange="updateCurrFlag(this)" aria-label="Currency">
+                      <option value="AED" selected>AED</option>
+                      <option value="IQD">IQD</option>
+                      <option value="LBP">LBP</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('locAmtCurr')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="locAmtInp" type="text" value="00.00" aria-label="Amount"/>
+                </div>
+                <div class="ntf-amt-chips">
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInp',100)">100</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInp',500)">500</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInp',1000)">1,000</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInp',5000)">5,000</button>
+                </div></div>
+              <div class="col-md-4"><label class="f-label" for="purposeLoc">Purpose</label><input id="purposeLoc" class="f-input" placeholder="Enter Purpose"/></div>
+            </div>
+          </div>
+          <div id="panelOtherLocal" class="tr-panel hidden">
+            <div class="row g-3 mb-2">
+              <div class="col-md-3"><label class="f-label">Bank</label><select class="f-input f-select"><option value="">Select Bank</option><option>Bank of Beirut</option><option>BLOM Bank</option><option>Byblos Bank</option></select></div>
+              <div class="col-md-3"><label class="f-label">Enter Branch</label><input class="f-input" placeholder="Enter Branch"/></div>
+              <div class="col-md-3"><label class="f-label">Bank Verification Number</label><input class="f-input" placeholder="Enter BVN"/></div>
+              <div class="col-md-3"><label class="f-label">Iban/ Account Number</label><input class="f-input" placeholder="Enter Iban/ Account Number"/></div>
+            </div>
+            <div class="row g-3 mb-2">
+              <div class="col-md-3"><label class="f-label">Recipient Name</label><input class="f-input" placeholder="Enter Recipient Name"/></div>
+              <div class="col-md-3"><label class="f-label">Beneficiary Currency</label><select class="f-input f-select"><option value="AED" selected>AED</option></select></div>
+              <div class="col-md-3"><label class="f-label">Reference Number</label><input class="f-input" placeholder="Enter Reference Number"/></div>
+              <div class="col-md-3"><label class="f-label" for="purposeLocOther">Purpose</label><input id="purposeLocOther" class="f-input" placeholder="Enter Purpose"/></div>
+            </div>
+            <div class="row g-3 mb-2">
+              <div class="col-md-6"><label class="f-label">Amount</label><div class="amount-field">
+                  <div class="amount-curr">
+                    <span class="fi fi-ae amount-flag" id="locAmtCurrFlagOther" onclick="ntfOpenSelect('locAmtCurrOther')"></span>
+                    <select id="locAmtCurrOther" onchange="updateCurrFlag(this)" aria-label="Currency">
+                      <option value="AED" selected>AED</option>
+                      <option value="IQD">IQD</option>
+                      <option value="LBP">LBP</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('locAmtCurrOther')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="locAmtInpOther" type="text" value="00.00" aria-label="Amount"/>
+                </div>
+                <div class="ntf-amt-chips">
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInpOther',100)">100</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInpOther',500)">500</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInpOther',1000)">1,000</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('locAmtInpOther',5000)">5,000</button>
+                </div></div>
+            </div>
+            <div class="row g-3"><div class="col-auto"><div class="toggle-wrap">
+                  <label class="az-toggle"><input type="checkbox" checked/><span class="az-toggle-slider"></span></label>
+                  <span>Save Beneficiary</span>
+                </div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="ntf-section">
+        <div class="ntf-when-block">
+          <div class="ntf-when-row">
+            <button type="button" class="ntf-when-card active" id="ntfWhenNow_local" onclick="ntfSetWhen('now','local')">
+              <span class="ntf-when-radio"><span class="material-icons">check_circle</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Transfer Now</span><span class="ntf-when-sub">Send money instantly</span></span>
+            </button>
+            <button type="button" class="ntf-when-card" id="ntfWhenLater_local" onclick="ntfSetWhen('later','local')">
+              <span class="ntf-when-radio"><span class="material-icons">radio_button_unchecked</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Schedule for Later</span><span class="ntf-when-sub">Send on a future date, or repeat it</span></span>
+            </button>
+          </div>
+          <div class="ntf-schedule-inline hidden" id="ntfScheduleSection_local">
+            <div class="row g-3">
+              <div class="col-md-4"><label class="f-label">Periodicity</label><select id="ntfPeriodicity_local" class="f-input f-select"><option>Single Future Date</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select></div>
+              <div class="col-md-4"><label class="f-label">Number Of Payments</label><input id="ntfNumPayments_local" class="f-input" type="number" value="1" min="1"/></div>
+              <div class="col-md-4"><label class="f-label">Transfer Date</label><button type="button" class="btn-schedule" onclick="ntfOpenModal('local')"><span class="material-icons" style="font-size:16px">calendar_today</span> <span id="ntfDateBtnLbl_local">Select Transfer Date</span></button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ntf-type-panel hidden" data-type="international">
+      <div class="ntf-section">
+        <div class="tr-tabs">
+          <button class="tr-tab active" data-target="panelBenIntl" onclick="ntfToggleSubTab(this)">Select Beneficiary</button>
+          <button class="tr-tab" data-target="panelOtherIntl" onclick="ntfToggleSubTab(this)">New Recipient</button>
+        </div>
+        <div class="ntf-sub-tabs-wrap">
+          <div id="panelBenIntl" class="tr-panel">
+            <div class="row g-3"><div class="col-md-4"><div class="ntf-field-lbl-row"><label class="f-label">Select Beneficiary</label><a href="beneficiary-management.html?mode=add" class="ntf-add-ben-link">+ Add New Beneficiary</a></div><div class="ntf-acct-picker" onclick="event.stopPropagation()">
+                <button type="button" class="ntf-acct-trigger" id="selIntlBen" onclick="ntfToggleAcctPicker('lovIntlBen',this)">
+                  <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                  <span class="ntf-acct-trigger-text">Select Beneficiary</span>
+                  <span class="material-icons ntf-acct-chevron">expand_more</span>
+                </button>
+                <div class="ntf-acct-dropdown hidden" id="lovIntlBen">
+                  <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selIntlBen','lovIntlBen')">
+                    <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                    <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">John Smith – Chase Bank</span><span class="ntf-acct-item-num">898987654523</span></span>
+                  </button>
+                  <button type="button" class="ntf-acct-item" onclick="ntfSelectAcct(this,'selIntlBen','lovIntlBen')">
+                    <span class="ntf-acct-avatar"><span class="material-icons">person</span></span>
+                    <span class="ntf-acct-item-text"><span class="ntf-acct-item-name">Global Traders LLC</span><span class="ntf-acct-item-num">898987654524</span></span>
+                  </button>
+                </div>
+              </div></div>
+              <div class="col-md-4"><label class="f-label">Amount</label><div class="amount-field">
+                  <div class="amount-curr">
+                    <span class="fi fi-ae amount-flag" id="intlAmtCurrFlag" onclick="ntfOpenSelect('intlAmtCurr')"></span>
+                    <select id="intlAmtCurr" onchange="updateCurrFlag(this)" aria-label="Currency">
+                      <option value="AED" selected>AED</option>
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                      <option value="IQD">IQD</option>
+                      <option value="LBP">LBP</option>
+                      <option value="MRU">MRU</option>
+                      <option value="GBP">GBP</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('intlAmtCurr')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="intlAmtInp" type="text" value="00.00" aria-label="Amount"/>
+                </div>
+                <div class="ntf-amt-chips">
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInp',100)">100</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInp',500)">500</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInp',1000)">1,000</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInp',5000)">5,000</button>
+                </div></div>
+              <div class="col-md-4"><label class="f-label" for="purposeIntl">Purpose</label><input id="purposeIntl" class="f-input" placeholder="Enter Purpose"/></div>
+            </div>
+          </div>
+          <div id="panelOtherIntl" class="tr-panel hidden">
+            <div class="row g-3 mb-2">
+              <div class="col-md-3"><label class="f-label">BIC Swift Code</label><input class="f-input" placeholder="Enter BIC Swift Code"/></div>
+              <div class="col-md-3"><label class="f-label">Iban/ Account Number</label><input class="f-input" placeholder="Enter Iban / Account Number"/></div>
+              <div class="col-md-3"><label class="f-label">Recipient Name</label><input class="f-input" placeholder="Enter Recipient Name"/></div>
+              <div class="col-md-3"><label class="f-label">Beneficiary Currency</label><select class="f-input f-select"><option value="">Select Currency</option><option>USD</option><option>EUR</option><option>GBP</option><option>SAR</option><option>INR</option></select></div>
+            </div>
+            <div class="row g-3 mb-2">
+              <div class="col-md-6"><label class="f-label">Amount</label><div class="amount-field">
+                  <div class="amount-curr">
+                    <span class="fi fi-ae amount-flag" id="intlAmtCurrFlagOther" onclick="ntfOpenSelect('intlAmtCurrOther')"></span>
+                    <select id="intlAmtCurrOther" onchange="updateCurrFlag(this)" aria-label="Currency">
+                      <option value="AED" selected>AED</option>
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                      <option value="IQD">IQD</option>
+                      <option value="LBP">LBP</option>
+                      <option value="MRU">MRU</option>
+                      <option value="GBP">GBP</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" onclick="ntfOpenSelect('intlAmtCurrOther')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+                  </div>
+                  <input class="amount-inp" id="intlAmtInpOther" type="text" value="00.00" aria-label="Amount"/>
+                </div>
+                <div class="ntf-amt-chips">
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInpOther',100)">100</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInpOther',500)">500</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInpOther',1000)">1,000</button>
+                  <button type="button" class="ntf-amt-chip" onclick="ntfSetAmount('intlAmtInpOther',5000)">5,000</button>
+                </div></div>
+              <div class="col-md-6"><label class="f-label" for="purposeIntlOther">Purpose</label><input id="purposeIntlOther" class="f-input" placeholder="Enter Purpose"/></div>
+            </div>
+            <div class="row g-3"><div class="col-auto"><div class="toggle-wrap">
+                  <label class="az-toggle"><input type="checkbox" checked/><span class="az-toggle-slider"></span></label>
+                  <span>Save Beneficiary</span>
+                </div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="ntf-section">
+        <div class="ntf-when-block">
+          <div class="ntf-when-row">
+            <button type="button" class="ntf-when-card active" id="ntfWhenNow_international" onclick="ntfSetWhen('now','international')">
+              <span class="ntf-when-radio"><span class="material-icons">check_circle</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Transfer Now</span><span class="ntf-when-sub">Send money instantly</span></span>
+            </button>
+            <button type="button" class="ntf-when-card" id="ntfWhenLater_international" onclick="ntfSetWhen('later','international')">
+              <span class="ntf-when-radio"><span class="material-icons">radio_button_unchecked</span></span>
+              <span class="ntf-when-text"><span class="ntf-when-title">Schedule for Later</span><span class="ntf-when-sub">Send on a future date, or repeat it</span></span>
+            </button>
+          </div>
+          <div class="ntf-schedule-inline hidden" id="ntfScheduleSection_international">
+            <div class="row g-3">
+              <div class="col-md-4"><label class="f-label">Periodicity</label><select id="ntfPeriodicity_international" class="f-input f-select"><option>Single Future Date</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select></div>
+              <div class="col-md-4"><label class="f-label">Number Of Payments</label><input id="ntfNumPayments_international" class="f-input" type="number" value="1" min="1"/></div>
+              <div class="col-md-4"><label class="f-label">Transfer Date</label><button type="button" class="btn-schedule" onclick="ntfOpenModal('international')"><span class="material-icons" style="font-size:16px">calendar_today</span> <span id="ntfDateBtnLbl_international">Select Transfer Date</span></button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ntf-section">
+        <div class="ntf-section-lbl">Attachment</div>
+        <div class="ntf-attach-compact" onclick="document.getElementById('fileInp').click()">
+          <span class="material-icons">attach_file</span>
+          <a class="attach-link">Choose file</a>
+          <span class="ntf-attach-hint">Optional — invoice or supporting document</span>
+        </div>
+        <input type="file" id="fileInp" style="display:none"/>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <div class="tc"><input type="checkbox" id="tc" style="accent-color:var(--az-green);cursor:pointer;width:16px;height:16px;"/><label for="tc"><a href="#" style="color:#0067AB;text-decoration:none">I Agree On Terms And Conditions</a></label></div>
+      <a href="#" onclick="history.back()" class="btn-action btn-cancel">CANCEL</a>
+      <button class="btn-action btn-save">Save Draft</button>
+      <button class="btn-action btn-submit">SUBMIT</button>
+    </div>
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn">A<sup>-</sup></button><button class="acc-btn">A</button><button class="acc-btn">A<sup>+</sup></button>
+        <button class="acc-btn" style="background:var(--az-navy);color:#fff">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div class="modal-ov hidden" id="ntfCalModal" role="dialog" aria-modal="true">
+  <div class="az-modal" style="max-width:420px;padding:1.5rem 1.75rem">
+    <button class="modal-close" onclick="ntfCloseModal('ntfCalModal')" aria-label="Close">&#215;</button>
+    <div class="modal-title">Select Transfer Date</div>
+    <div class="cal-wrap">
+      <div class="cal-nav"><button class="cal-nav-btn" onclick="ntfCalPrev()">&#8249;</button><span class="cal-month-label" id="ntfCalLbl">January 2025</span><button class="cal-nav-btn" onclick="ntfCalNext()">&#8250;</button></div>
+      <div id="ntfCalDays"></div>
+    </div>
+    <div class="d-flex gap-2 justify-content-center mt-3">
+      <button class="btn-action btn-cancel" onclick="ntfCloseModal('ntfCalModal')" style="padding:.5rem 1.75rem">CANCEL</button>
+      <button class="btn-action btn-submit" onclick="ntfConfirmDate()" style="padding:.5rem 1.75rem">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
+<script>
+function ntfSwitchType(type){
+  document.querySelectorAll('.ntf-type-btn').forEach(function(b){
+    var active=b.getAttribute('data-type')===type;
+    b.classList.toggle('active',active);
+    b.setAttribute('aria-selected',active?'true':'false');
+  });
+  document.querySelectorAll('.ntf-type-panel').forEach(function(p){p.classList.toggle('hidden',p.getAttribute('data-type')!==type);});
+  document.getElementById('sharedFromAcctSection').classList.toggle('hidden',type==='own');
+}
+function ntfToggleSubTab(tab){
+  var wrap=tab.closest('.ntf-section');
+  wrap.querySelectorAll('.tr-tab').forEach(function(t){t.classList.remove('active');});
+  wrap.querySelectorAll('.tr-panel').forEach(function(p){p.classList.add('hidden');});
+  tab.classList.add('active');
+  var panel=document.getElementById(tab.getAttribute('data-target'));
+  if(panel)panel.classList.remove('hidden');
+}
+function toggleLov(dropId){
+  var d=document.getElementById(dropId);if(!d)return;
+  var was=d.classList.contains('hidden');
+  document.querySelectorAll('.lov-dropdown').forEach(function(x){x.classList.add('hidden')});
+  if(was)d.classList.remove('hidden');
+}
+function lovSelect(el,selId,dropId){
+  var val=el.querySelector('.lv');
+  var sel=document.getElementById(selId);
+  if(sel&&val)sel.textContent=val.textContent;
+  document.getElementById(dropId).classList.add('hidden');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.lov-wrap'))document.querySelectorAll('.lov-dropdown').forEach(function(d){d.classList.add('hidden')});
+});
+function ntfFlagSvg(rects){
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">'+rects+'</svg>';
+  return 'data:image/svg+xml,'+encodeURIComponent(svg);
+}
+var NTF_FLAG_SVG={
+  us:ntfFlagSvg('<rect width="60" height="30" fill="#B22234"/><rect y="2.31" width="60" height="2.31" fill="#fff"/><rect y="6.92" width="60" height="2.31" fill="#fff"/><rect y="11.54" width="60" height="2.31" fill="#fff"/><rect y="16.15" width="60" height="2.31" fill="#fff"/><rect y="20.77" width="60" height="2.31" fill="#fff"/><rect y="25.38" width="60" height="2.31" fill="#fff"/><rect width="24" height="16.15" fill="#3C3B6E"/>'),
+  gb:ntfFlagSvg('<rect width="60" height="30" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/>'),
+  eu:ntfFlagSvg('<rect width="60" height="30" fill="#003399"/>'),
+  ae:ntfFlagSvg('<rect width="60" height="10" fill="#00732F"/><rect y="10" width="60" height="10" fill="#fff"/><rect y="20" width="60" height="10" fill="#000"/><rect width="20" height="30" fill="#FF0000"/>'),
+  sa:ntfFlagSvg('<rect width="60" height="30" fill="#006C35"/>'),
+  ch:ntfFlagSvg('<rect width="60" height="30" fill="#FF0000"/><rect x="24" y="9" width="12" height="12" fill="#fff"/><rect x="27" y="6" width="6" height="18" fill="#fff"/><rect x="21" y="12" width="18" height="6" fill="#fff"/>'),
+  iq:ntfFlagSvg('<rect width="60" height="10" fill="#CE1126"/><rect y="10" width="60" height="10" fill="#fff"/><rect y="20" width="60" height="10" fill="#000"/>'),
+  lb:ntfFlagSvg('<rect width="60" height="7.5" fill="#EE161F"/><rect y="7.5" width="60" height="15" fill="#fff"/><rect y="22.5" width="60" height="7.5" fill="#EE161F"/><rect x="26" y="11" width="8" height="10" fill="#00A651"/>')
+};
+function ntfPaintFlag(span,code){
+  var uri=NTF_FLAG_SVG[code]||NTF_FLAG_SVG.us;
+  span.style.backgroundImage='url("'+uri+'")';
+  span.style.backgroundSize='100% 100%';
+  span.style.backgroundPosition='center';
+  span.style.backgroundRepeat='no-repeat';
+}
+function updateCurrFlag(sel){
+  var flagMap={'USD':'us','EUR':'eu','GBP':'gb','IQD':'iq','LBP':'lb','MRU':'mr','CHF':'ch','AED':'ae','SAR':'sa'};
+  var flag=sel.closest('.amount-curr').querySelector('.amount-flag');
+  if(flag){var fc=flagMap[sel.value]||'us';flag.className='fi fi-'+fc+' amount-flag';ntfPaintFlag(flag,fc);}
+}
+
+/* ── Amount usability upgrades ── */
+var OWN_DAILY_LIMIT=50000;
+var OWN_EXCH_RATES={USD:0.27,EUR:0.25,GBP:0.22,AED:1.00};
+
+function ntfParseAmount(input){
+  return parseFloat((input.value||'0').replace(/,/g,''))||0;
+}
+function ntfFormatAmount(input){
+  var raw=input.value.replace(/[^0-9.]/g,'');
+  var firstDot=raw.indexOf('.');
+  if(firstDot>-1) raw=raw.slice(0,firstDot+1)+raw.slice(firstDot+1).replace(/\./g,'');
+  var parts=raw.split('.');
+  var intPart=parts[0].replace(/^0+(?=\d)/,'');
+  var decPart=parts.length>1?'.'+parts[1].slice(0,2):'';
+  var formattedInt=(intPart||'0').replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  input.value=formattedInt+decPart;
+}
+function ntfSetAmount(inputId,value){
+  var input=document.getElementById(inputId);
+  if(!input) return;
+  input.value=value.toFixed(2);
+  ntfFormatAmount(input);
+  input.dispatchEvent(new Event('input'));
+}
+function ntfRecalcExchange(){
+  var amtInput=document.getElementById('ownAmtInp');
+  var exchInput=document.getElementById('exchAmtInp');
+  var exchCurrSel=document.getElementById('exchAmtCurr');
+  var rateChip=document.getElementById('ownRateChip');
+  if(!amtInput||!exchInput) return;
+  var amt=ntfParseAmount(amtInput);
+  var curr=exchCurrSel?exchCurrSel.value:'USD';
+  var rate=OWN_EXCH_RATES[curr]||1;
+  exchInput.value=(amt*rate).toFixed(2);
+  ntfFormatAmount(exchInput);
+  if(rateChip) rateChip.innerHTML='<span class="material-icons">sync_alt</span> 1 AED = '+rate.toFixed(2)+' '+curr;
+}
+function ntfCheckLimit(){
+  var amtInput=document.getElementById('ownAmtInp');
+  var field=document.getElementById('ownAmtField');
+  var limitRow=document.getElementById('ownLimitRow');
+  if(!amtInput||!field||!limitRow) return;
+  var amt=ntfParseAmount(amtInput);
+  if(amt>OWN_DAILY_LIMIT){
+    field.classList.add('ntf-limit-exceeded');
+    limitRow.classList.add('ntf-limit-warn');
+    limitRow.textContent='Amount exceeds your daily limit of AED '+OWN_DAILY_LIMIT.toLocaleString()+'.00';
+  } else {
+    field.classList.remove('ntf-limit-exceeded');
+    limitRow.classList.remove('ntf-limit-warn');
+    var remaining=OWN_DAILY_LIMIT-amt;
+    limitRow.textContent='AED '+remaining.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+' remaining of your daily limit';
+  }
+}
+
+/* ── Recent recipients: repeat a past transfer's recipient + amount ── */
+function ntfPrefillRecent(chip,type){
+  var name=chip.getAttribute('data-name');
+  var amount=parseFloat(chip.getAttribute('data-amount'));
+  var benBtnId,benTabTarget,amtInputId;
+  if(type==='internal'){ benBtnId='selIntBen'; benTabTarget='panelBenInternal'; amtInputId='intAmtInp'; }
+  else if(type==='local'){ benBtnId='selLocBen'; benTabTarget='panelBenLocal'; amtInputId='locAmtInp'; }
+  else return;
+  var benBtn=document.getElementById(benBtnId);
+  if(benBtn){
+    var svg=benBtn.querySelector('svg');
+    benBtn.textContent=name+' ';
+    if(svg) benBtn.appendChild(svg);
+  }
+  var tabBtn=document.querySelector('.tr-tab[data-target="'+benTabTarget+'"]');
+  if(tabBtn) ntfToggleSubTab(tabBtn);
+  ntfSetAmount(amtInputId,amount);
+}
+
+/* ── Open a currency <select> when its flag/chevron (not the select itself) is clicked —
+   those are separate decorative elements sitting next to the select, so a click on them
+   would otherwise do nothing. ── */
+function ntfOpenSelect(id){
+  var sel=document.getElementById(id);
+  if(!sel) return;
+  if(sel.showPicker){ try{ sel.showPicker(); return; }catch(e){} }
+  sel.focus();
+}
+
+/* ── Simple single-line account picker (From Account) ── */
+function ntfToggleAcctPicker(dropId,btn){
+  var d=document.getElementById(dropId);
+  if(!d) return;
+  var was=d.classList.contains('hidden');
+  document.querySelectorAll('.ntf-acct-dropdown').forEach(function(x){x.classList.add('hidden');});
+  document.querySelectorAll('.ntf-acct-trigger').forEach(function(b){b.classList.remove('open');});
+  if(was){ d.classList.remove('hidden'); btn.classList.add('open'); }
+}
+function ntfSelectAcct(item,triggerId,dropId){
+  var name=item.querySelector('.ntf-acct-item-name').textContent;
+  var num=item.querySelector('.ntf-acct-item-num').textContent;
+  var trigger=document.getElementById(triggerId);
+  if(trigger){
+    var textEl=trigger.querySelector('.ntf-acct-trigger-text');
+    if(textEl) textEl.textContent=name+' — '+num;
+    trigger.classList.remove('open');
+  }
+  document.getElementById(dropId).classList.add('hidden');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.ntf-acct-picker')){
+    document.querySelectorAll('.ntf-acct-dropdown').forEach(function(d){d.classList.add('hidden');});
+    document.querySelectorAll('.ntf-acct-trigger').forEach(function(b){b.classList.remove('open');});
+  }
+});
+
+/* ── Transfer Now / Schedule for Later ── */
+function ntfSetWhen(mode,type){
+  var nowCard=document.getElementById('ntfWhenNow_'+type);
+  var laterCard=document.getElementById('ntfWhenLater_'+type);
+  var schedSection=document.getElementById('ntfScheduleSection_'+type);
+  var isLater=mode==='later';
+  nowCard.classList.toggle('active',!isLater);
+  laterCard.classList.toggle('active',isLater);
+  nowCard.querySelector('.ntf-when-radio .material-icons').textContent=!isLater?'check_circle':'radio_button_unchecked';
+  laterCard.querySelector('.ntf-when-radio .material-icons').textContent=isLater?'check_circle':'radio_button_unchecked';
+  schedSection.classList.toggle('hidden',!isLater);
+}
+
+/* ── Self-contained modal + calendar for the schedule date picker
+   (not using app.js's openModal/closeModal, which can fail to load) ── */
+var ntfCalTargetType=null;
+function ntfOpenModal(type){
+  ntfCalTargetType=type;
+  var m=document.getElementById('ntfCalModal');
+  if(m) m.classList.remove('hidden');
+}
+function ntfCloseModal(id){
+  var m=document.getElementById(id);
+  if(m) m.classList.add('hidden');
+}
+var ntfCalYear=2026,ntfCalMonth=6,ntfCalSelectedDay=null;
+var ntfMonths=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function ntfRenderCal(){
+  var lbl=document.getElementById('ntfCalLbl');
+  if(lbl) lbl.textContent=ntfMonths[ntfCalMonth]+' '+ntfCalYear;
+  var g=document.getElementById('ntfCalDays');
+  if(!g) return;
+  var days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var html='<div class="cal-day-hdr">';
+  days.forEach(function(d){html+='<span>'+d+'</span>';});
+  html+='</div><div class="cal-days">';
+  var first=new Date(ntfCalYear,ntfCalMonth,1).getDay();
+  var total=new Date(ntfCalYear,ntfCalMonth+1,0).getDate();
+  var prevTotal=new Date(ntfCalYear,ntfCalMonth,0).getDate();
+  for(var i=0;i<first;i++) html+='<button type="button" class="cal-day muted" disabled>'+(prevTotal-first+1+i)+'</button>';
+  for(var d=1;d<=total;d++){
+    var sel=d===ntfCalSelectedDay?' selected':'';
+    html+='<button type="button" class="cal-day'+sel+'" onclick="ntfCalPick('+d+')">'+String(d).padStart(2,'0')+'</button>';
+  }
+  var rem=(7-((first+total)%7))%7;
+  for(var i=1;i<=rem;i++) html+='<button type="button" class="cal-day muted" disabled>'+String(i).padStart(2,'0')+'</button>';
+  html+='</div>';
+  g.innerHTML=html;
+}
+function ntfCalPick(d){ ntfCalSelectedDay=d; ntfRenderCal(); }
+function ntfCalPrev(){ ntfCalMonth--; if(ntfCalMonth<0){ntfCalMonth=11;ntfCalYear--;} ntfCalSelectedDay=null; ntfRenderCal(); }
+function ntfCalNext(){ ntfCalMonth++; if(ntfCalMonth>11){ntfCalMonth=0;ntfCalYear++;} ntfCalSelectedDay=null; ntfRenderCal(); }
+function ntfConfirmDate(){
+  if(ntfCalSelectedDay&&ntfCalTargetType){
+    var lbl=document.getElementById('ntfDateBtnLbl_'+ntfCalTargetType);
+    if(lbl) lbl.textContent=String(ntfCalSelectedDay).padStart(2,'0')+' '+ntfMonths[ntfCalMonth].slice(0,3)+' '+ntfCalYear;
+  }
+  ntfCloseModal('ntfCalModal');
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.amount-inp').forEach(function(inp){
+    if(inp.id==='ownAmtInp'||inp.id==='exchAmtInp') return;
+    inp.addEventListener('input',function(){ntfFormatAmount(inp);});
+  });
+  ntfCheckLimit();
+  ntfRenderCal();
+  document.querySelectorAll('.amount-flag').forEach(function(span){
+    var m=span.className.match(/fi-([a-z]{2})/);
+    if(m) ntfPaintFlag(span,m[1]);
+  });
+  var qType=new URLSearchParams(window.location.search).get('type');
+  if(qType && document.querySelector('.ntf-type-btn[data-type="'+qType+'"]')){
+    ntfSwitchType(qType);
+  }
+});
+</script>
+</body>
+</html>

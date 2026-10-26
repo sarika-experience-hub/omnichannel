@@ -16,7 +16,13 @@
   <!-- Application styles -->
   <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <link rel="stylesheet" href="../css/transaction-history.css"/>
+  <style>
+    /* Apply Filters — corporate green instead of navy, so it matches the rest of the app's accent color (scoped to this page — .btn-apply is shared globally) */
+    .btn-apply { background: #1aad6e; }
+    .btn-apply:hover { background: #159962; }
+  </style>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
@@ -24,7 +30,7 @@
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
     <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
@@ -40,11 +46,11 @@
 </svg></span>
   </div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
       <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
-      <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-hidden="true"></span>
+      <span class="material-icons">notifications</span><span class="notif-dot" aria-hidden="true"></span>
     </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr">
@@ -79,8 +85,8 @@
         </div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><span class="material-icons">help</span></a>
     <div class="hdr-div" role="separator"></div>
     <div class="hdr-lang-wrap">
     <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
@@ -133,9 +139,9 @@
             <div class="av-nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             </div>
-            My Tasks
+            My Saved Drafts
           </a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -149,36 +155,33 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item active-section" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron open" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item active">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item active">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 
 <!-- ████ MAIN ████ -->
@@ -193,14 +196,14 @@
 <div class="page-top-bar">
   <h1 class="page-title">Transaction History</h1>
   <div class="d-flex align-items-center gap-2">
-    <span style="font-size:.8125rem;color:var(--az-muted);">Account:</span>
-    <select class="f-input f-select" style="min-width:200px;padding:.35rem 2rem .35rem .75rem;font-size:.8125rem;">
+    <span style="font-size:var(--fs-small);color:var(--az-muted);">Account:</span>
+    <select class="f-input f-select" style="min-width:200px;padding:.35rem 2rem .35rem .75rem;font-size:var(--fs-small);">
       <option>Current Account — AED 248,350.00</option>
       <option>Savings Account — AED 84,200.00</option>
       <option>Salary Account — AED 18,500.00</option>
     </select>
-    <a href="account-statement.html" class="btn-outline-sm" style="display:inline-flex;align-items:center;gap:.3rem;font-size:.8125rem;padding:.35rem .875rem;border:1px solid var(--az-blue);border-radius:.375rem;color:var(--az-blue);text-decoration:none;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='#eaf3fb'" onmouseout="this.style.background=''">
-      <span class="material-icons" style="font-size:15px;">description</span> View Statement
+    <a href="account-statement.html" class="btn-outline-sm" style="display:inline-flex;align-items:center;gap:.3rem;font-size:var(--fs-small);padding:.35rem .875rem;border:1px solid var(--az-blue);border-radius:.375rem;color:var(--az-blue);text-decoration:none;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='#eaf3fb'" onmouseout="this.style.background=''">
+      <span class="material-icons" style="font-size:15px;">description</span> View Account Statement
     </a>
   </div>
 </div>
@@ -232,85 +235,64 @@
 <!-- Smart Filter Bar -->
 <div class="th-filter-bar">
 
-  <!-- Row 1: Search + Export -->
-  <div class="th-search-row">
-    <div class="th-search-box">
-      <span class="material-icons th-search-ico">search</span>
-      <input type="text" id="thSearch" class="th-search-input" placeholder="Search transactions, merchants, references…" oninput="thDoSearch(this.value)" autocomplete="off"/>
-      <button class="th-search-cls" id="thSearchCls" onclick="thClearSearch()" style="display:none" aria-label="Clear search">
-        <span class="material-icons" style="font-size:16px;">close</span>
-      </button>
+  <!-- Row: Date quick-presets + transaction type, combined onto one row -->
+  <div class="th-filter-row th-filter-row-combined">
+    <div class="th-filter-group">
+      <span class="th-filter-lbl">Period</span>
+      <div class="th-pill-group" id="datePillGroup" role="group" aria-label="Date period">
+        <button class="th-pill" onclick="setDatePill(this,'today')">Today</button>
+        <button class="th-pill" onclick="setDatePill(this,'7d')">Last 7 days</button>
+        <button class="th-pill th-pill-active" onclick="setDatePill(this,'month')">This month</button>
+        <button class="th-pill" onclick="setDatePill(this,'3m')">Last 3 months</button>
+        <button class="th-pill" onclick="setDatePill(this,'6m')">Last 6 months</button>
+        <button class="th-pill th-pill-icon" onclick="setDatePill(this,'custom')">
+          <span class="material-icons" style="font-size:13px;vertical-align:-2px;">date_range</span> Custom range
+        </button>
+      </div>
     </div>
-    <button class="th-export-btn" onclick="alert('Export options coming soon')">
-      <span class="material-icons" style="font-size:15px;">download</span> Export
-    </button>
-  </div>
-
-  <!-- Row 2: Date quick-presets -->
-  <div class="th-filter-row">
-    <span class="th-filter-lbl">Period</span>
-    <div class="th-pill-group" id="datePillGroup" role="group" aria-label="Date period">
-      <button class="th-pill" onclick="setDatePill(this,'today')">Today</button>
-      <button class="th-pill" onclick="setDatePill(this,'7d')">Last 7 days</button>
-      <button class="th-pill th-pill-active" onclick="setDatePill(this,'month')">This month</button>
-      <button class="th-pill" onclick="setDatePill(this,'3m')">Last 3 months</button>
-      <button class="th-pill" onclick="setDatePill(this,'6m')">Last 6 months</button>
-      <button class="th-pill th-pill-icon" onclick="setDatePill(this,'custom')">
-        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">date_range</span> Custom range
-      </button>
+    <div class="th-filter-group">
+      <span class="th-filter-lbl">Type</span>
+      <div class="th-pill-group" id="typePillGroup" role="group" aria-label="Transaction type">
+        <button class="th-tpill th-tpill-active" onclick="setTypePill(this,'all')">All</button>
+        <button class="th-tpill th-tpill-cr" onclick="setTypePill(this,'credit')">
+          <span class="material-icons" style="font-size:13px;vertical-align:-2px;">south</span> Credits
+        </button>
+        <button class="th-tpill th-tpill-dr" onclick="setTypePill(this,'debit')">
+          <span class="material-icons" style="font-size:13px;vertical-align:-2px;">north</span> Debits
+        </button>
+        <button class="th-tpill th-tpill-tr" onclick="setTypePill(this,'transfer')">
+          <span class="material-icons" style="font-size:13px;vertical-align:-2px;">swap_horiz</span> Transfers
+        </button>
+        <button class="th-tpill" onclick="setTypePill(this,'bills')">
+          <span class="material-icons" style="font-size:13px;vertical-align:-2px;">receipt_long</span> Bill Payments
+        </button>
+      </div>
     </div>
-  </div>
-
-  <!-- Row 3: Transaction type -->
-  <div class="th-filter-row">
-    <span class="th-filter-lbl">Type</span>
-    <div class="th-pill-group" id="typePillGroup" role="group" aria-label="Transaction type">
-      <button class="th-tpill th-tpill-active" onclick="setTypePill(this,'all')">All</button>
-      <button class="th-tpill th-tpill-cr" onclick="setTypePill(this,'credit')">
-        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">south</span> Credits
-      </button>
-      <button class="th-tpill th-tpill-dr" onclick="setTypePill(this,'debit')">
-        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">north</span> Debits
-      </button>
-      <button class="th-tpill th-tpill-tr" onclick="setTypePill(this,'transfer')">
-        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">swap_horiz</span> Transfers
-      </button>
-      <button class="th-tpill" onclick="setTypePill(this,'bills')">
-        <span class="material-icons" style="font-size:13px;vertical-align:-2px;">receipt_long</span> Bill Payments
-      </button>
-    </div>
-  </div>
-
-  <!-- Row 4: More filters toggle + active chips -->
-  <div class="th-filter-bottom">
-    <button class="th-more-btn" id="thMoreBtn" onclick="toggleMoreFilters()">
+    <button class="th-more-btn th-more-btn-push" id="thMoreBtn" onclick="toggleMoreFilters()">
       <span class="material-icons" style="font-size:15px;">tune</span>
       More filters
       <span class="material-icons" id="thMoreChev" style="font-size:15px;transition:transform .2s;">expand_more</span>
-    </button>
-    <div class="th-active-chips" id="thActiveChips">
-      <span class="th-achip th-achip-date">This month <button onclick="removeActiveChip(this,'date')" aria-label="Remove">&#215;</button></span>
-    </div>
-    <button class="th-reset-lnk" id="thResetLnk" onclick="resetThFilters()" style="display:none">
-      <span class="material-icons" style="font-size:14px;vertical-align:-2px;">refresh</span> Reset all
     </button>
   </div>
 
   <!-- Advanced filters panel -->
   <div class="th-more-panel" id="thMorePanel" style="display:none">
+    <button type="button" class="th-more-close" onclick="toggleMoreFilters()" aria-label="Close advanced filters">
+      <span class="material-icons" style="font-size:17px;">close</span>
+    </button>
     <div class="th-more-grid">
       <div>
         <label class="f-label">From Date</label>
         <div class="position-relative">
           <input class="f-input" id="mfFromDate" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
-          <span class="cal-icon-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          <span class="cal-icon-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1aad6e" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
         </div>
       </div>
       <div>
         <label class="f-label">To Date</label>
         <div class="position-relative">
           <input class="f-input" id="mfToDate" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
-          <span class="cal-icon-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          <span class="cal-icon-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1aad6e" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
         </div>
       </div>
       <div>
@@ -344,10 +326,10 @@
           <option>Lowest amount first</option>
         </select>
       </div>
-    </div>
-    <div class="th-more-actions">
-      <button class="btn-reset" onclick="resetThFilters()">Reset</button>
-      <button class="btn-apply" onclick="applyMoreFilters()">Apply Filters</button>
+      <div class="th-more-actions">
+        <button class="btn-reset" onclick="resetThFilters()">Reset</button>
+        <button class="btn-apply" onclick="applyMoreFilters()">Apply Filters</button>
+      </div>
     </div>
   </div>
 
@@ -356,8 +338,39 @@
 <!-- Transaction card -->
 <div class="th-card" id="txnRows">
   <div class="th-card-header">
-    <span class="th-card-title">Transactions</span>
-    <span class="th-record-count">Showing 1–10 of 24 records</span>
+    <div class="th-card-header-left">
+      <span class="th-card-title">Transactions</span>
+      <div class="th-search-box">
+        <span class="material-icons th-search-ico">search</span>
+        <input type="text" id="thSearch" class="th-search-input" placeholder="Search transactions, merchants, references…" oninput="thDoSearch(this.value)" autocomplete="off"/>
+        <button class="th-search-cls" id="thSearchCls" onclick="thClearSearch()" style="display:none" aria-label="Clear search">
+          <span class="material-icons" style="font-size:16px;">close</span>
+        </button>
+      </div>
+    </div>
+    <div class="th-card-header-right">
+      <span class="th-record-count">Showing 1–10 of 24 records</span>
+      <a href="accounts.html" class="th-action-btn th-action-btn-sm">
+        <img src="../images/icons/back.svg" width="14" height="14" alt="" loading="lazy"/> Back
+      </a>
+      <button type="button" class="th-action-btn th-action-btn-sm">
+        <img src="../images/icons/send_to_self.svg" width="14" height="14" alt="" loading="lazy"/> Send to Self
+      </button>
+      <button type="button" class="th-action-btn th-action-btn-sm">
+        <img src="../images/icons/share.svg" width="14" height="14" alt="" loading="lazy"/> Share
+      </button>
+      <div class="th-export-dd">
+        <button type="button" class="th-card-export-btn" id="thExportBtn" onclick="toggleExportMenu(event)" aria-haspopup="true" aria-expanded="false">
+          <span class="material-icons" style="font-size:15px;">download</span> Export
+          <span class="material-icons" style="font-size:16px;">arrow_drop_down</span>
+        </button>
+        <div class="th-export-menu" id="thExportMenu" style="display:none" role="menu">
+          <button type="button" role="menuitem" onclick="thExportCsv()">CSV</button>
+          <button type="button" role="menuitem" onclick="thExportExcel()">Excel</button>
+          <button type="button" role="menuitem" onclick="thExportPdf()">PDF</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Column headers -->
@@ -386,7 +399,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003400</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80123</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80123</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -411,7 +424,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003400</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80124</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80124</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -436,7 +449,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003401</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80125</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80125</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -468,7 +481,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003400</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80119</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80119</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -493,7 +506,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003400</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80120</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80120</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -518,7 +531,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089009900</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80121</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80121</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -550,7 +563,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>TD001-2024</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80110</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80110</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -575,7 +588,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003400</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80111</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80111</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -600,7 +613,7 @@
     <div class="th-col">
       <div class="th-col-lbl">Account</div>
       <div>00320089003400</div>
-      <div style="font-size:.72rem;color:var(--az-muted);margin-top:.1rem;">Ref #80112</div>
+      <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.1rem;">Ref #80112</div>
     </div>
     <div class="th-col">
       <div class="th-col-lbl">Value Date</div>
@@ -629,23 +642,6 @@
   </div>
 </div>
 
-<!-- Action bar -->
-<div class="th-action-bar">
-  <div class="th-action-left">
-    <a href="accounts.html" class="th-action-btn">
-      <img src="../images/icons/cancel.svg" width="15" height="15" alt="" loading="lazy"/> Cancel
-    </a>
-    <button type="button" class="th-action-btn">
-      <img src="../images/icons/send_to_self.svg" width="15" height="15" alt="" loading="lazy"/> Send to Self
-    </button>
-    <button type="button" class="th-action-btn">
-      <img src="../images/icons/share.svg" width="15" height="15" alt="" loading="lazy"/> Share
-    </button>
-  </div>
-  <button type="button" class="th-action-btn th-btn-primary">
-    <img src="../images/icons/export.svg" width="15" height="15" alt="" loading="lazy" style="filter:brightness(0) invert(1);"/> Export Statement
-  </button>
-</div>
 <script>
 (function(){
 
@@ -824,6 +820,7 @@
   function renderActiveChips() {
     var container = document.getElementById('thActiveChips');
     var resetBtn  = document.getElementById('thResetLnk');
+    var row       = document.getElementById('thFilterBottom');
     if (!container) return;
     container.innerHTML = '';
     var keys = Object.keys(_activeChips);
@@ -835,6 +832,7 @@
       container.appendChild(chip);
     });
     if (resetBtn) resetBtn.style.display = keys.length > 1 ? 'inline-flex' : 'none';
+    if (row) row.style.display = keys.length > 0 ? 'flex' : 'none';
   }
 
   // ══ SEARCH ════════════════════════════════════
@@ -858,6 +856,120 @@
     var inp = document.getElementById('thSearch');
     if (inp) { inp.value = ''; window.thDoSearch(''); inp.focus(); }
   };
+
+  // ══ EXPORT ════════════════════════════════════
+  var EXPORT_HEADER = ['Description', 'Type', 'Account', 'Reference', 'Value Date', 'Balance', 'Amount'];
+
+  function thCollectRows() {
+    var out = [];
+    document.querySelectorAll('#txnRows .th-row').forEach(function(row) {
+      if (row.style.display === 'none') return;
+      var name = row.querySelector('.th-name');
+      var sub = row.querySelector('.th-sub');
+      var cols = row.querySelectorAll('.th-col');
+      var account = cols[0] && cols[0].children[1] ? cols[0].children[1].textContent.trim() : '';
+      var ref = cols[0] && cols[0].children[2] ? cols[0].children[2].textContent.trim().replace('Ref #', '') : '';
+      var valueDate = cols[1] && cols[1].children[1] ? cols[1].children[1].textContent.trim() : '';
+      var balance = cols[2] && cols[2].children[1] ? cols[2].children[1].textContent.trim() : '';
+      var amtVal = row.querySelector('.th-amt-val');
+      out.push([
+        name ? name.textContent.trim() : '',
+        sub ? sub.textContent.split('·')[0].trim() : '',
+        account, ref, valueDate, balance,
+        amtVal ? amtVal.textContent.trim() : ''
+      ]);
+    });
+    return out;
+  }
+
+  function thDownloadBlob(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function thEscHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  window.thExportCsv = function() {
+    closeExportMenu();
+    function csvEsc(s) {
+      s = String(s == null ? '' : s);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    var lines = [EXPORT_HEADER.map(csvEsc).join(',')];
+    thCollectRows().forEach(function(fields) { lines.push(fields.map(csvEsc).join(',')); });
+    thDownloadBlob(new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' }), 'transaction-history.csv');
+  };
+
+  window.thExportExcel = function() {
+    closeExportMenu();
+    var html = '<table><tr>' + EXPORT_HEADER.map(function(h){ return '<th>'+thEscHtml(h)+'</th>'; }).join('') + '</tr>' +
+      thCollectRows().map(function(fields){
+        return '<tr>' + fields.map(function(c){ return '<td>'+thEscHtml(c)+'</td>'; }).join('') + '</tr>';
+      }).join('') + '</table>';
+    thDownloadBlob(new Blob(['﻿' + html], { type: 'application/vnd.ms-excel' }), 'transaction-history.xls');
+  };
+
+  window.thExportPdf = function() {
+    closeExportMenu();
+    var win = window.open('', '_blank');
+    if (!win) { alert('Please allow pop-ups for this site to export as PDF.'); return; }
+    var rowsHtml = thCollectRows().map(function(fields){
+      return '<tr>' + fields.map(function(c){ return '<td>'+thEscHtml(c)+'</td>'; }).join('') + '</tr>';
+    }).join('');
+    win.document.open();
+    win.document.write(
+      '<html><head><title>Transaction History</title><style>' +
+      'body{font-family:Arial,sans-serif;padding:24px;color:#16303d;}' +
+      'h1{font-size:18px;margin-bottom:16px;}' +
+      'table{width:100%;border-collapse:collapse;font-size:12px;}' +
+      'th,td{border:1px solid #e2e8ec;padding:6px 8px;text-align:left;}' +
+      'th{background:#f4f7f9;}' +
+      '</style></head><body>' +
+      '<h1>Transaction History</h1>' +
+      '<table><thead><tr>' + EXPORT_HEADER.map(function(h){ return '<th>'+thEscHtml(h)+'</th>'; }).join('') + '</tr></thead>' +
+      '<tbody>' + rowsHtml + '</tbody></table>' +
+      '</body></html>'
+    );
+    win.document.close();
+    win.focus();
+    setTimeout(function() { win.print(); }, 300);
+  };
+
+  // ══ EXPORT DROPDOWN ═══════════════════════════
+  window.toggleExportMenu = function(ev) {
+    if (ev) ev.stopPropagation();
+    var menu = document.getElementById('thExportMenu');
+    var btn = document.getElementById('thExportBtn');
+    var open = menu.style.display === 'block';
+    if (open) {
+      menu.style.display = 'none';
+    } else {
+      var r = btn.getBoundingClientRect();
+      menu.style.top = (r.bottom + 6) + 'px';
+      menu.style.left = 'auto';
+      menu.style.right = (window.innerWidth - r.right) + 'px';
+      menu.style.display = 'block';
+    }
+    if (btn) btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+  };
+  function closeExportMenu() {
+    var menu = document.getElementById('thExportMenu');
+    var btn = document.getElementById('thExportBtn');
+    if (menu) menu.style.display = 'none';
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+  document.addEventListener('click', function(ev) {
+    var dd = document.querySelector('.th-export-dd');
+    if (dd && !dd.contains(ev.target)) closeExportMenu();
+  });
 
   // ══ RESET ═════════════════════════════════════
   window.resetThFilters = function() {

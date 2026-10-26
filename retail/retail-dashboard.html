@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../css/styles.css"/>
   <link rel="stylesheet" href="../css/retail-dashboard.css"/>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
   <script src="../js/theme.js"></script>
 <style>
@@ -25,15 +26,15 @@
     .pc-slide-3{ background:linear-gradient(to right,#b7b6b2 0%,#c3c2be 50%,#cccbc7 100%); }
     .pc-slide-4{ background:linear-gradient(to right,#120c0c 0%,#2a1e18 50%,#3a2c24 100%); }
     .pc-bg-circle{ position:absolute; border-radius:50%; pointer-events:none; }
-    .pc-icon{ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0; }
+    .pc-icon{ width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--fs-section);flex-shrink:0; }
     .pc-icon .material-icons{ font-size:22px; }
     .pc-body{ flex:1;min-width:0; }
-    .pc-tag{ display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.15rem .5rem;border-radius:20px;margin-bottom:.28rem; }
-    .pc-title{ font-size:.93rem;font-weight:700;color:#16303d;line-height:1.3;margin-bottom:.18rem; }
-    .pc-sub{ font-size:.74rem;color:#334155;line-height:1.35;font-weight:500; }
-    .pc-cta{ display:inline-flex;align-items:center;gap:.3rem;color:#fff;border:none;border-radius:2rem;padding:.32rem .85rem;font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:opacity .15s; }
+    .pc-tag{ display:inline-block;font-size:var(--fs-micro);font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.15rem .5rem;border-radius:20px;margin-bottom:.28rem; }
+    .pc-title{ font-size:var(--fs-subhead);font-weight:700;color:#16303d;line-height:1.3;margin-bottom:.18rem; }
+    .pc-sub{ font-size:var(--fs-caption);color:#334155;line-height:1.35;font-weight:500; }
+    .pc-cta{ display:inline-flex;align-items:center;gap:.3rem;color:#fff;border:none;border-radius:2rem;padding:.32rem .85rem;font-size:var(--fs-caption);font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;transition:opacity .15s; }
     .pc-cta:hover{ opacity:.88;color:#fff;text-decoration:none; }
-    .pc-x{ position:absolute;top:6px;right:8px;background:none;border:none;color:#64748b;font-size:1rem;cursor:pointer;padding:.15rem .3rem;line-height:1; }
+    .pc-x{ position:absolute;top:6px;right:8px;background:none;border:none;color:#64748b;font-size:var(--fs-subhead);cursor:pointer;padding:.15rem .3rem;line-height:1; }
     .pc-x:hover{ color:#16303d; }
     .pc-footer{ display:flex;align-items:center;padding:.25rem 1.25rem .3rem;background:#fff;border-top:1px solid #e2e8f0; }
     .pc-dots{ display:flex;gap:.35rem;flex:1; }
@@ -46,15 +47,15 @@
 
     /* Recently Used */
     .ru-row{ display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem; }
-    .ru-lbl{ font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted); }
-    .ru-clr{ font-size:.73rem;color:var(--az-blue);background:none;border:none;cursor:pointer;padding:0; }
+    .ru-lbl{ font-size:var(--fs-caption);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted); }
+    .ru-clr{ font-size:var(--fs-micro);color:var(--az-blue);background:none;border:none;cursor:pointer;padding:0; }
     #ruStrip{ display:flex;flex-wrap:wrap;gap:.4rem; }
     .ru-pill{ display:flex;align-items:center;gap:.45rem;background:#f7f9fb;border:1px solid var(--az-border);border-radius:2rem;padding:.3rem .6rem .3rem .35rem;text-decoration:none;transition:border-color .15s,box-shadow .15s;min-width:0; }
     .ru-pill:hover{ border-color:var(--az-green);box-shadow:0 2px 8px rgba(46,216,142,.12); }
     .ru-pill-icon{ width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
     .ru-pill-icon .material-icons{ font-size:13px; }
-    .ru-pill-name{ font-size:.75rem;font-weight:600;color:var(--az-navy);line-height:1.2; }
-    .ru-pill-time{ display:block;font-size:.63rem;color:var(--az-muted);font-weight:400;margin-top:.05rem; }
+    .ru-pill-name{ font-size:var(--fs-caption);font-weight:600;color:var(--az-navy);line-height:1.2; }
+    .ru-pill-time{ display:block;font-size:var(--fs-micro);color:var(--az-muted);font-weight:400;margin-top:.05rem; }
 
 
     .ins-nudge-icon { color:#1aad6e !important; }
@@ -107,8 +108,8 @@
     .pg-retail-dashboard .rd-left .rd-d5 { align-self: start !important; }
 
     /* ══ Greeting bar typography ══ */
-    .ab-greet-name { font-size: 1rem; font-weight: 600; }
-    .ab-greet-sub  { font-size: .95rem; }
+    .ab-greet-name { font-size:var(--fs-subhead); font-weight: 600; }
+    .ab-greet-sub  { font-size:var(--fs-subhead); }
 
     /* ══ All rd-panels: white, rounded, subtle shadow ══ */
     .pg-retail-dashboard .rd-panel {
@@ -132,25 +133,25 @@
 
     /* Partner Apps */
     .pa-hdr{ display:flex;align-items:center;justify-content:space-between;margin-bottom:.55rem; }
-    .pa-lbl{ font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted); }
-    .pa-va{ font-size:.73rem;color:var(--az-blue);text-decoration:none;display:flex;align-items:center; }
+    .pa-lbl{ font-size:var(--fs-caption);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--az-muted); }
+    .pa-va{ font-size:var(--fs-micro);color:var(--az-blue);text-decoration:none;display:flex;align-items:center; }
     .pa-va .material-icons{ font-size:14px; }
     .pa-row{ display:flex;gap:.625rem;overflow-x:auto;scrollbar-width:none; }
     .pa-row::-webkit-scrollbar{ display:none; }
     .pa-grid{ display:grid;grid-template-columns:repeat(4,1fr);gap:.375rem; }
     .pa-tile{ background:#fff;border:1px solid var(--az-border);border-radius:.75rem;padding:.5rem .25rem .4rem;display:flex;flex-direction:column;align-items:center;gap:.25rem;cursor:pointer;text-decoration:none;transition:box-shadow .15s,border-color .15s; }
     .pa-tile:hover{ box-shadow:0 3px 10px rgba(22,48,61,.1);border-color:var(--az-green); }
-    .pa-logo{ width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;font-family:'Roboto',sans-serif;letter-spacing:-.5px;overflow:hidden; }
+    .pa-logo{ width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:var(--fs-caption);font-weight:600;color:#fff;font-family:'Poppins','Roboto',sans-serif;letter-spacing:-.5px;overflow:hidden; }
     .pa-logo img{ width:34px;height:34px;object-fit:contain;border-radius:8px;display:block; }
-    .pa-name{ font-size:.67rem;font-weight:600;color:var(--az-navy);text-align:center;line-height:1.2; }
-    .pa-cat{ font-size:.6rem;color:var(--az-muted);text-align:center; }
-    .pa-conn{ display:inline-flex;align-items:center;background:none;border:1px solid var(--az-border);border-radius:2rem;padding:.08rem .45rem;font-size:.62rem;font-weight:600;color:var(--az-navy);cursor:pointer;transition:border-color .15s,background .15s; }
+    .pa-name{ font-size:var(--fs-micro);font-weight:600;color:var(--az-navy);text-align:center;line-height:1.2; }
+    .pa-cat{ font-size:var(--fs-micro);color:var(--az-muted);text-align:center; }
+    .pa-conn{ display:inline-flex;align-items:center;background:none;border:1px solid var(--az-border);border-radius:2rem;padding:.08rem .45rem;font-size:var(--fs-micro);font-weight:600;color:var(--az-navy);cursor:pointer;transition:border-color .15s,background .15s; }
     .pa-conn:hover,.pa-conn.on{ border-color:#2ed88e;background:#edfaf6;color:#2a7a50; }
     /* ── Notification tabs ── */
     .nt-tabs{ display:flex;border-bottom:1px solid var(--az-border);padding:0 1rem;gap:.125rem; }
-    .nt-tab{ background:none;border:none;border-bottom:2px solid transparent;padding:.5rem .625rem;font-size:.8125rem;font-weight:600;color:var(--az-muted);cursor:pointer;display:flex;align-items:center;gap:.35rem;margin-bottom:-1px;transition:color .15s,border-color .15s; }
+    .nt-tab{ background:none;border:none;border-bottom:2px solid transparent;padding:.5rem .625rem;font-size:var(--fs-small);font-weight:600;color:var(--az-muted);cursor:pointer;display:flex;align-items:center;gap:.35rem;margin-bottom:-1px;transition:color .15s,border-color .15s; }
     .nt-tab.active{ color:var(--az-blue);border-bottom-color:var(--az-blue); }
-    .nt-badge{ font-size:.6rem;font-weight:700;background:#e8f0fe;color:#00538A;border-radius:2rem;padding:.05rem .35rem;line-height:1.4; }
+    .nt-badge{ font-size:var(--fs-micro);font-weight:600;background:#e8f0fe;color:#00538A;border-radius:2rem;padding:.05rem .35rem;line-height:1.4; }
     .nt-tab.active .nt-badge{ background:#00538A;color:#fff; }
     .nt-panel{ display:none; }
     .nt-panel.active{ display:block; }
@@ -159,8 +160,9 @@
     .nt-ico-success{ color:#16a34a; }
     .nt-ico-info{ color:#00538A; }
     .nt-ico-offer{ color:#7c3aed; }
-    .nt-cta{ font-size:.7rem;font-weight:700;color:#00538A;text-decoration:none;white-space:nowrap;padding:.15rem .5rem;border:1px solid #00538A;border-radius:2rem;margin-left:.5rem;flex-shrink:0; }
+    .nt-cta{ font-size:var(--fs-micro);font-weight:600;color:#00538A;text-decoration:none;white-space:nowrap;padding:.15rem .5rem;border:1px solid #00538A;border-radius:2rem;margin-left:.5rem;flex-shrink:0; }
     .notif-item{ display:flex;align-items:center; }
+    #nt-offers .notif-msg{ font-weight:400;line-height:1.45; }
     .notif-content{ flex:1; }
   
     /* ══ Mobile responsive overrides ══ */
@@ -201,7 +203,7 @@
         padding-right: .75rem !important;
       }
       .pg-retail-dashboard .pc-cta {
-        font-size: .68rem !important;
+        font-size:var(--fs-micro) !important;
         padding: .22rem .55rem !important;
         white-space: nowrap;
       }
@@ -225,7 +227,7 @@
     }
     @media (max-width: 479px) {
       .pg-retail-dashboard .main-body { padding: .5rem !important; }
-      .pg-retail-dashboard .pc-cta { font-size: .65rem !important; padding: .2rem .45rem !important; }
+      .pg-retail-dashboard .pc-cta { font-size:var(--fs-micro) !important; padding: .2rem .45rem !important; }
     }
 
     </style>
@@ -235,11 +237,11 @@
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g id="logo" transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span>
   </div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About azentio" aria-label="About azentio">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="142 0 22 29" aria-hidden="true">
         <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" fill="#2ed88e"/>
         <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" fill="#2ed88e"/>
@@ -248,7 +250,7 @@
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
       <button class="hdr-icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications" style="position:relative" onclick="toggleNotifPanel(event)">
-        <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" id="notifBadge" aria-label="6 notifications">6</span>
+        <span class="material-icons-outlined" style="font-size:20px;">notifications</span><span class="notif-dot" id="notifBadge" aria-label="3 notifications">3</span>
       </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr"><button class="notif-mobile-close" onclick="closeNotifPanel()" aria-label="Close"><span class="material-icons">arrow_back</span></button><span class="notif-panel-title">Notifications</span></div>
@@ -256,13 +258,13 @@
         <div class="nt-tabs">
           <button class="nt-tab active" onclick="ntSwitch('alerts',this)">Alerts<span class="nt-badge" id="ntb-alerts">2</span></button>
           <button class="nt-tab" onclick="ntSwitch('announcements',this)">Announcements<span class="nt-badge" id="ntb-announcements">1</span></button>
-          <button class="nt-tab" onclick="ntSwitch('offers',this)">Offers<span class="nt-badge" id="ntb-offers">3</span></button>
+          <button class="nt-tab" onclick="ntSwitch('offers',this)">Offers<span class="nt-badge" id="ntb-offers" style="display:none">0</span></button>
         </div>
         <!-- Alerts -->
         <div class="nt-panel active" id="nt-alerts">
           <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">2 bills due this week — avoid late fees</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
-          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
-          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Scheduled transfer of AED 3,200 processed</div><div class="notif-time">1 hr ago</div></div></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Salary credited — AED 18,500.00</div><div class="notif-time">Just now</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Scheduled transfer of AED 3,200.00 processed</div><div class="notif-time">1 hr ago</div></div></div>
           <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Card statement ready for download</div><div class="notif-time">Yesterday</div></div></div>
         </div>
         <!-- Announcements -->
@@ -273,18 +275,16 @@
         </div>
         <!-- Offers (also shows dismissed carousel slides) -->
         <div class="nt-panel" id="nt-offers">
-          <div class="notif-item notif-unread" id="nto-loan"><div class="notif-content"><div class="notif-msg">Personal Loan at 3.49% p.a. — up to AED 500,000</div><div class="notif-time">Today</div></div><a href="financing-facility-request.html" class="nt-cta">Apply</a></div>
-          <div class="notif-item notif-unread" id="nto-fd"><div class="notif-content"><div class="notif-msg">5.5% p.a. Fixed Deposit — 12-month term</div><div class="notif-time">Today</div></div><a href="term-deposit-account-opening.html" class="nt-cta">Open</a></div>
-          <div class="notif-item notif-unread" id="nto-cashback"><div class="notif-content"><div class="notif-msg">10% Cashback on Dining — Gold Mastercard, valid till Dec 2026</div><div class="notif-time">Today</div></div><a href="offer-dining-cashback.html" class="nt-cta">View</a></div>
+          <div class="nt-empty" style="padding:1.25rem;color:var(--az-muted);font-size:var(--fs-small);text-align:center;">No offers</div>
         </div>
         <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
     <div class="hdr-div" role="separator"></div>
     <div class="hdr-lang-wrap">
-      <button class="hdr-lang" aria-label="Language: English"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <button class="hdr-lang" aria-label="Language: English"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
         <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
         <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
@@ -312,7 +312,7 @@
         </div>
         <div class="av-drop-nav">
           <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
-          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Saved Drafts</a>
           <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
         </div>
       </div>
@@ -322,38 +322,35 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
   <button class="sb-item" data-label="Frequently Visited" onclick="toggleSub('sFU','cFU')"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Frequently Visited</span><span class="sb-chevron" id="cFU"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sFU" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="transfer-own-accounts.html" class="sb-sub-item">Own Accounts Transfer</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item active-section" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div>
   <a href="offer-dining-cashback.html" class="sb-item" data-label="Offers"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Offers</span></a>
 </nav>
 </aside>
@@ -387,7 +384,8 @@
       <div class="rd-left">
 
       <!-- ── Personalized Carousel ── -->
-      <div id="pcWrap" style="grid-column:1/-1;grid-row:1;border-radius:.875rem;overflow:hidden;background:#fff;box-shadow:0 0 0 1.5px #cbd5e1;">
+      <div id="pcWrap" style="grid-column:1/-1;grid-row:1;position:relative;border-radius:.875rem;overflow:hidden;background:#fff;box-shadow:0 0 0 1.5px #cbd5e1;">
+        <button class="pc-x" onclick="pcDismiss()" aria-label="Dismiss offers" title="Dismiss" style="z-index:5;top:6px;right:8px;width:18px;height:18px;padding:0;background:none;border:none;box-shadow:none;color:rgba(255,255,255,.7);text-shadow:0 1px 2px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;"><span class="material-icons" style="font-size:14px;">close</span></button>
         <div class="pc-outer">
           <div class="pc-track" id="pcTrack">
             <!-- Slide: Personal Loan -->
@@ -402,7 +400,7 @@
                 <div style="min-width:0;flex:1;">
                   <span class="pc-tag" style="background:rgba(255,255,255,.2);color:#fff;">Limited Time</span>
                   <div class="pc-title" style="color:#fff;">Personal Loan at 3.49% p.a.</div>
-                  <div class="pc-sub" style="color:rgba(255,255,255,.85);">Up to AED 500,000 · Instant approval · No processing fee</div>
+                  <div class="pc-sub" style="color:rgba(255,255,255,.85);">Up to AED 500,000.00 · Instant approval · No processing fee</div>
                 </div>
                 <a href="financing-facility-request.html" class="pc-cta" style="background:#00538A;flex-shrink:0;">Apply for Personal Loan</a>
               </div>
@@ -419,7 +417,7 @@
                 <div style="min-width:0;flex:1;">
                   <span class="pc-tag" style="background:rgba(0,0,0,.12);color:#16303d;">Best Rate</span>
                   <div class="pc-title" style="color:#16303d;">5.5% p.a. Fixed Deposit</div>
-                  <div class="pc-sub" style="color:#334155;">12-month term · No minimum balance · AED 1,218 potential earn</div>
+                  <div class="pc-sub" style="color:#334155;">12-month term · No minimum balance · AED 1,218.00 potential earn</div>
                 </div>
                 <a href="term-deposit-account-opening.html?tenure=365&rate=5.50&amount=22150&source=bestrate" class="pc-cta" style="background:#16303d;flex-shrink:0;">Open Fixed Deposit</a>
               </div>
@@ -468,10 +466,10 @@
         </div>
         <div style="margin-bottom:.375rem;">
           <div style="display:flex;align-items:baseline;gap:.375rem;margin-bottom:.2rem;">
-            <span style="font-size:.95rem;font-weight:500;color:var(--az-muted);line-height:1;">AED</span>
+            <span style="font-size:var(--fs-subhead);font-weight:500;color:var(--az-muted);line-height:1;">AED</span>
             <span class="bal-amount" id="balAmount" style="font-size:clamp(1.6rem,2.4vw,2.1rem);font-weight:700;color:var(--az-navy);letter-spacing:-.02em;line-height:1;">248,350.00</span>
           </div>
-          <div id="availBalRow" style="font-size:.75rem;color:var(--az-muted);">Available &nbsp;<span id="availBalAmt" style="font-weight:600;color:var(--az-navy);">AED 241,800.00</span></div>
+          <div id="availBalRow" style="font-size:var(--fs-caption);color:var(--az-muted);">Available &nbsp;<span id="availBalAmt" style="font-weight:600;color:var(--az-navy);">AED 241,800.00</span></div>
         </div>
         <div style="height:.75rem;"></div>
         <div style="display:flex;align-items:stretch;border:1px solid var(--az-border);border-radius:.5rem;overflow:hidden;margin-bottom:.375rem;">
@@ -486,8 +484,8 @@
           </a>
         </div>
         <div style="display:flex;gap:.5rem;margin-top:.875rem;margin-bottom:.375rem;">
-          <a href="transfer-own-accounts.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:none;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#fff;text-decoration:none;background:#1AAD6E;transition:background .15s;">Transfer</a>
-          <a href="term-deposit-account-opening.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:1.5px solid #1AAD6E;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">Open Term Deposit</a>
+          <a href="transfer-own-accounts.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:none;border-radius:.5rem;padding:.5rem .875rem;font-size:var(--fs-caption);font-weight:600;color:#fff;text-decoration:none;background:#1AAD6E;transition:background .15s;">Transfer</a>
+          <a href="term-deposit-account-opening.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:1.5px solid #1AAD6E;border-radius:.5rem;padding:.5rem .875rem;font-size:var(--fs-caption);font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">Open Term Deposit</a>
         </div>
       </div>
 
@@ -498,26 +496,26 @@
         </div>
         <div id="rtList" style="display:block;margin-top:.75rem;">
           <div style="display:flex;align-items:center;gap:.625rem;padding:.875rem 0;border-bottom:1px solid var(--az-border);">
-            <div style="width:32px;height:32px;border-radius:8px;background:#f0f4f8;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#64748b;">directions_car</span></div>
-            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">Careem</div><div style="font-size:.68rem;color:var(--az-muted);">Transport · Today, 10:30 AM</div></div>
-            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:600;color:#e11d48;">− AED 45.00</div></div>
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">directions_car</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-caption);font-weight:600;color:#16303d;">Careem</div><div style="font-size:var(--fs-micro);color:var(--az-muted);">Transport · Today, 10:30 AM</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:var(--fs-small);font-weight:600;color:#e11d48;">− AED 45.00</div></div>
           </div>
           <div style="display:flex;align-items:center;gap:.625rem;padding:.875rem 0;border-bottom:1px solid var(--az-border);">
             <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">account_balance</span></div>
-            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">Salary Credit</div><div style="font-size:.68rem;color:var(--az-muted);">Income · Yesterday, 09:15 AM</div></div>
-            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:700;color:#1AAD6E;">+ AED 18,500.00</div></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-caption);font-weight:600;color:#16303d;">Salary Credit</div><div style="font-size:var(--fs-micro);color:var(--az-muted);">Income · Yesterday, 09:15 AM</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:var(--fs-small);font-weight:600;color:#1AAD6E;">+ AED 18,500.00</div></div>
           </div>
           <div style="display:flex;align-items:center;gap:.625rem;padding:.875rem 0;border-bottom:1px solid var(--az-border);">
-            <div style="width:32px;height:32px;border-radius:8px;background:#f0f4f8;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#64748b;">shopping_bag</span></div>
-            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">Amazon.ae</div><div style="font-size:.68rem;color:var(--az-muted);">Shopping · Yesterday, 08:45 PM</div></div>
-            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:600;color:#e11d48;">− AED 125.50</div></div>
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">shopping_bag</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-caption);font-weight:600;color:#16303d;">Amazon.ae</div><div style="font-size:var(--fs-micro);color:var(--az-muted);">Shopping · Yesterday, 08:45 PM</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:var(--fs-small);font-weight:600;color:#e11d48;">− AED 125.50</div></div>
           </div>
           <div style="display:none;align-items:center;gap:.625rem;padding:.875rem 0;">
-            <div style="width:32px;height:32px;border-radius:8px;background:#fff4e5;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#d97706;">bolt</span></div>
-            <div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:#16303d;">DEWA</div><div style="font-size:.68rem;color:var(--az-muted);">Utilities · 12 May 2025</div></div>
-            <div style="text-align:right;flex-shrink:0;"><div style="font-size:.8rem;font-weight:600;color:#e11d48;">− AED 210.00</div></div>
+            <div style="width:32px;height:32px;border-radius:8px;background:#edf9f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:16px;color:#1AAD6E;">bolt</span></div>
+            <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-caption);font-weight:600;color:#16303d;">DEWA</div><div style="font-size:var(--fs-micro);color:var(--az-muted);">Utilities · 12 May 2025</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:var(--fs-small);font-weight:600;color:#e11d48;">− AED 210.00</div></div>
           </div>
-          <a href="transaction-history.html" style="display:flex;align-items:center;justify-content:center;gap:.3rem;margin-top:.75rem;padding:.5rem;border:1.5px solid #1AAD6E;border-radius:.5rem;font-size:.78rem;font-weight:600;color:#1AAD6E;text-decoration:none;transition:background .15s;background:#fff;">View All Transactions <span class="material-icons" style="font-size:15px;">arrow_forward</span></a>
+          <div style="display:flex;justify-content:flex-start;margin-top:.75rem;"><a href="transaction-history.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.5rem 1.1rem;border:1.5px solid #1AAD6E;border-radius:.5rem;font-size:var(--fs-caption);font-weight:600;color:#1AAD6E;text-decoration:none;transition:background .15s;background:#fff;">View More Transactions</a></div>
         </div>
       </div>
       </div><!-- /col-1 wrapper -->
@@ -528,16 +526,16 @@
       <div class="rd-panel rd-reveal rd-d5" style="padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0;align-self:stretch !important;border-radius:.875rem !important;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.25rem .5rem;">
           <span class="rd-ph-title">My Cards</span>
-          <a href="cards-my-cards.html" style="font-size:.72rem;color:var(--az-blue);font-weight:600;text-decoration:none;">View all</a>
+          <a href="cards-my-cards.html" style="font-size:var(--fs-micro);color:var(--az-blue);font-weight:600;text-decoration:none;">View all</a>
         </div>
         <div style="margin:.125rem 1.25rem 0;border:1px solid var(--az-border);border-radius:.625rem;overflow:hidden;">
           <div class="card-sel-row" onclick="goToCard(0)" style="display:flex;align-items:center;gap:.875rem;padding:.75rem 1rem;cursor:pointer;background:#f0f7ff;border-left:3px solid var(--az-blue);transition:background .15s;">
             <div style="width:48px;height:30px;background:linear-gradient(135deg,#1a1f71,#00378b);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:.65rem;font-weight:900;color:#fff;font-style:italic;letter-spacing:.02em;">VISA</span>
+              <span style="font-size:var(--fs-micro);font-weight:900;color:#fff;font-style:italic;letter-spacing:.02em;">VISA</span>
             </div>
             <div style="flex:1;min-width:0;">
-              <div class="card-sel-name" style="font-size:.8rem;font-weight:600;color:var(--az-navy);">Platinum Visa</div>
-              <div style="font-size:.68rem;color:var(--az-muted);">···· 5678 &nbsp;·&nbsp; Exp 09/27</div>
+              <div class="card-sel-name" style="font-size:var(--fs-small);font-weight:600;color:var(--az-navy);">Platinum Visa</div>
+              <div style="font-size:var(--fs-micro);color:var(--az-muted);">···· 5678 &nbsp;·&nbsp; Exp 09/27</div>
             </div>
             <span class="mc-status-chip mc-status-active" style="flex-shrink:0;">Active</span>
           </div>
@@ -548,8 +546,8 @@
               <div style="width:18px;height:18px;border-radius:50%;background:#f79e1b;position:absolute;right:5px;opacity:.9;"></div>
             </div>
             <div style="flex:1;min-width:0;">
-              <div class="card-sel-name" style="font-size:.8rem;font-weight:600;color:var(--az-navy);">Gold Mastercard</div>
-              <div style="font-size:.68rem;color:var(--az-muted);">···· 9876 &nbsp;·&nbsp; Exp 12/26</div>
+              <div class="card-sel-name" style="font-size:var(--fs-small);font-weight:600;color:var(--az-navy);">Gold Mastercard</div>
+              <div style="font-size:var(--fs-micro);color:var(--az-muted);">···· 9876 &nbsp;·&nbsp; Exp 12/26</div>
             </div>
             <span class="mc-status-chip mc-status-active" style="flex-shrink:0;">Active</span>
           </div>
@@ -557,17 +555,17 @@
         <div style="padding:.75rem 1.25rem .5rem;">
           <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:.4rem;">
             <div>
-              <div style="font-size:.63rem;color:var(--az-muted);text-transform:uppercase;letter-spacing:.04em;font-weight:500;margin-bottom:.2rem;">Available Credit</div>
-              <div style="font-size:.95rem;font-weight:700;color:var(--az-navy);letter-spacing:-.01em;" id="mcBalAmt">AED 8,240.00</div>
+              <div style="font-size:var(--fs-micro);color:var(--az-muted);text-transform:uppercase;letter-spacing:.04em;font-weight:500;margin-bottom:.2rem;">Available Credit</div>
+              <div style="font-size:var(--fs-subhead);font-weight:700;color:var(--az-navy);letter-spacing:-.01em;" id="mcBalAmt">AED 8,240.00</div>
             </div>
-            <div style="font-size:.68rem;color:var(--az-muted);padding-bottom:.15rem;" id="mcUsageLbl">24% of AED 35,000.00 total credit</div>
+            <div style="font-size:var(--fs-micro);color:var(--az-muted);padding-bottom:.15rem;" id="mcUsageLbl">24% of AED 35,000.00 total credit</div>
           </div>
           <div class="mc-usage-track" style="margin-bottom:.875rem;"><div class="mc-usage-fill" id="mcUsageFill" style="width:24%"></div></div>
           <span id="mcBalSpent" style="display:none;">AED 8,240.00</span>
         </div>
         <div style="display:flex;gap:.5rem;padding:0 1.25rem .875rem;">
-          <a href="cards-manage.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:none;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#fff;text-decoration:none;background:#1AAD6E;transition:background .15s;">Manage Cards</a>
-          <a href="account-statement.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:1.5px solid #1AAD6E;border-radius:.5rem;padding:.5rem .875rem;font-size:.78rem;font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">View Statement</a>
+          <a href="cards-manage.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:none;border-radius:.5rem;padding:.5rem .875rem;font-size:var(--fs-caption);font-weight:600;color:#fff;text-decoration:none;background:#1AAD6E;transition:background .15s;">Manage Cards</a>
+          <a href="account-statement.html" style="display:inline-flex;align-items:center;justify-content:center;gap:.3rem;border:1.5px solid #1AAD6E;border-radius:.5rem;padding:.5rem .875rem;font-size:var(--fs-caption);font-weight:600;color:#1AAD6E;text-decoration:none;background:#fff;transition:background .15s;">View Statement</a>
         </div>
       </div>
 
@@ -575,29 +573,29 @@
       <div id="spendingAnalysis" class="rd-panel rd-reveal" style="padding:1.25rem 1.25rem 1.125rem;border-radius:.875rem !important;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;">
           <span class="rd-ph-title">Spending Analysis</span>
-          <span style="font-size:.68rem;color:var(--az-muted);">This month</span>
+          <span style="font-size:var(--fs-micro);color:var(--az-muted);">This month</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:.6rem;">
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Housing</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 1,543.00</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:var(--fs-micro);color:var(--az-muted);">Housing</span><span style="font-size:var(--fs-micro);color:var(--az-navy);font-weight:500;">AED 1,543.00</span></div>
             <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:32%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Food &amp; Dining</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 1,158.00</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:var(--fs-micro);color:var(--az-muted);">Food &amp; Dining</span><span style="font-size:var(--fs-micro);color:var(--az-navy);font-weight:500;">AED 1,158.00</span></div>
             <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:24%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Transport</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 869.00</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:var(--fs-micro);color:var(--az-muted);">Transport</span><span style="font-size:var(--fs-micro);color:var(--az-navy);font-weight:500;">AED 869.00</span></div>
             <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:18%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:.72rem;color:var(--az-muted);">Shopping</span><span style="font-size:.72rem;color:var(--az-navy);font-weight:500;">AED 724.00</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem;"><span style="font-size:var(--fs-micro);color:var(--az-muted);">Shopping</span><span style="font-size:var(--fs-micro);color:var(--az-navy);font-weight:500;">AED 724.00</span></div>
             <div style="height:4px;background:#e8edf0;border-radius:2px;"><div style="width:15%;height:100%;background:#8fa8b8;border-radius:2px;"></div></div>
           </div>
         </div>
         <div style="margin-top:.875rem;padding-top:.75rem;border-top:1px solid var(--az-border);display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:.72rem;color:var(--az-muted);">Monthly Budget</span>
-          <span style="font-size:.72rem;color:var(--az-navy);">AED 4,294.00 <span style="color:var(--az-muted);font-weight:400;">/ AED 6,000.00</span></span>
+          <span style="font-size:var(--fs-micro);color:var(--az-muted);">Monthly Budget</span>
+          <span style="font-size:var(--fs-micro);color:var(--az-navy);">AED 4,294.00 <span style="color:var(--az-muted);font-weight:400;">/ AED 6,000.00</span></span>
         </div>
       </div>
 
@@ -627,9 +625,9 @@
           </div>
           <div class="ac-item" style="border-bottom:none;">
             <div class="ac-icon" style="background:#f0fdf8;"><span class="material-icons" style="color:#1aad6e;font-size:18px;">credit_card</span></div>
-            <div class="ac-body"><div class="ac-name"><a href="cards-settlement-my.html" style="color:inherit;text-decoration:none;">Credit Card Bill</a></div><div class="ac-due">Due in 8 days</div></div>
+            <div class="ac-body"><div class="ac-name"><a href="cards-settlement.html" style="color:inherit;text-decoration:none;">Credit Card Bill</a></div><div class="ac-due">Due in 8 days</div></div>
             <div class="ac-amt">AED 1,440.00</div>
-            <a href="cards-settlement-my.html" class="ac-pay-btn">Pay</a>
+            <a href="cards-settlement.html" class="ac-pay-btn">Pay</a>
           </div>
         </div>
       </div>
@@ -641,8 +639,8 @@
             <span class="material-icons" style="font-size:20px;color:#1AAD6E;">flight</span>
           </div>
           <div style="min-width:0;flex:1;">
-            <div style="font-size:.82rem;font-weight:700;color:#16303d;margin-bottom:.1rem;">Visa Airport Companion</div>
-            <div style="font-size:.7rem;color:#64748b;">Airport &amp; Travel Benefits</div>
+            <div style="font-size:var(--fs-small);font-weight:600;color:#16303d;margin-bottom:.1rem;">Visa Airport Companion</div>
+            <div style="font-size:var(--fs-micro);color:#64748b;">Airport &amp; Travel Benefits</div>
           </div>
           <span class="material-icons" style="font-size:18px;color:var(--az-muted);flex-shrink:0;">chevron_right</span>
         </a>
@@ -653,10 +651,10 @@
           </div>
           <div style="min-width:0;flex:1;">
             <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.1rem;">
-              <span style="font-size:.82rem;font-weight:700;color:#16303d;">Rewards Hub</span>
-              <span style="font-size:.68rem;font-weight:700;color:#1AAD6E;background:#edf9f4;padding:.08rem .4rem;border-radius:20px;">17,345 pts</span>
+              <span style="font-size:var(--fs-small);font-weight:600;color:#16303d;">Rewards Hub</span>
+              <span style="font-size:var(--fs-micro);font-weight:600;color:#1AAD6E;background:#edf9f4;padding:.08rem .4rem;border-radius:20px;">17,345 pts</span>
             </div>
-            <div style="font-size:.7rem;color:#64748b;">Travel, Shopping &amp; Lifestyle</div>
+            <div style="font-size:var(--fs-micro);color:#64748b;">Travel, Shopping &amp; Lifestyle</div>
           </div>
           <span class="material-icons" style="font-size:18px;color:var(--az-muted);flex-shrink:0;">chevron_right</span>
         </a>
@@ -666,8 +664,8 @@
             <span class="material-icons" style="font-size:20px;color:#1AAD6E;">person_add</span>
           </div>
           <div style="min-width:0;flex:1;">
-            <div style="font-size:.82rem;font-weight:700;color:#16303d;margin-bottom:.1rem;">Invite &amp; Earn</div>
-            <div style="font-size:.7rem;color:#64748b;">Refer a friend and earn rewards</div>
+            <div style="font-size:var(--fs-small);font-weight:600;color:#16303d;margin-bottom:.1rem;">Invite &amp; Earn</div>
+            <div style="font-size:var(--fs-micro);color:#64748b;">Refer a friend and earn rewards</div>
           </div>
           <span class="material-icons" style="font-size:18px;color:var(--az-muted);flex-shrink:0;">chevron_right</span>
         </a>
@@ -715,7 +713,7 @@ function _ntUpdateBadge() {
 }
 function ntClearTab() {
   var active = document.querySelector('.nt-panel.active');
-  if (active) active.innerHTML = '<div style="padding:1.25rem;color:var(--az-muted);font-size:.8rem;text-align:center;">No notifications</div>';
+  if (active) active.innerHTML = '<div style="padding:1.25rem;color:var(--az-muted);font-size:var(--fs-small);text-align:center;">No notifications</div>';
   var activeTab = document.querySelector('.nt-tab.active');
   if (activeTab) {
     var badge = activeTab.querySelector('.nt-badge');
@@ -857,7 +855,7 @@ function setTab(el) {
     if (!empty) {
       empty = document.createElement('div');
       empty.id = 'txnEmptyState';
-      empty.style.cssText = 'text-align:center;padding:1.5rem 1rem;color:#707070;font-size:.82rem;';
+      empty.style.cssText = 'text-align:center;padding:1.5rem 1rem;color:#707070;font-size:var(--fs-small);';
       empty.innerHTML = '<span class="material-icons" style="font-size:2rem;display:block;margin-bottom:.4rem;color:#c8d6de;">inbox</span>No ' + (el.textContent.trim()) + ' transactions this period';
       list.insertBefore(empty, list.querySelector('.txn-view-all'));
     }
@@ -1083,6 +1081,40 @@ function mcDoFreeze() {
   }
 }
 
+// ── Collapse the empty banner row so the widgets sit flush at the top ──
+function pcCollapseBannerRow() {
+  var rows = document.querySelectorAll('.rd-left > div[style*="grid-row:2/4"]');
+  for (var i = 0; i < rows.length; i++) rows[i].style.gridRow = 'auto';
+}
+
+// ── Move dismissed carousel offers into the notification Offers tab ──
+function pcMoveOffersToNotifications() {
+  var panel = document.getElementById('nt-offers');
+  if (!panel) return 0;
+  var empty = panel.querySelector('.nt-empty');
+  if (empty) empty.remove();
+  var added = 0;
+  document.querySelectorAll('#pcTrack .pc-slide').forEach(function(slide){
+    var t = slide.querySelector('.pc-title');
+    if (!t) return;
+    var sub = slide.querySelector('.pc-sub');
+    var cta = slide.querySelector('.pc-cta');
+    var msg = t.textContent.trim() + (sub ? ' — ' + sub.textContent.trim() : '');
+    var item = document.createElement('div');
+    item.className = 'notif-item notif-unread';
+    item.innerHTML = '<div class="notif-content"><div class="notif-msg"></div><div class="notif-time">Just now</div></div>';
+    item.querySelector('.notif-msg').textContent = msg;
+    var a = document.createElement('a');
+    a.className = 'nt-cta';
+    a.href = cta ? cta.getAttribute('href') : '#';
+    a.textContent = cta ? cta.textContent.trim().split(' ')[0] : 'View';
+    item.appendChild(a);
+    panel.appendChild(item);
+    added++;
+  });
+  return added;
+}
+
 // ── Personalised Carousel ──
 (function() {
   var cur = 0, total = 3, timer, dismissed = false;
@@ -1097,6 +1129,13 @@ function mcDoFreeze() {
   window.pcDismiss = function() {
     var w=document.getElementById('pcWrap');
     if(w){w.style.display='none';dismissed=true;clearInterval(timer);}
+    pcCollapseBannerRow();
+    var added = pcMoveOffersToNotifications();
+    if(added){
+      var b=document.getElementById('ntb-offers');
+      if(b){ b.textContent=(parseInt(b.textContent,10)||0)+added; b.style.display=''; }
+      if(typeof _ntUpdateBadge==='function') _ntUpdateBadge();
+    }
     var btn=document.getElementById('notifBtn');if(!btn)return;
     btn.style.transition='transform .15s';var pulses=0;
     var iv=setInterval(function(){btn.style.transform=pulses%2===0?'scale(1.35)':'scale(1)';pulses++;if(pulses>=6){clearInterval(iv);btn.style.transform='';}},120);
@@ -1117,8 +1156,8 @@ function mcDoFreeze() {
       <!-- Modal header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:1.125rem 1.5rem;border-bottom:1px solid var(--az-border);flex-shrink:0;">
         <div>
-          <div style="font-size:.95rem;font-weight:700;color:var(--az-navy);">Recent Transactions</div>
-          <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Last 7 days · All accounts</div>
+          <div style="font-size:var(--fs-subhead);font-weight:700;color:var(--az-navy);">Recent Transactions</div>
+          <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.15rem;">Last 7 days · All accounts</div>
         </div>
         <button onclick="document.getElementById('recentTxnModal').classList.add('hidden')" style="background:none;border:none;cursor:pointer;color:var(--az-muted);display:flex;align-items:center;padding:0;">
           <span class="material-icons" style="font-size:22px;">close</span>
@@ -1129,17 +1168,17 @@ function mcDoFreeze() {
       <div style="overflow-y:auto;flex:1;padding:.5rem 0;">
 
         <!-- Today -->
-        <div style="padding:.5rem 0 .25rem 1.5rem;font-size:.65rem;font-weight:700;color:var(--az-muted);text-transform:uppercase;letter-spacing:.06em;background:#fafbfc;border-bottom:1px solid var(--az-border);">Today · 4 Aug 2026</div>
+        <div style="padding:.5rem 0 .25rem 1.5rem;font-size:var(--fs-micro);font-weight:600;color:var(--az-muted);text-transform:uppercase;letter-spacing:.06em;background:#fafbfc;border-bottom:1px solid var(--az-border);">Today · 4 Aug 2026</div>
 
         <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;cursor:pointer;border-bottom:1px solid #f4f6f8;" onclick="location.href='transfer-receipt.html'">
-          <div style="width:40px;height:40px;border-radius:50%;background:#e6f9f0;color:#1a9e63;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;">S</div>
+          <div style="width:40px;height:40px;border-radius:50%;background:#e6f9f0;color:#1a9e63;display:flex;align-items:center;justify-content:center;font-size:var(--fs-small);font-weight:600;flex-shrink:0;">S</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:.84rem;font-weight:600;color:var(--az-navy);">Salary · Emirates Corp</div>
-            <div style="font-size:.72rem;color:var(--az-muted);margin-top:.15rem;">Income · Direct Deposit · Current A/C</div>
+            <div style="font-size:var(--fs-small);font-weight:600;color:var(--az-navy);">Salary · Emirates Corp</div>
+            <div style="font-size:var(--fs-micro);color:var(--az-muted);margin-top:.15rem;">Income · Direct Deposit · Current A/C</div>
           </div>
           <div style="text-align:right;flex-shrink:0;">
-            <div style="font-size:.84rem;font-weight:700;color:#1a9e63;">+AED 18,500.00</div>
-            <div style="font-size:.68rem;color:var(--az-muted);">08:00</div>
+            <div style="font-size:var(--fs-small);font-weight:600;color:#1a9e63;">+AED 18,500.00</div>
+            <div style="font-size:var(--fs-micro);color:var(--az-muted);">08:00</div>
           </div>
         </div>
 

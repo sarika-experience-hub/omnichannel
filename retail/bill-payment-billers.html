@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>azentio – Bill Payments – Select Biller</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/fonts.css"/>
+  <link rel="stylesheet" href="../css/flag-icons.min.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+
+    /* Search */
+    .bp-search-wrap { position:relative; margin-bottom:1.5rem; }
+    .bp-search-wrap input { width:100%; padding:.8125rem 3rem .8125rem 1.375rem; border:1.5px solid var(--az-border); border-radius:2rem; font-size:var(--fs-subhead); color:var(--az-navy); background:#fff; outline:none; box-shadow:0 1px 4px rgba(0,0,0,.05); transition:border-color .15s,box-shadow .15s; }
+    .bp-search-wrap input:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.12); }
+    .bp-search-icon { position:absolute; right:1.125rem; top:50%; transform:translateY(-50%); color:var(--az-muted); font-size:var(--fs-heading) !important; pointer-events:none; }
+
+    /* Category filter chips */
+    .bp-cat-strip { display:flex; align-items:center; gap:.75rem; margin-bottom:1.375rem; }
+    .bp-cat-arrow { flex-shrink:0; background:#fff; border:1.5px solid var(--az-border); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--az-navy); transition:all .15s; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+    .bp-cat-arrow:hover { border-color:var(--az-green); color:var(--az-green); }
+    .bp-cat-track-wrap { flex:1; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; }
+    .bp-cat-track-wrap::-webkit-scrollbar { display:none; }
+    .bp-cat-track { display:flex; gap:.625rem; }
+    .bp-cat-chip { flex-shrink:0; display:flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border:1.5px solid var(--az-border); border-radius:2rem; background:#fff; cursor:pointer; transition:all .18s; white-space:nowrap; font-size:var(--fs-small); font-weight:500; color:var(--az-navy); }
+    .bp-cat-chip:hover { border-color:var(--az-green); background:#f0fdf8; color:var(--az-green); }
+    .bp-cat-chip.active { border-color:var(--az-green); background:var(--az-green); color:#fff; box-shadow:0 2px 8px rgba(46,216,142,.25); }
+
+    /* Toolbar row */
+    .bp-toolbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+    .bp-toolbar-lbl { font-size:var(--fs-body); color:var(--az-muted); font-weight:500; }
+    .bp-toolbar-count { font-size:var(--fs-small); color:var(--az-muted); background:#f4f7fa; padding:.25rem .75rem; border-radius:1rem; }
+
+    /* Empty state */
+    .bp-empty { padding:2.5rem 1rem; text-align:center; color:var(--az-muted); font-size:var(--fs-body); display:none; flex-direction:column; align-items:center; }
+    .bp-empty .material-icons { font-size:2.5rem; display:block; margin-bottom:.5rem; opacity:.4; }
+
+    /* This page's content is short (search + chips + one page of cards), so the
+       sitewide sticky-footer stretch (.main-body{flex:1}) leaves a large dead gap
+       above the footer — let the footer sit right after the content instead. */
+    .main-body { flex: 0 1 auto; }
+
+    /* Biller grid — 6 cols for better card sizing */
+    .bp-biller-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1rem; }
+    /* Six fixed columns leave 79px tiles inside a 354px pane, so below
+       the desktop width the tiles reflow to whatever fits. */
+    @media (max-width: 991.98px) { .bp-biller-grid { grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); } }
+    .bp-biller-card { border:1.5px solid var(--az-border); border-radius:.75rem; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1rem .75rem .875rem; cursor:pointer; transition:border-color .18s,background .18s,box-shadow .18s,transform .12s; min-height:104px; gap:.5rem; text-decoration:none; }
+    .bp-biller-card:hover { border-color:var(--az-green); background:#f0fdf8; box-shadow:0 4px 14px rgba(46,216,142,.14); transform:translateY(-2px); }
+    .bp-biller-card.bp-selected { border-color:var(--az-green); background:#edfaf4; box-shadow:0 0 0 3px rgba(46,216,142,.18); }
+    .bp-biller-logo { width:56px; height:44px; background:linear-gradient(135deg,#e8f5f0,#d0efe2); border-radius:.5rem; display:flex; align-items:center; justify-content:center; font-size:var(--fs-micro); color:#1a7a55; font-weight:600; letter-spacing:.02em; }
+    .bp-selected .bp-biller-logo { background:linear-gradient(135deg,#c6f0e0,#a8e4cc); }
+    .bp-biller-name { font-size:var(--fs-caption); color:var(--az-navy); font-weight:500; text-align:center; line-height:1.3; }
+
+    /* Top-right CTA — matches accounts.html's "Open New General Account" button exactly */
+    .btn-open-account { background: var(--az-navy,#16303d)!important; color: #fff!important; border: none; border-radius: .5rem; padding: 0 1.75rem; height: 2.5rem; box-sizing: border-box; font-size:var(--fs-body); font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: opacity .2s; letter-spacing: .01em; box-shadow: 0 1px 3px rgba(22,48,61,.18); }
+    .btn-open-account:hover { opacity: .92; }
+    .btn-open-account .material-icons { font-size: 17px; }
+
+    /* Pagination */
+    .bp-pagination { display:flex; align-items:center; justify-content:space-between; margin-top:1.5rem; padding-top:1.125rem; border-top:1px solid var(--az-border); }
+    .bp-page-info { font-size:var(--fs-small); color:var(--az-muted); }
+    .bp-page-btns { display:flex; gap:.3rem; align-items:center; }
+    .bp-page-btn { width:32px; height:32px; border:1.5px solid var(--az-border); border-radius:.4375rem; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:var(--fs-small); color:var(--az-navy); transition:all .15s; }
+    .bp-page-btn.active { border-color:var(--az-green); background:var(--az-green); color:#fff; font-weight:600; }
+    .bp-page-btn:hover:not(.active) { border-color:var(--az-green); color:var(--az-green); }
+    .bp-page-sep { color:var(--az-muted); font-size:var(--fs-body); padding:0 .25rem; }
+
+  </style>
+  <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+<header class="app-hdr" role="banner">
+  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-right">
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <div class="hdr-div"></div>
+    <div class="notif-wrap">
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
+      <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
+        <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span></div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Upcoming Prayer - 06:01 AM Fajr</div><div class="notif-time">1 hr ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item notif-unread"><div class="notif-content"><div class="notif-msg">Investment maturing notification</div><div class="notif-time">2 hrs ago</div></div><span class="notif-ind"></span></div>
+          <div class="notif-item"><div class="notif-content"><div class="notif-msg notif-msg-read">Notification for Coupon payout / Dividend payout</div><div class="notif-time">6 hrs ago</div></div><span class="notif-ind"></span></div>
+        </div>
+        <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
+      </div>
+    </div>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <div class="hdr-div"></div>
+    <div class="hdr-lang-wrap">
+      <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
+        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
+        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
+    <div class="hdr-avatar-wrap">
+      <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
+      <div class="avatar-dropdown" role="menu">
+        <div class="av-drop-top">
+          <svg class="av-drop-photo" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;border-radius:50%;background:#334155;flex-shrink:0;"><text x="36" y="46" text-anchor="middle" font-family="Roboto,sans-serif" font-size="24" font-weight="700" fill="#fff">SR</text></svg>
+          <div class="av-drop-userinfo">
+            <div class="av-drop-name">Sara Rahman</div>
+            <div class="av-drop-login-lbl">Last Login</div>
+            <div class="av-drop-login-time">
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>27 Jul, 2026</span>
+              <span class="t-sep">|</span>
+              <span class="t-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>09:42</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-drop-details">
+          <div class="av-detail-row"><span class="av-detail-lbl">Username:</span><span class="av-detail-val">sara.rahman</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">CIF:</span><span class="av-detail-val">1023847</span></div>
+          <div class="av-detail-row"><span class="av-detail-lbl">Nickname:</span><span class="av-detail-val">Sara Rahman</span></div>
+        </div>
+        <div class="av-drop-nav">
+          <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Saved Drafts</a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sb-nav">
+    <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+    <div class="sb-grp-lbl">Overview</div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+    <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+    <div class="sb-grp-lbl">Money Movement</div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sTr" class="sb-sub" style="display:none">
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+  </div>
+    <button class="sb-item active-section" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron open" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item active">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+    <div class="sb-grp-lbl">Cards &amp; Lending</div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+    <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+    <div class="sb-grp-lbl">Support</div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+</aside>
+<div class="app-main" id="appMain">
+  <main class="main-body" role="main">
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="bill-payment-billers.html">Bill Payments</a><span class="sep">&#8250;</span><span class="cur" id="bc-cat">Mobile Biller</span></div>
+    <div class="page-top-bar" style="margin-bottom:1.5rem;">
+      <h1 class="page-title" style="margin-bottom:0">Select Biller</h1>
+      <a href="payments-bill-report.html" class="btn-open-account">Payment Report</a>
+    </div>
+
+    <div class="bp-search-wrap">
+      <input type="text" id="billerSearch" placeholder="Search billers…" oninput="filterBillers(this.value)" aria-label="Search billers"/>
+      <span class="material-icons bp-search-icon">search</span>
+    </div>
+
+    <!-- Category filter chips -->
+    <div class="bp-cat-strip">
+      <button class="bp-cat-arrow" onclick="scrollCat(-1)" aria-label="Previous categories" type="button">
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 1 1 6 6 11"/></svg>
+      </button>
+      <div class="bp-cat-track-wrap">
+        <div class="bp-cat-track" id="catTrack"></div>
+      </div>
+      <button class="bp-cat-arrow" onclick="scrollCat(1)" aria-label="Next categories" type="button">
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 1 6 6 1 11"/></svg>
+      </button>
+    </div>
+
+    <div class="bp-toolbar">
+      <span class="bp-toolbar-lbl" id="billerLbl" aria-live="polite">List of Mobile Billers</span>
+      <span class="bp-toolbar-count" id="billerCount" aria-live="polite">— billers</span>
+    </div>
+
+    <div class="bp-biller-grid" id="billerGrid"></div>
+
+    <div class="bp-empty" id="emptyState">
+      <span class="material-icons">search_off</span>
+      No billers found. Try a different search or category.
+    </div>
+
+    <div class="bp-pagination" id="paginationBar">
+      <span class="bp-page-info" id="pageInfo">—</span>
+      <div class="bp-page-btns" id="pageBtns"></div>
+    </div>
+  </main>
+  <footer class="app-footer" role="contentinfo">
+    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+      <div class="acc-btns">
+        <button class="acc-btn">A<sup>-</sup></button><button class="acc-btn">A</button><button class="acc-btn">A<sup>+</sup></button>
+        <button class="acc-btn" style="background:var(--az-navy);color:#fff">&#9681;</button>
+      </div>
+    </div>
+  </footer>
+</div>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
+<script>
+'use strict';
+
+/* Same categorized biller set as payments-bill-payment.html, so this focused
+   single-category picker shows real billers instead of placeholders. */
+var CATEGORIES = [
+  { id:'mobile',      label:'Mobile' },
+  { id:'utility',     label:'Utility' },
+  { id:'finance',     label:'Finance' },
+  { id:'insurance',   label:'Insurance' },
+  { id:'taxi',        label:'Taxi' },
+  { id:'creditcard',  label:'Credit Card' },
+  { id:'government',  label:'Government' },
+  { id:'education',   label:'Education' }
+];
+var BILLERS = {
+  mobile: [
+    {name:'Etisalat',logo:'E'},{name:'Du',logo:'D'},{name:'Virgin Mobile',logo:'VM'},{name:'Salam',logo:'S'},
+    {name:'Mobily',logo:'M'},{name:'Zain',logo:'Z'},{name:'STC',logo:'S'},{name:'Ooredoo',logo:'O'},
+    {name:'Batelco',logo:'B'},{name:'Dialog',logo:'D'},{name:'Airtel',logo:'A'},{name:'Safaricom',logo:'S'}
+  ],
+  utility: [
+    {name:'DEWA',logo:'D'},{name:'SEWA',logo:'S'},{name:'FEWA',logo:'F'},{name:'ADDC',logo:'A'},
+    {name:'AADC',logo:'A'},{name:'Sharjah Gas',logo:'SG'},{name:'Ajman Sewerage',logo:'AS'},{name:'ENEC',logo:'E'}
+  ],
+  finance: [
+    {name:'DIB',logo:'D'},{name:'ADIB',logo:'A'},{name:'Emirates NBD',logo:'EN'},{name:'FAB',logo:'F'},
+    {name:'Mashreq',logo:'M'},{name:'RAKBank',logo:'R'},{name:'HSBC',logo:'H'},{name:'Citi',logo:'C'}
+  ],
+  insurance: [
+    {name:'Daman',logo:'D'},{name:'AXA Gulf',logo:'AG'},{name:'Oman Insurance',logo:'OI'},{name:'RSA',logo:'R'}
+  ],
+  taxi: [
+    {name:'RTA Taxi',logo:'RT'},{name:'Careem',logo:'C'},{name:'Uber',logo:'U'},{name:'InDriver',logo:'I'}
+  ],
+  creditcard: [
+    {name:'Visa',logo:'V'},{name:'Mastercard',logo:'M'},{name:'Amex',logo:'A'},{name:'Diners',logo:'D'}
+  ],
+  government: [
+    {name:'DLD',logo:'D'},{name:'MOI',logo:'M'},{name:'RTA Fines',logo:'RF'},{name:'MOHRE',logo:'M'}
+  ],
+  education: [
+    {name:'KHDA',logo:'K'},{name:'ADEK',logo:'A'},{name:'Gems',logo:'G'},{name:'Taaleem',logo:'T'}
+  ]
+};
+
+var activeCat = 'mobile';
+var currentPage = 1;
+var PAGE_SIZE = 12;
+
+function init() {
+  var p = new URLSearchParams(window.location.search);
+  var requested = (p.get('cat') || 'Mobile').toLowerCase().replace(/\s+/g, '');
+  var match = CATEGORIES.filter(function(c) { return c.id === requested; })[0];
+  activeCat = match ? match.id : 'mobile';
+  renderCatChips();
+  renderBillers();
+}
+
+function renderCatChips() {
+  var track = document.getElementById('catTrack');
+  track.innerHTML = CATEGORIES.map(function(c) {
+    return '<div class="bp-cat-chip' + (c.id === activeCat ? ' active' : '') + '" data-cat="' + c.id + '" onclick="selectCat(\'' + c.id + '\')" role="button" tabindex="0">' +
+      '<span>' + c.label + '</span></div>';
+  }).join('');
+}
+
+function selectCat(id) {
+  activeCat = id;
+  currentPage = 1;
+  document.getElementById('billerSearch').value = '';
+  renderCatChips();
+  renderBillers();
+  scrollActiveChipIntoView();
+}
+
+function scrollActiveChipIntoView() {
+  var chip = document.querySelector('.bp-cat-chip.active');
+  if (chip) chip.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+}
+
+function catLabel(id) {
+  var m = CATEGORIES.filter(function(c) { return c.id === id; })[0];
+  return m ? m.label : id;
+}
+
+function renderBillers() {
+  var q = (document.getElementById('billerSearch').value || '').toLowerCase().trim();
+  var all = BILLERS[activeCat] || [];
+  var visible = all.filter(function(b) { return !q || b.name.toLowerCase().includes(q); });
+
+  document.getElementById('bc-cat').textContent = catLabel(activeCat) + ' Biller';
+  document.getElementById('billerLbl').textContent = 'List of ' + catLabel(activeCat) + ' Billers';
+  document.getElementById('billerCount').textContent = visible.length + ' biller' + (visible.length === 1 ? '' : 's');
+
+  var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = 1;
+  var start = (currentPage - 1) * PAGE_SIZE;
+  var pageItems = visible.slice(start, start + PAGE_SIZE);
+
+  var grid = document.getElementById('billerGrid');
+  grid.innerHTML = pageItems.map(function(b) {
+    return '<a href="payments-bill-payment-details.html" class="bp-biller-card">' +
+      '<div class="bp-biller-logo">' + b.logo + '</div>' +
+      '<span class="bp-biller-name">' + b.name + '</span></a>';
+  }).join('');
+
+  document.getElementById('emptyState').style.display = visible.length === 0 ? 'flex' : 'none';
+  document.getElementById('paginationBar').style.display = visible.length === 0 ? 'none' : '';
+  document.getElementById('pageInfo').textContent =
+    'Showing ' + (visible.length === 0 ? 0 : start + 1) + '–' + Math.min(start + PAGE_SIZE, visible.length) + ' of ' + visible.length + ' billers';
+
+  renderPageBtns(totalPages);
+}
+
+function renderPageBtns(total) {
+  var container = document.getElementById('pageBtns');
+  container.innerHTML = '';
+  function btn(content, title, onclick, extraClass) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bp-page-btn' + (extraClass ? ' ' + extraClass : '');
+    if (title) b.title = title;
+    b.innerHTML = content;
+    b.addEventListener('click', onclick);
+    return b;
+  }
+  container.appendChild(btn('<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 2 5 6 9 10"/><line x1="3" y1="2" x2="3" y2="10"/></svg>', 'First', function(){ goPage(1); }));
+  container.appendChild(btn('<svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 1 2 6 6 11"/></svg>', 'Previous', function(){ goPage(currentPage - 1); }));
+  for (var i = 1; i <= total; i++) {
+    container.appendChild(btn(String(i), '', function(nn){ return function(){ goPage(nn); }; }(i), i === currentPage ? 'active' : ''));
+  }
+  container.appendChild(btn('<svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="2 1 6 6 2 11"/></svg>', 'Next', function(){ goPage(currentPage + 1); }));
+  container.appendChild(btn('<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 2 7 6 3 10"/><line x1="9" y1="2" x2="9" y2="10"/></svg>', 'Last', function(){ goPage(total); }));
+}
+
+function goPage(n) {
+  var q = (document.getElementById('billerSearch').value || '').toLowerCase().trim();
+  var all = BILLERS[activeCat] || [];
+  var visible = all.filter(function(b) { return !q || b.name.toLowerCase().includes(q); });
+  var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  currentPage = Math.max(1, Math.min(n, totalPages));
+  renderBillers();
+}
+
+function scrollCat(dir) {
+  document.getElementById('catTrack').parentElement.scrollBy({ left: dir * 160, behavior: 'smooth' });
+}
+
+function filterBillers() {
+  currentPage = 1;
+  renderBillers();
+}
+
+init();
+</script>
+</body>
+</html>

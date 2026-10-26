@@ -11,14 +11,162 @@
   <link rel="stylesheet" href="../css/datepicker.css"/>
   <link rel="stylesheet" href="../css/styles.css"/>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ Beneficiary Management — Manage/Add mode switch + combined Add form ══
+   (matches the segmented-pill pattern used on transfer-own-accounts.html;
+   .sec-card/.f-input/.phone-wrap/etc. are shared global classes used as-is) ══ */
+
+/* .qr-frame-corner is defined in the shared styles.css (used by other add-beneficiary
+   pages too) — recolored to the brand green for this page's QR modal only. */
+.qr-frame-corner { border-color: var(--az-green,#1aad6e); }
+
+/* .content-card is the shared white rounded panel wrapper — flattened here so the
+   filter chips and record cards sit directly on the page instead of inside a boxed panel. */
+.content-card { background: transparent; border-radius: 0; }
+
+/* ══ Add Beneficiary — validation states ══ */
+.f-input.is-invalid, .f-select.is-invalid { border-color: #dc2626 !important; }
+.tc.is-invalid label { color: #dc2626; }
+/* Terms checkbox — match the redesigned .terms-chk control used elsewhere in the app (scoped to this page) */
+.form-footer .tc { font-size: var(--fs-body); }
+.form-footer .tc a { color: var(--az-blue); font-weight: 500; }
+.form-footer .tc input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none; margin: 0; flex-shrink: 0;
+  width: 18px; height: 18px; border: 1.5px solid var(--az-border); border-radius: .25rem;
+  background: #fff center/12px no-repeat; cursor: pointer;
+  transition: background-color .15s, border-color .15s, box-shadow .15s;
+}
+.form-footer .tc input[type="checkbox"]:hover { border-color: var(--az-green); }
+.form-footer .tc input[type="checkbox"]:focus-visible { outline: none; box-shadow: 0 0 0 .1875rem rgba(46,216,142,.25); }
+.form-footer .tc input[type="checkbox"]:checked {
+  background-color: var(--az-green); border-color: var(--az-green);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.2 3.2L11 1' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.tc.is-invalid input[type="checkbox"] { border-color: #dc2626; }
+.abn-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--az-navy,#16303d); color: #fff; padding: .7rem 1.25rem; border-radius: .5rem; font-size:var(--fs-small); font-weight: 600; font-family: 'Poppins','Roboto',sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 99999; }
+.abn-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.benmode-switch { display: flex; gap: .3rem; background: var(--az-green-light,#edf9f4); border-radius: 22px; padding: 4px; margin-bottom: 1.5rem; max-width: 420px; height: 44px; box-sizing: border-box; }
+.benmode-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: .4rem; height: 36px; padding: 0 .75rem; border: none; background: transparent; border-radius: 18px; font-size:var(--fs-body); font-weight: 700; color: var(--az-muted,#707070); cursor: pointer; transition: all .18s; font-family: 'Poppins','Roboto',sans-serif; box-sizing: border-box; }
+.benmode-btn .material-icons { font-size: 17px; }
+.benmode-btn:hover { color: var(--az-navy,#16303d); }
+.benmode-btn.active { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; }
+.benmode-btn.active .material-icons { color: #2ed88e; }
+.benmode-btn.active:hover { color: #fff; }
+
+.abn-form-hdr { display: flex; align-items: center; gap: .5rem; font-size:var(--fs-section); font-weight: 700; color: var(--az-navy,#16303d); padding: 0 0 .75rem; margin-bottom: 1.25rem; border-bottom: 1px solid #e5e9ee; }
+.abn-form-hdr .material-icons { font-size: 20px; color: var(--az-green,#1aad6e); }
+.abn-type-row { margin-bottom: 1.25rem; }
+.abn-type-field { margin-bottom: 0; }
+.abn-type-picker { position: relative; }
+.abn-type-trigger { display: flex; align-items: center; gap: .6rem; width: 100%; background: #fff; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .5rem; padding: .625rem .75rem; cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; text-align: left; transition: border-color .15s; }
+.abn-type-trigger:hover { border-color: var(--az-green,#1aad6e); }
+.abn-type-trigger.open { border-color: var(--az-green,#1aad6e); }
+.abn-type-trigger-icon { font-size: 18px; color: var(--az-green,#1aad6e); flex-shrink: 0; }
+.abn-type-trigger-text { flex: 1; font-size:var(--fs-small); font-weight: 600; color: var(--az-navy,#16303d); }
+.abn-type-chevron { font-size: 20px; color: var(--az-muted,#707070); transition: transform .15s; flex-shrink: 0; }
+.abn-type-trigger.open .abn-type-chevron { transform: rotate(180deg); }
+.abn-type-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid var(--az-border,#e2e8ec); border-radius: .625rem; box-shadow: 0 8px 24px rgba(22,48,61,.14); z-index: 50; overflow: hidden; }
+.abn-type-dropdown.hidden { display: none; }
+.abn-type-option { display: flex; align-items: center; gap: .6rem; width: 100%; background: none; border: none; border-bottom: 1px solid #f0f4f7; padding: .625rem .75rem; cursor: pointer; text-align: left; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight: 600; color: var(--az-navy,#16303d); transition: background .15s; }
+.abn-type-option:last-child { border-bottom: none; }
+.abn-type-option .material-icons { font-size: 17px; color: var(--az-muted,#707070); }
+.abn-type-option:hover { background: var(--az-green-light,#edf9f4); }
+.abn-type-option.active { background: var(--az-green-light,#edf9f4); color: var(--az-green,#1aad6e); }
+.abn-type-option.active .material-icons { color: var(--az-green,#1aad6e); }
+.abn-type-hint { font-size:var(--fs-caption); color: var(--az-muted,#707070); margin-top: .4rem; margin-bottom: 0; }
+
+.abn-section {
+  background: #fff; border: 1px solid var(--az-border,#e2e8ec); border-radius: .875rem;
+  box-shadow: 0 1px 3px rgba(22,48,61,.04);
+  padding: 1.25rem 1.5rem; margin-bottom: 1.75rem;
+}
+html.dark .abn-section { background: #162530; border-color: #243545; }
+.abn-section-lbl { font-size:var(--fs-caption); font-weight:600; text-transform: uppercase; letter-spacing: .07em; color: var(--az-blue,#2563eb); margin-bottom: .75rem; }
+.abn-panel.hidden { display: none; }
+
+/* Manage Beneficiaries — unified list (no tabs), search + quick filters, visible actions */
+.mben-toolbar { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.mben-search-wrap { position: relative; width: 280px; max-width: 100%; }
+.mben-search-wrap .material-icons { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--az-muted,#707070); }
+.mben-search { width: 100%; height: 2.5rem; padding: 0 .75rem 0 2.25rem; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .5rem; font-size:var(--fs-small); font-family: 'Poppins','Roboto',sans-serif; color: var(--az-navy,#16303d); outline: none; transition: border-color .15s; box-sizing: border-box; }
+.mben-search:focus { border-color: var(--az-blue,#00538A); }
+.mben-filters { display: flex; gap: .4rem; flex-wrap: wrap; }
+.mben-filter-chip { display: inline-flex; align-items: center; gap: .3rem; border: 1.5px solid var(--az-border,#e2e8ec); background: #fff; border-radius: 999px; padding: .4rem .9rem; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy,#16303d); cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; }
+.mben-filter-chip .material-icons { font-size: 15px; }
+.mben-filter-chip:hover { border-color: var(--az-green,#1aad6e); }
+.mben-filter-chip.active { border-color: var(--az-green,#1aad6e); background: var(--az-green-light,#edf9f4); color: var(--az-green,#1aad6e); }
+
+.mben-list { display: flex; flex-direction: column; gap: .875rem; }
+.mben-card { display: flex; align-items: flex-start; gap: 1rem; border: 1px solid var(--az-border,#e2e8ec); border-radius: 1rem; background: #fff; padding: 1rem 1.25rem; transition: border-color .15s; }
+.mben-card:hover { border-color: var(--az-green,#1aad6e); }
+.mben-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--az-green-light,#edf9f4); color: var(--az-green,#1aad6e); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size:var(--fs-body); flex-shrink: 0; }
+.mben-main { flex: 1; min-width: 0; }
+.mben-top { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.mben-nick { font-size:var(--fs-body); font-weight: 700; color: var(--az-navy,#16303d); }
+.mben-type-badge { display: inline-flex; align-items: center; gap: .3125rem; font-size:var(--fs-caption); font-weight: 600; color: var(--az-muted,#707070); background: #f1f3f5; border-radius: 99px; padding: .3rem .75rem; white-space: nowrap; flex-shrink: 0; }.mben-details { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; }
+.mben-detail { font-size:var(--fs-caption); color: var(--az-navy,#16303d); display: flex; align-items: center; gap: .3rem; }
+.mben-detail .fi { border-radius: 2px; }
+.mben-actions { display: flex; gap: .4rem; flex-shrink: 0; }
+.mben-act-btn { display: inline-flex; align-items: center; gap: .3rem; padding: .4rem .8rem; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .5rem; background: #fff; font-size:var(--fs-caption); font-weight: 600; color: var(--az-navy,#16303d); cursor: pointer; text-decoration: none!important; transition: all .15s; }
+.mben-act-btn .material-icons { font-size: 14px; }
+.mben-act-btn:hover { border-color: var(--az-blue,#00538A); color: var(--az-blue,#00538A); background: #eff6ff; }
+.mben-act-btn.mben-act-pay { border-color: var(--az-green,#1aad6e); color: var(--az-green,#1aad6e); }
+.mben-act-btn.mben-act-pay:hover { background: var(--az-green-light,#edf9f4); }
+.mben-act-btn.mben-act-delete:hover { border-color: #dc2626; color: #dc2626; background: #fef2f2; }
+.mben-empty { display: none; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; text-align: center; padding: 3.5rem 1rem; border: 1.5px dashed var(--az-border,#e2e8ec); border-radius: 1rem; color: var(--az-muted,#707070); }
+.mben-empty.show { display: flex; }
+.mben-empty .material-icons { font-size: 2.25rem; color: var(--az-green,#1aad6e); opacity: .6; }
+.mben-empty .ae-title { font-size:var(--fs-body); font-weight: 600; color: var(--az-navy,#16303d); }
+.mben-empty .ae-sub { font-size:var(--fs-small); max-width: 320px; }
+.mben-delete-icon { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.mben-delete-icon .material-icons { font-size: 30px; color: #dc2626; }
+
+/* CTA row — copied from general-account-opening.html's footer treatment, for a unified look */
+.form-footer { background: none; border: none; border-top: 1px solid #eef1f4; padding: 1.5rem 0 0; margin-top: .5rem; }
+.form-footer .btn-action { border-radius: .5rem; padding: .7rem 1.75rem; font-size:var(--fs-body); transition: background .15s, box-shadow .15s, transform .15s, border-color .15s, color .15s; }
+.form-footer .btn-cancel, .form-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.form-footer .btn-cancel:hover, .form-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.form-footer .btn-submit { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; border: none; }
+.form-footer .btn-submit:hover { background: linear-gradient(135deg, #0f232e, #081820); transform: translateY(-1px); }
+.form-footer .btn-submit:active { transform: translateY(0); }
+
+#benAddView.hidden, #benManageView.hidden { display: none; }
+
+@media (max-width: 700px) {
+  .benmode-switch { flex-wrap: wrap; }
+}
+
+/* ── Mobile number: searchable country/ISD-code combobox ──
+   Replaces the plain code <select> so the country can be found by name,
+   not just by (often hard-to-tell-apart) flag. */
+.phone-combo { position: relative; }
+.phone-pfx { display: flex; align-items: center; gap: .375rem; margin: 0; background: #f8fafb; border: none; border-right: 1px solid var(--az-border); cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small); color: var(--az-navy); transition: background .12s; }
+.phone-pfx:hover { background: #f0f4f6; }
+.phone-pfx:focus-visible { outline: 2px solid var(--az-blue,#00538A); outline-offset: -2px; }
+.phone-pfx-chev { color: var(--az-muted); flex-shrink: 0; transition: transform .15s; margin-left: .125rem; }
+.phone-pfx[aria-expanded="true"] .phone-pfx-chev { transform: rotate(180deg); }
+.phone-ctry-panel { position: fixed; z-index: 1050; background: #fff; border: 1px solid var(--az-border); border-radius: .625rem; box-shadow: 0 8px 24px rgba(16,32,48,.16); max-height: 280px; min-width: 260px; overflow: hidden; display: flex; flex-direction: column; }
+.phone-ctry-search { display: flex; align-items: center; gap: .5rem; padding: .625rem .75rem; border-bottom: 1px solid #eef1f4; flex-shrink: 0; }
+.phone-ctry-search .material-icons { font-size: 18px; color: var(--az-muted); }
+.phone-ctry-search input { flex: 1; min-width: 0; border: none; outline: none; font-size:var(--fs-small); font-family: 'Poppins','Roboto',sans-serif; color: var(--az-navy); background: transparent; }
+.phone-ctry-list { overflow-y: auto; padding: .25rem; }
+.phone-ctry-opt { display: flex; align-items: center; gap: .5rem; padding: .5rem .625rem; border-radius: .375rem; font-size:var(--fs-small); color: var(--az-navy); cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; }
+.phone-ctry-opt:hover, .phone-ctry-opt.active { background: #f0f9f5; }
+.phone-ctry-opt .fi { flex-shrink: 0; }
+.phone-ctry-opt-name { flex: 1; }
+.phone-ctry-opt-dial { color: var(--az-muted); font-size:var(--fs-caption); }
+.phone-ctry-empty { padding: .75rem; font-size:var(--fs-small); color: #8a97a0; text-align: center; }
+</style>
 </head>
 <body>
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
    <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
     <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
@@ -34,11 +182,11 @@
 </svg></span>
   </div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
       <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
-      <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-hidden="true"></span>
+      <span class="material-icons">notifications</span><span class="notif-dot" aria-hidden="true"></span>
     </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr">
@@ -73,8 +221,8 @@
         </div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><span class="material-icons">help</span></a>
     <div class="hdr-div" role="separator"></div>
     <div class="hdr-lang-wrap">
     <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
@@ -127,9 +275,9 @@
             <div class="av-nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             </div>
-            My Tasks
+            My Saved Drafts
           </a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -143,36 +291,33 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item active-section" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron open" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item active">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 
 <!-- ████ MAIN ████ -->
@@ -185,282 +330,324 @@
     <!-- Page top bar -->
     <div class="page-top-bar">
       <h1 class="page-title">Beneficiary Management</h1>
-      <!-- Add button — changes per tab -->
-      <a href="add-internal-beneficiary.html" class="btn-add-ben" id="addBenBtn">
-        <img src="../images/icons/beneficiary.svg" width="16" height="16" alt="beneficiary" loading="lazy"/> <span id="addBenLabel">Add Bank Beneficiary</span>
-      </a>
     </div>
 
+    <div class="benmode-switch" role="tablist">
+      <button type="button" class="benmode-btn active" id="benModeManageBtn" onclick="benSetMode('manage')" role="tab" aria-selected="true"><span class="material-icons">list_alt</span> Manage Beneficiaries</button>
+      <button type="button" class="benmode-btn" id="benModeAddBtn" onclick="benSetMode('add')" role="tab" aria-selected="false"><span class="material-icons">person_add</span> Add Beneficiary</button>
+    </div>
+
+    <div id="benManageView">
     <!-- Content card -->
     <div class="content-card">
-      <!-- Tabs + view toggle -->
-      <div class="tabs-header-row">
-        <div class="az-tabs" role="tablist">
-          <button class="az-tab active" id="tabIntraBtn" onclick="benSwitchTab('intra')" role="tab" aria-selected="true" aria-controls="tabIntra">Intra-Bank Transfer</button>
-          <button class="az-tab" id="tabLocalBtn" onclick="benSwitchTab('local')" role="tab" aria-selected="false" aria-controls="tabLocal">Local Transfer</button>
-          <button class="az-tab" id="tabIntlBtn" onclick="benSwitchTab('intl')" role="tab" aria-selected="false" aria-controls="tabIntl">International Transfer</button>
-          <button class="az-tab" id="tabCashBtn" onclick="benSwitchTab('cash')" role="tab" aria-selected="false" aria-controls="tabCash">Cash Transfer</button>
-          <button class="az-tab" id="tabCardBtn" onclick="benSwitchTab('card')" role="tab" aria-selected="false" aria-controls="tabCard">Bank Card Settlement</button>
+      <!-- Search + quick filters + Add button -->
+      <div class="mben-toolbar">
+        <div class="mben-search-wrap">
+          <span class="material-icons">search</span>
+          <input type="text" class="mben-search" id="mbenSearch" placeholder="Search by nickname, account or detail…" oninput="mbenApplyFilters()" aria-label="Search beneficiaries"/>
         </div>
-        <div class="view-toggle">
-          <button class="view-btn active" id="vList" onclick="benSwitchView('list')" title="List View" aria-label="List view"><img src="../images/icons/cards_view.svg" width="18" height="18" alt="list_view" loading="lazy"/></button>
-          <button class="view-btn" id="vGrid" onclick="benSwitchView('grid')" title="Table View" aria-label="Table view"><img src="../images/icons/table_view.svg" width="18" height="18" alt="table_view" loading="lazy"/></button>
-        </div>
-      </div>
-
-      <!-- ── TAB 1: Intra-Bank Transfer ── -->
-      <div id="tabIntra" role="tabpanel" aria-labelledby="tabIntraBtn">
-        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt="info" loading="lazy"/> Intra-Bank Beneficiaries List</div>
-
-        <!-- Row 1 -->
-        <div class="ben-row" id="benRow_ib0">
-          <div class="ben-nick-col">
-            <div class="ben-nick">
-              <span id="benNick_ib0">ALINE FARES HEDARY</span>
-              <button class="edit-name-btn" onclick="benStartEdit('ib0')" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
-            </div>
-            <div class="ben-acct-info"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span> <span>000180000121</span></div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">EMEL PHARMA</div><div class="bl">Beneficiary Name</div></div>
-          <div class="ben-field"><div class="bv">+1 &nbsp;376712345</div><div class="bl">Country Code/Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">Purpose</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_ib0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_ib0" role="menu">
-                <a href="edit-internal-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_ib0')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_ib0')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="ben-row" id="benRow_ib1">
-          <div class="ben-nick-col">
-            <div class="ben-nick">
-              <span id="benNick_ib1">NICK NAME</span>
-              <button class="edit-name-btn" onclick="benStartEdit('ib1')" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>
-            </div>
-            <div class="ben-acct-info"><span class="fi fi-us" title="USD" aria-label="USD flag"></span> <span>USD</span> <span>000180000121</span></div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">EMEL PHARMA</div><div class="bl">Beneficiary Name</div></div>
-          <div class="ben-field"><div class="bv">+1 &nbsp;376712345</div><div class="bl">Country Code/Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_ib1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_ib1" role="menu">
-                <a href="edit-internal-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_ib1')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_ib1')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
+        <div class="mben-filters" id="mbenFilters">
+          <button type="button" class="mben-filter-chip active" data-type="all" onclick="mbenSetFilter('all',this)">All</button>
+          <button type="button" class="mben-filter-chip" data-type="intra" onclick="mbenSetFilter('intra',this)">Intra-Bank</button>
+          <button type="button" class="mben-filter-chip" data-type="local" onclick="mbenSetFilter('local',this)">Local</button>
+          <button type="button" class="mben-filter-chip" data-type="intl" onclick="mbenSetFilter('intl',this)">International</button>
+          <button type="button" class="mben-filter-chip" data-type="cash" onclick="mbenSetFilter('cash',this)">Cash</button>
+          <button type="button" class="mben-filter-chip" data-type="card" onclick="mbenSetFilter('card',this)">Card</button>
         </div>
       </div>
 
-      <!-- ── TAB 2: Local Transfer ── -->
-      <div id="tabLocal" class="hidden" role="tabpanel" aria-labelledby="tabLocalBtn">
-        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt="info" loading="lazy"/> Local Beneficiaries List</div>
+      <div class="mben-list" id="mbenList"></div>
 
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>ALINE FARES HEDARY</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info"><span class="fi fi-us" title="USD"></span> <span>USD</span> <span>000180000121</span></div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">EMEL PHARMA</div><div class="bl">Beneficiary Name</div></div>
-          <div class="ben-field"><div class="bv">+1</div><div class="bl">Country code</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Bank Name</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_lo0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_lo0" role="menu">
-                <a href="add-local-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_lo0')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_lo0')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>NICK NAME</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info"><span class="fi fi-us" title="USD"></span> <span>USD</span> <span>000180000121</span></div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">EMEL PHARMA</div><div class="bl">Beneficiary Name</div></div>
-          <div class="ben-field"><div class="bv">+1</div><div class="bl">Country code</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Bank Name</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_lo1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_lo1" role="menu">
-                <a href="add-local-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_lo1')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_lo1')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── TAB 3: International Transfer ── -->
-      <div id="tabIntl" class="hidden" role="tabpanel" aria-labelledby="tabIntlBtn">
-        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt="info" loading="lazy"/> International Beneficiaries List</div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>ALINE FARES HEDARY</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info"><span class="fi fi-us" title="USD"></span> <span>USD</span> <span>000180000121</span></div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">EMEL PHARMA</div><div class="bl">Beneficiary Name</div></div>
-          <div class="ben-field"><div class="bv">+1</div><div class="bl">Country code</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Bank Name</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_in0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_in0" role="menu">
-                <a href="add-international-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_in0')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_in0')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>NICK NAME</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info"><span class="fi fi-us" title="USD"></span> <span>USD</span> <span>000180000121</span></div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">EMEL PHARMA</div><div class="bl">Beneficiary Name</div></div>
-          <div class="ben-field"><div class="bv">+1</div><div class="bl">Country code</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Bank Name</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_in1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_in1" role="menu">
-                <a href="add-international-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_in1')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_in1')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── TAB 4: Cash Transfer ── -->
-      <div id="tabCash" class="hidden" role="tabpanel" aria-labelledby="tabCashBtn">
-        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt="info" loading="lazy"/> Cash Transfer Beneficiaries List</div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>EMEL PHARMA</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info" style="color:var(--az-muted)">Beneficiary Name</div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">Default</div><div class="bl">ID Type</div></div>
-          <div class="ben-field"><div class="bv">1</div><div class="bl">ID Number</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_ca0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_ca0" role="menu">
-                <a href="add-cash-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_ca0')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_ca0')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>EMEL PHARMA</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info" style="color:var(--az-muted)">Beneficiary Name</div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">Default</div><div class="bl">ID Type</div></div>
-          <div class="ben-field"><div class="bv">1</div><div class="bl">ID Number</div></div>
-          <div class="ben-field"><div class="bv">376712345</div><div class="bl">Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_ca1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_ca1" role="menu">
-                <a href="add-cash-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_ca1')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_ca1')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── TAB 5: Bank Card Settlement ── -->
-      <div id="tabCard" class="hidden" role="tabpanel" aria-labelledby="tabCardBtn">
-        <div class="info-bar"><img src="../images/icons/information.svg" width="16" height="16" alt="info" loading="lazy"/> Bank Card Beneficiaries List</div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>EMEL PHARMA</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info" style="color:var(--az-muted)">Beneficiary Name</div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">4221130000000026</div><div class="bl">Card Number</div></div>
-          <div class="ben-field"><div class="bv">+1 &nbsp;376712345</div><div class="bl">Country Code/Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_bc0')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_bc0" role="menu">
-                <a href="add-bank-card-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_bc0')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_bc0')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="ben-row">
-          <div class="ben-nick-col">
-            <div class="ben-nick"><span>EMEL PHARMA</span><button class="edit-name-btn" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button></div>
-            <div class="ben-acct-info" style="color:var(--az-muted)">Beneficiary Name</div>
-          </div>
-          <span class="badge-s s-active">Active</span>
-          <div class="ben-field"><div class="bv">4221130000000026</div><div class="bl">Card Number</div></div>
-          <div class="ben-field"><div class="bv">+1 &nbsp;376712345</div><div class="bl">Country Code/Mobile Number</div></div>
-          <div class="ben-field"><div class="bv">Lorem Ipsum</div><div class="bl">Purpose</div></div>
-          <div class="ben-actions">
-            <div class="ctx-wrap position-relative">
-              <button class="btn-more" onclick="toggleCtx('ctx_bc1')" aria-haspopup="true" aria-expanded="false" aria-label="More actions">&#8226;&#8226;&#8226;</button>
-              <div class="ctx-menu hidden" id="ctx_bc1" role="menu">
-                <a href="add-bank-card-beneficiary.html" class="ctx-item" role="menuitem"><img src="../images/icons/edit.svg" width="16" height="16" alt="edit" loading="lazy"/> Edit</a>
-                <button class="ctx-item" onclick="closeCtx('ctx_bc1')" role="menuitem"><img src="../images/icons/payments.svg" width="16" height="16" alt="pay" loading="lazy"/> Pay</button>
-                <button class="ctx-item ctx-delete" onclick="closeCtx('ctx_bc1')" role="menuitem"><img src="../images/icons/delete.svg" width="16" height="16" alt="delete" loading="lazy"/> Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="mben-empty" id="mbenEmpty">
+        <span class="material-icons">search_off</span>
+        <div class="ae-title">No matching beneficiaries</div>
+        <div class="ae-sub">Try a different name, account, or type.</div>
       </div>
     </div><!-- /content-card -->
+    </div><!-- /benManageView -->
+
+    <div id="benAddView" class="hidden">
+      <div class="abn-form-hdr hidden" id="abnFormHdr">
+        <span class="material-icons" id="abnFormHdrIcon">edit</span>
+        <span id="abnFormHdrTitle"></span>
+      </div>
+      <div class="row g-3 abn-type-row">
+        <div class="col-12 col-md-4 abn-type-field">
+          <label class="f-label">Beneficiary Type</label>
+          <div class="abn-type-picker" onclick="event.stopPropagation()">
+            <button type="button" class="abn-type-trigger" id="abnTypeTrigger" onclick="abnToggleTypePicker(this)">
+              <span class="material-icons abn-type-trigger-icon" id="abnTypeTriggerIcon">account_balance_wallet</span>
+              <span class="abn-type-trigger-text" id="abnTypeTriggerText">Intra-Bank</span>
+              <span class="material-icons abn-type-chevron">expand_more</span>
+            </button>
+            <div class="abn-type-dropdown hidden" id="abnTypeDropdown">
+              <button type="button" class="abn-type-option active" id="abnTypeBtn_intra" data-type="intra" data-label="Intra-Bank" data-hint="For transfers within the same bank" onclick="abnSwitchType('intra')"><span class="material-icons">account_balance_wallet</span> Intra-Bank</button>
+              <button type="button" class="abn-type-option" id="abnTypeBtn_local" data-type="local" data-label="Local" data-hint="For domestic transfers to other local banks" onclick="abnSwitchType('local')"><span class="material-icons">account_balance</span> Local</button>
+              <button type="button" class="abn-type-option" id="abnTypeBtn_intl" data-type="intl" data-label="International" data-hint="For international wire transfers abroad" onclick="abnSwitchType('intl')"><span class="material-icons">public</span> International</button>
+              <button type="button" class="abn-type-option" id="abnTypeBtn_cash" data-type="cash" data-label="Cash" data-hint="For cash pickup by ID — no bank account needed" onclick="abnSwitchType('cash')"><span class="material-icons">payments</span> Cash</button>
+              <button type="button" class="abn-type-option" id="abnTypeBtn_card" data-type="card" data-label="Bank Card" data-hint="For settling funds to a bank card number" onclick="abnSwitchType('card')"><span class="material-icons">credit_card</span> Bank Card</button>
+            </div>
+          </div>
+          <div class="abn-type-hint" id="abnTypeHint">For transfers within the same bank</div>
+        </div>
+      </div>
+
+      <!-- Intra-Bank -->
+      <div class="abn-panel" data-type="intra" id="abnPanelIntra">
+        <div class="abn-section">
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntraAcct">Account Number</label>
+              <div class="acct-qr-wrap">
+                <input id="abnIntraAcct" class="f-input" placeholder="Enter account number" style="padding-right:2.5rem" aria-label="Account number" data-required="true"/>
+                <button class="qr-icon-btn" onclick="abnOpenModal('abnQrModal')" title="Scan QR Code" aria-label="Scan QR code"><span class="material-icons" style="font-size:20px;color:var(--az-green,#1aad6e)">qr_code_scanner</span></button>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntraCurrency">Currency</label>
+              <select id="abnIntraCurrency" class="f-input f-select" aria-label="Select currency" data-required="true">
+                <option value="" disabled selected>Select Currency</option>
+                <option>US Dollar (USD)</option><option>Euro (EUR)</option><option>British Pound (GBP)</option><option>UAE Dirham (AED)</option><option>Saudi Riyal (SAR)</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntraName">Name Of Beneficiary</label>
+              <input id="abnIntraName" class="f-input" placeholder="Enter beneficiary name" aria-label="Name of beneficiary" data-required="true"/>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntraNum">Mobile Number</label>
+              <div class="phone-combo" id="abnIntraPhoneCombo" data-code="lb" data-dial="+961">
+                <div class="phone-wrap">
+                  <button type="button" class="phone-pfx" id="abnIntraPhonePfxBtn" onclick="phoneCtryToggle('abnIntra')" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose country code">
+                    <span class="fi fi-lb" id="abnIntraCtryFlag" aria-hidden="true"></span>
+                    <span id="abnIntraCtryDial">+961</span>
+                    <svg class="phone-pfx-chev" width="8" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+                  </button>
+                  <input id="abnIntraNum" type="tel" placeholder="Enter mobile number" aria-label="Mobile number"/>
+                </div>
+                <div class="phone-ctry-panel hidden" id="abnIntraCtryPanel" role="listbox" aria-label="Country code">
+                  <div class="phone-ctry-search">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="abnIntraCtrySearch" placeholder="Search country or code" autocomplete="off" oninput="phoneCtryFilter('abnIntra', this.value)"/>
+                  </div>
+                  <div class="phone-ctry-list" id="abnIntraCtryList"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntraPurpose">Purpose</label>
+              <input id="abnIntraPurpose" class="f-input" placeholder="Enter purpose" aria-label="Purpose"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Local -->
+      <div class="abn-panel hidden" data-type="local" id="abnPanelLocal">
+        <div class="abn-section">
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnLocalBank">Bank</label>
+              <select id="abnLocalBank" class="f-input f-select" aria-label="Select bank" data-required="true">
+                <option value="" disabled selected>Select Bank</option><option>Bank of Beirut</option><option>BLOM Bank</option><option>Byblos Bank</option><option>Fransabank</option><option>Credit Libanais</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnLocalBranch">Branch Name</label><input id="abnLocalBranch" class="f-input" placeholder="Enter branch name" aria-label="Branch name"/></div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnLocalVer">Beneficiary Bank Verification Number</label><input id="abnLocalVer" class="f-input" placeholder="Enter verification number" aria-label="Bank verification number"/></div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4"><label class="f-label" for="abnLocalAcct">Account Number</label><input id="abnLocalAcct" class="f-input" placeholder="Enter account number" aria-label="Account number" data-required="true"/></div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnLocalCurrency">Currency</label>
+              <select id="abnLocalCurrency" class="f-input f-select" aria-label="Select currency" data-required="true">
+                <option value="" disabled selected>Select Currency</option><option>US Dollar (USD)</option><option>Euro (EUR)</option><option>British Pound (GBP)</option><option>Lebanese Pound (LBP)</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnLocalName">Name Of Beneficiary</label><input id="abnLocalName" class="f-input" placeholder="Enter beneficiary name" aria-label="Beneficiary name" data-required="true"/></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnLocalNum">Mobile Number</label>
+              <div class="phone-combo" id="abnLocalPhoneCombo" data-code="lb" data-dial="+961">
+                <div class="phone-wrap">
+                  <button type="button" class="phone-pfx" id="abnLocalPhonePfxBtn" onclick="phoneCtryToggle('abnLocal')" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose country code">
+                    <span class="fi fi-lb" id="abnLocalCtryFlag" aria-hidden="true"></span>
+                    <span id="abnLocalCtryDial">+961</span>
+                    <svg class="phone-pfx-chev" width="8" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+                  </button>
+                  <input id="abnLocalNum" type="tel" placeholder="Enter mobile number" aria-label="Mobile number"/>
+                </div>
+                <div class="phone-ctry-panel hidden" id="abnLocalCtryPanel" role="listbox" aria-label="Country code">
+                  <div class="phone-ctry-search">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="abnLocalCtrySearch" placeholder="Search country or code" autocomplete="off" oninput="phoneCtryFilter('abnLocal', this.value)"/>
+                  </div>
+                  <div class="phone-ctry-list" id="abnLocalCtryList"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnLocalPurpose">Purpose</label><input id="abnLocalPurpose" class="f-input" placeholder="Enter purpose" aria-label="Purpose"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- International -->
+      <div class="abn-panel hidden" data-type="intl" id="abnPanelIntl">
+        <div class="abn-section">
+          <div class="abn-section-lbl">Beneficiary Bank Details</div>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntlCountry">Country</label>
+              <select id="abnIntlCountry" class="f-input f-select" aria-label="Select country" data-required="true">
+                <option value="" disabled selected>Select Country</option><option>Lebanon</option><option>United States</option><option>United Kingdom</option><option>United Arab Emirates</option><option>Saudi Arabia</option><option>France</option><option>Germany</option><option>Switzerland</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntlProvince">Province</label>
+              <select id="abnIntlProvince" class="f-input f-select" aria-label="Select province">
+                <option value="" disabled selected>Select Province</option><option>Beirut</option><option>Mount Lebanon</option><option>North Lebanon</option><option>South Lebanon</option><option>Bekaa</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlBuilding">Beneficiary Building Number</label><input id="abnIntlBuilding" class="f-input" placeholder="Enter building number" aria-label="Building number"/></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlSwift">BIC Swift Code</label><input id="abnIntlSwift" class="f-input" placeholder="Enter BIC/SWIFT code" aria-label="BIC Swift code" data-required="true"/></div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlBankName">Bank Name</label><input id="abnIntlBankName" class="f-input" placeholder="Enter bank name" aria-label="Bank name"/></div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlBranch">Branch Name</label><input id="abnIntlBranch" class="f-input" placeholder="Enter branch name" aria-label="Branch name"/></div>
+          </div>
+        </div>
+        <div class="abn-section">
+          <div class="abn-section-lbl">Beneficiary Details</div>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlAcct">Account Number</label><input id="abnIntlAcct" class="f-input" placeholder="Enter account number / IBAN" aria-label="Account number" data-required="true"/></div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntlCurrency">Currency</label>
+              <select id="abnIntlCurrency" class="f-input f-select" aria-label="Select currency" data-required="true">
+                <option value="" disabled selected>Select Currency</option><option>US Dollar (USD)</option><option>Euro (EUR)</option><option>British Pound (GBP)</option><option>Swiss Franc (CHF)</option><option>UAE Dirham (AED)</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlName">Name Of Beneficiary</label><input id="abnIntlName" class="f-input" placeholder="Enter beneficiary name" aria-label="Beneficiary name" data-required="true"/></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnIntlNum">Mobile Number</label>
+              <div class="phone-combo" id="abnIntlPhoneCombo" data-code="lb" data-dial="+961">
+                <div class="phone-wrap">
+                  <button type="button" class="phone-pfx" id="abnIntlPhonePfxBtn" onclick="phoneCtryToggle('abnIntl')" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose country code">
+                    <span class="fi fi-lb" id="abnIntlCtryFlag" aria-hidden="true"></span>
+                    <span id="abnIntlCtryDial">+961</span>
+                    <svg class="phone-pfx-chev" width="8" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+                  </button>
+                  <input id="abnIntlNum" type="tel" placeholder="Enter mobile number" aria-label="Mobile number"/>
+                </div>
+                <div class="phone-ctry-panel hidden" id="abnIntlCtryPanel" role="listbox" aria-label="Country code">
+                  <div class="phone-ctry-search">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="abnIntlCtrySearch" placeholder="Search country or code" autocomplete="off" oninput="phoneCtryFilter('abnIntl', this.value)"/>
+                  </div>
+                  <div class="phone-ctry-list" id="abnIntlCtryList"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnIntlPurpose">Purpose</label><input id="abnIntlPurpose" class="f-input" placeholder="Enter purpose" aria-label="Purpose"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash -->
+      <div class="abn-panel hidden" data-type="cash" id="abnPanelCash">
+        <div class="abn-section">
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCashName">Name Of Beneficiary</label><input id="abnCashName" class="f-input" placeholder="Enter beneficiary name" aria-label="Name of beneficiary" data-required="true"/></div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCashIdType">ID Type</label><input id="abnCashIdType" class="f-input" placeholder="Enter ID type" aria-label="ID type" data-required="true"/></div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCashIdNum">ID Number</label><input id="abnCashIdNum" class="f-input" placeholder="Enter ID number" aria-label="ID number" data-required="true"/></div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnCashNum">Mobile Number</label>
+              <div class="phone-combo" id="abnCashPhoneCombo" data-code="lb" data-dial="+961">
+                <div class="phone-wrap">
+                  <button type="button" class="phone-pfx" id="abnCashPhonePfxBtn" onclick="phoneCtryToggle('abnCash')" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose country code">
+                    <span class="fi fi-lb" id="abnCashCtryFlag" aria-hidden="true"></span>
+                    <span id="abnCashCtryDial">+961</span>
+                    <svg class="phone-pfx-chev" width="8" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+                  </button>
+                  <input id="abnCashNum" type="tel" placeholder="Enter mobile number" aria-label="Mobile number"/>
+                </div>
+                <div class="phone-ctry-panel hidden" id="abnCashCtryPanel" role="listbox" aria-label="Country code">
+                  <div class="phone-ctry-search">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="abnCashCtrySearch" placeholder="Search country or code" autocomplete="off" oninput="phoneCtryFilter('abnCash', this.value)"/>
+                  </div>
+                  <div class="phone-ctry-list" id="abnCashCtryList"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnCashExpiry">Expiry Date</label>
+              <div class="date-placeholder position-relative"><input id="abnCashExpiry" class="f-input" placeholder="DD / MM / YYYY" aria-label="Expiry date"/><span class="date-cal-icon"><img src="../images/icons/calendar.svg" width="16" height="16" alt="calendar" loading="lazy"/></span></div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnCashCountry">Country Of Issuance</label>
+              <select id="abnCashCountry" class="f-input f-select" aria-label="Select country of issuance">
+                <option value="" disabled selected>Select</option><option>Lebanon</option><option>United States</option><option>United Kingdom</option><option>United Arab Emirates</option><option>Saudi Arabia</option><option>France</option>
+              </select>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnCashIssue">Issue Date</label>
+              <div class="date-placeholder position-relative"><input id="abnCashIssue" class="f-input" placeholder="DD / MM / YYYY" aria-label="Issue date"/><span class="date-cal-icon"><img src="../images/icons/calendar.svg" width="16" height="16" alt="calendar" loading="lazy"/></span></div>
+            </div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCashPurpose">Purpose</label><input id="abnCashPurpose" class="f-input" placeholder="Enter purpose" aria-label="Purpose"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank Card -->
+      <div class="abn-panel hidden" data-type="card" id="abnPanelCard">
+        <div class="abn-section">
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCardNumber">Card Number</label><input id="abnCardNumber" class="f-input" placeholder="Enter card number" aria-label="Card number" maxlength="19" data-required="true"/></div>
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCardName">Name Of Beneficiary</label><input id="abnCardName" class="f-input" placeholder="Enter beneficiary name" aria-label="Name of beneficiary" data-required="true"/></div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="abnCardNum">Mobile Number</label>
+              <div class="phone-combo" id="abnCardPhoneCombo" data-code="lb" data-dial="+961">
+                <div class="phone-wrap">
+                  <button type="button" class="phone-pfx" id="abnCardPhonePfxBtn" onclick="phoneCtryToggle('abnCard')" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose country code">
+                    <span class="fi fi-lb" id="abnCardCtryFlag" aria-hidden="true"></span>
+                    <span id="abnCardCtryDial">+961</span>
+                    <svg class="phone-pfx-chev" width="8" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+                  </button>
+                  <input id="abnCardNum" type="tel" placeholder="Enter mobile number" aria-label="Mobile number"/>
+                </div>
+                <div class="phone-ctry-panel hidden" id="abnCardCtryPanel" role="listbox" aria-label="Country code">
+                  <div class="phone-ctry-search">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="abnCardCtrySearch" placeholder="Search country or code" autocomplete="off" oninput="phoneCtryFilter('abnCard', this.value)"/>
+                  </div>
+                  <div class="phone-ctry-list" id="abnCardCtryList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4"><label class="f-label" for="abnCardPurpose">Purpose</label><textarea id="abnCardPurpose" class="f-input" rows="3" placeholder="Enter purpose" aria-label="Purpose" style="resize:none;height:auto"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer" role="group" aria-label="Form actions">
+        <div class="tc">
+          <input type="checkbox" id="abnTcAgree" name="abnTcAgree" data-required="true"/>
+          <label for="abnTcAgree">I agree to the <a href="javascript:;" onclick="event.stopPropagation();abnOpenModal('abnTcModal')">Terms and Conditions</a> for adding this beneficiary</label>
+        </div>
+        <button type="button" class="btn-action btn-cancel" onclick="benSetMode('manage')">CANCEL</button>
+        <button type="button" class="btn-action btn-submit" id="abnSubmitBtn" onclick="abnHandleSubmit()">SUBMIT</button>
+      </div>
+    </div><!-- /benAddView -->
   </main>
 
   <footer class="app-footer" role="contentinfo">
@@ -477,75 +664,625 @@
   </footer>
 </div>
 
+<!-- ████ QR SCANNER MODAL (Add Beneficiary — Intra-Bank) ████ -->
+<div class="modal-ov hidden" id="abnQrModal" role="dialog" aria-modal="true" aria-labelledby="abnQrTitle">
+  <div class="az-modal modal-md" style="max-width:480px;text-align:center">
+    <button class="modal-close" onclick="abnCloseModal('abnQrModal')" aria-label="Close">&#215;</button>
+    <div id="abnQrTitle" class="modal-title text-start">QR Code</div>
+    <div class="qr-scanner-frame" style="margin:1.25rem auto">
+      <div class="qr-frame-corner tl"></div>
+      <div class="qr-frame-corner tr"></div>
+      <div class="qr-frame-corner bl"></div>
+      <div class="qr-frame-corner br"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 200 200" aria-label="QR code placeholder">
+        <rect width="200" height="200" fill="white"/>
+        <rect x="10" y="10" width="60" height="60" fill="none" stroke="#707070" stroke-width="6"/><rect x="22" y="22" width="36" height="36" fill="#707070"/>
+        <rect x="130" y="10" width="60" height="60" fill="none" stroke="#707070" stroke-width="6"/><rect x="142" y="22" width="36" height="36" fill="#707070"/>
+        <rect x="10" y="130" width="60" height="60" fill="none" stroke="#707070" stroke-width="6"/><rect x="22" y="142" width="36" height="36" fill="#707070"/>
+        <rect x="82" y="10" width="10" height="10" fill="#707070"/><rect x="96" y="10" width="10" height="10" fill="#707070"/><rect x="110" y="10" width="10" height="10" fill="#707070"/>
+        <rect x="82" y="24" width="10" height="10" fill="#707070"/><rect x="110" y="24" width="10" height="10" fill="#707070"/>
+        <rect x="96" y="38" width="10" height="10" fill="#707070"/>
+        <rect x="82" y="52" width="10" height="10" fill="#707070"/><rect x="96" y="52" width="10" height="10" fill="#707070"/><rect x="110" y="52" width="10" height="10" fill="#707070"/>
+        <rect x="82" y="82" width="10" height="10" fill="#707070"/><rect x="96" y="82" width="10" height="10" fill="#707070"/>
+        <rect x="82" y="96" width="10" height="10" fill="#707070"/><rect x="110" y="96" width="10" height="10" fill="#707070"/>
+        <rect x="96" y="110" width="10" height="10" fill="#707070"/><rect x="110" y="110" width="10" height="10" fill="#707070"/>
+        <rect x="130" y="82" width="10" height="10" fill="#707070"/><rect x="158" y="82" width="10" height="10" fill="#707070"/>
+        <rect x="130" y="96" width="10" height="10" fill="#707070"/><rect x="144" y="96" width="10" height="10" fill="#707070"/>
+        <rect x="158" y="110" width="10" height="10" fill="#707070"/>
+        <rect x="82" y="130" width="10" height="10" fill="#707070"/><rect x="96" y="130" width="10" height="10" fill="#707070"/><rect x="110" y="130" width="10" height="10" fill="#707070"/>
+        <rect x="82" y="158" width="10" height="10" fill="#707070"/><rect x="96" y="158" width="10" height="10" fill="#707070"/>
+        <rect x="110" y="144" width="10" height="10" fill="#707070"/>
+        <rect x="130" y="130" width="10" height="10" fill="#707070"/><rect x="158" y="130" width="10" height="10" fill="#707070"/>
+        <rect x="144" y="158" width="10" height="10" fill="#707070"/><rect x="130" y="158" width="10" height="10" fill="#707070"/><rect x="158" y="158" width="10" height="10" fill="#707070"/>
+        <rect x="144" y="144" width="10" height="10" fill="#707070"/>
+      </svg>
+    </div>
+    <button class="btn-action btn-submit" style="padding:.625rem 2.5rem;border-radius:.375rem;margin-bottom:.5rem" onclick="abnCloseModal('abnQrModal')">UPLOAD FROM THE DEVICE</button>
+  </div>
+</div>
+
+<!-- ████ TERMS AND CONDITIONS MODAL (Add Beneficiary) ████ -->
+<div class="modal-ov hidden" id="abnTcModal" role="dialog" aria-modal="true" aria-labelledby="abnTcModalTitle">
+  <div class="az-modal modal-md">
+    <button class="modal-close" onclick="abnCloseModal('abnTcModal')" aria-label="Close">&#215;</button>
+    <div id="abnTcModalTitle" class="modal-title">Terms and Conditions — Add Beneficiary</div>
+    <div style="font-size:var(--fs-small);color:var(--az-navy,#16303d);line-height:1.6;max-height:50vh;overflow-y:auto;margin:.5rem 0 0;padding-right:.5rem;">
+      <p><strong>1. Accuracy.</strong> You confirm that the beneficiary details provided, including account number, IBAN, SWIFT/BIC code and contact information, are accurate and belong to the intended recipient.</p>
+      <p><strong>2. Verification.</strong> azentio Bank may verify beneficiary details with the receiving bank before enabling transfers, and may reject beneficiaries that fail verification.</p>
+      <p><strong>3. Your Responsibility.</strong> You are responsible for any loss arising from incorrect beneficiary details; azentio Bank is not liable for funds transferred to an incorrectly specified beneficiary.</p>
+      <p><strong>4. Screening.</strong> All beneficiaries are subject to sanctions and compliance screening in accordance with applicable banking regulations.</p>
+      <p><strong>5. Amendments.</strong> azentio Bank reserves the right to update these terms at any time; continued use of this service constitutes acceptance of the revised terms.</p>
+    </div>
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;">
+      <button class="btn-action btn-submit" onclick="abnCloseModal('abnTcModal')" style="padding:.6rem 1.5rem">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ████ SUCCESS MODAL (Add Beneficiary) ████ -->
+<div class="modal-ov hidden" id="abnSuccessModal" role="dialog" aria-modal="true" aria-labelledby="abnSuccessTitle">
+  <div class="az-modal modal-sm" style="max-width:420px;text-align:center;padding:2rem">
+    <div class="success-circle" aria-hidden="true">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 18L14 26L30 10" stroke="#2ed88e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p id="abnSuccessTitle" class="fw-bold mb-1" style="font-size:var(--fs-subhead)">Beneficiary added successfully.</p>
+    <p id="abnSuccessSub" style="font-size:var(--fs-small);color:var(--az-muted);margin-bottom:1.5rem">Want to add another beneficiary?</p>
+    <div class="d-flex gap-3 justify-content-center" id="abnSuccessActions">
+      <button type="button" class="btn-action btn-save" style="padding:.5625rem 1.75rem" onclick="abnCloseModal('abnSuccessModal');abnResetForm()">ADD ANOTHER</button>
+      <button type="button" class="btn-action btn-submit" style="padding:.5625rem 1.75rem" onclick="location.href='fund-transfer.html?type=internal'">BACK TO TRANSFER</button>
+    </div>
+  </div>
+</div>
+
+<!-- ████ DELETE CONFIRMATION MODAL (Manage Beneficiaries) ████ -->
+<div class="modal-ov hidden" id="mbenDeleteModal" role="dialog" aria-modal="true" aria-label="Delete beneficiary" onclick="if(event.target===this)mbenCloseDeleteModal()">
+  <div class="az-modal modal-sm" style="text-align:center;">
+    <div class="mben-delete-icon"><span class="material-icons">delete_outline</span></div>
+    <p style="font-weight:700;color:var(--az-navy,#16303d);margin-bottom:.4rem;">Delete this beneficiary?</p>
+    <p style="font-size:var(--fs-small);color:var(--az-muted,#707070);margin-bottom:1.5rem;" id="mbenDeleteMsg">This action can't be undone.</p>
+    <div style="display:flex;gap:.6rem;justify-content:center;">
+      <button class="btn-action btn-cancel" onclick="mbenCloseDeleteModal()">CANCEL</button>
+      <button class="btn-action" style="background:#dc2626;color:#fff;" onclick="mbenConfirmDelete()">DELETE</button>
+    </div>
+  </div>
+</div>
+
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/datepicker.min.js"></script>
 <script src="../js/app.js"></script>
 <script>
-/* ── Beneficiary Management tab switching ── */
-var _benTabs = {
-  intra: { label:'Add Bank Beneficiary',   href:'add-internal-beneficiary.html' },
-  local: { label:'Add Local Beneficiary',  href:'add-local-beneficiary.html' },
-  intl:  { label:'Add International Beneficiary', href:'add-international-beneficiary.html' },
-  cash:  { label:'Add Cash Transfer Beneficiary', href:'add-cash-beneficiary.html' },
-  card:  { label:'Add Bank Card Beneficiary',      href:'add-bank-card-beneficiary.html' }
-};
-var _benTabIds = ['intra','local','intl','cash','card'];
-var _benBtnIds = { intra:'tabIntraBtn', local:'tabLocalBtn', intl:'tabIntlBtn', cash:'tabCashBtn', card:'tabCardBtn' };
-var _benPanelIds = { intra:'tabIntra', local:'tabLocal', intl:'tabIntl', cash:'tabCash', card:'tabCard' };
-
-function benSwitchTab(t) {
-  _benTabIds.forEach(function(id) {
-    var btn   = document.getElementById(_benBtnIds[id]);
-    var panel = document.getElementById(_benPanelIds[id]);
-    if (btn)   { btn.classList.toggle('active', id===t); btn.setAttribute('aria-selected', String(id===t)); }
-    if (panel) { panel.classList.toggle('hidden', id!==t); }
+/* ── Add Beneficiary — phone country-code flag sync (mirrors transfer screens' updateCurrFlag) ── */
+/* ── Mobile number: searchable country/ISD-code combobox ──
+   Lets the user find a country by name (flags alone aren't identifiable)
+   and have the ISD code fill in automatically. Shared across all five
+   Add-Beneficiary panels, keyed by each panel's id prefix. */
+var PHONE_COUNTRIES = [
+  {code:'ae',name:'United Arab Emirates',dial:'+971'},
+  {code:'sa',name:'Saudi Arabia',dial:'+966'},
+  {code:'bh',name:'Bahrain',dial:'+973'},
+  {code:'kw',name:'Kuwait',dial:'+965'},
+  {code:'om',name:'Oman',dial:'+968'},
+  {code:'qa',name:'Qatar',dial:'+974'},
+  {code:'eg',name:'Egypt',dial:'+20'},
+  {code:'jo',name:'Jordan',dial:'+962'},
+  {code:'iq',name:'Iraq',dial:'+964'},
+  {code:'lb',name:'Lebanon',dial:'+961'},
+  {code:'us',name:'United States',dial:'+1'},
+  {code:'gb',name:'United Kingdom',dial:'+44'},
+  {code:'fr',name:'France',dial:'+33'},
+  {code:'de',name:'Germany',dial:'+49'},
+  {code:'ch',name:'Switzerland',dial:'+41'},
+  {code:'in',name:'India',dial:'+91'},
+  {code:'pk',name:'Pakistan',dial:'+92'},
+  {code:'bd',name:'Bangladesh',dial:'+880'},
+  {code:'ph',name:'Philippines',dial:'+63'},
+  {code:'cn',name:'China',dial:'+86'},
+  {code:'jp',name:'Japan',dial:'+81'}
+];
+function phoneCtryRender(key, list){
+  var listEl = document.getElementById(key + 'CtryList');
+  listEl.innerHTML = '';
+  if (!list.length) { listEl.innerHTML = '<div class="phone-ctry-empty">No matches found</div>'; return; }
+  list.forEach(function(c){
+    var item = document.createElement('div');
+    item.className = 'phone-ctry-opt';
+    item.setAttribute('role', 'option');
+    item.innerHTML = '<span class="fi fi-' + c.code + '"></span><span class="phone-ctry-opt-name">' + c.name + '</span><span class="phone-ctry-opt-dial">' + c.dial + '</span>';
+    item.onmousedown = function(e){ e.preventDefault(); phoneCtrySelect(key, c); };
+    listEl.appendChild(item);
   });
-  var cfg = _benTabs[t];
-  var addBtn   = document.getElementById('addBenBtn');
-  var addLabel = document.getElementById('addBenLabel');
-  if (addBtn)   addBtn.href = cfg.href;
-  if (addLabel) addLabel.textContent = cfg.label;
+}
+function phoneCtryPosition(key){
+  var combo = document.getElementById(key + 'PhoneCombo');
+  var panel = document.getElementById(key + 'CtryPanel');
+  if (panel.parentElement !== document.body) document.body.appendChild(panel);
+  var r = combo.getBoundingClientRect();
+  panel.style.left = r.left + 'px';
+  panel.style.top = (r.bottom + 4) + 'px';
+}
+function phoneCtryOpen(key){
+  var panel = document.getElementById(key + 'CtryPanel');
+  var btn = document.getElementById(key + 'PhonePfxBtn');
+  panel.classList.remove('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  phoneCtryPosition(key);
+  phoneCtryRender(key, PHONE_COUNTRIES);
+  var search = document.getElementById(key + 'CtrySearch');
+  search.value = '';
+  setTimeout(function(){ search.focus(); }, 0);
+}
+function phoneCtryClose(key){
+  document.getElementById(key + 'CtryPanel').classList.add('hidden');
+  document.getElementById(key + 'PhonePfxBtn').setAttribute('aria-expanded', 'false');
+}
+function phoneCtryToggle(key){
+  var panel = document.getElementById(key + 'CtryPanel');
+  if (panel.classList.contains('hidden')) phoneCtryOpen(key);
+  else phoneCtryClose(key);
+}
+function phoneCtryFilter(key, q){
+  var needle = q.toLowerCase();
+  phoneCtryRender(key, PHONE_COUNTRIES.filter(function(c){
+    return c.name.toLowerCase().indexOf(needle) > -1 || c.dial.indexOf(needle) > -1;
+  }));
+}
+function phoneCtryApply(key, c){
+  document.getElementById(key + 'CtryFlag').className = 'fi fi-' + c.code;
+  document.getElementById(key + 'CtryDial').textContent = c.dial;
+  var combo = document.getElementById(key + 'PhoneCombo');
+  combo.dataset.code = c.code;
+  combo.dataset.dial = c.dial;
+}
+function phoneCtrySelect(key, c){
+  phoneCtryApply(key, c);
+  phoneCtryClose(key);
+  document.getElementById(key + 'Num').focus();
+}
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (panel.classList.contains('hidden')) return;
+    var key = panel.id.replace('CtryPanel', '');
+    var combo = document.getElementById(key + 'PhoneCombo');
+    if (combo && !combo.contains(e.target) && !panel.contains(e.target)) {
+      panel.classList.add('hidden');
+      var btn = document.getElementById(key + 'PhonePfxBtn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+window.addEventListener('scroll', function(){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (!panel.classList.contains('hidden')) phoneCtryPosition(panel.id.replace('CtryPanel', ''));
+  });
+}, true);
+window.addEventListener('resize', function(){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (!panel.classList.contains('hidden')) phoneCtryPosition(panel.id.replace('CtryPanel', ''));
+  });
+});
+function phoneCtryReset(key){
+  var def = PHONE_COUNTRIES.filter(function(c){ return c.code === 'lb'; })[0];
+  phoneCtryApply(key, def);
 }
 
-function benSwitchView(v) {
-  var vl = document.getElementById('vList');
-  var vg = document.getElementById('vGrid');
-  if (vl) vl.classList.toggle('active', v==='list');
-  if (vg) vg.classList.toggle('active', v==='grid');
+/* ── Manage Beneficiaries — data model (also used to prefill Edit) ── */
+var mbenData = [
+  { id:'0', type:'intra', nickname:'Ahmed Al Farsi', status:'Active', initial:'A',
+    accountNumber:'AE070331000000120121', currency:'UAE Dirham (AED)', name:'Ahmed Al Farsi Trading', phoneCode:'+1', phoneNumber:'376712345', purpose:'Salary' },
+  { id:'1', type:'intra', nickname:'Mohammed Rahman', status:'Active', initial:'M',
+    accountNumber:'AE070331000000450121', currency:'UAE Dirham (AED)', name:'EMEL PHARMA', phoneCode:'+1', phoneNumber:'376712345', purpose:'Supplier Payment' },
+  { id:'2', type:'local', nickname:'Khalid Traders', status:'Active', initial:'K',
+    bank:'Bank of Beirut', branch:'Beirut Main Branch', bvn:'BVN7734521', accountNumber:'000123450120121', currency:'US Dollar (USD)', name:'Khalid Traders', phoneCode:'+1', phoneNumber:'376712345', purpose:'Invoice Payment' },
+  { id:'3', type:'intl', nickname:'John Smith – Chase Bank', status:'Active', initial:'J',
+    country:'United States', province:'', building:'270 Park Avenue', swift:'CHASUS33', bankName:'Chase Bank', branch:'New York Branch', accountNumber:'US00CHASE00000120121', currency:'US Dollar (USD)', name:'John Smith', phoneCode:'+1', phoneNumber:'376712345', purpose:'Consulting Fee' },
+  { id:'4', type:'cash', nickname:'Fatima Noor', status:'Active', initial:'F',
+    name:'Fatima Noor', idType:'Passport', idNumber:'P1234567', phoneCode:'+1', phoneNumber:'376712345', expiryDate:'15 / 08 / 2028', countryOfIssuance:'Lebanon', issueDate:'15 / 08 / 2018', purpose:'Family Support' },
+  { id:'5', type:'card', nickname:'Layla Hassan', status:'Active', initial:'L',
+    cardNumber:'4532015112830026', name:'Layla Hassan', phoneCode:'+1', phoneNumber:'376712345', purpose:'Credit Card Settlement' }
+];
+var mbenTypeLabel = { intra:'Intra-Bank', local:'Local', intl:'International', cash:'Cash', card:'Bank Card' };
+var mbenPayHref = { intra:'transfer-own-accounts.html?type=internal', local:'transfer-own-accounts.html?type=local', intl:'transfer-own-accounts.html?type=international', cash:'fund-transfer.html?type=cash', card:'cards-settlement.html' };
+
+function mbenDetailRows(rec) {
+  if (rec.type === 'cash') {
+    return '<div class="mben-detail">'+rec.idType+' · '+rec.idNumber+'</div>'+
+      '<div class="mben-detail">'+rec.phoneCode+' '+rec.phoneNumber+'</div>'+
+      '<div class="mben-detail">'+rec.purpose+'</div>';
+  }
+  if (rec.type === 'card') {
+    return '<div class="mben-detail">Card •••• '+rec.cardNumber.slice(-4)+'</div>'+
+      '<div class="mben-detail">'+rec.phoneCode+' '+rec.phoneNumber+'</div>'+
+      '<div class="mben-detail">'+rec.purpose+'</div>';
+  }
+  var secondLine = rec.type === 'local' ? rec.bank : (rec.type === 'intl' ? rec.bankName+', '+rec.country : rec.name);
+  return '<div class="mben-detail"><span class="fi fi-ae" title="AED"></span> AED •••• '+rec.accountNumber.slice(-4)+'</div>'+
+    '<div class="mben-detail">'+secondLine+'</div>'+
+    '<div class="mben-detail">'+rec.phoneCode+' '+rec.phoneNumber+'</div>'+
+    '<div class="mben-detail">'+rec.purpose+'</div>';
+}
+
+function renderMbenList() {
+  var list = document.getElementById('mbenList');
+  if (!list) return;
+  list.innerHTML = mbenData.map(function(rec) {
+    var search = (rec.nickname+' '+(rec.name||'')+' '+(rec.bank||'')+' '+(rec.bankName||'')+' '+rec.purpose).toLowerCase();
+    return '<div class="mben-card" data-type="'+rec.type+'" data-search="'+search+'" id="mbenRow_'+rec.id+'">'+
+      '<div class="mben-avatar">'+rec.initial+'</div>'+
+      '<div class="mben-main">'+
+        '<div class="mben-top">'+
+          '<span class="mben-nick" id="mbenNick_'+rec.id+'">'+rec.nickname+'</span>'+
+          '<button class="edit-name-btn" onclick="mbenStartEdit(\''+rec.id+'\')" aria-label="Edit nick name"><img src="../images/icons/edit.svg" width="12" height="12" alt="edit" loading="lazy"/></button>'+
+          '<span class="mben-type-badge">'+mbenTypeLabel[rec.type]+'</span>'+
+          '<span class="badge-s s-active">'+rec.status+'</span>'+
+        '</div>'+
+        '<div class="mben-details">'+mbenDetailRows(rec)+'</div>'+
+      '</div>'+
+      '<div class="mben-actions">'+
+        '<a href="'+mbenPayHref[rec.type]+'" class="mben-act-btn mben-act-pay"><span class="material-icons">payments</span> Pay</a>'+
+        '<button type="button" class="mben-act-btn" onclick="mbenEdit(\''+rec.id+'\')"><span class="material-icons">edit</span> Edit</button>'+
+        '<button type="button" class="mben-act-btn mben-act-delete" onclick="mbenOpenDeleteModal(\''+rec.id+'\')"><span class="material-icons">delete_outline</span> Delete</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── Manage Beneficiaries — search + quick filter (no tabs) ── */
+var _mbenActiveFilter = 'all';
+
+function mbenSetFilter(type, btn) {
+  _mbenActiveFilter = type;
+  document.querySelectorAll('.mben-filter-chip').forEach(function(c) { c.classList.toggle('active', c===btn); });
+  mbenApplyFilters();
+}
+
+function mbenApplyFilters() {
+  var q = document.getElementById('mbenSearch').value.trim().toLowerCase();
+  var cards = document.querySelectorAll('#mbenList .mben-card');
+  var visible = 0;
+  cards.forEach(function(card) {
+    var matchesType = _mbenActiveFilter === 'all' || card.getAttribute('data-type') === _mbenActiveFilter;
+    var matchesSearch = !q || card.getAttribute('data-search').indexOf(q) > -1;
+    var match = matchesType && matchesSearch;
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('mbenEmpty').classList.toggle('show', visible === 0);
+}
+
+/* ── Delete confirmation ── */
+var mbenDeletePending = null;
+function mbenOpenDeleteModal(id) {
+  var rec = mbenData.find(function(r) { return r.id === id; });
+  if (!rec) return;
+  mbenDeletePending = id;
+  document.getElementById('mbenDeleteMsg').textContent = 'This will permanently delete ' + rec.nickname + '.';
+  document.getElementById('mbenDeleteModal').classList.remove('hidden');
+}
+function mbenCloseDeleteModal() {
+  document.getElementById('mbenDeleteModal').classList.add('hidden');
+  mbenDeletePending = null;
+}
+function mbenConfirmDelete() {
+  if (!mbenDeletePending) return;
+  var idx = mbenData.findIndex(function(r) { return r.id === mbenDeletePending; });
+  if (idx === -1) { mbenCloseDeleteModal(); return; }
+  var rec = mbenData[idx];
+  mbenData.splice(idx, 1);
+  mbenCloseDeleteModal();
+  renderMbenList();
+  mbenApplyFilters();
+  abnShowToast(rec.nickname + ' has been deleted.');
+}
+
+/* ── Manage / Add mode switch ── */
+var abnEditingId = null;
+function benSetMode(mode) {
+  var isAdd = mode === 'add';
+  document.getElementById('benModeManageBtn').classList.toggle('active', !isAdd);
+  document.getElementById('benModeAddBtn').classList.toggle('active', isAdd);
+  document.getElementById('benModeManageBtn').setAttribute('aria-selected', String(!isAdd));
+  document.getElementById('benModeAddBtn').setAttribute('aria-selected', String(isAdd));
+  document.getElementById('benManageView').classList.toggle('hidden', isAdd);
+  document.getElementById('benAddView').classList.toggle('hidden', !isAdd);
+  if (isAdd) {
+    abnEditingId = null;
+    abnResetForm();
+    abnSwitchType('intra');
+    abnSetFormHeader();
+  }
+}
+
+/* ── Edit an existing beneficiary — reuses the unified Add Beneficiary form ── */
+function mbenEdit(id) {
+  var rec = mbenData.find(function(r) { return r.id === id; });
+  if (!rec) return;
+  benSetMode('add');
+  abnEditingId = id;
+  abnSwitchType(rec.type);
+  abnPrefillFromRecord(rec);
+  abnSetFormHeader();
+}
+
+function abnSetFormHeader() {
+  var hdr = document.getElementById('abnFormHdr');
+  var icon = document.getElementById('abnFormHdrIcon');
+  var title = document.getElementById('abnFormHdrTitle');
+  var submitBtn = document.getElementById('abnSubmitBtn');
+  if (abnEditingId) {
+    var rec = mbenData.find(function(r) { return r.id === abnEditingId; });
+    if (hdr) hdr.classList.remove('hidden');
+    if (icon) icon.textContent = 'edit';
+    if (title) title.textContent = 'Edit Beneficiary — ' + (rec ? rec.nickname : '');
+    if (submitBtn) submitBtn.textContent = 'UPDATE';
+  } else {
+    if (hdr) hdr.classList.add('hidden');
+    if (submitBtn) submitBtn.textContent = 'SUBMIT';
+  }
+}
+
+function abnPrefillFromRecord(rec) {
+  function setVal(id, val) { var el = document.getElementById(id); if (el && val !== undefined) el.value = val; }
+  function setPhone(key, code, number) {
+    var match = PHONE_COUNTRIES.filter(function(c){ return c.dial === code; })[0];
+    if (match) phoneCtryApply(key, match);
+    var inp = document.getElementById(key + 'Num');
+    if (inp) inp.value = number;
+  }
+  if (rec.type === 'intra') {
+    setVal('abnIntraAcct', rec.accountNumber); setVal('abnIntraCurrency', rec.currency); setVal('abnIntraName', rec.name); setVal('abnIntraPurpose', rec.purpose);
+    setPhone('abnIntra', rec.phoneCode, rec.phoneNumber);
+  } else if (rec.type === 'local') {
+    setVal('abnLocalBank', rec.bank); setVal('abnLocalBranch', rec.branch); setVal('abnLocalVer', rec.bvn); setVal('abnLocalAcct', rec.accountNumber);
+    setVal('abnLocalCurrency', rec.currency); setVal('abnLocalName', rec.name); setVal('abnLocalPurpose', rec.purpose);
+    setPhone('abnLocal', rec.phoneCode, rec.phoneNumber);
+  } else if (rec.type === 'intl') {
+    setVal('abnIntlCountry', rec.country); setVal('abnIntlProvince', rec.province); setVal('abnIntlBuilding', rec.building); setVal('abnIntlSwift', rec.swift);
+    setVal('abnIntlBankName', rec.bankName); setVal('abnIntlBranch', rec.branch); setVal('abnIntlAcct', rec.accountNumber); setVal('abnIntlCurrency', rec.currency);
+    setVal('abnIntlName', rec.name); setVal('abnIntlPurpose', rec.purpose);
+    setPhone('abnIntl', rec.phoneCode, rec.phoneNumber);
+  } else if (rec.type === 'cash') {
+    setVal('abnCashName', rec.name); setVal('abnCashIdType', rec.idType); setVal('abnCashIdNum', rec.idNumber);
+    setVal('abnCashExpiry', rec.expiryDate); setVal('abnCashCountry', rec.countryOfIssuance); setVal('abnCashIssue', rec.issueDate); setVal('abnCashPurpose', rec.purpose);
+    setPhone('abnCash', rec.phoneCode, rec.phoneNumber);
+  } else if (rec.type === 'card') {
+    setVal('abnCardNumber', rec.cardNumber); setVal('abnCardName', rec.name); setVal('abnCardPurpose', rec.purpose);
+    setPhone('abnCard', rec.phoneCode, rec.phoneNumber);
+  }
+  document.querySelectorAll('#benAddView .is-invalid').forEach(function(el) { el.classList.remove('is-invalid'); });
+}
+
+function abnSaveEditedRecord(id) {
+  var rec = mbenData.find(function(r) { return r.id === id; });
+  if (!rec) return;
+  function getVal(elId) { var el = document.getElementById(elId); return el ? el.value : undefined; }
+  function getPhone(key) {
+    var combo = document.getElementById(key + 'PhoneCombo');
+    var inp = document.getElementById(key + 'Num');
+    if (!combo) return { code: rec.phoneCode, number: rec.phoneNumber };
+    return { code: combo.dataset.dial || rec.phoneCode, number: inp ? inp.value : rec.phoneNumber };
+  }
+  var ph;
+  if (rec.type === 'intra') {
+    rec.accountNumber = getVal('abnIntraAcct'); rec.currency = getVal('abnIntraCurrency'); rec.name = getVal('abnIntraName'); rec.purpose = getVal('abnIntraPurpose');
+    ph = getPhone('abnIntra');
+  } else if (rec.type === 'local') {
+    rec.bank = getVal('abnLocalBank'); rec.branch = getVal('abnLocalBranch'); rec.bvn = getVal('abnLocalVer'); rec.accountNumber = getVal('abnLocalAcct');
+    rec.currency = getVal('abnLocalCurrency'); rec.name = getVal('abnLocalName'); rec.purpose = getVal('abnLocalPurpose');
+    ph = getPhone('abnLocal');
+  } else if (rec.type === 'intl') {
+    rec.country = getVal('abnIntlCountry'); rec.province = getVal('abnIntlProvince'); rec.building = getVal('abnIntlBuilding'); rec.swift = getVal('abnIntlSwift');
+    rec.bankName = getVal('abnIntlBankName'); rec.branch = getVal('abnIntlBranch'); rec.accountNumber = getVal('abnIntlAcct'); rec.currency = getVal('abnIntlCurrency');
+    rec.name = getVal('abnIntlName'); rec.purpose = getVal('abnIntlPurpose');
+    ph = getPhone('abnIntl');
+  } else if (rec.type === 'cash') {
+    rec.name = getVal('abnCashName'); rec.idType = getVal('abnCashIdType'); rec.idNumber = getVal('abnCashIdNum');
+    rec.expiryDate = getVal('abnCashExpiry'); rec.countryOfIssuance = getVal('abnCashCountry'); rec.issueDate = getVal('abnCashIssue'); rec.purpose = getVal('abnCashPurpose');
+    ph = getPhone('abnCash');
+  } else if (rec.type === 'card') {
+    rec.cardNumber = getVal('abnCardNumber'); rec.name = getVal('abnCardName'); rec.purpose = getVal('abnCardPurpose');
+    ph = getPhone('abnCard');
+  }
+  if (ph) { rec.phoneCode = ph.code; rec.phoneNumber = ph.number; }
+  rec.nickname = rec.name;
+  renderMbenList();
+}
+
+function abnShowSuccessModal(isEdit) {
+  var title = document.getElementById('abnSuccessTitle');
+  var sub = document.getElementById('abnSuccessSub');
+  var actions = document.getElementById('abnSuccessActions');
+  if (isEdit) {
+    if (title) title.textContent = 'Beneficiary updated successfully.';
+    if (sub) sub.style.display = 'none';
+    if (actions) actions.innerHTML = '<button type="button" class="btn-action btn-submit" style="padding:.5625rem 1.75rem" onclick="abnCloseModal(\'abnSuccessModal\');benSetMode(\'manage\')">VIEW LIST</button>';
+  } else {
+    if (title) title.textContent = 'Beneficiary added successfully.';
+    if (sub) sub.style.display = '';
+    if (actions) actions.innerHTML = '<button type="button" class="btn-action btn-save" style="padding:.5625rem 1.75rem" onclick="abnCloseModal(\'abnSuccessModal\');abnResetForm()">ADD ANOTHER</button>'+
+      '<button type="button" class="btn-action btn-submit" style="padding:.5625rem 1.75rem" onclick="location.href=\'fund-transfer.html?type=internal\'">BACK TO TRANSFER</button>';
+  }
+  abnOpenModal('abnSuccessModal');
+}
+
+/* ── Add Beneficiary — type switch ── */
+var _abnTypeIds = ['intra','local','intl','cash','card'];
+var _abnBtnIds = { intra:'abnTypeBtn_intra', local:'abnTypeBtn_local', intl:'abnTypeBtn_intl', cash:'abnTypeBtn_cash', card:'abnTypeBtn_card' };
+var _abnPanelIds = { intra:'abnPanelIntra', local:'abnPanelLocal', intl:'abnPanelIntl', cash:'abnPanelCash', card:'abnPanelCard' };
+
+function abnSwitchType(t) {
+  _abnTypeIds.forEach(function(id) {
+    var btn   = document.getElementById(_abnBtnIds[id]);
+    var panel = document.getElementById(_abnPanelIds[id]);
+    if (btn)   { btn.classList.toggle('active', id===t); }
+    if (panel) { panel.classList.toggle('hidden', id!==t); }
+  });
+  var selectedBtn = document.getElementById(_abnBtnIds[t]);
+  if (selectedBtn) {
+    document.getElementById('abnTypeTriggerIcon').textContent = selectedBtn.querySelector('.material-icons').textContent;
+    document.getElementById('abnTypeTriggerText').textContent = selectedBtn.getAttribute('data-label');
+    document.getElementById('abnTypeHint').textContent = selectedBtn.getAttribute('data-hint');
+  }
+  document.getElementById('abnTypeDropdown').classList.add('hidden');
+  document.getElementById('abnTypeTrigger').classList.remove('open');
+}
+
+function abnToggleTypePicker(btn) {
+  var dropdown = document.getElementById('abnTypeDropdown');
+  var was = dropdown.classList.contains('hidden');
+  dropdown.classList.toggle('hidden', !was);
+  btn.classList.toggle('open', was);
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.abn-type-picker')) {
+    var dropdown = document.getElementById('abnTypeDropdown');
+    if (dropdown) dropdown.classList.add('hidden');
+    var trigger = document.getElementById('abnTypeTrigger');
+    if (trigger) trigger.classList.remove('open');
+  }
+});
+
+/* ── Self-contained modal open/close for the Add Beneficiary view
+   (not using app.js's openModal/closeModal, which can fail to load) ── */
+function abnOpenModal(id) {
+  var m = document.getElementById(id);
+  if (m) m.classList.remove('hidden');
+}
+function abnCloseModal(id) {
+  var m = document.getElementById(id);
+  if (m) m.classList.add('hidden');
+}
+
+/* ── Validation ── */
+function abnShowToast(msg) {
+  var t = document.getElementById('abnToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'abnToast';
+    t.className = 'abn-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(function () { t.classList.remove('show'); }, 2600);
+}
+
+function abnValidateForm() {
+  var valid = true;
+  var firstInvalid = null;
+  var activePanel = document.querySelector('.abn-panel:not(.hidden)');
+
+  if (activePanel) {
+    activePanel.querySelectorAll('[data-required="true"]').forEach(function (el) {
+      var empty = !el.value || !el.value.trim();
+      el.classList.toggle('is-invalid', empty);
+      if (empty && !firstInvalid) firstInvalid = el;
+      if (empty) valid = false;
+    });
+  }
+
+  var tcAgree = document.getElementById('abnTcAgree');
+  var tcWrap = tcAgree ? tcAgree.closest('.tc') : null;
+  if (tcAgree && !tcAgree.checked) {
+    valid = false;
+    if (tcWrap) tcWrap.classList.add('is-invalid');
+    if (!firstInvalid) firstInvalid = tcAgree;
+  } else if (tcWrap) {
+    tcWrap.classList.remove('is-invalid');
+  }
+
+  if (!valid) {
+    abnShowToast(firstInvalid === tcAgree ? 'Please accept the Terms and Conditions to continue' : 'Please complete all required fields');
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (firstInvalid.focus) firstInvalid.focus();
+    }
+  }
+  return valid;
+}
+
+function abnHandleSubmit() {
+  if (!abnValidateForm()) return;
+  if (abnEditingId) {
+    abnSaveEditedRecord(abnEditingId);
+    abnShowSuccessModal(true);
+  } else {
+    abnShowSuccessModal(false);
+  }
+}
+
+/* Clear the invalid state as soon as a field is fixed */
+document.querySelectorAll('[data-required="true"]').forEach(function (el) {
+  var evt = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
+  el.addEventListener(evt, function () {
+    if (el.id === 'abnTcAgree') {
+      if (el.checked) {
+        var tcWrap = el.closest('.tc');
+        if (tcWrap) tcWrap.classList.remove('is-invalid');
+      }
+      return;
+    }
+    if (el.value && el.value.trim()) el.classList.remove('is-invalid');
+  });
+});
+
+/* ── Reset the Add Beneficiary form (used by "Add Another") ── */
+function abnResetForm() {
+  document.querySelectorAll('#benAddView input[type="text"], #benAddView input[type="tel"], #benAddView input:not([type]), #benAddView textarea').forEach(function (el) { el.value = ''; el.classList.remove('is-invalid'); });
+  document.querySelectorAll('#benAddView select').forEach(function (el) { el.selectedIndex = 0; el.classList.remove('is-invalid'); });
+  document.querySelectorAll('#benAddView .phone-combo').forEach(function (combo) { phoneCtryReset(combo.id.replace('PhoneCombo', '')); });
+  var tcAgree = document.getElementById('abnTcAgree');
+  if (tcAgree) { tcAgree.checked = false; var tcWrap = tcAgree.closest('.tc'); if (tcWrap) tcWrap.classList.remove('is-invalid'); }
 }
 
 /* ── Inline nick name editing ── */
-function benStartEdit(idx) {
-  var span = document.getElementById('benNick_' + idx);
+function mbenStartEdit(idx) {
+  var span = document.getElementById('mbenNick_' + idx);
   if (!span) return;
   var orig = span.textContent.trim();
-  var nickDiv = span.closest('.ben-nick');
-  nickDiv.innerHTML =
-    '<div class="ie-wrap">' +
-    '<input id="bei_'+idx+'" value="'+orig+'" aria-label="Edit nick name" style="width:140px"/>' +
-    '<button class="ie-btn" onclick="benConfirmEdit(\''+idx+'\')" style="color:#22c55e" title="Save">&#10003;</button>' +
-    '<button class="ie-btn" onclick="benCancelEdit(\''+idx+'\',\''+orig+'\')" style="color:#ef4444" title="Cancel">&#10005;</button>' +
-    '</div>';
-  var inp = document.getElementById('bei_' + idx);
+  var top = span.closest('.mben-top');
+  var editWrap = document.createElement('span');
+  editWrap.className = 'ie-wrap';
+  editWrap.innerHTML =
+    '<input id="mbei_'+idx+'" value="'+orig+'" aria-label="Edit nick name" style="width:140px"/>' +
+    '<button class="ie-btn ie-btn-save" onclick="mbenConfirmEdit(\''+idx+'\')" title="Save" aria-label="Save nick name"><span class="material-icons">check</span></button>' +
+    '<button class="ie-btn ie-btn-cancel" onclick="mbenCancelEdit(\''+idx+'\',\''+orig+'\')" title="Cancel" aria-label="Cancel edit"><span class="material-icons">close</span></button>';
+  span.replaceWith(editWrap);
+  top.querySelector('.edit-name-btn').style.display = 'none';
+  var inp = document.getElementById('mbei_' + idx);
   if (inp) { inp.focus(); inp.select(); }
   inp.addEventListener('keydown', function(e) {
-    if (e.key==='Enter')  benConfirmEdit(idx);
-    if (e.key==='Escape') benCancelEdit(idx, orig);
+    if (e.key==='Enter')  mbenConfirmEdit(idx);
+    if (e.key==='Escape') mbenCancelEdit(idx, orig);
   });
 }
-function benConfirmEdit(idx) {
-  var inp = document.getElementById('bei_' + idx);
-  benRebuildNick(idx, inp ? (inp.value.trim() || 'Beneficiary') : 'Beneficiary');
+function mbenConfirmEdit(idx) {
+  var inp = document.getElementById('mbei_' + idx);
+  mbenRebuildNick(idx, inp ? (inp.value.trim() || 'Beneficiary') : 'Beneficiary');
 }
-function benCancelEdit(idx, orig) { benRebuildNick(idx, orig); }
-function benRebuildNick(idx, name) {
-  var row = document.getElementById('benRow_' + idx);
+function mbenCancelEdit(idx, orig) { mbenRebuildNick(idx, orig); }
+function mbenRebuildNick(idx, name) {
+  var row = document.getElementById('mbenRow_' + idx);
   if (!row) return;
-  row.querySelector('.ben-nick').innerHTML =
-    '<span id="benNick_'+idx+'">'+name+'</span>' +
-    '<button class="edit-name-btn" onclick="benStartEdit(\''+idx+'\')" aria-label="Edit nick name">' +
-    '<img src="../images/icons/edit.svg" width="12" height="12" alt="edit"/></button>';
+  var top = row.querySelector('.mben-top');
+  var editWrap = top.querySelector('.ie-wrap');
+  var span = document.createElement('span');
+  span.className = 'mben-nick';
+  span.id = 'mbenNick_' + idx;
+  span.textContent = name;
+  if (editWrap) editWrap.replaceWith(span);
+  top.querySelector('.edit-name-btn').style.display = '';
+  var rec = mbenData.find(function(r) { return r.id === idx; });
+  if (rec) rec.nickname = name;
 }
+
+renderMbenList();
+
+/* ── Deep-link support: ?mode=add opens the Add Beneficiary tab directly ── */
+(function() {
+  var mode = new URLSearchParams(window.location.search).get('mode');
+  if (mode === 'add') benSetMode('add');
+})();
 </script>
 </body>
 </html>

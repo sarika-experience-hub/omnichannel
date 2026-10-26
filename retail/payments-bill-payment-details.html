@@ -9,85 +9,103 @@
   <link rel="stylesheet" href="../css/styles.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <style>
+    /* Section cards — matches .gao-card used on general-account-opening.html exactly:
+       static (no expand/collapse), white box, title + muted subtitle. */
+    .bp-block { background:#fff; border:1px solid var(--az-border,#e2e8ec); border-radius:.875rem; box-shadow:0 1px 3px rgba(22,48,61,.04); padding:1rem 1.75rem 1.2rem; margin-bottom:1.5rem; }
+    .bp-block-hdr { background:none; border-bottom:1px solid #e5e9ee; padding:0 0 .4rem; margin-bottom:1rem; cursor:default; user-select:auto; }
+    .bp-block-title { font-size:var(--fs-subhead); font-weight:600; color:var(--az-navy); }
+    .bp-block-subtitle { font-size:var(--fs-small); color:var(--az-muted); margin-left:.25rem; }
+    .bp-block-body { padding:0; }
 
-    /* Collapsible blocks */
-    .bp-block { border:1.5px solid var(--az-border); border-radius:.875rem; overflow:hidden; margin-bottom:1.25rem; box-shadow:0 1px 4px rgba(0,0,0,.04); }
-    .bp-block-hdr { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.375rem; background:#fafbfd; cursor:pointer; user-select:none; }
-    .bp-block-title { font-size:.9375rem; font-weight:600; color:var(--az-navy); display:flex; align-items:center; gap:.5rem; }
-    .bp-block-title .material-icons { font-size:1.1rem; color:var(--az-green); }
-    .bp-block-chev { color:var(--az-muted); transition:transform .2s; }
-    .bp-block-hdr.collapsed .bp-block-chev { transform:rotate(180deg); }
-    .bp-block-body { padding:1.375rem 1.5rem; border-top:1px solid var(--az-border); background:#fff; }
+    /* Larger, softer inputs — matches .gao-card-body's "spacious, modern fintech feel" */
+    .bp-block-body .f-label { font-size:var(--fs-label); font-weight:500; margin-bottom:.5rem; }
+    .bp-block-body .f-input,
+    .bp-block-body .f-select,
+    .bp-block-body .amount-field {
+      border-radius:.625rem; border-color:#e2e7ee;
+    }
+    .bp-block-body .f-input,
+    .bp-block-body .amount-curr,
+    .bp-block-body .amount-inp {
+      padding:.75rem .95rem; font-size:var(--fs-body);
+    }
+    .bp-block-body .f-select { padding-right:2.25rem; }
+    .bp-block-body .f-input:focus,
+    .bp-block-body .amount-field:focus-within {
+      border-color:var(--az-blue,#00538A); box-shadow:none;
+    }
+    .bp-field-group { margin-bottom:1.25rem; }
+    .bp-field-group:last-child { margin-bottom:0; }
+    .bp-field-group-lbl {
+      font-size:var(--fs-micro); font-weight:600; text-transform:uppercase;
+      letter-spacing:.07em; color:var(--az-muted);
+      margin-bottom:.75rem; padding-bottom:.4rem;
+      border-bottom:1px solid #f1f5f8;
+    }
+    .bp-or-col { display:flex; justify-content:center; padding-bottom:.75rem; }
+    .bp-or-divider { font-size:var(--fs-caption); font-weight:600; color:var(--az-muted); text-transform:uppercase; letter-spacing:.03em; }
 
-    /* Form elements */
-    .bp-label { font-size:.8125rem; color:var(--az-muted); margin-bottom:.4rem; font-weight:500; letter-spacing:.01em; }
-    .bp-select-wrap { position:relative; }
-    .bp-select-wrap select { appearance:none; -webkit-appearance:none; width:100%; padding:.6875rem 2.5rem .6875rem 1rem; border:1.5px solid var(--az-border); border-radius:.5rem; font-size:.875rem; color:var(--az-navy); background:#fff; cursor:pointer; outline:none; transition:border-color .15s; }
-    .bp-select-wrap select:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.1); }
-    .sel-chev { position:absolute; right:.875rem; top:50%; transform:translateY(-50%); pointer-events:none; }
-    .bp-input { width:100%; padding:.6875rem 1rem; border:1.5px solid var(--az-border); border-radius:.5rem; font-size:.875rem; color:var(--az-navy); background:#fff; outline:none; transition:border-color .15s; }
-    .bp-input:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.1); }
+    /* Footer CTA — matches .gao-footer's "Modern CTA row" exactly */
+    .form-footer { background:none; border:none; border-top:1px solid #eef1f4; border-radius:0; box-shadow:none; padding:2rem 0 0; margin-bottom:0; margin-top:0; }
+    .form-footer .btn-action { border-radius:.5rem; padding:.7rem 1.75rem; font-size:var(--fs-body); transition:background .15s, box-shadow .15s, transform .15s, border-color .15s, color .15s; }
+    .form-footer .btn-cancel, .form-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+    .form-footer .btn-cancel:hover, .form-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+    .form-footer .btn-submit { background:linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color:#fff; border:none; }
+    .form-footer .btn-submit:hover { background:linear-gradient(135deg, #0f232e, #081820); transform:translateY(-1px); }
+    .form-footer .btn-submit:active { transform:translateY(0); }
 
-    /* Tabs */
-    .bp-tabs { display:flex; border-bottom:2px solid var(--az-border); margin-bottom:0; gap:0; background:#fff; }
-    .bp-tab { padding:.6875rem 1.75rem; font-size:.875rem; color:var(--az-muted); cursor:pointer; font-weight:500; background:#fff; transition:color .15s; position:relative; }
-    .bp-tab::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:2.5px; background:transparent; transition:background .15s; }
-    .bp-tab:hover { color:#00538A; }
-    .bp-tab.active { color:#00538A; }
-    .bp-tab.active::after { background:#00538A; }
-    .bp-tab-pane { display:none; animation:fadeIn .15s ease; }
-    .bp-tab-pane.active { display:block; }
-    .bp-tab-content { background:#e8f2fa; padding:1.25rem 1.375rem; border-radius:0 0 .5rem .5rem; margin-bottom:1.375rem; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:none} }
-
-    /* Due bills table */
-    .bp-table-wrap { overflow-x:auto; border:1px solid var(--az-border); border-radius:.625rem; }
-    .bp-due-table { width:100%; border-collapse:collapse; font-size:.875rem; min-width:520px; }
-    .bp-due-table thead tr { background:#f4f7fa; }
-    .bp-due-table th { padding:.6875rem 1rem; font-size:.8rem; font-weight:600; color:var(--az-muted); text-align:left; white-space:nowrap; text-transform:uppercase; letter-spacing:.03em; border-bottom:1px solid var(--az-border); }
-    .bp-due-table th:first-child { width:44px; text-align:center; border-radius:.5rem 0 0 0; }
-    .bp-due-table th:last-child { border-radius:0 .5rem 0 0; }
-    .bp-due-table td { padding:.75rem 1rem; color:var(--az-navy); }
-    .bp-due-table tbody tr { border-top:1px solid var(--az-border); transition:background .1s; }
-    .bp-due-table tbody tr:hover { background:#f9fafb; }
+    /* Due bills table — styled to match account-statement.html's .as-tbl exactly */
+    .bp-table-wrap { overflow-x:auto; }
+    .bp-due-table { width:100%; border-collapse:collapse; font-size:var(--fs-small); min-width:520px; }
+    .bp-due-table thead th {
+      background:var(--az-navy); color:#fff; font-weight:600; font-size:var(--fs-caption);
+      text-transform:uppercase; letter-spacing:.04em; padding:.6rem .75rem; white-space:nowrap;
+      text-align:left;
+    }
+    .bp-due-table thead th:first-child { width:44px; text-align:center; border-radius:.25rem 0 0 0; }
+    .bp-due-table thead th:last-child { border-radius:0 .25rem 0 0; }
+    .bp-due-table td { padding:.6rem .75rem; color:var(--az-navy); vertical-align:top; }
+    .bp-due-table tbody tr { border-bottom:1px solid #edf1f4; transition:background .1s; }
+    .bp-due-table tbody tr:hover { background:#f4f8fb; }
+    .bp-due-table tbody tr.bp-row-alt { background:#f8fafc; }
+    .bp-due-table tbody tr.bp-row-alt:hover { background:#edf5fb; }
     .bp-due-table td:first-child { text-align:center; }
+    .bp-due-table td.bp-amt { text-align:right; font-weight:600; font-variant-numeric:tabular-nums; }
     .bp-due-chk { width:16px; height:16px; accent-color:var(--az-green); cursor:pointer; }
     .bp-due-table tfoot tr { background:#f4f7fa; border-top:2px solid var(--az-border); }
-    .bp-due-table tfoot td { padding:.6875rem 1rem; font-weight:600; color:var(--az-navy); font-size:.875rem; }
+    .bp-due-table tfoot td { padding:.6875rem .75rem; }
+    .bp-due-table .bp-st-lbl { color:var(--az-muted); font-size:var(--fs-small); font-weight:500; }
+    .bp-due-table .bp-st-val { color:var(--az-green); }
 
-    /* Amount row */
-    .bp-amount-wrap { display:flex; border:1.5px solid var(--az-border); border-radius:.5rem; overflow:hidden; transition:border-color .15s; }
-    .bp-amount-wrap:focus-within { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.1); }
-    .bp-ccy-select { flex:0 0 130px; border:none; border-right:1.5px solid var(--az-border); padding:.6875rem .875rem; font-size:.875rem; color:var(--az-navy); background:#f9fafb; appearance:none; cursor:pointer; outline:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10.53 7'%3E%3Cpath d='M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z' fill='%232ed88e'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right .75rem center; padding-right:2rem; }
-    .bp-amount-input { flex:1; border:none; padding:.6875rem 1rem; font-size:.9rem; color:var(--az-navy); background:#fff; outline:none; font-weight:500; }
-
-    /* Footer action bar */
-    .bp-action-bar { display:flex; align-items:center; justify-content:space-between; padding:1.125rem 1.5rem; margin-top:1.25rem; background:#fafbfd; border:1.5px solid var(--az-border); border-radius:.875rem; flex-wrap:wrap; gap:.875rem; }
-    .bp-terms { display:flex; align-items:center; gap:.625rem; font-size:.8125rem; cursor:pointer; }
-    .bp-terms input { width:17px; height:17px; accent-color:var(--az-green); cursor:pointer; }
-    .bp-terms span { color:#0067AB; font-weight:500; text-decoration:underline; }
-    .bp-btn-group { display:flex; gap:.75rem; align-items:center; }
-    /* Semantic button colors: Cancel=outline, Save Draft=secondary, Pay Now=primary */
-    .btn-cancel { padding:.625rem 1.5rem; border-radius:.5rem; border:1.5px solid var(--az-border); background:#fff; color:var(--az-navy); font-size:.875rem; font-weight:600; cursor:pointer; text-transform:uppercase; letter-spacing:.04em; transition:all .15s; }
-    .btn-cancel:hover { border-color:var(--az-muted); background:#f4f7fa; }
-    .btn-save { padding:.625rem 1.5rem; border-radius:.5rem; border:1.5px solid #b0b8bf; background:#fff; color:#5a6470; font-size:.875rem; font-weight:600; cursor:pointer; text-transform:uppercase; letter-spacing:.04em; transition:all .15s; }
-    .btn-save:hover { background:#f4f7fa; border-color:#8a9099; }
-    .btn-pay { padding:.625rem 1.75rem; border-radius:.5rem; border:none; background:var(--az-green); color:#fff; font-size:.875rem; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:.04em; box-shadow:0 2px 8px rgba(46,216,142,.3); transition:all .15s; }
-    .btn-pay:hover { background:#28c47e; box-shadow:0 4px 16px rgba(46,216,142,.4); transform:translateY(-1px); }
-
+    /* Terms checkbox — match the redesigned .terms-chk control used elsewhere in the app (scoped to this page) */
+    .form-footer .tc { font-size: var(--fs-body); }
+    .form-footer .tc a { color: var(--az-blue); font-weight: 500; }
+    .form-footer .tc input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none; margin: 0; flex-shrink: 0;
+      width: 18px; height: 18px; border: 1.5px solid var(--az-border); border-radius: .25rem;
+      background: #fff center/12px no-repeat; cursor: pointer;
+      transition: background-color .15s, border-color .15s, box-shadow .15s;
+    }
+    .form-footer .tc input[type="checkbox"]:hover { border-color: var(--az-green); }
+    .form-footer .tc input[type="checkbox"]:focus-visible { outline: none; box-shadow: 0 0 0 .1875rem rgba(46,216,142,.25); }
+    .form-footer .tc input[type="checkbox"]:checked {
+      background-color: var(--az-green); border-color: var(--az-green);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.2 3.2L11 1' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
   </style>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
 </head>
 <body>
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div"></div>
     <div class="notif-wrap">
-      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="../images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span></div>
         <div class="notif-list">
@@ -98,11 +116,11 @@
         <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
     <div class="hdr-div"></div>
     <div class="hdr-lang-wrap">
-      <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
         <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
         <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
@@ -131,42 +149,41 @@
         </div>
         <div class="av-drop-nav">
           <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
-          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Saved Drafts</a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem"><div class="av-nav-icon"><span class="material-icons" style="font-size:18px;">logout</span></div>Logout</a>
         </div>
       </div>
     </div>
   </div>
 </header>
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none"><span class="material-icons">close</span></button>
-  </div>
   <nav class="sb-nav">
     <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
     <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
-    <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
+    <div class="sb-grp-lbl">Overview</div>
+  <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
     <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
-    <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+    <div class="sb-grp-lbl">Money Movement</div>
+  <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
     <div id="sTr" class="sb-sub" style="display:none">
-      <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
-      <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-      <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-      <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-      <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-      <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
-    </div>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
+    <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
+  </div>
     <button class="sb-item active-section" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron open" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item active">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
-    <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+    <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item active">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+    <div class="sb-grp-lbl">Cards &amp; Lending</div>
+  <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
     <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
-    <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+    <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+    <div class="sb-grp-lbl">Support</div>
+  <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+    <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
@@ -175,59 +192,41 @@
 
     <!-- ── Bill Payment Details ── -->
     <div class="bp-block">
-      <div class="bp-block-hdr" id="hdr1" onclick="toggleBlock('body1','hdr1')">
-        <span class="bp-block-title"><span class="material-icons">receipt_long</span>Bill Payment Details</span>
-        <span class="material-icons bp-block-chev">expand_less</span>
+      <div class="bp-block-hdr">
+        <span class="bp-block-title">Bill Payment Details</span>
+        <span class="bp-block-subtitle">— Choose the account and biller to pay</span>
       </div>
-      <div class="bp-block-body" id="body1">
+      <div class="bp-block-body">
 
-        <!-- From Account -->
-        <div class="mb-4" style="max-width:320px;">
-          <div class="bp-label">From Account</div>
-          <div class="bp-select-wrap">
-            <select>
-              <option>Savings Account – ••••7001</option>
-              <option>Junior Savings – ••••7003</option>
-              <option>Current Account – ••••7002</option>
-            </select>
-            <svg class="sel-chev" xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-          </div>
-        </div>
-
-        <!-- Tabs -->
-        <div class="bp-tabs">
-          <div class="bp-tab active" id="tab-fav" onclick="switchTab('fav')">To Favourite</div>
-          <div class="bp-tab" id="tab-other" onclick="switchTab('other')">To Other</div>
-        </div>
-
-        <!-- Tab content area (light blue background) -->
-        <div class="bp-tab-content">
-          <!-- To Favourite pane -->
-          <div class="bp-tab-pane active" id="pane-fav">
-            <div style="max-width:360px;">
-              <div class="bp-label">Select Favourite</div>
-              <div class="bp-select-wrap">
-                <select>
-                  <option>Lorem Ipsum</option>
-                  <option>Favourite 2</option>
-                  <option>Favourite 3</option>
-                </select>
-                <svg class="sel-chev" xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-              </div>
+        <!-- From Account + Pay To: favourite biller, or a new biller's account number + mobile — all in one row -->
+        <div class="bp-field-group">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label class="f-label" for="fromAcct">From Account</label>
+              <select id="fromAcct" class="f-input f-select">
+                <option>Savings Account – ••••7001</option>
+                <option>Junior Savings – ••••7003</option>
+                <option>Current Account – ••••7002</option>
+              </select>
             </div>
-          </div>
-
-          <!-- To Other pane -->
-          <div class="bp-tab-pane" id="pane-other">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <div class="bp-label">Biller Account Number</div>
-                <input type="text" class="bp-input" placeholder="Enter biller account number"/>
-              </div>
-              <div class="col-md-6">
-                <div class="bp-label">Mobile Number</div>
-                <input type="tel" class="bp-input" placeholder="Enter mobile number"/>
-              </div>
+            <div class="col-md-3">
+              <label class="f-label" for="payToSelect">Favourite Biller</label>
+              <select id="payToSelect" class="f-input f-select">
+                <option>Favourite 1</option>
+                <option>Favourite 2</option>
+                <option>Favourite 3</option>
+              </select>
+            </div>
+            <div class="col-auto bp-or-col">
+              <span class="bp-or-divider">or</span>
+            </div>
+            <div class="col-md-3">
+              <label class="f-label" for="billerAcctNum">Other Biller Account Number</label>
+              <input type="text" id="billerAcctNum" class="f-input" placeholder="Enter biller account number"/>
+            </div>
+            <div class="col-md-2">
+              <label class="f-label" for="billerMobile">Mobile Number</label>
+              <input type="tel" id="billerMobile" class="f-input" placeholder="Enter mobile number"/>
             </div>
           </div>
         </div>
@@ -237,13 +236,14 @@
 
     <!-- ── Due Bills ── -->
     <div class="bp-block">
-      <div class="bp-block-hdr" id="hdr2" onclick="toggleBlock('body2','hdr2')">
-        <span class="bp-block-title"><span class="material-icons">assignment</span>Due Bills</span>
-        <span class="material-icons bp-block-chev">expand_less</span>
+      <div class="bp-block-hdr">
+        <span class="bp-block-title">Due Bills</span>
+        <span class="bp-block-subtitle">— Select the bills you want to pay</span>
       </div>
-      <div class="bp-block-body" id="body2">
+      <div class="bp-block-body">
 
-        <div class="bp-table-wrap mb-4">
+        <div class="bp-field-group">
+        <div class="bp-table-wrap">
           <table class="bp-due-table">
             <thead>
               <tr>
@@ -260,49 +260,54 @@
                 <td>90890234567890001</td>
                 <td>29/05/2025</td>
                 <td>Lorem ipsum dolr</td>
-                <td style="text-align:right;font-weight:500;">AED 54.30</td>
+                <td class="bp-amt">AED 54.30</td>
               </tr>
-              <tr>
+              <tr class="bp-row-alt">
                 <td><input type="checkbox" class="bp-due-chk bill-chk" onchange="updateTotal()"/></td>
                 <td>90890234567890001</td>
                 <td>23/02/2025</td>
                 <td>Lorem ipsum dolor sit</td>
-                <td style="text-align:right;font-weight:500;">AED 89.02</td>
+                <td class="bp-amt">AED 89.02</td>
               </tr>
               <tr>
                 <td><input type="checkbox" class="bp-due-chk bill-chk" onchange="updateTotal()"/></td>
                 <td>90890234567890001</td>
                 <td>09/07/2025</td>
                 <td>Lorem ipsum dolor sit</td>
-                <td style="text-align:right;font-weight:500;">AED 78.10</td>
+                <td class="bp-amt">AED 78.10</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="4" style="color:var(--az-muted);font-size:.8rem;font-weight:500;">SELECTED TOTAL</td>
-                <td style="text-align:right;color:var(--az-green);" id="selectedTotal">AED 0.00</td>
+                <td colspan="4" class="bp-st-lbl">SELECTED TOTAL</td>
+                <td class="bp-amt bp-st-val" id="selectedTotal">AED 0.00</td>
               </tr>
             </tfoot>
           </table>
         </div>
+        </div>
 
         <!-- Amount + Purpose -->
-        <div class="row g-3 mb-2">
+        <div class="bp-field-group row g-3">
           <div class="col-md-6">
-            <div class="bp-label">Payment Amount</div>
-            <div class="bp-amount-wrap">
-              <select class="bp-ccy-select" onchange="syncCcy(this.value)">
-                <option>AED</option>
-                <option>USD</option>
-                <option>EUR</option>
-                <option>GBP</option>
-              </select>
-              <input type="number" class="bp-amount-input" id="amountInput" value="0.00" min="0" step="0.01" placeholder="0.00"/>
+            <label class="f-label" for="amountInput">Payment Amount</label>
+            <div class="amount-field">
+              <div class="amount-curr" onclick="ntfOpenSelect('ccySelect')">
+                <span class="fi fi-ae amount-flag" id="ccyFlag" aria-hidden="true"></span>
+                <select id="ccySelect" aria-label="Currency" onchange="updateCurrFlag(this);syncCcy(this.value);">
+                  <option selected>AED</option>
+                  <option>USD</option>
+                  <option>EUR</option>
+                  <option>GBP</option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" aria-hidden="true" onclick="ntfOpenSelect('ccySelect')"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+              </div>
+              <input type="number" class="amount-inp" id="amountInput" value="0.00" min="0" step="0.01" placeholder="0.00"/>
             </div>
           </div>
           <div class="col-md-6">
-            <div class="bp-label">Payment Purpose</div>
-            <input type="text" class="bp-input" placeholder="e.g. Monthly mobile bill"/>
+            <label class="f-label" for="paymentPurpose">Payment Purpose</label>
+            <input type="text" id="paymentPurpose" class="f-input" placeholder="e.g. Monthly mobile bill"/>
           </div>
         </div>
 
@@ -310,16 +315,11 @@
     </div>
 
     <!-- ── Action Bar ── -->
-    <div class="bp-action-bar">
-      <label class="bp-terms">
-        <input type="checkbox" id="termsChk"/>
-        <span>I agree to the Terms and Conditions</span>
-      </label>
-      <div class="bp-btn-group">
-        <button class="btn-cancel" onclick="location.href='payments-bill-payment.html'">Cancel</button>
-        <button class="btn-save">Save Draft</button>
-        <button class="btn-pay" onclick="submitPayment()">Pay Now</button>
-      </div>
+    <div class="form-footer">
+      <div class="tc" id="tcWrap"><input type="checkbox" id="termsChk"/><label for="termsChk">I agree to the <a href="javascript:;" onclick="event.stopPropagation();openModal('tcModal')">Terms and Conditions</a> for this bill payment</label></div>
+      <a href="payments-bill-payment.html" class="btn-action btn-cancel">CANCEL</a>
+      <button type="button" class="btn-action btn-save">Save Draft</button>
+      <button type="button" class="btn-action btn-submit" onclick="submitPayment()">PAY NOW</button>
     </div>
 
   </main>
@@ -333,27 +333,31 @@
     </div>
   </footer>
 </div>
+
+<!-- ══ Terms and Conditions modal ══ -->
+<div class="modal-ov hidden" id="tcModal" role="dialog" aria-modal="true" aria-labelledby="tcModalTitle">
+  <div class="az-modal modal-md">
+    <button class="modal-close" onclick="closeModal('tcModal')" aria-label="Close">&#215;</button>
+    <div id="tcModalTitle" class="modal-title">Terms and Conditions — Bill Payment</div>
+    <div style="font-size:var(--fs-small);color:var(--az-navy,#16303d);line-height:1.6;max-height:50vh;overflow-y:auto;margin:.5rem 0 0;padding-right:.5rem;">
+      <p><strong>1. Accuracy.</strong> You confirm that the biller, account details and amount provided are accurate, and authorize azentio Bank to debit the selected account accordingly.</p>
+      <p><strong>2. Biller Processing.</strong> Payment to the biller is subject to the biller's own processing times; azentio Bank is not responsible for delays once funds are remitted to the biller.</p>
+      <p><strong>3. Irrevocability.</strong> Once processed, a bill payment may not be reversible or refundable.</p>
+      <p><strong>4. Fees.</strong> Any applicable payment fees are shown before you submit and will be debited together with the payment amount.</p>
+      <p><strong>5. Screening.</strong> All payments are subject to sanctions and compliance screening in accordance with applicable banking regulations.</p>
+      <p><strong>6. Amendments.</strong> azentio Bank reserves the right to update these terms at any time; continued use of this service constitutes acceptance of the revised terms.</p>
+    </div>
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;">
+      <button class="btn-action btn-submit" onclick="closeModal('tcModal')" style="padding:.6rem 1.5rem">Close</button>
+    </div>
+  </div>
+</div>
+
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/app.js"></script>
 <script>
 'use strict';
 var AMOUNTS = [54.30, 89.02, 78.10];
-
-function toggleBlock(bodyId, hdrId) {
-  var b = document.getElementById(bodyId), h = document.getElementById(hdrId);
-  var open = b.style.display !== 'none';
-  b.style.display = open ? 'none' : '';
-  h.classList.toggle('collapsed', open);
-  var chev = h.querySelector('.bp-block-chev');
-  chev.textContent = open ? 'expand_more' : 'expand_less';
-}
-
-function switchTab(which) {
-  ['fav','other'].forEach(function(t) {
-    document.getElementById('tab-' + t).classList.toggle('active', t === which);
-    document.getElementById('pane-' + t).classList.toggle('active', t === which);
-  });
-}
 
 function toggleAll(master) {
   document.querySelectorAll('.bill-chk').forEach(function(c) { c.checked = master.checked; });
@@ -368,8 +372,19 @@ function updateTotal() {
   if (total > 0) document.getElementById('amountInput').value = total.toFixed(2);
 }
 
+function ntfOpenSelect(id){
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  if (sel.showPicker) { try { sel.showPicker(); return; } catch(e) {} }
+  sel.focus();
+}
+function updateCurrFlag(sel){
+  var flagMap={'AED':'ae','USD':'us','EUR':'eu','GBP':'gb'};
+  var flag=sel.closest('.amount-curr').querySelector('.amount-flag');
+  if(flag){var fc=flagMap[sel.value]||'ae';flag.className='fi fi-'+fc+' amount-flag';}
+}
 function syncCcy(ccy) {
-  document.querySelectorAll('.bp-due-table td[style*="text-align:right"]').forEach(function(td) {
+  document.querySelectorAll('.bp-due-table td.bp-amt').forEach(function(td) {
     td.textContent = td.textContent.replace(/^[A-Z]{3}/, ccy);
   });
 }
@@ -381,5 +396,6 @@ function submitPayment() {
   }
   alert('Payment submitted successfully!');
 }
-
-// Syn
+</script>
+</body>
+</html>

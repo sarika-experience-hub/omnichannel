@@ -8,43 +8,99 @@
   <link rel="stylesheet" href="../css/flag-icons.min.css"/>
   <link rel="stylesheet" href="../css/styles.css"/>
   <style>
-    .form-footer-bar { border-top:1px solid var(--az-border); padding:1.125rem 0 0; margin-top:1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem; }
-    .terms-chk { display:flex; align-items:center; gap:.5rem; font-size:.8125rem; cursor:pointer; }
-    .terms-chk input { width:16px; height:16px; accent-color:var(--az-green); cursor:pointer; }
-    .terms-chk span { color:#0067AB; font-weight:500; }
-    .page-top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
-    .view-btn { background:#fff; border:1.5px solid var(--az-border); border-radius:.375rem; padding:.375rem .5rem; cursor:pointer; color:var(--az-muted); display:flex; align-items:center; transition:border-color .12s,color .12s; }
-    .view-btn.active, .view-btn:hover { border-color:var(--az-green); color:var(--az-green); }
-    .fav-row { display:flex; align-items:center; gap:1.5rem; padding:.875rem 1rem; border-bottom:1px solid var(--az-border); position:relative; }
-    .fav-row:last-child { border-bottom:none; }
-    .fav-name { min-width:180px; }
-    .fav-name .primary { font-weight:600; font-size:.875rem; color:var(--az-navy); }
-    .fav-name .secondary { font-size:.75rem; color:var(--az-muted); }
-    .fav-field { display:flex; flex-direction:column; min-width:120px; }
-    .fav-field .fv { font-weight:500; font-size:.8125rem; color:var(--az-navy); }
-    .fav-field .fl { font-size:.75rem; color:var(--az-muted); }
-    .fav-actions { margin-left:auto; position:relative; }
-    .ctx-trigger { background:none; border:none; cursor:pointer; font-size:1.25rem; line-height:1; color:var(--az-muted); padding:.25rem .5rem; border-radius:.25rem; }
-    .ctx-trigger:hover { background:var(--az-border); }
-    .ctx-menu { position:absolute; right:0; top:100%; background:#fff; border:1px solid var(--az-border); border-radius:.375rem; box-shadow:0 4px 16px rgba(0,0,0,.08); z-index:200; min-width:130px; padding:.25rem 0; }
-    .ctx-menu a, .ctx-menu button { display:block; width:100%; text-align:left; padding:.45rem 1rem; font-size:.8125rem; color:var(--az-navy); background:none; border:none; cursor:pointer; text-decoration:none; }
-    .ctx-menu a:hover, .ctx-menu button:hover { background:#f4f7fa; color:var(--az-green); }
-    .ctx-menu .ctx-del { color:#e03c31; }
-    .ctx-menu .ctx-del:hover { color:#c0291f; background:#fff5f4; }
+    /* Top-right CTA — matches accounts.html's "Open New General Account" button exactly */
+    .btn-open-account { background: var(--az-navy,#16303d)!important; color: #fff!important; border: none; border-radius: .5rem; padding: 0 1.75rem; height: 2.5rem; box-sizing: border-box; font-size:var(--fs-body); font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: opacity .2s; letter-spacing: .01em; box-shadow: 0 1px 3px rgba(22,48,61,.18); }
+    .btn-open-account:hover { opacity: .92; }
+
+    /* Delete confirmation modal icon — matches beneficiary-management.html's .mben-delete-icon */
+    .mben-delete-icon { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .mben-delete-icon .material-icons { font-size: 30px; color: #dc2626; }
+
+    /* Toast — matches beneficiary-management.html's .abn-toast */
+    .fav-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--az-navy,#16303d); color: #fff; padding: .7rem 1.25rem; border-radius: .5rem; font-size:var(--fs-small); font-weight: 600; font-family: 'Poppins','Roboto',sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 99999; }
+    .fav-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Search — matches bill-payment-billers.html's pill search box */
+    .bp-search-wrap { position:relative; margin-bottom:1.25rem; }
+    .bp-search-wrap input { width:100%; padding:.8125rem 3rem .8125rem 1.375rem; border:1.5px solid var(--az-border); border-radius:2rem; font-size:var(--fs-subhead); color:var(--az-navy); background:#fff; outline:none; box-shadow:0 1px 4px rgba(0,0,0,.05); transition:border-color .15s,box-shadow .15s; }
+    .bp-search-wrap input:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.12); }
+    .bp-search-icon { position:absolute; right:1.125rem; top:50%; transform:translateY(-50%); color:var(--az-muted); font-size:var(--fs-heading) !important; pointer-events:none; }
+
+    /* ── Favorites hub — quick-access rail (left) + hero detail (right) ──
+       Reuses accounts.html's .acct-hero / .qa-panel / .qa-item verbatim,
+       with the same 260px/1fr column split and order. */
+    .fav-hub { display:grid; grid-template-columns:260px 1fr; gap:1.25rem; align-items:start; }
+    .fav-main-col { display:flex; flex-direction:column; gap:1.25rem; }
+    @media (max-width:900px) { .fav-hub { grid-template-columns:1fr; } }
+
+    .qa-panel { border:none; border-radius:1rem; background:transparent; padding:1rem; }
+    .qa-hdr { font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; color:var(--az-muted,#707070); text-transform:uppercase; margin-bottom:.75rem; padding:0 .25rem; }
+    .qa-hdr-count { color:var(--az-navy,#16303d); }
+    .qa-list { display:flex; flex-direction:column; gap:.625rem; max-height:calc(100vh - 280px); min-height:240px; overflow-y:auto; overflow-x:hidden; padding-right:.5rem; scrollbar-width:thin; scrollbar-color:#8a97a0 #eef1f4; }
+    .qa-list::-webkit-scrollbar { width:8px; }
+    .qa-list::-webkit-scrollbar-track { background:#eef1f4; border-radius:4px; }
+    .qa-list::-webkit-scrollbar-thumb { background:#8a97a0; border-radius:4px; border:1.5px solid #eef1f4; }
+    .qa-list::-webkit-scrollbar-thumb:hover { background:var(--az-navy,#16303d); }
+    .qa-item { position:relative; overflow:hidden; display:block; width:100%; flex-shrink:0; text-align:left; border:1px solid var(--az-border,#e2e8ec); border-radius:.75rem; background:#fcfdfd; padding:.75rem .875rem; cursor:pointer; transition:all .15s; font-family:'Poppins','Roboto',sans-serif; }
+    .qa-item:hover { background:#f4f7f7; }
+    .qa-item.active { background:var(--az-green-light); border:1.5px solid var(--az-green,#1aad6e); box-shadow:0 3px 10px rgba(26,173,110,.18); }
+    .qa-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--az-green,#1aad6e); }
+    .qa-item-top { display:flex; align-items:center; gap:.375rem; font-size:var(--fs-micro); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:.35rem; color:var(--az-green); }
+    .qa-item .val { font-size:var(--fs-subhead); font-weight:700; color:var(--az-navy,#16303d); margin-bottom:.15rem; display:block; }
+    .qa-item-type { font-size:var(--fs-micro); color:var(--az-muted,#707070); margin-bottom:.35rem; }
+
+    .acct-field .lbl { font-size:var(--fs-micro); color:var(--az-muted,#707070); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.2rem; font-weight:500; }
+    .acct-field .val { font-size:var(--fs-small); font-weight:600; color:var(--az-navy,#16303d); white-space:nowrap; }
+
+    .acct-hero { border-radius:1.1rem; padding:1.5rem 1.75rem; background:#e3f7ec; color:var(--az-navy,#16303d); position:relative; overflow:hidden; box-shadow:0 3px 8px rgba(26,173,110,.1); border:1px solid #bfeed7; }
+    .acct-hero::before { content:''; position:absolute; top:-10px; right:-10px; width:170px; height:170px; background:var(--az-hero-mark) no-repeat center/78%, radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%; }
+    .hero-eyebrow { font-size:var(--fs-micro); font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.6rem; position:relative; z-index:1; color:var(--az-green); }
+    .hero-name-row { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-section); font-weight:600; margin-bottom:1.25rem; position:relative; z-index:1; color:var(--az-navy,#16303d); }
+    .hero-name-row .material-icons { font-size:20px; background:#fff; color:var(--az-green); width:32px; height:32px; border-radius:.5rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 3px rgba(22,48,61,.1); }
+    .hero-bal-row { display:flex; flex-wrap:wrap; gap:3rem; position:relative; z-index:1; margin-bottom:1.4rem; }
+    .acct-hero > .hero-bal-row:last-child { margin-bottom:0; }
+    .hero-bal-block { position:relative; z-index:1; }
+    .acct-hero .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-bottom:.35rem; color:#1a7a55; }
+    .acct-hero .val { font-size:var(--fs-display); font-weight: 600; letter-spacing:-.02em; color:var(--az-navy,#16303d); white-space:normal; }
+    .hero-foot-row { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; gap:.75rem; flex-wrap:wrap; }
+    .hero-iban { font-size:var(--fs-section); font-weight:600; letter-spacing:-.01em; display:flex; align-items:center; gap:.2rem; color:var(--az-navy,#16303d); }
+    .hero-status-pill { background:#fff; color:var(--az-green); border:1px solid var(--az-green); border-radius:2rem; padding:.3rem .8rem; font-size:var(--fs-micro); font-weight:600; display:inline-flex; align-items:center; gap:.3rem; white-space:nowrap; position:absolute; top:1.5rem; right:1.75rem; z-index:2; }
+    .copy-iban-btn { background:none; border:none; padding:0 0 0 5px; cursor:pointer; color:#1a7a55; vertical-align:middle; line-height:1; position:relative; }
+    .copy-iban-btn:hover { color:var(--az-green); }
+    .copy-iban-btn .material-icons { font-size:13px; vertical-align:middle; }
+    .copy-tip { position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--az-navy,#16303d); color:#fff; font-size:var(--fs-micro); padding:2px 6px; border-radius:4px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .2s; font-family:'Poppins','Roboto',sans-serif; }
+    .copy-tip.show { opacity:1; }
+
+    /* Actions card — matches transfer-pending-list.html's .ptl-detail-panel + pill buttons */
+    .ptl-detail-panel { border:1px solid var(--az-border,#e2e8ec); border-radius:1rem; background:#fff; padding:1.25rem 1.5rem; }
+    .ptl-detail-hdr { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-body); font-weight:700; color:var(--az-navy,#16303d); margin-bottom:1rem; }
+    .ptl-detail-hdr .material-icons { font-size:18px; color:var(--az-green,#1aad6e); }
+    .ptl-meta { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:.75rem 1rem; margin-bottom:1.1rem; }
+    .ptl-meta-field .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--az-muted,#707070); margin-bottom:.2rem; }
+    .ptl-meta-field .val { font-size:var(--fs-small); font-weight:600; color:var(--az-navy,#16303d); }
+    .ptl-detail-footer { display:flex; align-items:center; justify-content:flex-end; gap:.5rem; padding-top:.9rem; border-top:1px solid #f0f4f7; }
+    .ptl-act-btn { display:inline-flex; align-items:center; gap:.35rem; padding:.4375rem 1rem; border:1.5px solid var(--az-border,#e2e8ec); border-radius:.5rem; background:#fff; font-size:var(--fs-caption); font-weight:600; color:var(--az-navy,#16303d); cursor:pointer; text-decoration:none!important; transition:all .15s; }
+    .ptl-act-btn:hover { border-color:var(--az-blue,#00538A); color:var(--az-blue,#00538A); background:#eff6ff; }
+    .ptl-act-btn.ptl-act-delete:hover { border-color:#dc2626; color:#dc2626; background:#fef2f2; }
+    .ptl-act-btn .material-icons { font-size:15px; }
+
+    .bp-empty { padding:2.5rem 1rem; text-align:center; color:var(--az-muted); font-size:var(--fs-body); display:none; flex-direction:column; align-items:center; }
+    .bp-empty .material-icons { font-size:2.5rem; display:block; margin-bottom:.5rem; opacity:.4; }
   </style>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer"><span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></span></div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div"></div>
     <div class="notif-wrap">
-      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><img src="../images/icons/notification.svg" width="18" height="18" alt="notifications" loading="lazy"/><span class="notif-dot"></span></button>
+      <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative"><span class="material-icons">notifications</span><span class="notif-dot"></span></button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr"><span class="notif-panel-title">Notifications</span></div>
         <div class="notif-list">
@@ -55,11 +111,11 @@
         <div class="notif-footer"><button class="notif-view-all" onclick="location.href='all-notifications.html'">VIEW ALL NOTIFICATIONS</button></div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
     <div class="hdr-div"></div>
     <div class="hdr-lang-wrap">
-      <button class="hdr-lang" aria-label="Language"><span class="fi fi-us"></span> <span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
+      <button class="hdr-lang" aria-label="Language"><span class="lang-txt">ENG</span> <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
         <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
         <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
@@ -88,8 +144,8 @@
         </div>
         <div class="av-drop-nav">
           <a href="my-profile-details.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>My Profile</a>
-          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Tasks</a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="my-tasks.html" class="av-nav-link" role="menuitem"><div class="av-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>My Saved Drafts</a>
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -101,118 +157,112 @@
   </div>
 </header>
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub" style="display:none"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item">Term Deposit Account Opening</a></div>
+  <button class="sb-item" data-label="Chequebook" onclick="toggleSub('sChq','cChq')"><span class="sb-icon"><img src="../images/icons/chequebook.svg" width="18" height="18" alt=""/></span><span class="sb-label">Chequebook</span><span class="sb-chevron" id="cChq"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
+  <div id="sChq" class="sb-sub" style="display:none"><a href="my-chequebooks.html" class="sb-sub-item">My Chequebook</a><a href="chequebook-request.html" class="sb-sub-item">Request Chequebook</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item active-section" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron open" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item active">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub"><a href="payments-favorites.html" class="sb-sub-item active">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 <div class="app-main" id="appMain">
   <main class="main-body" role="main">
-    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="#">Payments</a><span class="sep">&#8250;</span><span class="cur">Favorites Management</span></div>
+    <div class="az-bc"><a href="retail-dashboard.html">Home</a><span class="sep">&#8250;</span><a href="bill-payment-billers.html">Payments</a><span class="sep">&#8250;</span><span class="cur">Favorites Management</span></div>
 
     <div class="page-top-bar">
-      <h1 class="page-title">Favorites Management</h1>
-      <a href="payments-add-favorite.html" class="btn-open-account" style="display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;">
+      <h1 class="page-title" style="margin-bottom:0">Favorites Management</h1>
+      <a href="payments-add-favorite.html" class="btn-open-account">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Add Favorite
       </a>
     </div>
 
-    <!-- View toggle -->
-    <div class="d-flex justify-content-end mb-2 gap-2">
-      <button class="view-btn active" id="vList" title="List view">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      </button>
-      <button class="view-btn" id="vGrid" title="Grid view">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      </button>
-    </div>
-
-    <!-- Favorites list -->
-    <div class="sec-card">
-      <!-- Row 1 (context menu open) -->
-      <div class="fav-row">
-        <div class="fav-name">
-          <div class="primary">Lorem ipsum</div>
-          <div class="secondary">dolr sit amet</div>
+    <!-- Favorites hub — quick-access list (left) + hero detail panel (right),
+         matches accounts.html's hub pattern exactly (same column order). -->
+    <div class="fav-hub">
+      <div class="qa-panel">
+        <div class="bp-search-wrap" style="margin-bottom:1rem">
+          <input type="text" id="favSearch" placeholder="Search favorites…" oninput="favApplyFilters()" aria-label="Search favorites"/>
+          <span class="material-icons bp-search-icon" style="font-size:var(--fs-section)!important;right:.875rem">search</span>
         </div>
-        <div class="fav-field">
-          <span class="fv">biller name 1</span>
-          <span class="fl">Biller</span>
-        </div>
-        <div class="fav-field">
-          <span class="fv">Cards</span>
-          <span class="fl">Category</span>
-        </div>
-        <div class="fav-field">
-          <span class="fv">235436</span>
-          <span class="fl">Reference</span>
-        </div>
-        <div class="fav-actions">
-          <button class="ctx-trigger" onclick="toggleCtx('ctx1',this)" aria-label="Actions">&#8943;</button>
-          <div class="ctx-menu" id="ctx1" style="display:block;">
-            <a href="payments-edit-favorite.html">Edit</a>
-            <a href="#">Pay</a>
-            <button class="ctx-del" onclick="this.closest('.fav-row').remove()">Delete</button>
-          </div>
+        <div class="qa-hdr">Your Favorites <span class="qa-hdr-count" id="favHdrCount">(0)</span></div>
+        <div class="qa-list" id="favQaList"></div>
+        <div class="bp-empty" id="favEmptyState" style="padding:1.5rem .5rem;">
+          <span class="material-icons">search_off</span>
+          No favorites found.
         </div>
       </div>
-      <!-- Row 2 -->
-      <div class="fav-row">
-        <div class="fav-name">
-          <div class="primary">Lorem ipsum</div>
-          <div class="secondary">dolr sit amet</div>
+
+      <div class="fav-main-col">
+        <div class="acct-hero" id="favHero">
+          <span class="hero-status-pill" id="favHeroCat">Mobile</span>
+          <div class="hero-eyebrow">Selected Favorite</div>
+          <div class="hero-name-row">
+            <span class="material-icons">star</span>
+            <span id="favHeroName">—</span>
+          </div>
+          <div class="hero-bal-row">
+            <div class="acct-field hero-bal-block">
+              <div class="lbl">Biller</div>
+              <div class="val" id="favHeroBiller" style="font-size:var(--fs-section)">—</div>
+            </div>
+            <div class="acct-field hero-bal-block">
+              <div class="lbl">Reference</div>
+              <div class="hero-iban"><span id="favHeroRef">—</span><button class="copy-iban-btn" id="favHeroCopyBtn" onclick="favCopyRef()" title="Copy reference number" aria-label="Copy reference number"><span class="material-icons">content_copy</span><span class="copy-tip">Copied!</span></button></div>
+            </div>
+            <div class="acct-field hero-bal-block">
+              <div class="lbl">Purpose</div>
+              <div class="val" style="font-size:var(--fs-section)" id="favHeroPurpose">—</div>
+            </div>
+          </div>
         </div>
-        <div class="fav-field">
-          <span class="fv">biller name 1</span>
-          <span class="fl">Biller</span>
-        </div>
-        <div class="fav-field">
-          <span class="fv">Cards</span>
-          <span class="fl">Category</span>
-        </div>
-        <div class="fav-field">
-          <span class="fv">235436</span>
-          <span class="fl">Reference</span>
-        </div>
-        <div class="fav-actions">
-          <button class="ctx-trigger" onclick="toggleCtx('ctx2',this)" aria-label="Actions">&#8943;</button>
-          <div class="ctx-menu" id="ctx2" style="display:none;">
-            <a href="payments-edit-favorite.html">Edit</a>
-            <a href="#">Pay</a>
-            <button class="ctx-del" onclick="this.closest('.fav-row').remove()">Delete</button>
+
+        <div class="ptl-detail-panel" id="favActionsPanel">
+          <div class="ptl-detail-hdr"><span class="material-icons">info</span> Favorite Information</div>
+          <div class="ptl-meta" id="favMetaGrid"></div>
+          <div class="ptl-detail-footer">
+            <a href="payments-bill-payment-details.html" class="ptl-act-btn"><span class="material-icons">payments</span> Pay This Bill</a>
+            <a href="payments-edit-favorite.html" class="ptl-act-btn"><span class="material-icons">edit</span> Edit</a>
+            <button type="button" class="ptl-act-btn ptl-act-delete" onclick="favOpenDeleteModal(selectedFavId)"><span class="material-icons">delete_outline</span> Delete</button>
           </div>
         </div>
       </div>
     </div>
 
   </main>
+
+  <!-- ████ DELETE CONFIRMATION MODAL — matches beneficiary-management.html's mbenDeleteModal ████ -->
+  <div class="modal-ov hidden" id="favDeleteModal" role="dialog" aria-modal="true" aria-label="Delete favorite" onclick="if(event.target===this)favCloseDeleteModal()">
+    <div class="az-modal modal-sm" style="text-align:center;">
+      <div class="mben-delete-icon"><span class="material-icons">delete_outline</span></div>
+      <p style="font-weight:700;color:var(--az-navy,#16303d);margin-bottom:.4rem;">Delete this favorite?</p>
+      <p style="font-size:var(--fs-small);color:var(--az-muted,#707070);margin-bottom:1.5rem;" id="favDeleteMsg">This action can't be undone.</p>
+      <div style="display:flex;gap:.6rem;justify-content:center;">
+        <button class="btn-action btn-cancel" onclick="favCloseDeleteModal()">CANCEL</button>
+        <button class="btn-action" style="background:#dc2626;color:#fff;" onclick="favConfirmDelete()">DELETE</button>
+      </div>
+    </div>
+  </div>
   <footer class="app-footer" role="contentinfo">
     <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
     <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
@@ -226,25 +276,165 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/app.js"></script>
 <script>
-function toggleCtx(id, btn) {
-  var menu = document.getElementById(id);
-  var allMenus = document.querySelectorAll('.ctx-menu');
-  allMenus.forEach(function(m){ if(m.id !== id) m.style.display='none'; });
-  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+'use strict';
+
+/* ── Favorites — mock data ──
+   Billers/categories match bill-payment-billers.html's biller list; fields
+   match payments-add-favorite.html / payments-edit-favorite.html exactly
+   (Category, Biller, Favorite Name, Reference Number, Purpose). */
+var FAVORITES = [
+  { id:'1', name:'My Mobile Bill',       biller:'Etisalat', category:'Mobile',      ref:'235436', purpose:'Monthly mobile recharge',        lastPaid:'27 Jul 2026', payMethod:'Current Account ····7040', status:'Active' },
+  { id:'2', name:'Home Electricity',     biller:'DEWA',      category:'Utility',     ref:'118820', purpose:'Electricity & water bill',       lastPaid:'26 Jul 2026', payMethod:'Current Account ····7040', status:'Active' },
+  { id:'3', name:'Daily Commute',        biller:'Careem',    category:'Taxi',        ref:'556210', purpose:'Ride-hailing top-up',            lastPaid:'25 Jul 2026', payMethod:'Savings Account ····7136', status:'Active' },
+  { id:'4', name:'Credit Card Payment',  biller:'Visa',      category:'Credit Card', ref:'908345', purpose:'Monthly card settlement',        lastPaid:'26 Jul 2026', payMethod:'Current Account ····7040', status:'Active' },
+  { id:'5', name:'Loan Installment',     biller:'DIB',       category:'Finance',     ref:'772031', purpose:'Personal loan EMI',              lastPaid:'24 Jul 2026', payMethod:'Current Account ····7040', status:'Active' },
+  { id:'6', name:'Health Cover',         biller:'Daman',     category:'Insurance',   ref:'334298', purpose:'Annual health insurance',        lastPaid:'23 Jul 2026', payMethod:'Savings Account ····7136', status:'Active' },
+  { id:'7', name:'Second Line',          biller:'Du',        category:'Mobile',      ref:'119987', purpose:'Secondary mobile number',        lastPaid:'21 Jul 2026', payMethod:'Current Account ····7040', status:'Active' },
+  { id:'8', name:'Property Fees',        biller:'DLD',       category:'Government',  ref:'450021', purpose:'Annual property registration',   lastPaid:'22 Jul 2026', payMethod:'Current Account ····7040', status:'Active' }
+];
+
+var selectedFavId = FAVORITES.length ? FAVORITES[0].id : null;
+var FAV_ACCENTS = ['accent-green', 'accent-blue', 'accent-purple'];
+
+function favFilteredList() {
+  var q = (document.getElementById('favSearch').value || '').toLowerCase().trim();
+  if (!q) return FAVORITES;
+  return FAVORITES.filter(function(f) {
+    return f.name.toLowerCase().indexOf(q) > -1 ||
+           f.biller.toLowerCase().indexOf(q) > -1 ||
+           f.category.toLowerCase().indexOf(q) > -1 ||
+           f.ref.toLowerCase().indexOf(q) > -1;
+  });
 }
-document.addEventListener('click', function(e){
-  if(!e.target.closest('.fav-actions')) {
-    document.querySelectorAll('.ctx-menu').forEach(function(m){ m.style.display='none'; });
+
+function favApplyFilters() {
+  favRenderAll();
+}
+
+function favSelect(id) {
+  selectedFavId = id;
+  favRenderAll();
+}
+
+/* ── Delete confirmation ── */
+var favDeletePending = null;
+function favOpenDeleteModal(id) {
+  var f = FAVORITES.filter(function(x){ return x.id === id; })[0];
+  if (!f) return;
+  favDeletePending = id;
+  document.getElementById('favDeleteMsg').textContent = 'This will permanently delete "' + f.name + '".';
+  openModal('favDeleteModal');
+}
+function favCloseDeleteModal() {
+  closeModal('favDeleteModal');
+  favDeletePending = null;
+}
+function favConfirmDelete() {
+  if (!favDeletePending) return;
+  var id = favDeletePending;
+  var f = FAVORITES.filter(function(x){ return x.id === id; })[0];
+  FAVORITES = FAVORITES.filter(function(x) { return x.id !== id; });
+  if (selectedFavId === id) selectedFavId = FAVORITES.length ? FAVORITES[0].id : null;
+  favCloseDeleteModal();
+  favRenderAll();
+  if (f) favShowToast('"' + f.name + '" has been deleted.');
+}
+
+/* ── Toast — matches beneficiary-management.html's abnShowToast ── */
+function favShowToast(msg) {
+  var t = document.getElementById('favToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'favToast';
+    t.className = 'fav-toast';
+    document.body.appendChild(t);
   }
-});
-document.getElementById('vList').addEventListener('click', function(){
-  document.getElementById('vList').classList.add('active');
-  document.getElementById('vGrid').classList.remove('active');
-});
-document.getElementById('vGrid').addEventListener('click', function(){
-  document.getElementById('vGrid').classList.add('active');
-  document.getElementById('vList').classList.remove('active');
-});
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(function () { t.classList.remove('show'); }, 2600);
+}
+
+function favCopyRef() {
+  var f = FAVORITES.filter(function(x){ return x.id === selectedFavId; })[0];
+  if (!f) return;
+  var tip = document.querySelector('#favHeroCopyBtn .copy-tip');
+  var finish = function(){ tip.classList.add('show'); setTimeout(function(){ tip.classList.remove('show'); }, 1200); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(f.ref).then(finish, finish);
+  } else {
+    finish();
+  }
+}
+
+function favRenderQuickList() {
+  var visible = favFilteredList();
+  document.getElementById('favHdrCount').textContent = '(' + visible.length + ')';
+
+  var list = document.getElementById('favQaList');
+  list.innerHTML = visible.map(function(f, i) {
+    var accent = FAV_ACCENTS[i % FAV_ACCENTS.length];
+    return '<button type="button" class="qa-item ' + accent + (f.id === selectedFavId ? ' active' : '') + '" onclick="favSelect(\'' + f.id + '\')">' +
+      '<div class="qa-item-top"><span class="material-icons" style="font-size:14px">star</span> ' + f.category + '</div>' +
+      '<span class="val">' + f.name + '</span>' +
+      '<div class="qa-item-type">' + f.biller + '</div>' +
+      '</button>';
+  }).join('');
+
+  var isEmpty = visible.length === 0;
+  document.getElementById('favEmptyState').style.display = isEmpty ? 'flex' : 'none';
+  list.style.display = isEmpty ? 'none' : '';
+
+  if (!isEmpty && !visible.some(function(f){ return f.id === selectedFavId; })) {
+    selectedFavId = visible[0].id;
+  }
+}
+
+function favRenderHero() {
+  var f = FAVORITES.filter(function(x){ return x.id === selectedFavId; })[0];
+  var hero = document.getElementById('favHero');
+  var actionsPanel = document.getElementById('favActionsPanel');
+  if (!f) {
+    hero.style.display = 'none';
+    if (actionsPanel) actionsPanel.style.display = 'none';
+    return;
+  }
+  hero.style.display = '';
+  document.getElementById('favHeroCat').textContent = f.category;
+  document.getElementById('favHeroName').textContent = f.name;
+  document.getElementById('favHeroBiller').textContent = f.biller;
+  document.getElementById('favHeroRef').textContent = 'Ref #' + f.ref;
+  document.getElementById('favHeroPurpose').textContent = f.purpose;
+
+  var metaFields = [
+    ['Payment Category', f.category],
+    ['Last Bill Paid', f.lastPaid],
+    ['Payment Method', f.payMethod],
+    ['Status', f.status]
+  ];
+  document.getElementById('favMetaGrid').innerHTML = metaFields.map(function(m) {
+    return '<div class="ptl-meta-field"><div class="lbl">' + m[0] + '</div><div class="val">' + m[1] + '</div></div>';
+  }).join('');
+}
+
+function favRenderAll() {
+  favRenderQuickList();
+  favRenderHero();
+}
+
+favRenderAll();
+
+/* Show a toast when returning here after a successful edit (see
+   payments-edit-favorite.html's VIEW LIST link). */
+(function favCheckUpdatedFlag() {
+  var params = new URLSearchParams(window.location.search);
+  var name = params.get('updated');
+  if (!name) return;
+  favShowToast('"' + name + '" has been updated.');
+  params.delete('updated');
+  var qs = params.toString();
+  history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : ''));
+})();
 </script>
 </body>
 </html>

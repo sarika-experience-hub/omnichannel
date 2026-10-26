@@ -16,15 +16,227 @@
   <!-- Application styles -->
   <link rel="stylesheet" href="../css/styles.css"/>
   <link rel="stylesheet" href="../css/dark.css"/>
+  <link rel="stylesheet" href="../css/retail-sidebar-navy.css"/>
   <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/general-account-opening.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+/* ══ Modern, box-free restyle — scoped to this page only ══
+   (general-account-opening.css is shared with corporate pages,
+   so overrides live here instead of in the shared file) ══ */
+
+.page-top-bar { margin-bottom: .25rem; }
+
+/* Sections: white card box, similar to fund-transfer.html's .ntf-card */
+.gao-card {
+  background: #fff; border: 1px solid var(--az-border,#e2e8ec); border-radius: .875rem;
+  box-shadow: 0 1px 3px rgba(22,48,61,.04); overflow: visible;
+  padding: 1rem 1.75rem 1.2rem; margin-bottom: 1.5rem;
+  opacity: 0; animation: gaoFadeIn .45s cubic-bezier(.22,1,.36,1) forwards;
+}
+.gao-card:nth-of-type(1) { animation-delay: .05s; }
+.gao-card:nth-of-type(2) { animation-delay: .12s; }
+@keyframes gaoFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.gao-card-hdr { background: none; border-bottom: 1px solid #e5e9ee; padding: 0 0 .4rem; margin-bottom: .75rem; cursor: default; user-select: auto; }
+.gao-card-hdr:hover { background: none; }
+.gao-card-title { font-size:var(--fs-subhead); font-weight: 600; }
+.gao-card-subtitle { font-size:var(--fs-small); }
+
+.gao-card-body { padding: 0; }
+
+/* Field group labels — no underline rule, just weight + color for grouping */
+.gao-field-group-lbl { border-bottom: none; padding-bottom: 0; color: var(--az-blue, #2563eb); }
+
+/* Toggle rows — plain row, no box */
+.gao-toggle-row { background: none; border: none; border-radius: 0; padding: 0; margin-bottom: 0; }
+
+/* Footer — flat, separated by a hairline instead of a bordered box */
+.gao-footer {
+  background: none; border: none; border-top: 1px solid #eef1f4;
+  border-radius: 0; box-shadow: none;
+  padding: 1.5rem 0 0; margin-bottom: 0;
+}
+
+/* Modern CTA row — corporate blue primary, ghost/outline secondaries.
+   Scoped to this form's footer only (global .btn-* classes are shared
+   across the whole app, including this page's own modals). */
+.gao-footer .btn-action {
+  border-radius: .5rem;
+  padding: .7rem 1.75rem;
+  font-size:var(--fs-body);
+  transition: background .15s, box-shadow .15s, transform .15s, border-color .15s, color .15s;
+}
+.gao-footer .btn-cancel, .gao-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.gao-footer .btn-cancel:hover, .gao-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.gao-footer .btn-submit {
+  background: linear-gradient(135deg, var(--az-navy, #16303D), #0d1f28);
+  color: #fff; border: none;
+}
+.gao-footer .btn-submit:hover {
+  background: linear-gradient(135deg, #0f232e, #081820);
+  transform: translateY(-1px);
+}
+.gao-footer .btn-submit:active { transform: translateY(0); }
+
+/* ══ Spacious, modern fintech feel — more air, softer/larger controls ══ */
+
+/* Breathing room between groups and sections */
+.gao-field-group { margin-bottom: 2rem; }
+.gao-field-group:last-child { margin-bottom: 0; }
+.gao-field-group-lbl { font-size:var(--fs-caption); margin-bottom: 1.1rem; }
+.gao-card-hdr { margin-bottom: 1rem; }
+.gao-footer { padding-top: 2rem; }
+.page-top-bar { margin-bottom: 1rem; }
+
+/* Larger, softer inputs — less dense, more premium */
+.gao-card-body .f-label { font-size: var(--fs-label); font-weight: 500; margin-bottom: .5rem; }
+.gao-card-body .f-input,
+.gao-card-body .f-select,
+.gao-card-body .f-currency,
+.gao-card-body .amount-field {
+  border-radius: .625rem; border-color: #e2e7ee;
+}
+.gao-card-body .f-input,
+.gao-card-body .f-currency .fp,
+.gao-card-body .f-currency input,
+.gao-card-body .amount-curr,
+.gao-card-body .amount-inp {
+  padding: .75rem .95rem; font-size:var(--fs-body);
+}
+.gao-card-body .f-select { padding-right: 2.25rem; }
+.gao-card-body .f-input::placeholder,
+.gao-card-body .f-currency input::placeholder,
+.gao-card-body .amount-inp::placeholder {
+  text-shadow: none; -webkit-text-fill-color: currentColor; opacity: 1;
+}
+.gao-card-body .f-input:focus,
+.gao-card-body .f-currency:focus-within,
+.gao-card-body .amount-field:focus-within {
+  border-color: var(--az-blue, #00538A);
+  box-shadow: none;
+}
+.gao-card-body .ctry-combo .amount-curr {
+  min-width: auto; padding-left: .625rem; padding-right: .625rem;
+}
+
+/* Roomier field-group background block, no borders — a soft surface, not a "box" */
+.gao-toggle-info .gao-toggle-title { font-size:var(--fs-body); }
+/* Match the "Locate on Map" button used on request-hard-copy-statement.html (scoped to this page — .gao-locate-btn is shared via general-account-opening.css) */
+.gao-locate-btn {
+  border: 1.5px solid var(--az-green); color: var(--az-navy); background: #edf6f1;
+  border-radius: 20px; padding: .375rem .875rem; font-weight: 500;
+  margin-top: 1.75rem;
+}
+.gao-locate-btn:hover { background: #ddf0e6; border-color: var(--az-green); color: var(--az-navy); }
+.gao-locate-btn .material-icons { font-size: 16px; color: #1aad6e; }
+
+/* Let the 4-across rows breathe at typical laptop widths: 2-up on md/lg, 4-up only on xl+ */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .gao-card-body .row > .col-md-3 { width: 50%; }
+}
+
+/* ══ Validation states ══ */
+.f-input.is-invalid, .f-select.is-invalid, .f-currency.is-invalid {
+  border-color: #dc2626 !important;
+}
+.amount-field:has(.amount-inp.is-invalid) {
+  border-color: #dc2626 !important;
+}
+.gao-tc-error {
+  color: #dc2626; font-size:var(--fs-caption); margin-top: .5rem; display: none;
+}
+.gao-tc-error.show { display: block; }
+.gao-footer-left.is-invalid label { color: #dc2626; }
+
+/* Terms checkbox — match the redesigned .terms-chk control used elsewhere in the app */
+.gao-footer-left { font-size: var(--fs-body); }
+.gao-footer-left input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none; margin: 0; flex-shrink: 0;
+  width: 18px; height: 18px; border: 1.5px solid var(--az-border); border-radius: .25rem;
+  background: #fff center/12px no-repeat; cursor: pointer;
+  transition: background-color .15s, border-color .15s, box-shadow .15s;
+}
+.gao-footer-left input[type="checkbox"]:hover { border-color: var(--az-green); }
+.gao-footer-left input[type="checkbox"]:focus-visible { outline: none; box-shadow: 0 0 0 .1875rem rgba(46,216,142,.25); }
+.gao-footer-left input[type="checkbox"]:checked {
+  background-color: var(--az-green); border-color: var(--az-green);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.2 3.2L11 1' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.gao-footer-left.is-invalid input[type="checkbox"] { border-color: #dc2626; }
+
+/* ══ Toast ══ */
+.gao-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px);
+  background: var(--az-navy, #16303d); color: #fff; padding: .7rem 1.25rem; border-radius: .5rem;
+  font-size:var(--fs-small); font-weight: 600; font-family: 'Poppins','Roboto',sans-serif;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s; z-index: 99999;
+}
+.gao-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══ Draft-saved status pill (next to the page title) ══ */
+.gao-draft-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: #dcfce7; color: #15803d; white-space: nowrap;
+  font-size:var(--fs-caption); font-weight: 600; padding: .3rem .75rem; border-radius: 2rem;
+}
+.gao-draft-pill .material-icons { font-size: 15px; }
+
+/* ══ Saved Drafts panel ══ */
+.gao-drafts-panel { border: 1px solid #e5e9ee; border-radius: .75rem; padding: 1rem 1.25rem; margin-bottom: 2rem; background: #fafbfc; }
+.gao-drafts-hdr { display: flex; align-items: center; gap: .5rem; font-size:var(--fs-small); font-weight:600; color: var(--az-navy, #16303d); margin-bottom: .85rem; }
+.gao-drafts-hdr .material-icons { font-size: 18px; color: var(--az-blue, #00538A); }
+.gao-drafts-list { display: flex; flex-direction: column; gap: .6rem; }
+.gao-draft-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: #fff; border: 1px solid #eef1f4; border-radius: .5rem; padding: .7rem .9rem; }
+.gao-draft-name { font-size:var(--fs-small); font-weight: 600; color: var(--az-navy, #16303d); }
+.gao-draft-date { font-size:var(--fs-micro); color: var(--az-muted, #707070); margin-top: .15rem; }
+.gao-draft-actions { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+.gao-draft-resume { background: none; border: 1.5px solid var(--az-blue, #00538A); color: var(--az-blue, #00538A); font-size:var(--fs-caption); font-weight: 600; padding: .35rem .9rem; border-radius: 1.5rem; cursor: pointer; transition: background .15s; white-space: nowrap; }
+.gao-draft-resume:hover { background: rgba(0,83,138,.08); }
+.gao-draft-delete { background: none; border: none; color: var(--az-muted, #707070); cursor: pointer; padding: .3rem; display: flex; border-radius: .375rem; transition: background .12s, color .12s; }
+.gao-draft-delete:hover { background: #fee2e2; color: #dc2626; }
+.gao-draft-delete .material-icons { font-size: 18px; }
+
+/* ══ Deposit Details: form column + live preview side panel ══ */
+.gao-td-grid { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 2rem; align-items: start; }
+.gao-td-side { position: sticky; top: 1rem; align-self: start; height: fit-content; }
+@media (max-width: 991.98px) {
+  .gao-td-grid { grid-template-columns: 1fr; }
+}
+
+/* ══ Live maturity preview — vertical side panel ══ */
+.gao-preview {
+  background: rgba(46,216,142,.07); border: 1px solid rgba(26,173,110,.18); border-left: 3px solid var(--az-green, #1aad6e);
+  border-radius: .625rem; padding: 1.1rem 1.25rem;
+  display: flex; flex-direction: column; gap: .9rem;
+}
+.gao-preview-hdr {
+  display: flex; align-items: center; gap: .4rem;
+  font-size:var(--fs-caption); font-weight:600; color: var(--az-navy, #16303d);
+  padding-bottom: .75rem; margin-bottom: .1rem; border-bottom: 1px solid rgba(26,173,110,.18);
+}
+.gao-preview-hdr .material-icons { font-size: 16px; color: var(--az-green, #1aad6e); }
+/* Label and value sit on one row, matching the Fund Transfer summary panel */
+.gao-preview-item { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+.gao-preview-item:not(:last-child) { padding-bottom: .9rem; border-bottom: 1px solid rgba(26,173,110,.15); }
+.gao-preview-item .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; text-transform: uppercase; color: var(--az-muted,#707070); flex-shrink: 0; }
+.gao-preview-item .val { font-size:var(--fs-body); font-weight: 600; color: var(--az-navy,#16303d); line-height: 1.35; text-align: right; }
+.gao-preview-item.gao-preview-main .val { font-size:var(--fs-heading); font-weight: 600; color: var(--az-green, #1aad6e); }
+
+/* ══ Dependent toggle (disabled state) ══ */
+.gao-toggle-row.is-disabled { opacity: .45; }
+.gao-toggle-row.is-disabled .az-toggle { cursor: not-allowed; }
+
+/* ══ Toggle switches — corporate green instead of the shared blue (page-scoped) ══ */
+.gao-toggle-row .az-toggle input:checked + .az-slider { background: var(--az-green, #1aad6e); }
+</style>
 </head>
 <body>
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
     <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
@@ -40,11 +252,11 @@
 </svg></span>
   </div>
   <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="../images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
+    <a href="../about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
     <div class="hdr-div" role="separator"></div>
     <div class="notif-wrap">
       <button class="hdr-icon-btn" title="Notifications" aria-label="Notifications" style="position:relative">
-      <img src="../images/icons/notification.svg" width="18" height="18" alt="notification" loading="lazy"/><span class="notif-dot" aria-hidden="true"></span>
+      <span class="material-icons">notifications</span><span class="notif-dot" aria-hidden="true"></span>
     </button>
       <div class="notif-dropdown" role="dialog" aria-label="Notifications panel">
         <div class="notif-panel-hdr">
@@ -79,8 +291,8 @@
         </div>
       </div>
     </div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="../images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="../images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
+    <a href="../contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><span class="material-icons">call</span></a>
+    <a href="../faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><span class="material-icons">help</span></a>
     <div class="hdr-div" role="separator"></div>
     <div class="hdr-lang-wrap">
     <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
@@ -133,9 +345,9 @@
             <div class="av-nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             </div>
-            My Tasks
+            My Saved Drafts
           </a>
-          <a href="login.html" class="av-nav-link av-nav-logout" role="menuitem">
+          <a href="../login.html" class="av-nav-link av-nav-logout" role="menuitem">
             <div class="av-nav-icon">
               <span class="material-icons" style="font-size:18px;">logout</span>
             </div>
@@ -149,36 +361,31 @@
 
 <!-- ████ SIDEBAR ████ -->
 <aside class="app-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-  <div class="sb-search-wrap">
-    <span class="material-icons sb-search-icon">search</span>
-    <input type="text" class="sb-search-input" id="sbSearch" placeholder="Search menu…" autocomplete="off" oninput="sbFilter(this.value)" aria-label="Search navigation"/>
-    <button class="sb-search-clear" id="sbSearchClear" onclick="sbClearSearch()" aria-label="Clear search" style="display:none">
-      <span class="material-icons">close</span>
-    </button>
-  </div>
   <nav class="sb-nav">
   <button class="sb-item" data-label="Quick Links" onclick="toggleSub('sQL','cQL')" style="display:none"><span class="sb-icon"><img src="../images/icons/quick_links.svg" width="18" height="18" alt=""/></span><span class="sb-label">Quick Links</span><span class="sb-chevron" id="cQL"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sQL" class="sb-sub" style="display:none"><a href="javascript:;" class="sb-sub-item">Favourites</a></div>
+  <div class="sb-grp-lbl">Overview</div>
   <a href="retail-dashboard.html" class="sb-item" data-label="My Banking"><span class="sb-icon"><img src="../images/icons/dashboard.svg" width="18" height="18" alt=""/></span><span class="sb-label">My Banking</span></a>
   <button class="sb-item active-section" data-label="Accounts" onclick="toggleSub('sAcc','cAcc')"><span class="sb-icon"><img src="../images/icons/accounts.svg" width="18" height="18" alt=""/></span><span class="sb-label">Accounts</span><span class="sb-chevron open" id="cAcc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="account-statement.html" class="sb-sub-item">Account Statement</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item active">Term Deposit Account Opening</a></div>
+  <div id="sAcc" class="sb-sub"><a href="accounts.html" class="sb-sub-item">My Accounts</a><a href="transaction-history.html" class="sb-sub-item">Transaction History</a><a href="general-account-opening.html" class="sb-sub-item">General Account Opening</a><a href="term-deposit-account-opening.html" class="sb-sub-item active">Term Deposit Account Opening</a></div>
+  <div class="sb-grp-lbl">Money Movement</div>
   <button class="sb-item" data-label="Transfers" onclick="toggleSub('sTr','cTr')"><span class="sb-icon"><img src="../images/icons/transfer.svg" width="18" height="18" alt=""/></span><span class="sb-label">Transfers</span><span class="sb-chevron" id="cTr"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
   <div id="sTr" class="sb-sub" style="display:none">
-    <a href="transfer-pending-list.html" class="sb-sub-item">Pending Transfers List</a>
+    <a href="fund-transfer.html" class="sb-sub-item">Fund Transfer</a>
+    <a href="transfer-pending-list.html" class="sb-sub-item">My Transfers</a>
+    <a href="transfer-history.html" class="sb-sub-item">Transfer History</a>
     <a href="beneficiary-management.html" class="sb-sub-item">Beneficiary Management</a>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sImm','cImm')">Immediate Transfers <span class="sb-chev-sm" id="cImm"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sImm" class="sb-sub3" style="display:none"><a href="transfer-own-accounts.html" class="sb-sub3-item">Own Accounts Transfer</a><a href="transfer-internal.html" class="sb-sub3-item">Internal Transfer</a><a href="transfer-local.html" class="sb-sub3-item">Local Transfer</a><a href="transfer-international.html" class="sb-sub3-item">International Transfer</a><a href="transfer-list.html" class="sb-sub3-item">Immediate Transfers List</a></div>
-    <button class="sb-sub2-hdr" onclick="toggleSub('sSched','cSched')">Scheduled Transfers <span class="sb-chev-sm" id="cSched"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-    <div id="sSched" class="sb-sub3" style="display:none"><a href="scheduled-own-account.html" class="sb-sub3-item">Scheduled Own Accounts Transfer</a><a href="scheduled-internal.html" class="sb-sub3-item">Scheduled Internal Transfer</a><a href="scheduled-local.html" class="sb-sub3-item">Scheduled Local Transfer</a><a href="scheduled-international.html" class="sb-sub3-item">Scheduled International Transfer</a><a href="scheduled-transfers-list.html" class="sb-sub3-item">Scheduled Transfers List</a></div>
   </div>
   <button class="sb-item" data-label="Payments" onclick="toggleSub('sPay','cPay')"><span class="sb-icon"><img src="../images/icons/payments.svg" width="18" height="18" alt=""/></span><span class="sb-label">Payments</span><span class="sb-chevron" id="cPay"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="payments-bill-payment.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a><a href="transfer-cash-request.html" class="sb-sub-item">Cash Transfer Request</a><a href="transfer-cash-report.html" class="sb-sub-item">Cash Transfer Report</a></div>
+  <div id="sPay" class="sb-sub" style="display:none"><a href="payments-favorites.html" class="sb-sub-item">Favorites Management</a><a href="bill-payment-billers.html" class="sb-sub-item">Bill Payment</a><a href="payments-bill-report.html" class="sb-sub-item">Bill Payment Report</a><a href="payments-qr-payment.html" class="sb-sub-item">QR Code Payment</a><a href="payments-qr-request.html" class="sb-sub-item">Request QR Code</a></div>
+  <div class="sb-grp-lbl">Cards &amp; Lending</div>
   <button class="sb-item" data-label="Cards" onclick="toggleSub('sCards','cCards')"><span class="sb-icon"><img src="../images/icons/cards.svg" width="18" height="18" alt=""/></span><span class="sb-label">Cards</span><span class="sb-chevron" id="cCards"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><button class="sb-sub2-hdr" onclick="toggleSub('sSettle','cSettle')">Credit Card Settlement <span class="sb-chev-sm" id="cSettle"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button><div id="sSettle" class="sb-sub3" style="display:none"><a href="cards-settlement-my.html" class="sb-sub3-item">My Credit Card Settlement</a><a href="cards-settlement-bank.html" class="sb-sub3-item">Bank Credit Card Settlement</a></div><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
+  <div id="sCards" class="sb-sub" style="display:none"><a href="cards-my-cards.html" class="sb-sub-item">My Cards</a><a href="cards-debit-request.html" class="sb-sub-item">Debit Card Request</a><a href="cards-credit-request.html" class="sb-sub-item">Credit Card Request</a><a href="cards-prepaid-request.html" class="sb-sub-item">Prepaid Card Request</a><a href="cards-settlement.html" class="sb-sub-item">Credit Card Settlement</a><a href="cards-prepaid-recharge.html" class="sb-sub-item">Prepaid Card Recharge</a></div>
   <button class="sb-item" data-label="Financing" onclick="toggleSub('sFin','cFin')"><span class="sb-icon"><img src="../images/icons/financing.svg" width="18" height="18" alt=""/></span><span class="sb-label">Financing</span><span class="sb-chevron" id="cFin"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-calculator.html" class="sb-sub-item">Financial Calculator</a><a href="financing-facility-request.html" class="sb-sub-item">Facility Request</a><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div id="sFin" class="sb-sub" style="display:none"><a href="financing-my-facilities.html" class="sb-sub-item">My Facilities</a><a href="financing-facility-request.html" class="sb-sub-item">Financial Facility Request</a><a href="financing-payment.html" class="sb-sub-item">Financing Payment</a></div>
+  <div class="sb-grp-lbl">Support</div>
   <button class="sb-item" data-label="Services" onclick="toggleSub('sSvc','cSvc')"><span class="sb-icon"><img src="../images/icons/services.svg" width="18" height="18" alt=""/></span><span class="sb-label">Services</span><span class="sb-chevron" id="cSvc"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg></span></button>
-  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
+  <div id="sSvc" class="sb-sub" style="display:none"><a href="report-lost-document.html" class="sb-sub-item">Report Lost Document</a><a href="services-e-statement-request.html" class="sb-sub-item">E-statement Request</a><a href="../branches-atm.html" class="sb-sub-item">Branches &amp; ATM Location</a><a href="../currency-exchange-rate.html" class="sb-sub-item">Currency Exchange Rate</a><a href="../faq.html" class="sb-sub-item">Frequently Asked Questions</a><a href="../islamic-utilities.html" class="sb-sub-item">Islamic Utilities</a></div></nav>
 </aside>
 
 <!-- ████ MAIN ████ -->
@@ -191,138 +398,166 @@
 </div>
 
 <div class="page-top-bar">
-  <h1 class="page-title">Term Deposit Account Opening</h1>
+  <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+    <h1 class="page-title" style="margin-bottom:0">Term Deposit Account Opening</h1>
+    <span id="gaoDraftStatus" class="gao-draft-pill hidden"><span class="material-icons">check_circle</span> Draft saved as "<span id="gaoDraftStatusName"></span>"</span>
+  </div>
+</div>
+
+<!-- Saved Drafts — hidden entirely when there are none -->
+<div class="gao-drafts-panel hidden" id="gaoDraftsPanel">
+  <div class="gao-drafts-hdr"><span class="material-icons">description</span> Saved Drafts</div>
+  <div class="gao-drafts-list" id="gaoDraftsList"></div>
 </div>
 
 <!-- Section 1: Deposit Details -->
 <div class="gao-card" id="cardTermDet">
-  <div class="gao-card-hdr" onclick="toggleSec('secTermDet')" role="button" aria-expanded="true" aria-controls="secTermDet">
+  <div class="gao-card-hdr">
     <div class="gao-hdr-left">
-      <span class="gao-step-num">1</span>
       <span class="gao-card-title">Deposit Details</span>
       <span class="gao-card-subtitle">— Configure your term deposit</span>
     </div>
-    <svg class="gao-chev chev" viewBox="0 0 10.53 7" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/>
-    </svg>
   </div>
   <div class="gao-card-body" id="secTermDet">
 
     <!-- Smart Insights pre-fill banner (shown only when arriving from dashboard nudge) -->
     <div id="prefillBanner" style="display:none;align-items:center;gap:.75rem;background:#e6f9f0;border:1px solid #a3e6c8;border-radius:.625rem;padding:.75rem 1.125rem;margin-bottom:1rem;">
       <span class="material-icons" style="color:#1a9e63;flex-shrink:0;">auto_awesome</span>
-      <div style="flex:1;font-size:.8125rem;color:#0f6e56;">
+      <div style="flex:1;font-size:var(--fs-small);color:#0f6e56;">
         <span id="prefillMsg"><strong>Pre-filled from Best Rate Offer.</strong> A 12-month Fixed Deposit at <strong>5.50% p.a.</strong> on AED 22,150 could earn you <strong>AED 1,218</strong>.</span>
       </div>
       <button onclick="document.getElementById('prefillBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:#1a9e63;padding:0;font-size:18px;line-height:1;" aria-label="Dismiss">&#215;</button>
     </div>
 
-    <div class="gao-note">
-      <span class="material-icons">info</span>
-      Select your deposit type and tenure. Interest rate is auto-populated based on the selected tenure.
-    </div>
+    <div class="gao-td-grid">
+      <div class="gao-td-main">
 
-    <div class="gao-field-group">
-      <div class="gao-field-group-lbl">Deposit Configuration</div>
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          <label class="f-label" for="tBranch">Branch</label>
-          <input id="tBranch" class="f-input" value="Dubai Main Branch – DIFC" readonly aria-readonly="true"/>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f-label" for="tAcctType">Account Type <span style="color:#c62828">*</span></label>
-          <select id="tAcctType" class="f-input f-select">
-            <option value="" disabled selected>Select account type</option>
-            <option value="standard">Standard Term Deposit</option>
-            <option value="islamic">Islamic Term Deposit</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f-label" for="tenure">Tenure <span style="color:#c62828">*</span></label>
-          <select id="tenure" class="f-input f-select" onchange="updateRateFromTenure(this.value)">
-            <option value="" disabled selected>Select tenure</option>
-            <option value="60">60 Days</option>
-            <option value="90">3 Months</option>
-            <option value="180">6 Months</option>
-            <option value="365">12 Months</option>
-            <option value="730">24 Months</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f-label" for="interestRate">Interest Rate</label>
-          <input id="interestRate" class="f-input" value="4.50% p.a." readonly aria-readonly="true"/>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f-label">Maturity Date</label>
-          <div class="position-relative">
-            <input id="maturityDate" class="f-input" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
-            <span class="cal-icon-btn" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0085db" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="gao-field-group">
-      <div class="gao-field-group-lbl">Funding</div>
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          <label class="f-label" for="tFromAcct">From Account <span style="color:#c62828">*</span></label>
-          <select id="tFromAcct" class="f-input f-select">
-            <option>Current Account — AED 248,350.00</option>
-            <option>Savings Account — AED 84,200.00</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f-label">Opening Balance <span style="color:#c62828">*</span></label>
-          <div class="f-currency">
-            <span class="fp">AED</span>
-            <input id="openingBalance" placeholder="0.00" style="text-align:right"/>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="gao-field-group" style="margin-bottom:0">
-      <div class="gao-field-group-lbl">Maturity Instructions</div>
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          <div class="gao-toggle-row" style="margin-bottom:.75rem">
-            <div class="gao-toggle-info">
-              <span class="gao-toggle-title">Reinvest Upon Maturity</span>
-              <span class="gao-toggle-desc">Automatically renew the deposit when it matures</span>
+        <div class="gao-field-group" style="margin-bottom:1.25rem">
+          <div class="gao-field-group-lbl">Deposit Configuration</div>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="tFromAcct">From Account <span style="color:#c62828">*</span></label>
+              <select id="tFromAcct" class="f-input f-select" data-required="true">
+                <option>Current Account — AED 248,350.00</option>
+                <option>Savings Account — AED 84,200.00</option>
+              </select>
             </div>
-            <label class="az-toggle">
-              <input type="checkbox" id="tglReinvest" role="switch" onchange="document.getElementById('fldMatTransfer').classList.toggle('hidden',!this.checked)"/>
-              <span class="az-slider"></span>
-            </label>
-          </div>
-          <div class="gao-toggle-row" style="margin-bottom:.75rem">
-            <div class="gao-toggle-info">
-              <span class="gao-toggle-title">Reinvest With Profit</span>
-              <span class="gao-toggle-desc">Include accrued profit in the renewed deposit principal</span>
+            <div class="col-12 col-md-4">
+              <label class="f-label">Opening Balance <span style="color:#c62828">*</span></label>
+              <div class="f-currency">
+                <span class="fp">AED</span>
+                <input id="openingBalance" placeholder="0.00" style="text-align:right" data-required="true" oninput="updateMaturityPreview()"/>
+              </div>
             </div>
-            <label class="az-toggle">
-              <input type="checkbox" id="tglProfit" role="switch" onchange="document.getElementById('fldProfitAcct').classList.toggle('hidden',!this.checked)"/>
-              <span class="az-slider"></span>
-            </label>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="tAcctType">Account Type <span style="color:#c62828">*</span></label>
+              <select id="tAcctType" class="f-input f-select" data-required="true">
+                <option value="" disabled selected>Select account type</option>
+                <option value="standard">Standard Term Deposit</option>
+                <option value="islamic">Islamic Term Deposit</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="tenure">Tenure <span style="color:#c62828">*</span></label>
+              <select id="tenure" class="f-input f-select" data-required="true" onchange="updateRateFromTenure(this.value); updateMaturityPreview();">
+                <option value="" disabled selected>Select tenure</option>
+                <option value="60">60 Days</option>
+                <option value="90">3 Months</option>
+                <option value="180">6 Months</option>
+                <option value="365">12 Months</option>
+                <option value="730">24 Months</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="interestRate">Interest Rate</label>
+              <input id="interestRate" class="f-input" value="4.50% p.a." readonly aria-readonly="true"/>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label">Maturity Date</label>
+              <div class="position-relative">
+                <input id="maturityDate" class="f-input" placeholder="DD / MM / YYYY" style="padding-right:36px" autocomplete="off"/>
+                <span class="cal-icon-btn" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1aad6e" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="f-label" for="tBranch">Branch</label>
+              <input id="tBranch" class="f-input" value="Dubai Main Branch – DIFC" readonly aria-readonly="true"/>
+            </div>
           </div>
         </div>
-        <div class="col-12 col-md-4">
-          <div id="fldMatTransfer" class="hidden">
-            <label class="f-label" for="matTransfer">On Maturity Transfer Balance To</label>
-            <select id="matTransfer" class="f-input f-select">
-              <option>Current Account — AED 248,350.00</option>
-              <option>Savings Account — AED 84,200.00</option>
-            </select>
+
+        <div class="gao-field-group" style="margin-bottom:0">
+          <div class="gao-field-group-lbl">Maturity Instructions</div>
+          <div class="row g-3 align-items-start">
+            <div class="col-12 col-md-4">
+              <div class="gao-toggle-row" style="margin-bottom:0">
+                <div class="gao-toggle-info">
+                  <span class="gao-toggle-title">Reinvest Upon Maturity</span>
+                  <span class="gao-toggle-desc">Automatically renew the deposit<br/>when it matures</span>
+                </div>
+                <label class="az-toggle">
+                  <input type="checkbox" id="tglReinvest" role="switch" onchange="handleReinvestToggle(this)"/>
+                  <span class="az-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div id="fldMatTransfer" class="hidden">
+                <label class="f-label" for="matTransfer">On Maturity Transfer Balance To</label>
+                <select id="matTransfer" class="f-input f-select">
+                  <option>Current Account — AED 248,350.00</option>
+                  <option>Savings Account — AED 84,200.00</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div id="fldProfitAcct" class="hidden mt-3">
-            <label class="f-label" for="profitAcct">Profit Account</label>
-            <select id="profitAcct" class="f-input f-select">
-              <option>Current Account — AED 248,350.00</option>
-              <option>Savings Account — AED 84,200.00</option>
-            </select>
+          <div class="row g-3 align-items-start mt-1">
+            <div class="col-12 col-md-4">
+              <div class="gao-toggle-row is-disabled" id="reinvestProfitRow" style="margin-bottom:0">
+                <div class="gao-toggle-info">
+                  <span class="gao-toggle-title">Reinvest With Profit</span>
+                  <span class="gao-toggle-desc">Include accrued profit in the renewed deposit principal — available once reinvestment is on</span>
+                </div>
+                <label class="az-toggle">
+                  <input type="checkbox" id="tglProfit" role="switch" disabled onchange="document.getElementById('fldProfitAcct').classList.toggle('hidden',!this.checked)"/>
+                  <span class="az-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div id="fldProfitAcct" class="hidden">
+                <label class="f-label" for="profitAcct">Profit Account</label>
+                <select id="profitAcct" class="f-input f-select">
+                  <option>Current Account — AED 248,350.00</option>
+                  <option>Savings Account — AED 84,200.00</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="gao-td-side">
+        <div class="gao-preview" id="maturityPreview">
+          <div class="gao-preview-hdr"><span class="material-icons">calculate</span> Deposit Summary</div>
+          <div class="gao-preview-item">
+            <div class="lbl">Principal</div>
+            <div class="val" id="prevPrincipal">AED 0.00</div>
+          </div>
+          <div class="gao-preview-item">
+            <div class="lbl">Interest Rate</div>
+            <div class="val" id="prevRate">—</div>
+          </div>
+          <div class="gao-preview-item">
+            <div class="lbl">Tenure</div>
+            <div class="val" id="prevTenure">—</div>
+          </div>
+          <div class="gao-preview-item gao-preview-main">
+            <div class="lbl">Maturity Value</div>
+            <div class="val" id="prevMaturity">AED 0.00</div>
           </div>
         </div>
       </div>
@@ -333,42 +568,43 @@
 
 <!-- Section 2: Branch Selection -->
 <div class="gao-card" id="cardTermBranch">
-  <div class="gao-card-hdr" onclick="toggleSec('secTermBranch')" role="button" aria-expanded="true" aria-controls="secTermBranch">
+  <div class="gao-card-hdr">
     <div class="gao-hdr-left">
-      <span class="gao-step-num">2</span>
       <span class="gao-card-title">Branch Selection</span>
       <span class="gao-card-subtitle">— Choose your preferred branch</span>
     </div>
-    <svg class="gao-chev chev" viewBox="0 0 10.53 7" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/>
-    </svg>
   </div>
   <div class="gao-card-body" id="secTermBranch">
     <div class="row g-3">
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="tCountry">Country</label>
-        <select id="tCountry" class="f-input f-select">
-          <option value="" disabled selected>Select country</option>
-          <option>Mauritania</option>
-        </select>
+        <div class="ctry-combo" id="tCountryCombo">
+          <div class="amount-field">
+            <div class="amount-curr" onclick="ctryOpen(); document.getElementById('tCountry').focus();">
+              <span class="fi amount-flag" id="tCountryFlag"></span>
+            </div>
+            <input id="tCountry" class="amount-inp" style="text-align:left" autocomplete="off" placeholder="Select country" data-required="true" data-code="" onfocus="ctryOpen()" oninput="ctryFilter(this.value)"/>
+          </div>
+          <div class="ctry-combo-panel hidden" id="tCountryPanel" role="listbox" aria-label="Country"></div>
+        </div>
       </div>
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="tProvince">Province <span style="color:#c62828">*</span></label>
-        <select id="tProvince" class="f-input f-select">
+        <select id="tProvince" class="f-input f-select" data-required="true">
           <option value="" disabled selected>Select province</option>
           <option>Nouakchott</option>
         </select>
       </div>
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="tCity">City <span style="color:#c62828">*</span></label>
-        <select id="tCity" class="f-input f-select">
+        <select id="tCity" class="f-input f-select" data-required="true">
           <option value="" disabled selected>Select city</option>
           <option>Nouakchott</option>
         </select>
       </div>
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <label class="f-label" for="tBranch2">Account Opening Branch <span style="color:#c62828">*</span></label>
-        <select id="tBranch2" class="f-input f-select">
+        <select id="tBranch2" class="f-input f-select" data-required="true">
           <option value="" disabled selected>Select branch</option>
           <option>Dubai Main Branch – DIFC</option>
           <option>Abu Dhabi Main Branch – Corniche</option>
@@ -386,20 +622,38 @@
 
 <!-- Form footer -->
 <div class="gao-footer">
-  <div class="gao-footer-left">
-    <input type="checkbox" id="tcAgree" name="tcAgree"/>
-    <label for="tcAgree">I agree to the <a href="#">Terms and Conditions</a> for term deposit opening</label>
+  <div>
+    <div class="gao-footer-left">
+      <input type="checkbox" id="tcAgree" name="tcAgree" data-required="true"/>
+      <label for="tcAgree">I agree to the <a href="#">Terms and Conditions</a> for term deposit opening</label>
+    </div>
+    <div class="gao-tc-error" id="tcError">Please accept the Terms and Conditions to continue.</div>
   </div>
   <div class="gao-footer-right">
     <a href="accounts.html" class="btn-action btn-cancel" role="button">
-      <span class="material-icons">close</span> Cancel
+      Cancel
     </a>
-    <button type="button" class="btn-action btn-save">
-      <span class="material-icons">bookmark_border</span> Save Draft
+    <button type="button" class="btn-action btn-save" onclick="openSaveDraftModal()">
+      Save Draft
     </button>
-    <button type="submit" class="btn-action btn-submit" onclick="window.location.href='accounts.html'">
-      Submit <span class="material-icons">arrow_forward</span>
+    <button type="button" class="btn-action btn-submit" onclick="handleGaoSubmit()">
+      Submit
     </button>
+  </div>
+</div>
+
+<!-- Save Draft Modal -->
+<div class="modal-ov hidden" id="saveDraftModal" role="dialog" aria-modal="true" aria-labelledby="saveDraftModalTitle">
+  <div class="az-modal modal-sm">
+    <button class="modal-close" onclick="closeGaoModal('saveDraftModal')" aria-label="Close">&#215;</button>
+    <div id="saveDraftModalTitle" class="modal-title">Save as Draft</div>
+    <p style="font-size:var(--fs-small);color:var(--az-muted,#707070);margin:-.25rem 0 1.25rem;">Give this draft a name so you can find and continue it later.</p>
+    <label class="f-label" for="draftName">Draft Name</label>
+    <input id="draftName" class="f-input" placeholder="e.g. 12-Month Term Deposit — Draft"/>
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;">
+      <button class="btn-action btn-cancel" onclick="closeGaoModal('saveDraftModal')" style="padding:.6rem 1.25rem">Cancel</button>
+      <button class="btn-action btn-submit" onclick="confirmSaveDraft()" style="padding:.6rem 1.5rem">Save Draft</button>
+    </div>
   </div>
 </div>
 
@@ -465,6 +719,80 @@
 <script src="../js/shared.js"></script>
 
 <script>
+/* ── Searchable country combobox ── */
+var ctryList=[
+  {code:'us',name:'United States'},
+  {code:'ae',name:'United Arab Emirates'},
+  {code:'bh',name:'Bahrain'},
+  {code:'ch',name:'Switzerland'},
+  {code:'cn',name:'China'},
+  {code:'eg',name:'Egypt'},
+  {code:'fr',name:'France'},
+  {code:'gb',name:'United Kingdom'},
+  {code:'in',name:'India'},
+  {code:'jo',name:'Jordan'},
+  {code:'jp',name:'Japan'},
+  {code:'kw',name:'Kuwait'},
+  {code:'mr',name:'Mauritania'},
+  {code:'om',name:'Oman'},
+  {code:'qa',name:'Qatar'},
+  {code:'sa',name:'Saudi Arabia'}
+];
+function ctryRender(list){
+  var panel=document.getElementById('tCountryPanel');
+  panel.innerHTML='';
+  if(!list.length){ panel.innerHTML='<div class="ctry-combo-empty">No matches found</div>'; return; }
+  list.forEach(function(c){
+    var item=document.createElement('div');
+    item.className='ctry-combo-opt';
+    item.setAttribute('role','option');
+    item.innerHTML='<span class="fi fi-'+c.code+'"></span><span>'+c.name+'</span>';
+    item.onmousedown=function(e){ e.preventDefault(); ctrySelect(c); };
+    panel.appendChild(item);
+  });
+}
+function ctryPosition(){
+  var combo=document.getElementById('tCountryCombo');
+  var panel=document.getElementById('tCountryPanel');
+  if(panel.parentElement!==document.body) document.body.appendChild(panel);
+  var r=combo.getBoundingClientRect();
+  panel.style.left=r.left+'px';
+  panel.style.top=(r.bottom+4)+'px';
+  panel.style.width=r.width+'px';
+}
+function ctryOpen(){
+  var panel=document.getElementById('tCountryPanel');
+  panel.classList.remove('hidden');
+  ctryPosition();
+  ctryRender(ctryList);
+}
+function ctryFilter(q){
+  document.getElementById('tCountryPanel').classList.remove('hidden');
+  ctryPosition();
+  var needle=q.toLowerCase();
+  ctryRender(ctryList.filter(function(c){ return c.name.toLowerCase().indexOf(needle)>-1; }));
+}
+function ctrySelect(c){
+  var input=document.getElementById('tCountry');
+  input.value=c.name;
+  input.dataset.code=c.code.toUpperCase();
+  input.classList.remove('is-invalid');
+  document.getElementById('tCountryFlag').className='fi fi-'+c.code+' amount-flag';
+  document.getElementById('tCountryPanel').classList.add('hidden');
+}
+document.addEventListener('click', function(e){
+  var combo=document.getElementById('tCountryCombo');
+  if(combo && !combo.contains(e.target)){ document.getElementById('tCountryPanel').classList.add('hidden'); }
+});
+window.addEventListener('scroll', function(){
+  var panel=document.getElementById('tCountryPanel');
+  if(panel && !panel.classList.contains('hidden')) ctryPosition();
+}, true);
+window.addEventListener('resize', function(){
+  var panel=document.getElementById('tCountryPanel');
+  if(panel && !panel.classList.contains('hidden')) ctryPosition();
+});
+
 /* ── Rate table by tenure value (days) ── */
 var TENURE_RATES = { '60': '5.50', '90': '4.25', '180': '4.75', '365': '5.50', '730': '5.25' };
 
@@ -539,7 +867,315 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Scroll to / highlight the Deposit Details card */
   var card = document.getElementById('cardTermDet');
   if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  updateMaturityPreview();
 });
+
+/* ── Live maturity preview ── */
+function updateMaturityPreview() {
+  var principalEl = document.getElementById('openingBalance');
+  var rateEl = document.getElementById('interestRate');
+  var tenureSel = document.getElementById('tenure');
+
+  var principal = principalEl ? parseFloat(principalEl.value.replace(/,/g, '')) : NaN;
+  if (isNaN(principal)) principal = 0;
+
+  var rate = 0;
+  if (rateEl && rateEl.value) {
+    var m = rateEl.value.match(/[\d.]+/);
+    if (m) rate = parseFloat(m[0]);
+  }
+
+  var tenureDays = tenureSel ? parseInt(tenureSel.value, 10) : NaN;
+  var tenureLabel = (tenureSel && tenureSel.selectedIndex > 0) ? tenureSel.options[tenureSel.selectedIndex].text : '—';
+
+  var interest = (!isNaN(tenureDays) && rate) ? principal * (rate / 100) * (tenureDays / 365) : 0;
+  var maturityValue = principal + interest;
+
+  var fmt = function (n) { return 'AED ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+
+  document.getElementById('prevPrincipal').textContent = fmt(principal);
+  document.getElementById('prevRate').textContent = rate ? rate.toFixed(2) + '% p.a.' : '—';
+  document.getElementById('prevTenure').textContent = tenureLabel;
+  document.getElementById('prevMaturity').textContent = fmt(maturityValue);
+}
+
+/* ── Dependent toggle: "Reinvest With Profit" only makes sense once reinvestment is on ── */
+function handleReinvestToggle(tgl) {
+  document.getElementById('fldMatTransfer').classList.toggle('hidden', !tgl.checked);
+  var profitTgl = document.getElementById('tglProfit');
+  var profitRow = document.getElementById('reinvestProfitRow');
+  if (!tgl.checked) {
+    profitTgl.checked = false;
+    profitTgl.disabled = true;
+    if (profitRow) profitRow.classList.add('is-disabled');
+    document.getElementById('fldProfitAcct').classList.add('hidden');
+  } else {
+    profitTgl.disabled = false;
+    if (profitRow) profitRow.classList.remove('is-disabled');
+  }
+}
+
+/* ── Toast ── */
+function showGaoToast(msg) {
+  var t = document.getElementById('gaoToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'gaoToast';
+    t.className = 'gao-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(function () { t.classList.remove('show'); }, 2600);
+}
+
+/* ── Validation ── */
+function validateGaoForm() {
+  var valid = true;
+  var firstInvalid = null;
+
+  document.querySelectorAll('[data-required="true"]').forEach(function (el) {
+    if (el.id === 'tcAgree') return; /* handled separately below */
+    if (el.closest('.hidden')) { el.classList.remove('is-invalid'); return; }
+    var empty = !el.value || !el.value.trim();
+    if (empty) {
+      valid = false;
+      el.classList.add('is-invalid');
+      if (!firstInvalid) firstInvalid = el;
+    } else {
+      el.classList.remove('is-invalid');
+    }
+  });
+
+  var tcAgree = document.getElementById('tcAgree');
+  var tcError = document.getElementById('tcError');
+  var tcWrap = document.querySelector('.gao-footer-left');
+  if (tcAgree) {
+    if (!tcAgree.checked) {
+      valid = false;
+      if (tcError) tcError.classList.add('show');
+      if (tcWrap) tcWrap.classList.add('is-invalid');
+      if (!firstInvalid) firstInvalid = tcAgree;
+    } else {
+      if (tcError) tcError.classList.remove('show');
+      if (tcWrap) tcWrap.classList.remove('is-invalid');
+    }
+  }
+
+  if (!valid) {
+    showGaoToast('Please complete all required fields');
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (firstInvalid.focus) firstInvalid.focus();
+    }
+  }
+  return valid;
+}
+
+/* Clear the invalid state as soon as a field is fixed */
+document.querySelectorAll('[data-required="true"]').forEach(function (el) {
+  var evt = el.tagName === 'SELECT' ? 'change' : 'input';
+  el.addEventListener(evt, function () {
+    if (el.id === 'tcAgree') {
+      if (el.checked) {
+        var tcError = document.getElementById('tcError');
+        var tcWrap = document.querySelector('.gao-footer-left');
+        if (tcError) tcError.classList.remove('show');
+        if (tcWrap) tcWrap.classList.remove('is-invalid');
+      }
+      return;
+    }
+    if (el.value && el.value.trim()) el.classList.remove('is-invalid');
+  });
+});
+
+function handleGaoSubmit() {
+  if (!validateGaoForm()) return;
+  window.location.href = 'accounts.html';
+}
+
+/* ── Save Draft modal (self-contained — doesn't depend on app.js's openModal/closeModal) ── */
+function openGaoModal(id) { var el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function closeGaoModal(id) { var el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+
+function openSaveDraftModal() {
+  var input = document.getElementById('draftName');
+  if (input && !input.value.trim()) {
+    var d = new Date();
+    var dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    var tenureSel = document.getElementById('tenure');
+    var tenureLabel = (tenureSel && tenureSel.selectedIndex > 0) ? tenureSel.options[tenureSel.selectedIndex].text : 'Term Deposit';
+    input.value = tenureLabel + ' — Draft ' + dateStr;
+  }
+  openGaoModal('saveDraftModal');
+  setTimeout(function () {
+    if (input) { input.focus(); input.select(); }
+  }, 60);
+}
+function confirmSaveDraft() {
+  var input = document.getElementById('draftName');
+  var name = input ? input.value.trim() : '';
+  if (!name) {
+    input.classList.add('is-invalid');
+    input.focus();
+    return;
+  }
+  input.classList.remove('is-invalid');
+  closeGaoModal('saveDraftModal');
+
+  var drafts = loadGaoDrafts();
+  drafts.unshift({ id: 'd' + Date.now(), name: name, savedAt: new Date().toISOString(), fields: collectGaoFormFields() });
+  saveGaoDrafts(drafts);
+  renderGaoDraftsList();
+
+  showGaoToast('Draft "' + name + '" saved');
+  var pill = document.getElementById('gaoDraftStatus');
+  var pillName = document.getElementById('gaoDraftStatusName');
+  if (pill && pillName) {
+    pillName.textContent = name;
+    pill.classList.remove('hidden');
+  }
+}
+
+/* ── Saved Drafts: persistence, list, resume, delete ── */
+var GAO_DRAFTS_KEY = 'az_tdo_drafts';
+
+function loadGaoDrafts() {
+  try {
+    var raw = localStorage.getItem(GAO_DRAFTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+function saveGaoDrafts(drafts) {
+  try { localStorage.setItem(GAO_DRAFTS_KEY, JSON.stringify(drafts)); } catch (e) {}
+}
+
+function collectGaoFormFields() {
+  return {
+    tAcctType: document.getElementById('tAcctType').value,
+    tenure: document.getElementById('tenure').value,
+    interestRate: document.getElementById('interestRate').value,
+    maturityDate: document.getElementById('maturityDate').value,
+    tFromAcct: document.getElementById('tFromAcct').value,
+    openingBalance: document.getElementById('openingBalance').value,
+    tglReinvest: document.getElementById('tglReinvest').checked,
+    matTransfer: document.getElementById('matTransfer').value,
+    tglProfit: document.getElementById('tglProfit').checked,
+    profitAcct: document.getElementById('profitAcct').value,
+    tCountry: document.getElementById('tCountry').value,
+    tProvince: document.getElementById('tProvince').value,
+    tCity: document.getElementById('tCity').value,
+    tBranch2: document.getElementById('tBranch2').value,
+    tcAgree: document.getElementById('tcAgree').checked
+  };
+}
+function applyGaoFormFields(f) {
+  if (!f) return;
+  document.getElementById('tAcctType').value = f.tAcctType || '';
+  document.getElementById('tenure').value = f.tenure || '';
+  document.getElementById('interestRate').value = f.interestRate || '';
+  document.getElementById('maturityDate').value = f.maturityDate || '';
+  document.getElementById('tFromAcct').value = f.tFromAcct || '';
+  document.getElementById('openingBalance').value = f.openingBalance || '';
+  updateMaturityPreview();
+
+  var reinvestTgl = document.getElementById('tglReinvest');
+  reinvestTgl.checked = !!f.tglReinvest;
+  handleReinvestToggle(reinvestTgl);
+  document.getElementById('matTransfer').value = f.matTransfer || '';
+  if (f.tglReinvest) {
+    var profitTgl = document.getElementById('tglProfit');
+    profitTgl.checked = !!f.tglProfit;
+    document.getElementById('fldProfitAcct').classList.toggle('hidden', !profitTgl.checked);
+  }
+  document.getElementById('profitAcct').value = f.profitAcct || '';
+
+  document.getElementById('tCountry').value = f.tCountry || '';
+  var savedCtry = ctryList.find(function(c){ return c.name === f.tCountry; });
+  document.getElementById('tCountryFlag').className = savedCtry ? ('fi fi-' + savedCtry.code + ' amount-flag') : 'fi amount-flag';
+  document.getElementById('tCountry').dataset.code = savedCtry ? savedCtry.code.toUpperCase() : '';
+  document.getElementById('tProvince').value = f.tProvince || '';
+  document.getElementById('tCity').value = f.tCity || '';
+  document.getElementById('tBranch2').value = f.tBranch2 || '';
+  document.getElementById('tcAgree').checked = !!f.tcAgree;
+
+  document.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+  var tcError = document.getElementById('tcError');
+  if (tcError) tcError.classList.remove('show');
+}
+
+function escapeHtmlGao(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function formatGaoDraftDate(iso) {
+  try {
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+      ' at ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return ''; }
+}
+
+function renderGaoDraftsList() {
+  var panel = document.getElementById('gaoDraftsPanel');
+  var list = document.getElementById('gaoDraftsList');
+  if (!panel || !list) return;
+  var drafts = loadGaoDrafts();
+  if (!drafts.length) {
+    panel.classList.add('hidden');
+    return;
+  }
+  panel.classList.remove('hidden');
+  list.innerHTML = drafts.map(function (d) {
+    return '<div class="gao-draft-item">' +
+      '<div class="gao-draft-info">' +
+        '<div class="gao-draft-name">' + escapeHtmlGao(d.name) + '</div>' +
+        '<div class="gao-draft-date">Saved ' + formatGaoDraftDate(d.savedAt) + '</div>' +
+      '</div>' +
+      '<div class="gao-draft-actions">' +
+        '<button class="gao-draft-resume" onclick="resumeGaoDraft(\'' + d.id + '\')">Resume</button>' +
+        '<button class="gao-draft-delete" onclick="deleteGaoDraft(\'' + d.id + '\')" aria-label="Delete draft"><span class="material-icons">delete_outline</span></button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function resumeGaoDraft(id) {
+  var draft = loadGaoDrafts().find(function (d) { return d.id === id; });
+  if (!draft) return;
+  applyGaoFormFields(draft.fields);
+  showGaoToast('Resumed draft "' + draft.name + '"');
+  var pill = document.getElementById('gaoDraftStatus');
+  var pillName = document.getElementById('gaoDraftStatusName');
+  if (pill && pillName) {
+    pillName.textContent = draft.name;
+    pill.classList.remove('hidden');
+  }
+  var card = document.getElementById('cardTermDet');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function deleteGaoDraft(id) {
+  saveGaoDrafts(loadGaoDrafts().filter(function (d) { return d.id !== id; }));
+  renderGaoDraftsList();
+  showGaoToast('Draft deleted');
+}
+
+renderGaoDraftsList();
+(function () {
+  var input = document.getElementById('draftName');
+  if (input) {
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') confirmSaveDraft();
+    });
+    input.addEventListener('input', function () {
+      if (input.value.trim()) input.classList.remove('is-invalid');
+    });
+  }
+})();
 </script>
 </body>
 </html>
