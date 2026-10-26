@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 124" width="260" height="124" role="img" aria-label="azentio brand shapes">
+  <title>azentio brand shapes</title>
+  <g fill="#1aad6e" opacity=".11">
+    <g transform="translate(0,0)">
+      <path d="M2,46 A26,26 0 0 1 54,46 L44,46 A16,16 0 0 0 12,46 Z"/>
+      <circle cx="28" cy="46" r="8"/>
+    </g>
+    <g transform="translate(68,0)" opacity=".55">
+      <rect x="2"  y="4" width="5" height="48" rx="1"/>
+      <rect x="14" y="4" width="5" height="48" rx="1"/>
+      <rect x="26" y="4" width="5" height="48" rx="1"/>
+      <rect x="38" y="4" width="5" height="48" rx="1"/>
+      <rect x="50" y="4" width="5" height="48" rx="1"/>
+    </g>
+    <svg x="136" y="0" width="56" height="56" viewBox="130.9 0.6 22 28.2" preserveAspectRatio="xMidYMid meet">
+      <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#1aad6e"/>
+      <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#1aad6e"/>
+    </svg>
+    <g transform="translate(204,0)" opacity=".7">
+      <circle cx="28" cy="28" r="24" fill="none" stroke="#1aad6e" stroke-width="5"/>
+      <circle cx="28" cy="28" r="10" fill="none" stroke="#1aad6e" stroke-width="5"/>
+    </g>
+    <g transform="translate(0,68)">
+      <circle cx="28" cy="28" r="26"/>
+      <path d="M28 6C28 19 19 28 6 28C19 28 28 37 28 50C28 37 37 28 50 28C37 28 28 19 28 6Z" fill="#ffffff" opacity="1"/>
+    </g>
+    <g transform="translate(68,68)" opacity=".8">
+      <path d="M28,3 L55,53 L1,53 Z M28,27 L41,53 L15,53 Z" fill-rule="evenodd"/>
+    </g>
+    <g transform="translate(136,68)" opacity=".6">
+      <path d="M2,42 A13,13 0 0 1 28,42 A13,13 0 0 0 54,42" fill="none" stroke="#1aad6e" stroke-width="7"/>
+      <rect x="4"  y="4" width="12" height="12"/>
+      <rect x="40" y="4" width="12" height="12"/>
+    </g>
+    <g transform="translate(204,68)" opacity=".75">
+      <path d="M26,2 A26,26 0 0 0 26,54 Z"/>
+      <path d="M30,2 A26,26 0 0 1 30,54 Z" opacity=".45"/>
+    </g>
+  </g>
+</svg>
