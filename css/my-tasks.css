@@ -1,0 +1,164 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — My Tasks
+   ──────────────────────────────────────────────────────────────
+   Built on the same hub as My Accounts and My Chequebooks: the
+   queues sit in the left panel, the selected queue is described by
+   the hero, and its items are listed below. The tabs this screen
+   used to carry are gone — picking a queue on the left is what
+   changes the view.
+
+   My Tasks is reached from the profile menu, not the sidebar, so
+   no sidebar item is marked active here.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Accent matched to the accounts hub; the global --az-green is the
+   brighter brand mint. Worth unifying app-wide rather than per page. */
+:root { --az-green: #1aad6e; }
+
+/* The hub sits straight on the page — the panels and rows carry
+   their own surfaces, so a card around them adds a second border. */
+.content-card { background:transparent; border:none; box-shadow:none; padding:0; }
+
+/* ── Hub ── */
+.acct-hub { display:grid; grid-template-columns:260px 1fr; gap:1.25rem; align-items:start; }
+.acct-main-col { display:flex; flex-direction:column; gap:1.25rem; }
+
+.qa-panel { border:none; border-radius:1rem; background:transparent; padding:1rem; }
+.qa-hdr { font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; color:var(--az-muted,#707070); text-transform:uppercase; margin-bottom:.75rem; padding:0 .25rem; }
+.qa-hdr-count { color:var(--az-navy,#16303d); }
+.qa-list { display:flex; flex-direction:column; gap:.625rem; }
+.qa-item { position:relative; overflow:hidden; display:block; width:100%; text-align:left; border:1px solid var(--az-border,#e2e8ec); border-radius:.75rem; background:#fcfdfd; padding:.75rem .875rem; cursor:pointer; transition:background .15s, border-color .15s, box-shadow .15s; font-family:var(--az-font); }
+.qa-item:hover { background:#f4f7f7; }
+.qa-item.active { background:var(--az-green-light); border:1.5px solid var(--az-green,#1aad6e); box-shadow:0 3px 10px rgba(26,173,110,.18); }
+.qa-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--az-green,#1aad6e); }
+.qa-item-type { font-size:var(--fs-micro); color:var(--az-muted,#707070); margin-bottom:.35rem; }
+.qa-item-top { display:flex; align-items:center; gap:.375rem; font-size:var(--fs-micro); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:.35rem; }
+.qa-item-top .material-icons { font-size:14px; }
+/* Accent per category, the way the accounts panel accents per account */
+.qa-item.accent-green .qa-item-top { color:var(--az-green); }
+.qa-item.accent-blue .qa-item-top { color:#2563eb; }
+.qa-item.accent-purple .qa-item-top { color:#7c3aed; }
+.qa-item .val { font-size:var(--fs-subhead); font-weight:700; color:var(--az-navy,#16303d); margin-bottom:.15rem; display:block; }
+.qa-item-badge { display:inline-flex; font-size:var(--fs-micro); padding:.15rem .5rem; margin-top:.7rem; }
+
+/* ── Hero ── */
+.acct-hero { border-radius:1.1rem; padding:1.5rem 1.75rem; background:#e3f7ec; color:var(--az-navy,#16303d); position:relative; overflow:hidden; box-shadow:0 3px 8px rgba(26,173,110,.1); border:1px solid #bfeed7; }
+.acct-hero::before {
+  content:''; position:absolute; top:-10px; right:-10px; width:170px; height:170px;
+  background:
+    var(--az-hero-mark) no-repeat center/78%,
+    radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%;
+}
+.hero-eyebrow { font-size:var(--fs-micro); font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.6rem; position:relative; z-index:1; color:var(--az-green); }
+.hero-name-row { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-section); font-weight:600; margin-bottom:1.25rem; position:relative; z-index:1; color:var(--az-navy,#16303d); flex-wrap:wrap; }
+.hero-name-row .material-icons { font-size:20px; background:#fff; color:var(--az-green); width:32px; height:32px; border-radius:.5rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 3px rgba(22,48,61,.1); }
+.hero-bal-row { display:flex; flex-wrap:wrap; gap:3rem; position:relative; z-index:1; margin-bottom:0; }
+.hero-bal-block { position:relative; z-index:1; }
+.acct-hero .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-bottom:.35rem; color:#1a7a55; }
+.acct-hero .val { font-size:var(--fs-section); font-weight:600; letter-spacing:-.02em; color:var(--az-navy,#16303d); font-variant-numeric:tabular-nums lining-nums; }
+.mt-hero-badge { position:absolute; top:1.5rem; right:1.75rem; z-index:2; padding:.25rem .75rem; }
+
+/* ── Queue toolbar ── */
+.mt-sec-hdr { display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; margin-bottom:1rem; }
+.mt-sec-title { font-size:var(--fs-subhead); font-weight:600; color:var(--az-navy); }
+.mt-sec-title span { color:var(--az-muted); font-weight:400; }
+.mt-toolbar { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; }
+.mt-search { display:flex; align-items:center; border:1.5px solid #e2e7ee; border-radius:.625rem; background:#fff; padding:0 .3rem 0 .9rem; min-width:220px; transition:border-color .15s, box-shadow .15s; }
+.mt-search:focus-within { border-color:var(--az-green,#1aad6e); box-shadow:0 0 0 3px rgba(26,173,110,.12); }
+.mt-search input { flex:1; min-width:0; border:none; outline:none; background:none; padding:.5rem 0; font-family:var(--az-font); font-size:var(--fs-small); color:var(--az-navy); }
+.mt-search button { border:none; background:none; cursor:pointer; color:var(--az-green,#1aad6e); padding:.35rem; display:flex; border-radius:.4rem; }
+.mt-search button:hover { background:#eafaf2; }
+
+/* Bulk bar appears only while something is selected, so the screen
+   never offers an action that cannot be taken. */
+.mt-bulk { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; background:#f2fcf7; border:1px solid #cdeedd; border-radius:.625rem; padding:.6rem .9rem; margin-bottom:1rem; }
+.mt-bulk-count { font-size:var(--fs-small); font-weight:600; color:#1a7a55; margin-right:auto; }
+.mt-bulk.hidden { display:none; }
+
+/* ── Rows ── */
+.mt-row { border:1px solid var(--az-border); border-radius:.75rem; background:#fff; padding:.9rem 1.15rem; margin-bottom:.7rem; transition:box-shadow .15s, border-color .15s; }
+.mt-row:last-child { margin-bottom:0; }
+.mt-row:hover { box-shadow:0 4px 16px rgba(22,48,61,.07); border-color:#d3e6dd; }
+.mt-row.is-selected { border-color:var(--az-green,#1aad6e); background:#f8fdfa; }
+.mt-row-top { display:flex; align-items:center; gap:.6rem; margin-bottom:.6rem; flex-wrap:wrap; }
+.mt-row-cb { width:16px; height:16px; accent-color:#1aad6e; cursor:pointer; flex-shrink:0; }
+.mt-row-name { font-size:var(--fs-body); font-weight:600; color:var(--az-navy); }
+.mt-row-time { font-size:var(--fs-caption); color:var(--az-muted); }
+.mt-row-actions { display:flex; align-items:center; gap:.35rem; margin-left:auto; }
+.mt-icon-btn { border:none; background:none; cursor:pointer; padding:.3rem; border-radius:.4rem; color:var(--az-muted); display:flex; transition:background .12s,color .12s; }
+.mt-icon-btn:hover { background:#eafaf2; color:var(--az-green,#1aad6e); }
+.mt-icon-btn.danger:hover { background:#fdeaea; color:#dc3545; }
+.mt-icon-btn .material-icons { font-size:17px; }
+
+.mt-fields { display:flex; gap:2rem; flex-wrap:wrap; }
+.mt-field .mf-val { font-size:var(--fs-small); font-weight:600; color:var(--az-navy); font-variant-numeric:tabular-nums lining-nums; }
+.mt-field .mf-lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--az-muted); margin-top:.15rem; }
+
+/* Twelve audit fields on every row buried the three that matter, so
+   the rest collapse behind a disclosure. */
+.mt-more { margin-top:.75rem; }
+.mt-more-btn { border:none; background:none; padding:0; display:inline-flex; align-items:center; gap:.25rem; font-family:var(--az-font); font-size:var(--fs-caption); font-weight:600; color:var(--az-blue); cursor:pointer; }
+.mt-more-btn .material-icons { font-size:16px; transition:transform .2s; }
+.mt-more-btn[aria-expanded="true"] .material-icons { transform:rotate(180deg); }
+.mt-more-body { margin-top:.7rem; padding-top:.7rem; border-top:1px dashed #e5eaee; }
+.mt-more-body.hidden { display:none; }
+
+/* ── Row CTAs ── */
+.mt-row-cta { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.85rem; padding-top:.8rem; border-top:1px solid #eef1f4; }
+.btn-task { border-radius:.5rem; padding:.45rem 1rem; font-family:var(--az-font); font-size:var(--fs-small); font-weight:600; border:none; cursor:pointer; transition:background .12s, transform .12s; }
+.btn-task:active { transform:translateY(1px); }
+.btn-task-gray { background:#f1f3f5; color:var(--az-muted); }
+.btn-task-gray:hover { background:#e4e7eb; color:var(--az-navy); }
+.btn-task-reject { background:#fff; border:1.5px solid var(--az-green,#1aad6e); color:var(--az-navy); }
+.btn-task-reject:hover { background:#f2fcf7; border-color:#148c58; }
+.btn-task-approve, .btn-task-update { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; }
+.btn-task-approve:hover, .btn-task-update:hover { background:linear-gradient(135deg,#0f232e,#081820); color:#fff; }
+
+.mt-empty { text-align:center; padding:2.5rem 1rem; color:var(--az-muted); font-size:var(--fs-small); }
+.mt-empty .material-icons { display:block; font-size:30px; color:#c7d6cf; margin-bottom:.5rem; }
+
+@media (max-width:1100px) {
+  .acct-hub { grid-template-columns:1fr; }
+  .qa-panel { padding:0 0 .5rem; }
+  .qa-list { flex-direction:row; flex-wrap:wrap; }
+  .qa-item { flex:1 1 220px; }
+}
+
+html.dark .qa-item { background:#111e27; border-color:#243545; }
+html.dark .qa-item:hover { background:#16242f; }
+html.dark .acct-hero { background:#12302a; border-color:#1d5243; }
+html.dark .mt-row { background:#111e27; border-color:#243545; }
+html.dark .mt-search { background:#0d1b24; border-color:#243545; }
+html.dark .mt-bulk { background:#12302a; border-color:#1d5243; }
+
+/* ── Row actions ──
+   Labelled items borrowed from the accounts page action panel, but
+   kept on the rows themselves: an action that reads "delete the
+   latest draft" gives the reader no way to tell which one that is. */
+.acts-item { display:block; padding:.5rem; margin:0 -.5rem; width:calc(100% + 1rem); border:none; background:none; text-align:left; text-decoration:none !important; color:#00538A; font-family:var(--az-font); font-size:var(--fs-small); font-weight:500; cursor:pointer; border-radius:.375rem; transition:background .12s; }
+.acts-item:hover { background:var(--az-green-light); color:#00538A; }
+
+/* Row actions use the same labelled items rather than bare icons, so
+   "edit" is readable without hovering for a tooltip. */
+.mt-row-acts { gap:.25rem; }
+.mt-row-acts .acts-item { display:inline-block; width:auto; margin:0; padding:.4rem .7rem; }
+.acts-item-danger { color:#c62828; }
+.acts-item-danger:hover { background:#fdeaea; color:#c62828; }
+
+html.dark .acts-item:hover { background:#16242f; }
+
+/* ── Action panel ──
+   Back in use now that the left panel selects a single draft: the
+   panel header names the draft it acts on, so there is no guessing
+   which one "delete" means. */
+.aic-panel { border:1px solid var(--az-border,#e2e8ec); border-radius:1rem; background:#fff; padding:1.25rem 1.5rem; }
+.aic-hdr { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-body); font-weight:600; color:var(--az-navy,#16303d); margin-bottom:1rem; }
+.aic-hdr .material-icons { font-size:18px; color:var(--az-green); }
+.acts-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.25rem; }
+.acts-sec-hdr { display:flex; align-items:center; gap:.3rem; font-size:var(--fs-micro); font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--az-muted,#707070); margin-bottom:.4rem; }
+.acts-sec-hdr .material-icons { font-size:15px; color:var(--az-green); }
+
+.mt-empty { display:flex; flex-direction:column; align-items:center; }
+.acct-hub.hidden { display:none; }
+
+html.dark .aic-panel { background:#111e27; border-color:#243545; }

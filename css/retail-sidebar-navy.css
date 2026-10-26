@@ -1,0 +1,111 @@
+/* ══════════════════════════════════════════════════════════════
+   Retail — Navy Rail sidebar
+   Scoped to the retail/ section only. Loaded after styles.css so
+   these rules win on equal specificity without needing !important.
+   Does not touch css/styles.css, so corporate/ and other sections
+   are unaffected.
+   ══════════════════════════════════════════════════════════════ */
+
+.app-sidebar {
+  background: #0f2029;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+
+/* ── Page background ──
+   Matches retail-dashboard.html's own canvas (#f9fafb) so every retail
+   page shares the same light grey background against the white header
+   and dark navy rail. Only applies in light mode — dark.css's
+   `html.dark body` rule is more specific and still wins when dark theme
+   is active. */
+body { background: #f9fafb; }
+
+/* ── Sidebar search ── */
+.sb-search-wrap {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+}
+.sb-search-wrap:focus-within {
+  background: rgba(255,255,255,.1);
+  border-color: #2ed88e;
+  box-shadow: 0 0 0 2px rgba(46,216,142,.18);
+}
+.sb-search-icon { color: #8fa3a0; }
+.sb-search-input { color: #e8efec; }
+.sb-search-input::placeholder { color: #6b827e; }
+.sb-search-clear { color: #8fa3a0; }
+.sb-search-clear:hover { color: #ffffff; }
+.app-sidebar.sb-collapsed .sb-search-wrap { border-color: rgba(255,255,255,.14); }
+.app-sidebar.sb-collapsed .sb-search-icon { color: #8fa3a0; }
+
+/* ── Group labels (Overview / Money Movement / Cards & Lending / Support) ── */
+.sb-grp-lbl {
+  font-family: 'Poppins','Roboto',sans-serif;
+  font-size:var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  /* was #5d7a78 — 3.59:1 on the navy rail, under AA for text this small */
+  color: #7d9693;
+  padding: .95rem 1rem .4rem 1rem;
+}
+.sb-nav > .sb-grp-lbl:first-of-type { padding-top: .35rem; }
+.app-sidebar.sb-collapsed .sb-grp-lbl { display: none; }
+
+/* ── Top-level nav rows ── */
+.sb-item {
+  color: #cdd9d7;
+}
+.sb-item:hover { background: rgba(255,255,255,.06); }
+.sb-item.active-section {
+  background: rgba(46,216,142,.14);
+  color: #ffffff;
+  border-left-color: #2ed88e;
+}
+.sb-item.active-section:hover { background: rgba(46,216,142,.2); }
+
+/* icons ship as flat-colored SVGs (navy/green fills baked in), so recolor
+   via filter rather than `color` — muted light by default, white when active */
+.sb-icon img { filter: brightness(0) invert(1); opacity: .55; }
+.sb-item:hover .sb-icon img { opacity: .8; }
+.sb-item.active-section .sb-icon img { filter: brightness(0) invert(1); opacity: 1; }
+.sb-icon .material-icons { color: #7d9693; }
+.sb-item.active-section .sb-icon .material-icons { color: #ffffff; }
+.sb-item:hover .sb-icon .material-icons { color: #e8efec; }
+
+.sb-chevron { color: #7d9693; } /* was #6b827e — 4.07:1 */
+.sb-item.active-section .sb-chevron { color: #ffffff; }
+
+/* Collapsed-rail tooltip stays legible against the main (light) content area */
+.app-sidebar.sb-collapsed .sb-item::after {
+  background: #0f2029;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+/* ── Sub menu ── */
+.sb-sub-item, a.sb-sub-item { color: #8fa3a0; }
+.sb-sub-item:hover, a.sb-sub-item:hover { background: rgba(255,255,255,.05); color: #ffffff; }
+.sb-sub-item.active, a.sb-sub-item.active {
+  color: #ffffff;
+  font-weight: 600;
+  background: rgba(255,255,255,.04);
+  border-left-color: #2ed88e;
+}
+.sb-sub2-hdr { color: #8fa3a0; }
+.sb-sub2-hdr:hover { background: rgba(255,255,255,.05); color: #ffffff; }
+.sb-sub2-hdr:has(+ .sb-sub3 .sb-sub3-item.active) {
+  color: #ffffff; font-weight: 600;
+  background: rgba(255,255,255,.04);
+  border-left-color: #2ed88e;
+}
+.sb-sub3-item, a.sb-sub3-item { color: #8fa3a0; }
+.sb-sub3-item:hover, a.sb-sub3-item:hover { background: rgba(255,255,255,.04); color: #ffffff; }
+.sb-sub3-item.active, a.sb-sub3-item.active {
+  color: #ffffff; font-weight: 600;
+  background: rgba(255,255,255,.04);
+  border-left-color: #2ed88e;
+}
+
+/* ── Scrollbar ── */
+.sb-nav { scrollbar-color: rgba(255,255,255,.35) transparent; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); }
+.sb-nav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.55); }

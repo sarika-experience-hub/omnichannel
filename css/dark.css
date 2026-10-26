@@ -500,6 +500,13 @@ html.dark .amount-curr      { background: #1e3040 !important; border-right-color
 /* Remove the generic select arrow override inside amount-curr to prevent double-arrow */
 html.dark .amount-curr select { background: none !important; color: #d0dde5 !important; border: none !important; }
 html.dark .amount-inp       { background: #162530 !important; color: #d0dde5 !important; }
+html.dark .terms-chk        { color: #d0dde5 !important; }
+html.dark .terms-chk input[type="checkbox"] { background-color: #162530 !important; border-color: #243545 !important; }
+html.dark .terms-chk input[type="checkbox"]:checked { background-color: var(--az-green) !important; border-color: var(--az-green) !important; }
+html.dark .ctry-combo-panel { background: #16222c !important; border-color: #243545 !important; }
+html.dark .ctry-combo-opt   { color: #d0dde5 !important; }
+html.dark .ctry-combo-opt:hover, html.dark .ctry-combo-opt.active { background: #1e3040 !important; }
+html.dark .ctry-combo-empty { color: #7c8a94 !important; }
 
 /* ── Attachment / file upload zone ───────────── */
 html.dark .attach-zone      { background: #162530 !important; border-color: #2ed88e !important; }

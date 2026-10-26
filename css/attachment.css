@@ -1,0 +1,32 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — attachment control
+   ──────────────────────────────────────────────────────────────
+   A compact single row: icon, the copy with its constraints, and
+   a Browse button. Used by the onboarding ID upload and the QR
+   payment attachment, so it lives here rather than in either
+   page's stylesheet.
+
+   Pairs with js/attachment.js.
+   ══════════════════════════════════════════════════════════════ */
+.attach-zone { display:flex; align-items:center; gap:.85rem; text-align:left; padding:.8rem .9rem; border:1.5px dashed #cdd9e0; border-radius:.75rem; background:#fbfcfd; cursor:pointer; transition:border-color .15s, background .15s; }
+.attach-zone:hover { border-color:var(--az-green,#1aad6e); background:#f6fdf9; }
+.attach-zone.is-dragover { border-color:var(--az-green,#1aad6e); background:#eefaf4; }
+.ob-upload-ico { width:34px; height:34px; border-radius:.55rem; background:#e3f7ec; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ob-upload-ico .material-icons { font-size:19px; color:#1aad6e; }
+.ob-upload-txt { flex:1; min-width:0; display:block; }
+.ob-upload-lead { display:block; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); }
+.ob-upload-hint { display:block; font-size:var(--fs-micro); color:var(--az-muted); margin-top:.1rem; }
+.ob-upload-btn { display:inline-flex; align-items:center; gap:.35rem; border:1.5px solid var(--az-navy); color:var(--az-navy); background:#fff; font-weight:600; font-size:var(--fs-caption); padding:.4rem .8rem; border-radius:.5rem; cursor:pointer; flex-shrink:0; font-family:var(--az-font); }
+.ob-upload-btn:hover { background:#f4f7fa; }
+
+.ob-file-chip { display:flex; align-items:center; gap:.6rem; border:1px solid #cdeedd; background:#f5fcf8; border-radius:.55rem; padding:.5rem .7rem; margin-top:.65rem; font-size:var(--fs-small); }
+.ob-file-chip .ob-chip-ico { color:#1aad6e; font-size:18px; flex-shrink:0; }
+.ob-file-chip-name { flex:1; min-width:0; color:var(--az-navy); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ob-file-chip-size { font-size:var(--fs-micro); color:var(--az-muted); flex-shrink:0; font-variant-numeric:tabular-nums; }
+.ob-file-chip-rm { cursor:pointer; color:var(--az-muted); font-size:18px; border-radius:50%; transition:color .12s,background .12s; }
+.ob-file-chip-rm:hover { color:#c62828; background:rgba(198,40,40,.08); }
+.ob-file-chip-err { border-color:#f3c9c9; background:#fff6f6; }
+.ob-file-chip-err .ob-chip-ico, .ob-file-chip-err .ob-file-chip-name { color:#d94141; }
+
+html.dark .attach-zone { background:#0d1b24; border-color:#243545; }
+html.dark .ob-file-chip { background:#12302a; border-color:#1d5243; }

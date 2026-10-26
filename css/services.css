@@ -13,7 +13,7 @@
 }
 
 .svc-acct-name {
-  font-size: .875rem;
+  font-size:var(--fs-body);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--az-navy);
@@ -25,22 +25,27 @@
 .svc-badge-active {
   display: inline-flex;
   align-items: center;
-  background: #e6f9f1;
-  color: #1a9c5b;
-  font-size: .6875rem;
+  gap: .3rem;
+  background: #fff;
+  color: var(--az-green);
+  font-size:var(--fs-micro);
   font-weight: 700;
   padding: .125rem .5625rem;
   border-radius: 50px;
-  border: 1px solid #b7ecd7;
+  border: 1px solid var(--az-green);
   line-height: 1.4;
   text-transform: none;
+}
+.svc-badge-active::before {
+  content: 'check_circle'; font-family: 'Material Icons'; font-weight: normal; font-style: normal;
+  display: inline-block; font-size: 1.15em; line-height: 1; -webkit-font-smoothing: antialiased;
 }
 
 .svc-acct-ccy {
   display: flex;
   align-items: center;
   gap: .375rem;
-  font-size: .8125rem;
+  font-size:var(--fs-small);
   color: var(--az-navy);
   margin-top: .3125rem;
 }
@@ -61,8 +66,8 @@
   background: #fff;
   border: 1.5px solid var(--az-green);
   border-radius: .375rem;
-  font-family: 'Roboto', sans-serif;
-  font-size: .8125rem;
+  font-family: 'Poppins','Roboto',sans-serif;
+  font-size:var(--fs-small);
   font-weight: 600;
   color: var(--az-navy);
   cursor: pointer;
@@ -82,8 +87,8 @@
 .f-currency-sel {
   border: none;
   background: none;
-  font-family: 'Roboto', sans-serif;
-  font-size: .8125rem;
+  font-family: 'Poppins','Roboto',sans-serif;
+  font-size:var(--fs-small);
   font-weight: 500;
   cursor: pointer;
   outline: none;
@@ -94,7 +99,7 @@
 
 /* ── Terms & Conditions link ───────────────────── */
 .form-footer .tc a {
-  color: #0067AB;
+  color: var(--az-blue);
   text-decoration: none;
   font-weight: 500;
 }
@@ -132,7 +137,7 @@
   cursor: pointer;
   color: var(--az-muted);
   padding: .25rem .5rem;
-  font-size: 1.125rem;
+  font-size:var(--fs-heading);
   line-height: 1;
   border-radius: .25rem;
   transition: background .12s, color .12s;
@@ -147,7 +152,7 @@
 
 .svc-cal-month {
   font-weight: 700;
-  font-size: .9375rem;
+  font-size:var(--fs-subhead);
   color: var(--az-green);
   letter-spacing: .01em;
 }
@@ -159,7 +164,7 @@
 }
 
 .svc-cal-dh {
-  font-size: .625rem;
+  font-size:var(--fs-micro);
   font-weight: 600;
   color: var(--az-muted);
   padding: .25rem 0 .5rem;
@@ -169,11 +174,11 @@
 
 .svc-cal-day {
   padding: .4375rem .125rem;
-  font-size: .8125rem;
+  font-size:var(--fs-small);
   cursor: pointer;
   border-radius: .25rem;
   color: var(--az-navy);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins','Roboto',sans-serif;
   transition: background .1s;
   border: none;
   background: none;

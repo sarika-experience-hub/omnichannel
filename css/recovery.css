@@ -1,0 +1,61 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — account recovery
+   ──────────────────────────────────────────────────────────────
+   The few pieces the forgot-username / forgot-password journeys
+   need on top of the onboarding shell: the "one of three" field
+   row, the delivery-channel picker and the guidance side panel.
+   Everything else comes from onboarding-shell.css, so these pages
+   stay visually identical to Create Online Account.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── "CIF or account or card" — one of three ──
+   The OR separators sit on the field baseline so the row reads as a
+   single choice, and the group wraps as a unit on narrow screens. */
+.ob-oneof { display:flex; align-items:flex-end; gap:0; flex-wrap:wrap; }
+.ob-oneof > .ob-oneof-f { flex:1 1 180px; min-width:0; }
+.ob-oneof-or { flex:0 0 auto; padding:0 .9rem .95rem; font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; color:var(--az-muted); }
+
+/* ── Delivery channel picker ── */
+.ob-choice-row { display:flex; gap:.75rem; flex-wrap:wrap; }
+.ob-choice { flex:1 1 0; min-width:0; display:flex; align-items:flex-start; gap:.65rem; padding:.85rem 1rem; border:1.5px solid #e2e7ee; border-radius:.75rem; background:#fff; cursor:pointer; margin:0; transition:border-color .15s, background .15s, box-shadow .15s; }
+.ob-choice:hover { border-color:#bfd8ea; }
+.ob-choice input { margin-top:.15rem; accent-color:#1aad6e; width:16px; height:16px; flex-shrink:0; cursor:pointer; }
+.ob-choice:has(input:checked) { border-color:#1aad6e; background:#f4fcf8; box-shadow:0 0 0 3px rgba(26,173,110,.1); }
+.ob-choice-t { display:block; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); }
+.ob-choice-d { display:block; font-size:var(--fs-caption); color:var(--az-muted); margin-top:.1rem; }
+@media (max-width:620px) { .ob-choice { flex:1 1 100%; } }
+
+/* ── Side panel: guidance accordion ──
+   Same white-on-mint surface as the onboarding summary panel, so the
+   two journeys read as one family. */
+.ob-side-title { font-size:var(--fs-micro); font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:#4b6b5b; margin-bottom:.85rem; }
+.ob-guide { background:#fff; border:1px solid #cdeedd; border-radius:.75rem; overflow:hidden; margin-bottom:.6rem; }
+.ob-guide:last-child { margin-bottom:0; }
+.ob-guide-hdr { display:flex; align-items:center; gap:.5rem; width:100%; background:none; border:none; padding:.65rem .85rem; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); cursor:pointer; text-align:left; }
+.ob-guide-hdr .gi { font-size:17px; color:#1aad6e; flex-shrink:0; }
+.ob-guide-hdr .gchev { font-size:18px; color:var(--az-muted); margin-left:auto; transition:transform .2s; flex-shrink:0; }
+.ob-guide-hdr[aria-expanded="false"] .gchev { transform:rotate(-90deg); }
+.ob-guide-body { padding:0 .85rem .8rem; }
+.ob-guide-body.ob-hidden { display:none; }
+.ob-guide-tip { display:flex; gap:.5rem; align-items:flex-start; margin-bottom:.45rem; }
+.ob-guide-tip:last-child { margin-bottom:0; }
+.ob-guide-tip .dot { width:5px; height:5px; border-radius:50%; background:#1aad6e; margin-top:.42rem; flex-shrink:0; }
+.ob-guide-tip span { font-size:var(--fs-caption); color:#55707e; line-height:1.55; }
+.ob-guide-tip strong { color:var(--az-navy); font-weight:600; }
+.ob-guide-note { display:inline-flex; align-items:center; gap:.3rem; margin-top:.55rem; font-size:var(--fs-micro); font-weight:600; background:#e0f7ee; color:#0a7a4a; border:1px solid #b3e6ce; border-radius:20px; padding:.18rem .6rem; }
+.ob-guide-note .material-icons { font-size:12px; }
+.ob-guide-contact { padding:.45rem 0; }
+.ob-guide-contact div { font-size:var(--fs-caption); color:#55707e; line-height:1.45; }
+.ob-guide-contact strong { display:block; color:var(--az-navy); font-size:var(--fs-caption); font-weight:600; }
+.ob-guide-sep { height:1px; background:#e8f3ec; margin:.2rem 0; }
+
+/* ── Verified identification read-back on step 2 ── */
+.ob-verified { display:flex; align-items:center; gap:.4rem; font-size:var(--fs-micro); font-weight:600; background:#e0f7ee; color:#0a7a4a; border:1px solid #b3e6ce; border-radius:20px; padding:.18rem .6rem; }
+.ob-verified .material-icons { font-size:12px; }
+
+/* ── Footer terms row sits left of the CTAs ── */
+.ob-footer-terms { margin-right:auto; }
+
+html.dark .ob-choice { background:#111e27; border-color:#243545; }
+html.dark .ob-choice:has(input:checked) { background:#12302a; border-color:#1aad6e; }
+html.dark .ob-guide { background:#111e27; border-color:#1d5243; }

@@ -1,0 +1,40 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — QR Code Payment
+   ──────────────────────────────────────────────────────────────
+   Only the scanner pieces. Form layout, amount block and CTA
+   panel come from request-form.css, shared with the QR request
+   and cash transfer request screens.
+   ══════════════════════════════════════════════════════════════ */
+/* ── Scan-in-field ──
+   The scanner sits inside the IBAN field rather than beside it, so
+   the row stays four columns wide. */
+.qr-scan-wrap { position:relative; }
+.qr-scan-wrap .f-input { padding-right:2.6rem; }
+.qr-scan-btn { position:absolute; top:50%; right:.45rem; transform:translateY(-50%); width:30px; height:30px; display:flex; align-items:center; justify-content:center; border:none; border-radius:.45rem; background:#edf6f1; color:#1aad6e; cursor:pointer; transition:background .12s; }
+.qr-scan-btn:hover { background:#d9efe4; }
+.qr-scan-btn .material-icons { font-size:18px; }
+
+
+/* ── Scan dialog ── */
+.qr-frame { position:relative; width:100%; max-width:260px; aspect-ratio:1/1; margin:1.25rem auto 0; border-radius:1rem; background:#0f2029; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.qr-frame-idle { display:flex; flex-direction:column; align-items:center; gap:.4rem; color:#8fa3a0; text-align:center; padding:1rem; }
+.qr-frame-idle .material-icons { font-size:36px; color:#4a6a66; }
+.qr-frame-idle span { font-size:var(--fs-caption); }
+.qr-corner { position:absolute; width:30px; height:30px; border:3px solid #2ed88e; }
+.qr-corner.tl { top:16px; left:16px; border-right:none; border-bottom:none; border-radius:6px 0 0 0; }
+.qr-corner.tr { top:16px; right:16px; border-left:none; border-bottom:none; border-radius:0 6px 0 0; }
+.qr-corner.bl { bottom:16px; left:16px; border-right:none; border-top:none; border-radius:0 0 0 6px; }
+.qr-corner.br { bottom:16px; right:16px; border-left:none; border-top:none; border-radius:0 0 6px 0; }
+
+/* The sweep only runs while scanning, so motion means "working" */
+.qr-sweep { position:absolute; left:16px; right:16px; height:2px; background:linear-gradient(90deg,transparent,#2ed88e,transparent); top:16px; opacity:0; }
+.qr-frame.is-scanning .qr-sweep { opacity:1; animation:qrSweep 1.6s ease-in-out infinite; }
+@keyframes qrSweep { 0%,100% { transform:translateY(0); } 50% { transform:translateY(190px); } }
+.qr-scan-status { text-align:center; font-size:var(--fs-small); color:var(--az-muted); margin-top:.75rem; min-height:1.3rem; }
+.qr-scan-status.ok { color:#1aad6e; font-weight:600; }
+
+@media (prefers-reduced-motion:reduce) {
+  .qr-frame.is-scanning .qr-sweep { animation:none; }
+  .gao-footer .btn-submit:hover { transform:none; }
+}
+

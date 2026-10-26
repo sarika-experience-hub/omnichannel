@@ -1,0 +1,26 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — onboarding step rail navigation
+   ──────────────────────────────────────────────────────────────
+   Paired with onboarding-rail.js. Kept separate from the shell
+   because the journeys load their styles differently: the
+   generated "Become Our Customer" steps link
+   onboarding-shell.css, while the retail and Create Online
+   Account screens carry that shell inline. Linking this one file
+   gives every journey the same rail affordances.
+
+   A step you can return to behaves like a link — pointer cursor,
+   hover highlight, keyboard focus ring. A step you have not
+   reached is dimmed and inert, so the rail shows at a glance how
+   far the journey is open to you.
+   ══════════════════════════════════════════════════════════════ */
+.ob-step.is-link { cursor:pointer; border-radius:.6rem; transition:background .14s; }
+.ob-step.is-link:hover { background:rgba(255,255,255,.06); }
+.ob-step.is-link:hover .ob-step-lbl { color:#fff; }
+.ob-step.is-link:hover .ob-step-num { border-color:rgba(255,255,255,.55); }
+.ob-step.is-link:focus-visible { outline:2px solid #2ed88e; outline-offset:-2px; background:rgba(255,255,255,.06); }
+.ob-step.is-link:active { background:rgba(255,255,255,.1); }
+
+.ob-step.is-locked { opacity:.45; cursor:default; }
+.ob-step.is-locked .ob-step-lbl { color:#8fa3a0; }
+
+@media (prefers-reduced-motion:reduce) { .ob-step.is-link { transition:none; } }

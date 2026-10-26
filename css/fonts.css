@@ -1,14 +1,63 @@
 /*
- * azentio – Roboto Font Stack (fully local, no CDN)
+ * azentio – Brand typography
+ * ───────────────────────────────────────────────────────────────
+ * LATIN — Poppins, the primary typeface per the Azentio brand
+ * guidelines (v.01, Dec 2024, §2.1): "Poppins is our primary
+ * typeface and should be used for all professionally produced
+ * communications across print and digital applications where
+ * possible."
  *
- * Font files in fonts/roboto/:
- *   roboto-400.woff  /  roboto-400.ttf   (Regular)
- *   roboto-700.woff  /  roboto-700.ttf   (Bold)
+ *   700 Bold      – main headings
+ *   600 SemiBold  – subheadings (~25% larger than body)
+ *   500 Medium    – form labels, active navigation
+ *   400 Regular   – body copy
  *
- * To add Roboto Light (300) and Medium (500), download from:
- *   https://fonts.google.com/specimen/Roboto
- * and add roboto-300.woff2, roboto-500.woff2 to fonts/roboto/
+ * ARABIC — Poppins ships no Arabic glyphs. Until now عربي fell
+ * through to whatever Arabic face the operating system happened to
+ * provide, so the same screen rendered differently on every machine
+ * and the two scripts were never drawn to sit together. Tajawal is
+ * added as the Arabic companion: it is geometric like Poppins (so
+ * the pairing holds), it is drawn for screen UI, and it is the face
+ * Gulf readers are already used to across Saudi digital services.
+ * Noto Sans Arabic backs it up.
+ *
+ * The two are combined in ONE stack rather than swapped per
+ * language. Browsers resolve font-family per glyph, so Latin
+ * characters take Poppins and Arabic characters — absent from
+ * Poppins — fall through to Tajawal automatically. Mixed strings
+ * ("IBAN رقم") therefore render correctly without any .lang()
+ * plumbing, and nothing has to change when the language toggles.
+ *
+ * Avenir is the brand's *everyday* face (§2.2) for Word, PowerPoint
+ * and Outlook only — deliberately not used on the web.
+ *
+ * Roboto stays in the stack as a last-resort fallback and is still
+ * served locally from fonts/roboto/.
+ *
+ * NOTE: Poppins and Tajawal come from Google Fonts. To restore the
+ * "fully local, no CDN" policy this file originally had, download
+ * both families into fonts/ and swap the @import for @font-face.
  */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
+
+/* The one stack every rule should use. Declared here so pages and
+   components can say font-family: var(--az-font) instead of
+   repeating the list — the long literal remains valid everywhere it
+   already appears, and resolves identically. */
+:root {
+  --az-font: 'Poppins', 'Tajawal', 'Noto Sans Arabic', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --az-font-ar: 'Tajawal', 'Noto Sans Arabic', system-ui, sans-serif;
+}
+
+/* Arabic sets its own line-height: the script's ascenders and
+   descenders need more room than Latin at the same size, and
+   Tajawal runs slightly smaller on the body, so it is nudged up to
+   keep optical parity with Poppins beside it. */
+:lang(ar), [dir="rtl"] {
+  font-family: var(--az-font-ar);
+  font-size: 1.04em;
+  line-height: 1.75;
+}
 
 @font-face {
   font-family: 'Roboto';
@@ -48,4 +97,39 @@
   src: local('Roboto Bold'), local('Roboto-Bold'),
        url('../fonts/roboto/roboto-700.woff') format('woff'),
        url('../fonts/roboto/roboto-700.ttf')  format('truetype');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Type scale
+   ──────────────────────────────────────────────────────────────
+   The app had grown ~90 distinct size/weight pairs, with nine
+   separate steps crowded between 11.2px and 12.6px. Differences
+   that small don't read as hierarchy, they read as drift — which
+   is what made the typography feel unresolved rather than
+   considered. These eight steps are the whole scale; anything that
+   isn't one of them is an accident.
+
+   The sizes themselves are the ones the app was already tuned to,
+   at the original 14px base. Standardising the scale was never
+   meant to change how big anything looked — only to stop the same
+   role being set nine slightly different ways. Each token below is
+   the value that role already used; the drift is what went away.
+
+   To rescale the whole app, change these nine values. Nothing
+   should set a raw font-size any more.
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --fs-micro:   .68rem;   /* 9.5px  — uppercase eyebrows, badges       */
+  --fs-caption: .75rem;   /* 10.5px — helper text, captions, meta      */
+  --fs-small:   .8125rem; /* 11.4px — labels, dense cells, field values */
+  /* Labels were set to 11.5px and dense cells to 11.4px — a tenth of a
+     pixel apart, which is two tokens for one optical size. Folded into
+     --fs-small; the alias stays so label rules still read as labels. */
+  --fs-label:   var(--fs-small);
+  --fs-body:    .875rem;  /* 12.25px — body copy                       */
+  --fs-subhead: .95rem;   /* 13.3px — card titles, section headings    */
+  --fs-section: 1.05rem;  /* 14.7px — panel headings                   */
+  --fs-heading: 1.2rem;   /* 16.8px — page headings                    */
+  --fs-title:   1.375rem; /* 19.25px — page title                      */
+  --fs-display: 1.5rem;   /* 21px   — hero figures                     */
 }

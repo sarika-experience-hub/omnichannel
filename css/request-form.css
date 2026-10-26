@@ -1,0 +1,95 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — request form layout
+   ──────────────────────────────────────────────────────────────
+   The account-opening form layout (.gao-card / .gao-footer) as a
+   shared sheet, plus the amount block and summary panel. Used by
+   the QR payment, QR request and cash transfer request screens.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Card + field treatment, matching general-account-opening ── */
+.gao-card { background:#fff; border:1px solid var(--az-border,#e2e8ec); border-radius:.875rem; box-shadow:0 1px 3px rgba(22,48,61,.04); padding:1rem 1.75rem 1.2rem; margin-bottom:1.5rem; }
+.gao-card-hdr { background:none; border-bottom:1px solid #e5e9ee; padding:0 0 .4rem; margin-bottom:1rem; cursor:default; }
+.gao-card-title { font-size:var(--fs-subhead); font-weight:600; }
+.gao-card-subtitle { font-size:var(--fs-small); color:var(--az-muted); }
+.gao-card-body { padding:0; }
+.gao-field-group + .gao-field-group { border-top:1px solid #eef1f4; padding-top:1.5rem; margin-top:1.5rem; }
+.gao-field-group-lbl { font-size:var(--fs-caption); font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--az-blue,#00538A); margin-bottom:1rem; }
+.gao-card-body .f-label { font-size:var(--fs-label); font-weight:500; margin-bottom:.5rem; }
+.gao-card-body .f-input,
+.gao-card-body .f-select { border-radius:.625rem; border-color:#e2e7ee; }
+.gao-card-body .f-input { padding:.75rem .95rem; font-size:var(--fs-body); }
+.gao-card-body .f-select { padding-right:2.25rem; }
+.gao-card-body .f-input:focus,
+.gao-card-body .f-select:focus { border-color:var(--az-green,#1aad6e); box-shadow:0 0 0 3px rgba(26,173,110,.12); outline:none; }
+.gao-card-body .f-input.is-invalid,
+.gao-card-body .f-select.is-invalid { border-color:#d94141; background:#fffafa; }
+.gao-req { color:#c62828; }
+
+/* ── CTA panel ── */
+.gao-footer { background:none; border:none; border-top:1px solid #eef1f4; border-radius:0; box-shadow:none; padding:2rem 0 0; margin-bottom:0; display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; }
+.gao-footer .btn-action { border-radius:.5rem; padding:.7rem 1.75rem; font-size:var(--fs-body); font-weight:600; border:none; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; transition:background .15s, box-shadow .15s, transform .15s; }
+.gao-footer .btn-cancel, .gao-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.gao-footer .btn-cancel:hover, .gao-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.gao-footer .btn-submit { background:linear-gradient(135deg,var(--az-navy,#16303D),#0d1f28); color:#fff; }
+.gao-footer .btn-submit:hover { background:linear-gradient(135deg,#0f232e,#081820); color:#fff; transform:translateY(-1px); box-shadow:0 6px 18px rgba(16,32,48,.18); }
+.gao-footer-left { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-body); color:var(--az-navy); }
+.gao-footer-left input[type=checkbox] { width:16px; height:16px; accent-color:#1aad6e; cursor:pointer; }
+.gao-footer-left.is-invalid label { color:#dc2626; }
+.gao-footer-right { display:flex; align-items:center; gap:.625rem; margin-left:auto; }
+.gao-tc-error { display:none; font-size:var(--fs-caption); font-weight:600; color:#d94141; margin-top:.35rem; }
+.gao-tc-error.show { display:block; }
+
+.frs-back-btn { display:inline-flex; align-items:center; gap:.3rem; background:#fff; border:1.5px solid var(--az-border,#e2e8ec); color:var(--az-navy,#16303d); border-radius:20px; padding:.375rem .875rem; font-family:var(--az-font); font-size:var(--fs-small); font-weight:500; cursor:pointer; transition:background .12s,border-color .12s; text-decoration:none; }
+.frs-back-btn:hover { background:#f4f6f8; border-color:#c9d2d8; }
+.frs-back-btn .material-icons { font-size:16px; }
+
+.gao-locate-btn { display:inline-flex; align-items:center; gap:.375rem; border:1.5px solid var(--az-green,#1aad6e); color:var(--az-navy); background:#edf6f1; border-radius:20px; padding:.375rem .875rem; font-family:var(--az-font); font-size:var(--fs-small); font-weight:500; cursor:pointer; transition:background .12s; }
+.gao-locate-btn:hover { background:#ddf0e6; }
+.gao-locate-btn .material-icons { font-size:16px; color:#1aad6e; }
+
+.toggle-wrap { display:inline-flex; align-items:center; gap:.6rem; font-size:var(--fs-small); color:var(--az-navy); cursor:pointer; margin:0; }
+
+
+/* ── Amount ──
+   Sits in a row beside ordinary selects, so it matches their size and
+   height — the weight and tabular numerals carry the emphasis instead. */
+.rf-amt-field { border-radius:.625rem; border-width:1.5px; }
+.rf-amt-field .amount-inp { font-size:var(--fs-body); font-weight:600; padding:.75rem .9rem; font-variant-numeric:tabular-nums lining-nums; }
+.rf-amt-field .amount-curr { padding:.45rem .7rem; background:#f8fafb; gap:.35rem; }
+.rf-amt-field.is-invalid { border-color:#d94141; }
+
+.rf-quick { display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.6rem; }
+.rf-quick-btn { border:1px solid var(--az-border); background:#fff; border-radius:2rem; padding:.3rem .8rem; font-family:var(--az-font); font-size:var(--fs-caption); font-weight:600; color:var(--az-navy); cursor:pointer; transition:background .12s, border-color .12s; font-variant-numeric:tabular-nums; }
+.rf-quick-btn:hover { background:#f2fcf7; border-color:var(--az-green,#1aad6e); }
+
+.rf-amt-err { min-height:1rem; margin-top:.35rem; font-size:var(--fs-caption); font-weight:600; color:#d94141; }
+.rf-bal { font-size:var(--fs-micro); color:var(--az-muted); margin-top:.35rem; }
+.rf-bal strong { color:var(--az-navy); font-variant-numeric:tabular-nums lining-nums; }
+
+/* ── Summary panel: what it costs and what lands ── */
+.rf-rate { border:1px solid #cdeedd; background:#f6fdf9; border-radius:.75rem; padding:.9rem 1.1rem; }
+.rf-rate-row { display:flex; align-items:baseline; justify-content:space-between; gap:.75rem; padding:.42rem 0; }
+.rf-rate-row + .rf-rate-row { border-top:1px solid rgba(22,48,61,.06); }
+.rf-rate-k { font-size:var(--fs-small); color:#55707e; }
+.rf-rate-v { font-size:var(--fs-small); font-weight:600; color:var(--az-navy); font-variant-numeric:tabular-nums lining-nums; text-align:right; }
+.rf-rate-total .rf-rate-k { font-weight:600; color:var(--az-navy); }
+.rf-rate-total .rf-rate-v { font-size:var(--fs-section); }
+
+html.dark .rf-rate { background:#12302a; border-color:#1d5243; }
+html.dark .rf-quick-btn { background:#111e27; border-color:#243545; color:#e6eef3; }
+
+/* ── Locked / read-only value note ── */
+.gao-locked-note { display:inline-flex; align-items:center; gap:.35rem; margin-top:.45rem; padding:.2rem .6rem; background:#f1f5f8; border:1px solid #e2e8ec; border-radius:2rem; font-size:var(--fs-micro); font-weight:600; letter-spacing:.02em; color:#5c7080; }
+.gao-locked-note .material-icons { font-size:13px; color:#8a979e; }
+.rf-amt-field .amount-inp[readonly],
+.rf-amt-field .amount-inp:disabled { background:#f8fafb; color:var(--az-muted); }
+
+/* ── Generated code panel ── */
+.qrr-code { margin-top:1.1rem; padding:1.1rem; border:1px solid var(--az-border); border-radius:1rem; background:#fff; }
+.qrr-code svg { display:block; margin:0 auto; }
+.qrr-code-ref { margin-top:.7rem; font-size:var(--fs-caption); color:var(--az-muted); }
+.qrr-code-ref strong { color:var(--az-navy); font-variant-numeric:tabular-nums; }
+.qrr-code-exp { font-size:var(--fs-micro); color:var(--az-muted); margin-top:.2rem; }
+
+html.dark .gao-locked-note { background:#16242f; border-color:#243545; color:#9fb3c0; }
+html.dark .qrr-code { background:#111e27; border-color:#243545; }

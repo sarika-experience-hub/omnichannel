@@ -1,0 +1,209 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — onboarding step extras
+   ──────────────────────────────────────────────────────────────
+   The few components the eight-step "Become Our Customer" journey
+   needs beyond the shared onboarding shell: selfie capture, the
+   signature pad, the branch picker and the side-panel note.
+
+   Everything else — header, step rail, cards, fields, footer —
+   comes from onboarding-shell.css, which is the same shell the
+   retail onboarding and account-recovery screens use.
+   ══════════════════════════════════════════════════════════════ */
+
+.ob-note { font-size:var(--fs-caption); color:var(--az-muted); line-height:1.55; margin-top:.35rem; }
+
+/* ── Selfie capture ── */
+.ob-capture {
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem;
+  border:1.5px dashed #cdd9e0; border-radius:1rem; background:#fbfcfd;
+  padding:2.5rem 1.5rem; text-align:center; margin-bottom:1.25rem;
+}
+.ob-capture > .material-icons { font-size:38px; color:#9fb3c0; }
+.ob-capture-hint { font-size:var(--fs-small); color:var(--az-muted); margin-bottom:.35rem; }
+.ob-capture.is-captured { border-style:solid; border-color:var(--az-green,#1aad6e); background:#f4fcf8; }
+
+/* ── Tip card ── */
+.ob-tip-card { border:1px solid #cdeedd; border-radius:.875rem; background:#f6fdf9; padding:.9rem 1.1rem; }
+.ob-tip-card-hdr { display:flex; align-items:center; gap:.4rem; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); margin-bottom:.5rem; }
+.ob-tip-card-hdr .material-icons { font-size:16px; color:var(--az-green,#1aad6e); }
+.ob-tip-card .ob-tip-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.4rem; }
+.ob-tip-card .ob-tip-list li { position:relative; padding-left:1rem; font-size:var(--fs-caption); color:#55707e; line-height:1.55; }
+.ob-tip-card .ob-tip-list li::before { content:''; position:absolute; left:.2rem; top:.5rem; width:4px; height:4px; border-radius:50%; background:var(--az-green,#1aad6e); }
+
+/* ── Signature ── */
+.ob-sig-tabs { display:inline-flex; gap:.25rem; background:#f1f4f6; border-radius:2rem; padding:.25rem; margin-bottom:1rem; }
+.ob-sig-tab { border:none; background:none; border-radius:2rem; padding:.4rem 1rem; font-family:var(--az-font); font-size:var(--fs-small); font-weight:600; color:var(--az-muted); cursor:pointer; transition:background .12s,color .12s; }
+.ob-sig-tab:hover { color:var(--az-navy); }
+.ob-sig-tab.active { background:var(--az-navy); color:#fff; }
+.ob-sig-canvas { display:block; width:100%; max-width:100%; height:200px; border:1.5px solid #e2e7ee; border-radius:.75rem; background:#fff; cursor:crosshair; touch-action:none; }
+.ob-sig-actions { display:flex; gap:.6rem; justify-content:flex-end; margin-top:.8rem; }
+.ob-sig-actions .btn-action { border-radius:.5rem; padding:.55rem 1.4rem; font-size:var(--fs-small); font-weight:600; border:none; cursor:pointer; }
+.ob-sig-actions .btn-cancel { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.ob-sig-actions .btn-cancel:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.ob-sig-actions .btn-submit { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; }
+.ob-sig-actions .btn-submit:hover { background:linear-gradient(135deg,#0f232e,#081820); color:#fff; }
+
+/* ── Upload drop zone ── */
+.ob-drop {
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem;
+  border:1.5px dashed #cdd9e0; border-radius:1rem; background:#fbfcfd;
+  padding:2.2rem 1.5rem; text-align:center; cursor:pointer; transition:border-color .15s, background .15s;
+}
+.ob-drop:hover { border-color:var(--az-green,#1aad6e); background:#f6fdf9; }
+.ob-drop .material-icons { font-size:32px; color:#9fb3c0; }
+.ob-drop-t { font-size:var(--fs-small); font-weight:600; color:var(--az-navy); }
+.ob-drop-s { font-size:var(--fs-caption); color:var(--az-muted); }
+
+/* ── Branch picker ── */
+.ob-branch-list { display:flex; flex-direction:column; gap:.6rem; }
+.ob-branch { display:flex; align-items:flex-start; gap:.7rem; border:1.5px solid #e2e7ee; border-radius:.75rem; background:#fff; padding:.85rem 1rem; cursor:pointer; margin:0; transition:border-color .15s, background .15s, box-shadow .15s; }
+.ob-branch:hover { border-color:#bfd8ea; }
+.ob-branch input { margin-top:.15rem; accent-color:var(--az-green,#1aad6e); width:16px; height:16px; flex-shrink:0; cursor:pointer; }
+.ob-branch:has(input:checked) { border-color:var(--az-green,#1aad6e); background:#f4fcf8; box-shadow:0 0 0 3px rgba(26,173,110,.1); }
+.ob-branch-n { display:block; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); }
+.ob-branch-a { display:block; font-size:var(--fs-caption); color:var(--az-muted); margin-top:.1rem; }
+
+/* ── Locate button, matching the account-opening screens ── */
+.gao-locate-btn {
+  display:inline-flex; align-items:center; gap:.375rem;
+  border:1.5px solid var(--az-green,#1aad6e); color:var(--az-navy); background:#edf6f1;
+  border-radius:20px; padding:.375rem .875rem;
+  font-family:var(--az-font); font-size:var(--fs-small); font-weight:500;
+  cursor:pointer; transition:background .12s, border-color .12s;
+}
+.gao-locate-btn:hover { background:#ddf0e6; color:var(--az-navy); }
+.gao-locate-btn .material-icons { font-size:16px; color:#1aad6e; }
+
+/* ── Side panel note ── */
+.ob-side-note { display:flex; align-items:flex-start; gap:.45rem; margin-top:1.25rem; padding-top:1rem; border-top:1px solid #cdeedd; font-size:var(--fs-caption); color:#4b6b5b; line-height:1.55; }
+.ob-side-note .material-icons { font-size:15px; color:var(--az-green,#1aad6e); flex-shrink:0; margin-top:.1rem; }
+
+/* ── Toggle rows reused from the request screens ── */
+.toggle-wrap { display:flex; align-items:center; gap:.6rem; font-size:var(--fs-small); color:var(--az-navy); }
+
+textarea.f-input { min-height:auto; resize:vertical; }
+
+html.dark .ob-capture, html.dark .ob-drop { background:#0d1b24; border-color:#243545; }
+html.dark .ob-tip-card { background:#12302a; border-color:#1d5243; }
+html.dark .ob-branch { background:#111e27; border-color:#243545; }
+html.dark .ob-sig-canvas { background:#0d1b24; border-color:#243545; }
+html.dark .ob-sig-tabs { background:#162530; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   Selfie — liveness capture
+   ──────────────────────────────────────────────────────────────
+   A camera stage with a face guide, live status line, countdown
+   and a quality read-out afterwards. Sober by intent: one accent,
+   no colour outside the status states, and motion that only ever
+   signals progress.
+   ══════════════════════════════════════════════════════════════ */
+.ob-live { display:grid; grid-template-columns:minmax(0,300px) 1fr; gap:1.75rem; align-items:start; }
+@media (max-width:820px) { .ob-live { grid-template-columns:1fr; } }
+
+.ob-stage {
+  position:relative; width:100%; aspect-ratio:1/1; max-width:300px;
+  border-radius:50%; overflow:hidden; background:#0f2029;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 36px rgba(16,32,48,.16);
+}
+.ob-stage video, .ob-stage canvas.ob-shot { width:100%; height:100%; object-fit:cover; transform:scaleX(-1); display:block; }
+.ob-stage-idle { display:flex; flex-direction:column; align-items:center; gap:.5rem; color:#8fa3a0; text-align:center; padding:1.5rem; }
+.ob-stage-idle .material-icons { font-size:40px; color:#4a6a66; }
+.ob-stage-idle span { font-size:var(--fs-caption); line-height:1.5; }
+
+/* Face guide — a ring that reads as alignment feedback, not decoration */
+.ob-guide { position:absolute; inset:7%; border-radius:50%; pointer-events:none; border:2px dashed rgba(255,255,255,.35); transition:border-color .3s, box-shadow .3s; }
+.ob-stage.is-aligned .ob-guide { border-style:solid; border-color:#2ed88e; box-shadow:0 0 0 3px rgba(46,216,142,.18); }
+.ob-stage.is-shot .ob-guide { border-style:solid; border-color:rgba(255,255,255,.5); box-shadow:none; }
+
+/* Countdown sits over the frame */
+.ob-count { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--az-font); font-size:4rem; font-weight:600; color:#fff; text-shadow:0 2px 14px rgba(0,0,0,.4); font-variant-numeric:tabular-nums; }
+.ob-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+.ob-flash.go { animation:obFlash .42s ease-out; }
+@keyframes obFlash { 0%{opacity:.85} 100%{opacity:0} }
+
+/* Status line under the stage */
+.ob-live-status { display:flex; align-items:center; gap:.45rem; margin-top:.9rem; font-size:var(--fs-small); font-weight:500; color:var(--az-muted); min-height:1.4rem; }
+.ob-live-status .material-icons { font-size:17px; }
+.ob-live-status.ok { color:#1aad6e; }
+.ob-live-status.warn { color:#b7791f; }
+.ob-live-status .ob-dot { width:7px; height:7px; border-radius:50%; background:currentColor; animation:obPulse 1.4s ease-in-out infinite; }
+@keyframes obPulse { 0%,100%{opacity:.35} 50%{opacity:1} }
+
+.ob-live-actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:1rem; }
+
+/* Quality read-out — plain statements, ticked as they pass */
+.ob-checks { display:flex; flex-direction:column; gap:.55rem; margin-top:.25rem; }
+.ob-check { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-small); color:var(--az-muted); transition:color .25s; }
+.ob-check .material-icons { font-size:17px; color:#c7d0d6; transition:color .25s; }
+.ob-check.pass { color:var(--az-navy); }
+.ob-check.pass .material-icons { color:#1aad6e; }
+
+@media (prefers-reduced-motion:reduce) {
+  .ob-flash.go { animation:none; }
+  .ob-live-status .ob-dot { animation:none; opacity:1; }
+}
+
+html.dark .ob-stage { background:#07131a; }
+
+/* ══════════════════════════════════════════════════════════════
+   Flow polish
+   ──────────────────────────────────────────────────────────────
+   Restraint is the point: one accent, generous spacing, and motion
+   only where it reports progress. Nothing bounces, nothing slides
+   in from off-screen — the screen simply settles.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Cards settle on arrival. Deliberately transform-only: an opacity
+   fade would make the resting state depend on the animation running,
+   so a throttled or disabled animation would leave the form blank.
+   Movement alone reads as polish and can never hide content. */
+@keyframes obSettle { from { transform:translateY(8px); } to { transform:none; } }
+.ob-card { animation:obSettle .42s cubic-bezier(.22,1,.36,1) both; }
+.ob-card:nth-of-type(2) { animation-delay:.06s; }
+.ob-card:nth-of-type(3) { animation-delay:.12s; }
+.ob-side { animation:obSettle .5s cubic-bezier(.22,1,.36,1) .08s both; }
+
+/* The current step reads as current without shouting about it. */
+.ob-step.active .ob-step-num { box-shadow:0 0 0 4px rgba(255,255,255,.09), 0 2px 10px rgba(0,0,0,.25); }
+.ob-step.done .ob-step-num { transition:background .25s, border-color .25s; }
+
+/* Fields: a calm focus ring, and a clear but quiet invalid state. */
+.ob-card-body .f-input,
+.ob-card-body .f-select,
+.ob-card-body textarea.f-input { transition:border-color .16s, box-shadow .16s, background .16s; }
+.ob-card-body .f-input:focus,
+.ob-card-body .f-select:focus,
+.ob-card-body textarea.f-input:focus {
+  border-color:var(--az-green,#1aad6e);
+  box-shadow:0 0 0 3px rgba(26,173,110,.12);
+  outline:none;
+}
+.ob-card-body .f-input.is-invalid,
+.ob-card-body .f-select.is-invalid { border-color:#d94141; background:#fffafa; }
+
+/* Primary action lifts a little on hover, settles on press. */
+.ob-footer .btn-submit { transition:background .15s, transform .15s, box-shadow .15s; }
+.ob-footer .btn-submit:hover { box-shadow:0 6px 18px rgba(16,32,48,.18); }
+
+/* Field groups get a hairline above them from the second onward, so
+   long steps read as sections rather than one continuous column. */
+.ob-field-group + .ob-field-group { border-top:1px solid #eef1f4; padding-top:1.5rem; }
+
+/* Summary rows reveal gently as the panel rebuilds. */
+.ob-sum-body { animation:obSettle .3s ease-out both; }
+
+/* Arabic runs right-to-left; the shell mirrors rather than breaks. */
+[dir="rtl"] .ob-shell { direction:rtl; }
+[dir="rtl"] .ob-step:not(:last-child)::after { left:auto; right:22px; }
+[dir="rtl"] .ob-sum-row,
+[dir="rtl"] .ob-footer { flex-direction:row-reverse; }
+
+@media (prefers-reduced-motion:reduce) {
+  .ob-card, .ob-side, .ob-sum-body { animation:none; }
+  .ob-footer .btn-submit:hover { transform:none; }
+}
+
+html.dark .ob-card-body .f-input.is-invalid { background:#241518; }
+html.dark .ob-field-group + .ob-field-group { border-top-color:#243545; }

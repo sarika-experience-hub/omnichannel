@@ -1,0 +1,78 @@
+/* ══════════════════════════════════════════════════════════════
+   azentio — shared pre-login header
+   Lifted from retail-onboarding-1-personal-details.html so every
+   pre-login screen carries the same bar: logo, About Us / Contact
+   Us / Help, and a language picker whose flag follows the choice.
+   ══════════════════════════════════════════════════════════════ */
+.pl-hdr { height:60px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 1.25rem; border-bottom:1px solid var(--az-border,#e2e8ec); background:#fff; position:sticky; top:0; z-index:100; }
+.pl-hdr-left { display:flex; align-items:center; }
+.pl-hamburger { width:36px; height:36px; background:none; border:none; border-radius:.5rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; margin-right:.5rem; transition:background .12s; color:#16303d; }
+.pl-hamburger:hover { background:rgba(22,48,61,.07); }
+.pl-hamburger svg { display:block; }
+.pl-hdr-logo { display:flex; align-items:center; padding:0 .75rem; text-decoration:none; }
+.pl-hdr-logo svg { height:28px; width:auto; display:block; }
+.pl-hdr-right { display:flex; align-items:center; gap:.25rem; }
+.pl-hdr-div { width:1px; height:22px; background:var(--az-border,#e2e8ec); margin:0 6px; }
+.pl-icon-btn { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; color:#1aad6e; text-decoration:none; transition:background .12s,color .12s; border:none; background:none; cursor:pointer; }
+.pl-icon-btn:hover { background:#eafaf2; color:#148c58; }
+.pl-icon-btn .material-icons { font-size:21px; }
+.pl-lang-wrap { position:relative; }
+.pl-lang-btn { display:flex; align-items:center; gap:5px; background:none; border:1px solid var(--az-border,#e2e8ec); border-radius:6px; cursor:pointer; padding:.3rem .625rem; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-caption); font-weight:500; color:#16303d; }
+.pl-lang-btn:hover { background:#f0f4f6; }
+.pl-lang-menu { position:absolute; top:calc(100% + 6px); right:0; background:#fff; border:1px solid var(--az-border,#e2e8ec); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.14); min-width:130px; padding:4px 0; z-index:200; }
+.pl-lang-menu[hidden] { display:none; }
+.pl-lang-opt { display:flex; align-items:center; gap:10px; padding:8px 14px; width:100%; background:none; border:none; cursor:pointer; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); color:#16303d; text-align:left; }
+.pl-lang-opt:hover { background:#f0faf5; }
+.pl-lang-opt.active { font-weight:700; }
+/* Collapsible nav rail */
+.prelogin-sidebar { transition:width .2s, padding .2s, opacity .15s; }
+.prelogin-sidebar.pl-collapsed { width:0 !important; min-width:0 !important; padding-left:0 !important; padding-right:0 !important; opacity:0; overflow:hidden; border-right:none !important; }
+
+html.dark .pl-hdr { background:#111e27; border-bottom-color:#243545; }
+html.dark .pl-hamburger { color:#e6eef3; }
+html.dark .pl-lang-btn { color:#e6eef3; border-color:#243545; }
+html.dark .pl-lang-menu { background:#111e27; border-color:#243545; }
+html.dark .pl-lang-opt { color:#e6eef3; }
+html.dark .pl-lang-opt:hover { background:#162530; }
+
+/* ══════════════════════════════════════════════════════════════
+   Link standards — one definition for every pre-login page so the
+   same kind of link never renders two different ways.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Inline / body link — scoped to running text (paragraphs, list items)
+   so it can never collide with breadcrumb or footer links. */
+.pl-link,
+main p > a:not([class]),
+main li > a:not([class]) {
+  color: var(--az-blue, #00538A);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .12s;
+}
+.pl-link:hover,
+main p > a:not([class]):hover,
+main li > a:not([class]):hover { color: #003f6b; text-decoration: underline; }
+
+/* Breadcrumb — muted until hovered */
+.bp-bc a, .iu-bc a, .faq-bc a, .au-bc a {
+  color: #8a979e;
+  text-decoration: none;
+  font-weight: 400;
+}
+.bp-bc a:hover, .iu-bc a:hover, .faq-bc a:hover, .au-bc a:hover { color: #16303d; }
+
+/* Footer — every footer link the same muted grey. "Accessibility" used to
+   fall through to the browser default (blue, underlined) while its two
+   siblings were inline-styled grey. */
+footer a {
+  color: var(--az-blue, #00538A) !important;
+  text-decoration: none;
+  transition: color .12s;
+}
+footer a:hover { color: #003f6b !important; text-decoration: underline; }
+
+html.dark .pl-link, html.dark main p > a:not([class]), html.dark main li > a:not([class]) { color: #6ab7e8; }
+html.dark footer a { color: #6ab7e8 !important; }
+html.dark footer a:hover { color: #e6eef3 !important; }
+html.dark .bp-bc a:hover, html.dark .iu-bc a:hover, html.dark .faq-bc a:hover { color: #e6eef3; }
