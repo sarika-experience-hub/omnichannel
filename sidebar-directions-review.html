@@ -1,0 +1,327 @@
+<title>Sidebar Redesign Directions</title>
+<link rel="stylesheet" href="css/fonts.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+/* ============ outer tool chrome — theme-aware ============ */
+:root{
+  --bg:#f1f5f2; --surface:#ffffff; --surface-2:#f7f9f8;
+  --text:#152024; --muted:#5c6e72; --line:#dde4e0;
+  --accent:#0e8a5d; --accent-soft:#e2f3ea; --accent-text:#0b6e49;
+  --shadow: 0 1px 2px rgba(15,30,25,.04), 0 8px 24px -12px rgba(15,30,25,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1613; --surface:#161f1c; --surface-2:#1b2521;
+    --text:#e8efec; --muted:#9db0ac; --line:#263430;
+    --accent:#3ddb9b; --accent-soft:#15291f; --accent-text:#5be8ab;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1613; --surface:#161f1c; --surface-2:#1b2521;
+  --text:#e8efec; --muted:#9db0ac; --line:#263430;
+  --accent:#3ddb9b; --accent-soft:#15291f; --accent-text:#5be8ab;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text); font-family:'Poppins','Roboto',Arial,sans-serif; margin:0; padding:2.25rem 1.5rem 3rem;}
+.wrap{max-width:1180px; margin:0 auto;}
+.intro{max-width:62ch; margin-bottom:1.75rem;}
+.eyebrow{font-size:var(--fs-micro); font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:var(--accent-text); margin-bottom:.6rem;}
+h1{font-size:var(--fs-display); font-weight:900; letter-spacing:-.015em; margin:0 0 .5rem; text-wrap:balance; color:var(--text);}
+.intro p{font-size:var(--fs-subhead); line-height:1.55; color:var(--muted); margin:0;}
+
+.switcher{display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.1rem;}
+.switcher button{
+  font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight:500; color:var(--muted);
+  background:var(--surface); border:1px solid var(--line); border-radius:999px;
+  padding:.5rem 1.05rem; cursor:pointer; transition:all .15s; display:inline-flex; align-items:center; gap:.4rem;
+}
+.switcher button:hover{ color:var(--text); border-color:var(--accent); }
+.switcher button.active{ background:var(--accent); border-color:var(--accent); color:#fff; font-weight:700; }
+.switcher button .rec{ font-size:var(--fs-micro); font-weight:600; background:rgba(255,255,255,.25); padding:.1rem .4rem; border-radius:999px; }
+.switcher button:not(.active) .rec{ background:var(--accent-soft); color:var(--accent-text); }
+
+.frame{
+  background:var(--surface); border:1px solid var(--line); border-radius:1rem;
+  box-shadow:var(--shadow); padding:1.1rem; margin-bottom:1.1rem;
+}
+.frame-label{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin:.1rem .25rem .9rem; flex-wrap:wrap; }
+.frame-label h2{ font-size:var(--fs-section); font-weight:700; margin:0; color:var(--text); }
+.frame-label .tag{ font-size:var(--fs-caption); color:var(--muted); }
+
+/* the simulated app window — fixed colors, this represents the real product and does not follow viewer theme */
+.appwin{ border:1px solid #d7dde0; border-radius:.7rem; overflow:hidden; background:#fff; box-shadow:0 1px 0 rgba(0,0,0,.02) inset; }
+.apphdr{ height:46px; background:#fff; border-bottom:1px solid #e2e8ec; display:flex; align-items:center; padding:0 1rem; gap:.6rem; }
+.apphdr .logo{ font-family:'Poppins','Roboto',sans-serif; font-weight:900; font-size:var(--fs-subhead); color:#16303d; letter-spacing:-.01em; }
+.apphdr .logo b{ color:#1aad6e; }
+.apphdr .spacer{ flex:1; }
+.apphdr .hicon{ width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#6b7f8c; }
+.apphdr .hicon .material-icons{ font-size:18px; }
+.apphdr .av{ width:26px; height:26px; border-radius:50%; background:#334155; color:#fff; font-size:var(--fs-micro); font-weight:600; display:flex; align-items:center; justify-content:center; font-family:'Poppins','Roboto',sans-serif; }
+
+.appbody{ display:flex; height:460px; }
+.appcontent{ flex:1; background:#f4f6f7; padding:1.1rem 1.3rem; overflow:hidden; }
+.cc-title{ font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-section); font-weight:500; color:#16303d; margin:0 0 .15rem; }
+.cc-bc{ font-size:var(--fs-micro); color:#8a97a0; margin-bottom:.85rem; }
+.cc-tabs{ display:flex; gap:1.4rem; border-bottom:1px solid #e2e8ec; margin-bottom:.9rem; }
+.cc-tab{ font-size:var(--fs-small); font-weight:600; color:#8a97a0; padding-bottom:.6rem; border-bottom:3px solid transparent; }
+.cc-tab.active{ color:#1aad6e; border-color:#1aad6e; }
+.cc-grid{ display:grid; grid-template-columns:160px 1fr; gap:.8rem; }
+.cc-qa{ background:#fff; border:1px solid #e2e8ec; border-radius:.6rem; padding:.6rem; }
+.cc-qa .h{ font-size:var(--fs-micro); font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:#8a97a0; margin-bottom:.5rem; }
+.cc-qa .item{ border:1.5px solid #1aad6e; background:#edf9f4; border-radius:.5rem; padding:.5rem .55rem; font-size:var(--fs-micro); color:#16303d; font-weight:600; margin-bottom:.4rem; }
+.cc-qa .item.ghost{ border-color:#e2e8ec; background:#f8fafb; color:#8a97a0; font-weight:500; }
+.cc-hero{ background:linear-gradient(135deg,#0c7a50,#063d28); border-radius:.6rem; padding:.8rem .9rem; color:#fff; }
+.cc-hero .e{ font-size:var(--fs-micro); font-weight:600; letter-spacing:.08em; text-transform:uppercase; opacity:.85; margin-bottom:.35rem; }
+.cc-hero .v{ font-size:var(--fs-heading); font-weight:700; }
+
+/* ---- shared sidebar scaffolding ---- */
+.mocksb{ width:230px; flex-shrink:0; display:flex; flex-direction:column; font-family:'Poppins','Roboto',sans-serif; }
+.mocksb .grp-lbl{ font-size:var(--fs-micro); font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:.85rem 1rem .35rem; }
+.mocksb .row{ display:flex; align-items:center; gap:.6rem; padding:.5rem 1rem; font-size:var(--fs-small); cursor:default; border-radius:0; }
+.mocksb .row .material-icons{ font-size:17px; flex-shrink:0; }
+.mocksb .row .lbl{ flex:1; }
+.mocksb .row .chev{ font-size:15px; opacity:.6; }
+.mocksb .sub{ padding:.4rem .9rem .4rem 2.6rem; font-size:var(--fs-caption); }
+.mocksb .search{ display:flex; align-items:center; gap:.4rem; margin:.8rem .75rem .3rem; padding:.4rem .6rem; border-radius:.5rem; font-size:var(--fs-caption); }
+.mocksb .search .material-icons{ font-size:15px; }
+
+/* === CURRENT (baseline) === */
+.mocksb.v-current{ background:#E8EAEC; border-right:1px solid #d0d4d8; padding-top:.5rem; }
+.v-current .search{ background:#d8dce0; border:1px solid #c4c9ce; color:#3a4650; }
+.v-current .row{ color:#16303d; border-left:3px solid transparent; }
+.v-current .row .material-icons{ color:#6b7f8c; }
+.v-current .row.active{ background:#7ae9bc; border-left-color:#16303d; font-weight:700; }
+.v-current .row.active .material-icons{ color:#16303d; }
+.v-current .sub{ color:#5a6a74; border-left:3px solid transparent; }
+.v-current .sub.active{ color:#16303d; font-weight:500; background:rgba(0,0,0,.05); border-left-color:#1aad6e; }
+
+/* === A: SOFT CARD === */
+.mocksb.v-a{ background:#ffffff; border-right:1px solid #e7ebe9; padding-top:.4rem; }
+.v-a .search{ background:#f3f5f4; border:1px solid #e3e8e6; color:#5c6e72; margin-top:.75rem; }
+.v-a .grp-lbl{ color:#9aa6a2; }
+.v-a .row{ color:#243137; margin:0 .55rem; border-radius:.6rem; width:calc(100% - 1.1rem); }
+.v-a .row .material-icons{ color:#79868a; }
+.v-a .row:hover{ background:#f3f5f4; }
+.v-a .row.active{ background:#e2f3ea; color:#0e5e3e; font-weight:700; }
+.v-a .row.active .material-icons{ color:#149361; }
+.v-a .sub{ color:#5c6e72; margin-left:1.5rem; padding-left:1.1rem; border-left:1.5px solid #e7ebe9; }
+.v-a .sub.active{ color:#0e5e3e; font-weight:700; border-left-color:#1aad6e; }
+
+/* === B: NAVY RAIL === */
+.mocksb.v-b{ background:#0f2029; padding-top:.4rem; }
+.v-b .search{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); color:#b7c4c2; margin-top:.75rem; }
+.v-b .grp-lbl{ color:#5d7a78; }
+.v-b .row{ color:#cdd9d7; margin:0 .55rem; border-radius:.6rem; width:calc(100% - 1.1rem); }
+.v-b .row .material-icons{ color:#7d9693; }
+.v-b .row:hover{ background:rgba(255,255,255,.06); }
+.v-b .row.active{ background:rgba(61,219,155,.14); color:#fff; font-weight:700; }
+.v-b .row.active .material-icons{ color:#3ddb9b; }
+.v-b .sub{ color:#90a3a1; margin-left:1.5rem; padding-left:1.1rem; border-left:1.5px solid rgba(255,255,255,.1); }
+.v-b .sub.active{ color:#fff; font-weight:700; border-left-color:#3ddb9b; }
+
+/* === C: GROUPED COMPACT === */
+.mocksb.v-c{ background:#fafbfb; border-right:1px solid #e7ebe9; padding-top:0; }
+.v-c .fav{ display:flex; gap:.35rem; flex-wrap:wrap; padding:.75rem .9rem .6rem; border-bottom:1px solid #e7ebe9; margin-bottom:.2rem; }
+.v-c .fav span{ font-size:var(--fs-micro); background:#eef1f0; color:#51615f; border-radius:999px; padding:.22rem .55rem; display:inline-flex; align-items:center; gap:.25rem; }
+.v-c .fav .material-icons{ font-size:12px; color:#c9a227; }
+.v-c .grp-lbl{ color:#9aa6a2; border-top:1px solid #eef1f0; margin-top:.2rem; padding-top:.65rem; }
+.v-c .grp-lbl:first-of-type{ border-top:none; margin-top:0; }
+.v-c .row{ color:#243137; padding:.4rem 1rem; border-left:2px solid transparent; }
+.v-c .row .material-icons{ color:#79868a; font-size:16px; }
+.v-c .row:hover{ color:#0e5e3e; }
+.v-c .row.active{ border-left-color:#1aad6e; color:#0e5e3e; font-weight:700; background:linear-gradient(90deg,#e2f3ea,transparent 60%); }
+.v-c .row.active .material-icons{ color:#149361; }
+.v-c .sub{ color:#5c6e72; padding:.32rem .9rem .32rem 2.4rem; }
+.v-c .sub.active{ color:#0e5e3e; font-weight:700; }
+.v-c .sub.active::before{ content:'•'; color:#1aad6e; margin-right:.35rem; }
+
+.shell[hidden]{ display:none; }
+
+.callouts{ display:flex; gap:.6rem; flex-wrap:wrap; margin:0 .25rem 1rem; }
+.callouts .chip{ font-size:var(--fs-caption); background:var(--accent-soft); color:var(--accent-text); border-radius:999px; padding:.35rem .8rem; font-weight:500; }
+.tokens{ display:flex; gap:1rem; flex-wrap:wrap; margin:0 .25rem; font-family:'Roboto Mono',monospace; font-size:var(--fs-micro); color:var(--muted); }
+.tokens .sw{ display:inline-flex; align-items:center; gap:.4rem; }
+.tokens .dot{ width:11px; height:11px; border-radius:3px; display:inline-block; border:1px solid rgba(0,0,0,.08); }
+
+footer.note{ max-width:66ch; font-size:var(--fs-small); line-height:1.55; color:var(--muted); margin-top:.5rem; padding:1rem 1.1rem; background:var(--surface); border:1px solid var(--line); border-radius:.75rem; }
+footer.note b{ color:var(--text); }
+
+@media (max-width: 760px){
+  .appbody{ height:auto; flex-direction:column; }
+  .mocksb{ width:100%; }
+  .cc-grid{ grid-template-columns:1fr; }
+}
+</style>
+
+<div class="wrap">
+  <div class="intro">
+    <div class="eyebrow">Navigation · Direction Review</div>
+    <h1>Left sidebar, three professional directions</h1>
+    <p>Same seven sections, same labels as the live app — just the sidebar's visual treatment changes. Click a direction to preview it in place against a real page (Transfers List). Current is included for reference.</p>
+  </div>
+
+  <div class="switcher" id="switcher">
+    <button data-v="current">Current</button>
+    <button data-v="a" class="active">A · Soft Card <span class="rec">Recommended</span></button>
+    <button data-v="b">B · Navy Rail</button>
+    <button data-v="c">C · Grouped Compact</button>
+  </div>
+
+  <div class="frame">
+    <div class="frame-label">
+      <h2 id="fl-title">A · Soft Card</h2>
+      <span class="tag" id="fl-tag">White panel, rounded active state, items grouped into four sections</span>
+    </div>
+
+    <div class="appwin">
+      <div class="apphdr">
+        <div class="logo">azent<b>io</b></div>
+        <div class="spacer"></div>
+        <div class="hicon"><span class="material-icons">notifications</span></div>
+        <div class="hicon"><span class="material-icons">help_outline</span></div>
+        <div class="av">SR</div>
+      </div>
+      <div class="appbody">
+
+        <!-- CURRENT -->
+        <section class="shell" data-shell="current" hidden>
+          <nav class="mocksb v-current">
+            <div class="search"><span class="material-icons">search</span>Search menu…</div>
+            <div class="row"><span class="material-icons">dashboard</span><span class="lbl">My Banking</span></div>
+            <div class="row"><span class="material-icons">account_balance_wallet</span><span class="lbl">Accounts</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row active"><span class="material-icons">swap_horiz</span><span class="lbl">Transfers</span><span class="material-icons chev">expand_more</span></div>
+            <div class="sub">Fund Transfer</div>
+            <div class="sub active">Pending Transfer List</div>
+            <div class="sub">Beneficiary Management</div>
+            <div class="row"><span class="material-icons">payments</span><span class="lbl">Payments</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row"><span class="material-icons">credit_card</span><span class="lbl">Cards</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row"><span class="material-icons">request_quote</span><span class="lbl">Financing</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row"><span class="material-icons">support_agent</span><span class="lbl">Services</span><span class="material-icons chev">expand_more</span></div>
+          </nav>
+        </section>
+
+        <!-- A SOFT CARD -->
+        <section class="shell" data-shell="a">
+          <nav class="mocksb v-a">
+            <div class="search"><span class="material-icons">search</span>Search menu…</div>
+            <div class="grp-lbl">Overview</div>
+            <div class="row"><span class="material-icons">dashboard</span><span class="lbl">My Banking</span></div>
+            <div class="row"><span class="material-icons">account_balance_wallet</span><span class="lbl">Accounts</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Money movement</div>
+            <div class="row active"><span class="material-icons">swap_horiz</span><span class="lbl">Transfers</span><span class="material-icons chev">expand_more</span></div>
+            <div class="sub">Fund Transfer</div>
+            <div class="sub active">Pending Transfer List</div>
+            <div class="sub">Beneficiary Management</div>
+            <div class="row"><span class="material-icons">payments</span><span class="lbl">Payments</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Cards &amp; lending</div>
+            <div class="row"><span class="material-icons">credit_card</span><span class="lbl">Cards</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row"><span class="material-icons">request_quote</span><span class="lbl">Financing</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Support</div>
+            <div class="row"><span class="material-icons">support_agent</span><span class="lbl">Services</span><span class="material-icons chev">expand_more</span></div>
+          </nav>
+        </section>
+
+        <!-- B NAVY RAIL -->
+        <section class="shell" data-shell="b" hidden>
+          <nav class="mocksb v-b">
+            <div class="search"><span class="material-icons">search</span>Search menu…</div>
+            <div class="grp-lbl">Overview</div>
+            <div class="row"><span class="material-icons">dashboard</span><span class="lbl">My Banking</span></div>
+            <div class="row"><span class="material-icons">account_balance_wallet</span><span class="lbl">Accounts</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Money movement</div>
+            <div class="row active"><span class="material-icons">swap_horiz</span><span class="lbl">Transfers</span><span class="material-icons chev">expand_more</span></div>
+            <div class="sub">Fund Transfer</div>
+            <div class="sub active">Pending Transfer List</div>
+            <div class="sub">Beneficiary Management</div>
+            <div class="row"><span class="material-icons">payments</span><span class="lbl">Payments</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Cards &amp; lending</div>
+            <div class="row"><span class="material-icons">credit_card</span><span class="lbl">Cards</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row"><span class="material-icons">request_quote</span><span class="lbl">Financing</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Support</div>
+            <div class="row"><span class="material-icons">support_agent</span><span class="lbl">Services</span><span class="material-icons chev">expand_more</span></div>
+          </nav>
+        </section>
+
+        <!-- C GROUPED COMPACT -->
+        <section class="shell" data-shell="c" hidden>
+          <nav class="mocksb v-c">
+            <div class="fav"><span><span class="material-icons">star</span>My Accounts</span><span><span class="material-icons">star</span>Fund Transfer</span></div>
+            <div class="grp-lbl">Overview</div>
+            <div class="row"><span class="material-icons">dashboard</span><span class="lbl">My Banking</span></div>
+            <div class="row"><span class="material-icons">account_balance_wallet</span><span class="lbl">Accounts</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Money movement</div>
+            <div class="row active"><span class="material-icons">swap_horiz</span><span class="lbl">Transfers</span><span class="material-icons chev">expand_more</span></div>
+            <div class="sub">Fund Transfer</div>
+            <div class="sub active">Pending Transfer List</div>
+            <div class="sub">Beneficiary Management</div>
+            <div class="row"><span class="material-icons">payments</span><span class="lbl">Payments</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Cards &amp; lending</div>
+            <div class="row"><span class="material-icons">credit_card</span><span class="lbl">Cards</span><span class="material-icons chev">expand_more</span></div>
+            <div class="row"><span class="material-icons">request_quote</span><span class="lbl">Financing</span><span class="material-icons chev">expand_more</span></div>
+            <div class="grp-lbl">Support</div>
+            <div class="row"><span class="material-icons">support_agent</span><span class="lbl">Services</span><span class="material-icons chev">expand_more</span></div>
+          </nav>
+        </section>
+
+        <div class="appcontent">
+          <div class="cc-bc">Home &rsaquo; Transfer &rsaquo; <span style="color:#16303d">Pending Transfer List</span></div>
+          <div class="cc-title">Transfers List</div>
+          <div class="cc-tabs">
+            <div class="cc-tab active">Pending Transfers</div>
+            <div class="cc-tab">Scheduled Transfers</div>
+          </div>
+          <div class="cc-grid">
+            <div class="cc-qa">
+              <div class="h">Pending <span style="color:#16303d">3</span></div>
+              <div class="item">TRF-2026-0871</div>
+              <div class="item ghost">TRF-2026-0854</div>
+              <div class="item ghost">TRF-2026-0839</div>
+            </div>
+            <div class="cc-hero">
+              <div class="e">Transfer Details</div>
+              <div class="v">LKR 5,000.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callouts" id="callouts"></div>
+  <div class="tokens" id="tokens"></div>
+
+  <footer class="note">
+    <b>Why these three:</b> A groups the flat seven-item list into four scannable sections and softens the active state from a flat highlight to a tinted rounded chip — the safest, most broadly "enterprise banking" upgrade. B is the same structure in a dark navy rail for a more premium, differentiated feel against the light content area. C keeps the current density but adds pinned favorites and a minimal accent bar for power users who live in the menu. Say which one to carry across all 92 pages — or mix pieces, e.g. A's grouping with C's favorites row.
+  </footer>
+</div>
+
+<script>
+const DATA = {
+  current: { title:'Current', tag:'Flat grey panel, neon mint active state, no grouping — the baseline', chips:['Flat #E8EAEC panel','Neon active fill','No section grouping'], tokens:[['bg','#E8EAEC'],['active','#7ae9bc'],['text','#16303d']] },
+  a: { title:'A · Soft Card', tag:'White panel, rounded active state, items grouped into four sections', chips:['Four labeled groups','Rounded tinted active chip','White elevated panel'], tokens:[['bg','#FFFFFF'],['active','#E2F3EA'],['accent','#1AAD6E']] },
+  b: { title:'B · Navy Rail', tag:'Deep navy rail, translucent active state, high contrast with content', chips:['Premium dark rail','Translucent active fill','Strong contrast vs content'], tokens:[['bg','#0F2029'],['active','rgba(61,219,155,.14)'],['accent','#3DDB9B']] },
+  c: { title:'C · Grouped Compact', tag:'Dense list, pinned favorites row, minimal accent bar instead of a fill', chips:['Pinned favorites row','Dense power-user rows','Minimal 2px accent bar'], tokens:[['bg','#FAFBFB'],['accent bar','#1AAD6E'],['text','#0E5E3E']] }
+};
+
+function renderMeta(key){
+  const d = DATA[key];
+  document.getElementById('fl-title').textContent = d.title;
+  document.getElementById('fl-tag').textContent = d.tag;
+  document.getElementById('callouts').innerHTML = d.chips.map(c => `<span class="chip">${c}</span>`).join('');
+  document.getElementById('tokens').innerHTML = d.tokens.map(([k,v]) => `<span class="sw"><span class="dot" style="background:${v}"></span>${k}: ${v}</span>`).join('');
+}
+
+document.getElementById('switcher').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const v = btn.dataset.v;
+  document.querySelectorAll('#switcher button').forEach(b => b.classList.toggle('active', b===btn));
+  document.querySelectorAll('.shell').forEach(s => s.hidden = s.dataset.shell !== v);
+  renderMeta(v);
+});
+
+renderMeta('a');
+</script>

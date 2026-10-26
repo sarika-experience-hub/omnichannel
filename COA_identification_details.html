@@ -1,635 +1,754 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>azentio – Create Online Account – Identification Details</title>
+<link rel="stylesheet" href="css/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/fonts.css"/>
 <link rel="stylesheet" href="css/flag-icons.min.css"/>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Online Account – Identification Details | Azentio</title>
+<link rel="stylesheet" href="css/datepicker.css"/>
+<link rel="stylesheet" href="css/styles.css"/>
+<link rel="stylesheet" href="css/onboarding-rail.css"/>
+<link rel="stylesheet" href="css/dark.css"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script src="js/theme.js"></script>
 <style>
-/* ── Reset & Variables ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --green:#2db87a; --green-light:#e8f7f0; --green-dark:#1f9e63;
-  --navy:#1c3a52;  --navy-mid:#2a5070;
-  --gray-sb:#efefef; --gray-bd:#dde2e7; --gray-tx:#6b7280; --gray-bg:#f7f8fa;
-  --orange:#f57c00; --orange-lt:#fff3e0;
-  --red:#d32f2f;   --blue:#1976d2;
-  --white:#fff;    --text:#1a2533;
-  --ff:'Segoe UI',system-ui,-apple-system,sans-serif;
-  --r:6px; --rl:10px;
-  --sh:0 2px 8px rgba(0,0,0,.08); --shm:0 4px 16px rgba(0,0,0,.12);
-  --tr:.2s ease;
+/* ══ Retail Onboarding — shared shell (header, stepper, right panel, footer) ══
+   Scoped to the three retail-onboarding-*.html pages; reuses the app's shared
+   .f-input/.f-select/.btn-action/.amount-field/.phone-wrap/.modal-ov classes
+   from styles.css, and mirrors general-account-opening.html's static
+   .gao-card / .gao-field-group / .gao-footer conventions so the look matches
+   the rest of the retail app. */
+body { background:#f9fafb; font-family:'Poppins','Roboto',sans-serif; color:var(--az-navy); }
+
+/* ── Public header (no sidebar/avatar — pre-login) ── */
+.ob-hdr { height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 1.25rem; border-bottom:1px solid var(--az-border); position:sticky; top:0; background:#fff; z-index:50; }
+.ob-hdr-left { display:flex; align-items:center; }
+.ob-hamburger { width:36px; height:36px; background:none; border:none; border-radius:.5rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; margin-right:.5rem; transition:background .12s; }
+.ob-hamburger:hover { background:rgba(22,48,61,.07); }
+.ob-hamburger .material-icons { font-size:22px; color:var(--az-navy); line-height:1; }
+.ob-hamburger .icon-collapsed { display:none; }
+.ob-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
+.ob-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
+.ob-hdr .l-logo { display:flex; align-items:center; padding:0 .75rem; }
+.ob-hdr .l-logo svg { height:28px; width:auto; }
+.ob-hdr-right { display:flex; align-items:center; gap:.25rem; }
+.ob-hdr-div { width:1px; height:22px; background:var(--az-border); margin:0 6px; }
+.ob-icon-btn { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; color:#1aad6e; text-decoration:none; transition:background .12s,color .12s; border:none; background:none; cursor:pointer; }
+.ob-icon-btn:hover { background:#eafaf2; color:#148c58; }
+.ob-icon-brand { color:#1aad6e; }
+.ob-icon-brand:hover { background:#eafaf2; color:#148c58; }
+.ob-icon-btn .material-icons { font-size:21px; }
+.ob-lang-wrap { position:relative; }
+.ob-lang-btn { display:flex; align-items:center; gap:5px; background:none; border:1px solid var(--az-border); border-radius:6px; cursor:pointer; padding:.3rem .625rem; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-caption); font-weight:500; color:var(--az-navy); }
+.ob-lang-btn:hover { background:#f0f4f6; }
+.ob-lang-menu { position:absolute; top:calc(100% + 6px); right:0; background:#fff; border:1px solid var(--az-border); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.14); min-width:130px; padding:4px 0; z-index:200; }
+.ob-lang-opt { display:flex; align-items:center; gap:10px; padding:8px 14px; width:100%; background:none; border:none; cursor:pointer; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); color:var(--az-navy); text-align:left; }
+.ob-lang-opt:hover { background:#f0faf5; }
+.ob-lang-opt.active { font-weight:700; }
+
+/* ── Shell: stepper | main | side panel ── */
+.ob-shell { display:flex; align-items:stretch; min-height:calc(100vh - 60px); }
+.ob-rail { width:258px; flex-shrink:0; background:linear-gradient(180deg,#142b38 0%,#0f2029 55%); border-right:1px solid rgba(255,255,255,.08); padding:1.5rem .875rem; transition:width .2s,padding .2s,opacity .15s; overflow:hidden; }
+.ob-rail.collapsed { width:0; padding:1.5rem 0; opacity:0; border-right:none; }
+.ob-rail-cap { font-size:var(--fs-micro); font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#5d7a78; padding:0 .6rem; margin-bottom:1.15rem; white-space:nowrap; }
+.ob-steps { list-style:none; padding-left:0; margin-bottom:0; }
+.ob-step { display:flex; align-items:flex-start; gap:.7rem; padding:.5rem .6rem 1.6rem; position:relative; }
+.ob-step:not(:last-child)::after { content:''; position:absolute; left:22px; top:38px; bottom:6px; width:2px; border-radius:2px; background:rgba(255,255,255,.13); }
+.ob-step.done:not(:last-child)::after { background:linear-gradient(180deg,var(--az-green),rgba(46,216,142,.3)); }
+.ob-step-num { width:26px; height:26px; border-radius:50%; background:transparent; border:2px solid rgba(255,255,255,.26); color:#8fa3a0; font-size:var(--fs-caption); font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .22s,border-color .22s,color .22s,box-shadow .22s; }
+.ob-step.done .ob-step-num { background:var(--az-green); border-color:var(--az-green); color:#0f2029; }
+.ob-step.active .ob-step-num { background:#fff; border-color:#fff; color:#0f2029; box-shadow:0 0 0 4px rgba(255,255,255,.09); }
+/* Label + percentage share one line; the live progress bar is drawn underneath
+   with pseudo-elements so the row itself never has to wrap. */
+.ob-step-body { position:relative; flex:1; min-width:0; display:flex; align-items:center; justify-content:space-between; gap:.4rem; flex-wrap:nowrap; padding:.15rem 0 .5rem; }
+.ob-step-lbl { font-size:var(--fs-small); font-weight:600; color:#8fa3a0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ob-step.active .ob-step-lbl, .ob-step.done .ob-step-lbl { color:#fff; }
+.ob-step-pct { font-size:var(--fs-micro); font-weight:600; padding:.1rem .36rem; border-radius:.75rem; white-space:nowrap; flex-shrink:0; font-variant-numeric:tabular-nums; }
+.ob-step-pct.pct-0 { background:rgba(255,255,255,.08); color:#8fa3a0; }
+.ob-step-pct.pct-mid { background:rgba(234,179,8,.18); color:#fbbf24; }
+.ob-step-pct.pct-done { background:rgba(46,216,142,.18); color:var(--az-green); }
+.ob-step.active .ob-step-body::before { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; border-radius:2px; background:rgba(255,255,255,.1); }
+.ob-step.active .ob-step-body::after { content:''; position:absolute; left:0; bottom:0; height:3px; width:var(--ob-pct,0%); border-radius:2px; background:linear-gradient(90deg,#2ed88e,#8af2c6); transition:width .35s cubic-bezier(.4,0,.2,1); }
+
+.ob-main { flex:1; min-width:0; padding:1.5rem 2rem 3rem; }
+.ob-bc { display:flex; align-items:center; gap:.375rem; font-size:var(--fs-caption); color:var(--az-muted); margin-bottom:.375rem; flex-wrap:wrap; }
+.ob-bc a { color:var(--az-blue); text-decoration:none; }
+.ob-bc a:hover { text-decoration:underline; }
+.ob-bc .sep { color:#c7d0d6; }
+.ob-title { font-size:var(--fs-heading); font-weight:600; color:var(--az-navy); margin-bottom:1.25rem; }
+
+/* ── Card — static section, no expand/collapse (matches .gao-card) ── */
+.ob-card { background:#fff; border:1px solid var(--az-border); border-radius:.875rem; box-shadow:0 1px 3px rgba(22,48,61,.04); margin-bottom:1.5rem; padding:1.25rem 1.75rem 1.75rem; }
+.ob-card-hdr { display:flex; align-items:center; justify-content:space-between; padding:0 0 .75rem; border-bottom:1px solid #eef1f4; margin-bottom:1.25rem; cursor:default; user-select:auto; }
+.ob-card-title { font-size:var(--fs-subhead); font-weight:600; color:var(--az-navy); }
+.ob-card-body { padding:0; }
+
+/* ── Field groups (matches .gao-field-group / .gao-field-group-lbl) ── */
+.ob-field-group { margin-bottom:2rem; }
+.ob-field-group:last-child { margin-bottom:0; }
+.ob-field-group-lbl { font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--az-blue,#2563eb); margin-bottom:1.1rem; }
+
+/* ── Larger, softer inputs — matches general-account-opening.html's field style ── */
+.ob-card-body .f-label { font-size:var(--fs-label); font-weight:500; margin-bottom:.5rem; }
+.ob-card-body .f-input,
+.ob-card-body .f-select,
+.ob-card-body .f-currency,
+.ob-card-body .amount-field,
+.ob-card-body .phone-wrap {
+  border-radius:.625rem; border-color:#e2e7ee;
 }
-body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(--white); min-height:100vh; display:flex; flex-direction:column; }
+.ob-card-body .f-input,
+.ob-card-body .f-currency .fp,
+.ob-card-body .f-currency input,
+.ob-card-body .amount-curr,
+.ob-card-body .amount-inp,
+.ob-card-body .phone-pfx,
+.ob-card-body .phone-wrap input {
+  padding:.75rem .95rem; font-size:var(--fs-body);
+}
+.ob-card-body .f-select { padding-right:2.25rem; }
+.ob-card-body .f-input::placeholder,
+.ob-card-body .f-currency input::placeholder,
+.ob-card-body .amount-inp::placeholder,
+.ob-card-body .phone-wrap input::placeholder {
+  text-shadow:none; -webkit-text-fill-color:currentColor; opacity:1;
+}
+.ob-card-body .f-input:focus,
+.ob-card-body .f-currency:focus-within,
+.ob-card-body .amount-field:focus-within,
+.ob-card-body .phone-wrap:focus-within {
+  border-color:var(--az-blue,#00538A);
+  box-shadow:none;
+}
 
-/* ── Utility ─────────────────────────────────────────────────── */
-.hidden { display:none !important; }
+/* ── Footer CTA — matches .gao-footer's "Modern CTA row" ── */
+.ob-footer { display:flex; align-items:center; justify-content:flex-end; gap:.75rem; padding-top:1rem; }
+.ob-footer .btn-action { border-radius:.5rem; padding:.7rem 1.75rem; font-size:var(--fs-body); transition:background .15s,box-shadow .15s,transform .15s; }
+.ob-footer .btn-cancel, .ob-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.ob-footer .btn-cancel:hover, .ob-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.ob-footer .btn-submit { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; border:none; }
+.ob-footer .btn-submit:hover { background:linear-gradient(135deg,#0f232e,#081820); transform:translateY(-1px); }
+.ob-footer .btn-submit:active { transform:translateY(0); }
 
-/* ── Hamburger button ────────────────────────────────────────── */
-.hdr-hamburger { background:none; border:none; cursor:pointer; padding:.375rem .5rem; display:flex; align-items:center; justify-content:center; border-radius:.375rem; transition:background .12s; color:#16303d; }
-.hdr-hamburger:hover { background:#f0f4f6; }
-.hdr-hamburger .material-icons { font-size:22px; color:#16303d; line-height:1; }
-.hdr-hamburger .icon-collapsed { display:none; }
-.hdr-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
-.hdr-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
+/* ── Right side panel: welcome illustration (step 1) ── */
+.ob-side { position:relative; overflow:hidden; width:288px; flex-shrink:0; background:#eefaf4; border:1px solid #d4efe2; margin:1.5rem 2rem 1.5rem 0; border-radius:1rem; padding:1.6rem 1.4rem; align-self:flex-start; }
+/* Brand mark motif behind the panel, same treatment as the accounts hero */
+.ob-side::before { content:''; position:absolute; top:-18px; right:-18px; width:150px; height:150px; pointer-events:none;
+  background:
+    var(--az-hero-mark) no-repeat center/76%,
+    radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%; }
+.ob-side > * { position:relative; z-index:1; }
+.ob-side-copy { font-size:var(--fs-subhead); line-height:1.6; color:var(--az-navy); margin-bottom:1.75rem; }
+.ob-side-copy strong { color:var(--az-navy); }
+.ob-side-sub { font-weight:600; margin-bottom:1.5rem; }
+.ob-side-illo { width:100%; display:block; margin-top:.25rem; }
+.ob-side-photo { width:100%; height:auto; display:block; margin-top:.25rem; }
 
-/* ── Header ──────────────────────────────────────────────────── */
-.app-hdr { height:56px; background:#fff; border-bottom:1px solid #e2e8ec; display:flex; align-items:center; position:sticky; top:0; z-index:100; padding-right:1.25rem; box-shadow:0 1px 4px rgba(22,48,61,.06); }
-.hdr-logo { width:240px; flex-shrink:0; display:flex; align-items:center; padding:0 1.25rem; overflow:hidden; }
-.hdr-logo-svg { display:flex; align-items:center; }
-.hdr-logo-svg svg { height:28px; width:auto; }
-.hdr-right { display:flex; align-items:center; gap:.5rem; margin-left:auto; }
-.hdr-icon-btn { background:none; border:none; cursor:pointer; padding:.375rem; display:flex; align-items:center; position:relative; border-radius:.375rem; transition:background .12s; }
-.hdr-icon-btn:hover { background:#f0f4f6; }
-.hdr-icon-btn img { width:20px; height:20px; }
-.notif-dot { position:absolute; top:4px; right:4px; width:7px; height:7px; background:#2ed88e; border-radius:50%; border:1.5px solid #fff; }
-.hdr-div { width:1px; height:24px; background:#e2e8ec; margin:0 .125rem; }
-.hdr-lang { font-size:.875rem; font-weight:500; color:#16303d; border:none; background:none; cursor:pointer; display:flex; align-items:center; gap:.25rem; padding:.3125rem .5rem; border-radius:.375rem; }
-.hdr-lang:hover { background:#f0f4f6; }
-.hdr-lang-wrap { position: relative; display: flex; align-items: center; }
-.hdr-lang-wrap::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 12px; }
-.hdr-lang-drop { position: absolute; top: calc(100% + 12px); right: 0; min-width: 150px; background: #fff; border: 1px solid #e2e8ec; border-radius: .5rem; box-shadow: 0 8px 24px rgba(0,0,0,.13); z-index: 9997; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity .2s .4s, transform .2s .4s; padding: .25rem 0; overflow: hidden; }
-.hdr-lang-wrap:hover .hdr-lang-drop { opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity .15s, transform .15s; }
-.hdr-lang-opt { display: flex; align-items: center; gap: .625rem; padding: .5625rem 1rem; width: 100%; background: none; border: none; cursor: pointer; font-family: inherit; font-size: .8125rem; color: #16303d; text-align: left; transition: background .1s; }
-.hdr-lang-opt:hover { background: #f0faf5; }
-.hdr-lang-opt.active { font-weight: 700; background: #f5fdf9; }
-.hdr-lang-opt .fi { width: 20px; height: 15px; border-radius: 2px; flex-shrink: 0; }
-.hdr-avatar { width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid #e2e8ec; cursor:pointer; }
-.btn-logout { background:#2ed88e; color:#fff; border:none; border-radius:20px; padding:.3125rem 1.125rem; font-size:.8125rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s; text-decoration:none; display:inline-block; }
-.btn-logout:hover { background:#25c47e; }
+/* ── Responsive: stack side panel below on small screens ── */
+@media (max-width:1200px) {
+  .ob-shell { flex-direction:column; }
+  .ob-rail { width:auto; border-right:none; border-bottom:1px solid rgba(255,255,255,.08); }
+  .ob-rail.collapsed { padding:0; }
+  .ob-steps { display:flex; gap:1.5rem; flex-wrap:wrap; }
+  .ob-step:not(:last-child)::after { display:none; }
+  .ob-side { width:auto; margin:0 2rem 1.5rem; }
+}
 
-/* ── Layout ──────────────────────────────────────────────────── */
-.az-layout { display:flex; flex:1; min-height:0; }
+/* ── Required marker ── */
+.ob-req { color:#c62828; }
 
-/* ── Sidebar ─────────────────────────────────────────────────── */
-.az-sidebar { width:240px; min-width:240px; background:var(--gray-sb); border-right:1px solid var(--gray-bd); padding:20px 0; position:relative; transition:width var(--tr),min-width var(--tr); }
-.az-sidebar.collapsed, .az-sidebar.sb-collapsed { width:56px; min-width:56px; }
+/* ── Mobile number: searchable country/ISD-code combobox ── */
+.phone-combo { position:relative; }
+.phone-pfx { display:flex; align-items:center; gap:.375rem; margin:0; background:#f8fafb; border:none; border-right:1px solid var(--az-border); cursor:pointer; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); color:var(--az-navy); transition:background .12s; }
+.phone-pfx:hover { background:#f0f4f6; }
+.phone-pfx:focus-visible { outline:2px solid var(--az-blue,#00538A); outline-offset:-2px; }
+.phone-pfx .fi { flex-shrink:0; }
+.phone-pfx-chev { color:var(--az-muted); flex-shrink:0; transition:transform .15s; margin-left:.125rem; }
+.phone-pfx[aria-expanded="true"] .phone-pfx-chev { transform:rotate(180deg); }
+.phone-ctry-panel { position:fixed; z-index:1050; background:#fff; border:1px solid var(--az-border); border-radius:.625rem; box-shadow:0 8px 24px rgba(16,32,48,.16); max-height:280px; min-width:260px; overflow:hidden; display:flex; flex-direction:column; }
+.phone-ctry-search { display:flex; align-items:center; gap:.5rem; padding:.625rem .75rem; border-bottom:1px solid #eef1f4; flex-shrink:0; }
+.phone-ctry-search .material-icons { font-size:18px; color:var(--az-muted); }
+.phone-ctry-search input { flex:1; min-width:0; border:none; outline:none; font-size:var(--fs-small); font-family:'Poppins','Roboto',sans-serif; color:var(--az-navy); background:transparent; }
+.phone-ctry-list { overflow-y:auto; padding:.25rem; }
+.phone-ctry-opt { display:flex; align-items:center; gap:.5rem; padding:.5rem .625rem; border-radius:.375rem; font-size:var(--fs-small); color:var(--az-navy); cursor:pointer; font-family:'Poppins','Roboto',sans-serif; }
+.phone-ctry-opt:hover, .phone-ctry-opt.active { background:#f0f9f5; }
+.phone-ctry-opt .fi { flex-shrink:0; }
+.phone-ctry-opt-name { flex:1; }
+.phone-ctry-opt-dial { color:var(--az-muted); font-size:var(--fs-caption); }
+.phone-ctry-empty { padding:.75rem; font-size:var(--fs-small); color:#8a97a0; text-align:center; }
 
-.az-steps { list-style:none; padding:4px 0; }
-.az-step { display:flex; align-items:center; gap:12px; padding:11px 16px; border-left:4px solid transparent; margin-bottom:2px; }
-.az-step.completed { border-left-color:#1a7a4a; background:rgba(45,184,122,.05); }
-.az-step.active    { border-left-color:#f57c00; background:rgba(245,124,0,.04); }
-.az-step.inactive  { border-left-color:var(--gray-bd); }
-.az-step-circle { width:30px; height:30px; min-width:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; border:2px solid transparent; flex-shrink:0; }
-.az-step-circle svg { width:13px; height:13px; }
-.az-step.completed .az-step-circle { background:#1a7a4a; border-color:#1a7a4a; color:var(--white); }
-.az-step.active    .az-step-circle { background:var(--white); border-color:#f57c00; color:#f57c00; }
-.az-step.inactive  .az-step-circle { background:var(--white); border-color:#c0c8d0; color:#c0c8d0; }
-.az-step-info { display:flex; align-items:center; justify-content:space-between; flex:1; gap:8px; overflow:hidden; min-width:0; }
-.az-sidebar.collapsed .az-step-info, .az-sidebar.sb-collapsed .az-step-info { display:none; }
-.az-step-label { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
-.az-step.completed .az-step-label { color:var(--text); }
-.az-step.active    .az-step-label { color:var(--text); }
-.az-step.inactive  .az-step-label { color:var(--gray-tx); }
-.az-step-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; flex-shrink:0; }
-.badge-green  { background:var(--green-light); color:#1a7a4a; }
-.badge-orange { background:var(--orange-lt);   color:var(--orange); }
-.badge-gray   { background:var(--gray-bd);     color:var(--gray-tx); }
+/* ══ OTP verification modal — 4-digit code entry ══ */
+.otp-modal { max-width:420px; padding:1.75rem 1.75rem 1.5rem; border-radius:1rem; box-shadow:0 24px 60px rgba(10,28,38,.28); }
+.otp-badge { width:52px; height:52px; border-radius:50%; background:#e3f7ec; border:1px solid #bfeed7; display:flex; align-items:center; justify-content:center; margin-bottom:1rem; }
+.otp-badge .material-icons { font-size:26px; color:#1aad6e; }
+.otp-title { font-size:var(--fs-subhead); font-weight:600; color:var(--az-navy); margin-bottom:.3rem; }
+.otp-sub { font-size:var(--fs-small); color:var(--az-muted); line-height:1.55; margin-bottom:1.35rem; }
+.otp-sub b { color:var(--az-navy); font-weight:600; font-variant-numeric:tabular-nums; }
+.otp-inputs { display:flex; gap:.6rem; }
+.otp-digit { width:100%; height:58px; text-align:center; font-size:var(--fs-display); font-weight:700; color:var(--az-navy); font-family:'Poppins','Roboto',sans-serif; border:1.5px solid #e2e7ee; border-radius:.75rem; background:#fbfcfd; outline:none; caret-color:#1aad6e; transition:border-color .15s,box-shadow .15s,background .15s; }
+.otp-digit:focus { border-color:var(--az-navy); background:#fff; box-shadow:0 0 0 3px rgba(22,48,61,.08); }
+.otp-digit.filled { border-color:#1aad6e; background:#fff; }
+.otp-wrap.err .otp-digit { border-color:#d94141; background:#fff6f6; }
+.otp-wrap.ok  .otp-digit { border-color:#1aad6e; background:#f2fcf7; }
+.otp-wrap.err { animation:otpShake .32s cubic-bezier(.36,.07,.19,.97); }
+@keyframes otpShake { 10%,90%{transform:translateX(-2px)} 30%,70%{transform:translateX(4px)} 50%{transform:translateX(-5px)} }
+.otp-msg { min-height:1.15rem; font-size:var(--fs-caption); font-weight:600; margin:.7rem 0 .5rem; }
+.otp-msg.err { color:#d94141; }
+.otp-msg.ok  { color:#1aad6e; }
+.otp-foot { display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:1.4rem; }
+.otp-resend { background:none; border:none; padding:0; color:var(--az-blue); font-weight:600; font-size:var(--fs-small); cursor:pointer; font-family:'Poppins','Roboto',sans-serif; }
+.otp-resend:hover:not(:disabled) { text-decoration:underline; }
+.otp-resend:disabled { color:#a8b4bc; cursor:default; }
+.otp-timer { display:inline-flex; align-items:center; gap:.3rem; font-size:var(--fs-small); color:var(--az-muted); font-variant-numeric:tabular-nums; }
+.otp-timer .material-icons { font-size:15px; }
+.otp-cta { display:flex; gap:.75rem; }
+.otp-cta .btn-action { flex:1; border-radius:.5rem; padding:.72rem 1rem; font-size:var(--fs-body); text-align:center; }
+.otp-cta .btn-cancel { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.otp-cta .btn-cancel:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.otp-cta .btn-submit { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; border:none; transition:transform .15s,opacity .15s; }
+.otp-cta .btn-submit:hover:not(:disabled) { transform:translateY(-1px); }
+.otp-cta .btn-submit:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+@media (prefers-reduced-motion:reduce) { .otp-wrap.err { animation:none; } .otp-digit, .otp-cta .btn-submit { transition:none; } }
+/* ── "You have entered" summary accordion ── */
+.ob-sum-grp { margin-bottom:.75rem; }
+.ob-sum-grp:last-child { margin-bottom:0; }
+.ob-sum-hdr { display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer; padding:.5rem 0; border-bottom:1px solid #cdeedd; font-weight:700; color:var(--az-navy); font-size:var(--fs-body); user-select:none; }
+.ob-sum-hdr:hover { color:#0d1f28; }
+.ob-sum-hdr .material-icons { font-size:20px; color:#4b6b5b; transition:transform .2s; flex-shrink:0; }
+.ob-sum-hdr.collapsed .material-icons { transform:rotate(-90deg); }
+.ob-sum-tick { width:16px; height:16px; border-radius:50%; background:#1aad6e; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; margin-right:.4rem; }
+.ob-sum-tick .material-icons { font-size:11px; color:#fff; transform:none !important; }
+.ob-sum-hdr-l { display:flex; align-items:center; min-width:0; }
+.ob-sum-body { padding-top:.5rem; font-size:var(--fs-caption); color:var(--az-navy); }
+.ob-sum-body.ob-hidden { display:none; }
+.ob-sum-row { display:flex; align-items:baseline; justify-content:space-between; gap:.7rem; padding:.34rem 0; border-bottom:1px solid rgba(22,48,61,.065); }
+.ob-sum-row:last-child { border-bottom:none; }
+.ob-sum-k { color:#5c7a6c; flex-shrink:0; }
+.ob-sum-v { font-weight:600; text-align:right; min-width:0; overflow-wrap:anywhere; }
+.ob-sum-v.empty { color:#9bb0a4; font-weight:400; }
+/* ── Help popover + info trigger ──
+   The trigger is a quiet outline glyph that only picks up colour on hover or
+   while its popover is open, so it reads as an affordance rather than an alert. */
+.ob-info-wrap { position:relative; display:inline-flex; vertical-align:middle; }
+.ob-info-btn { width:16px; height:16px; border-radius:50%; background:none; border:none; color:#a9b6be; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; line-height:1; transition:color .12s; }
+.ob-info-btn .material-icons { font-size:16px; }
+.ob-info-btn:hover { color:var(--az-blue); }
+.ob-info-btn[aria-expanded="true"] { color:var(--az-blue); }
+.ob-info-btn:focus-visible { outline:2px solid var(--az-blue); outline-offset:2px; }
 
-/* ── Main content ────────────────────────────────────────────── */
-.az-main { flex:1; min-width:0; display:flex; flex-direction:column; }
-.az-content-wrap { flex:1; display:flex; }
-.az-form-area { flex:1; min-width:0; padding:16px 24px 12px; display:flex; flex-direction:column; }
+.ob-tooltip { position:absolute; top:calc(100% + 10px); left:-10px; z-index:60; width:320px; max-width:min(320px,78vw); background:#fff; border:1px solid #e6ebef; border-radius:.875rem; box-shadow:0 18px 44px rgba(16,36,48,.16),0 2px 6px rgba(16,36,48,.05); padding:1.05rem 1.15rem; font-size:var(--fs-small); line-height:1.55; color:var(--az-navy); font-weight:400; text-align:left; }
+.ob-tooltip.ob-hidden { display:none; }
+.ob-tooltip::before { content:''; position:absolute; top:-7px; left:15px; width:12px; height:12px; background:#fff; border-left:1px solid #e6ebef; border-top:1px solid #e6ebef; transform:rotate(45deg); }
+.ob-tip-title { font-size:var(--fs-body); font-weight:600; color:var(--az-navy); margin-bottom:.75rem; }
+.ob-tip-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.6rem; }
+.ob-tip-list li { position:relative; padding-left:1rem; }
+.ob-tip-list li::before { content:''; position:absolute; left:.22rem; top:.52rem; width:4px; height:4px; border-radius:50%; background:var(--az-navy); }
+.ob-tip-list b { font-weight:700; }
+.ob-tip-note { margin-top:.9rem; padding-top:.8rem; border-top:1px solid #edf1f4; color:#5e717c; }
+.ob-tip-note b { color:var(--az-navy); font-weight:700; }
+.ob-field-lbl { display:flex; align-items:center; gap:.4rem; margin-bottom:.375rem; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); }
+/* ── Password strength meter + live criteria checklist ── */
+.pwd-strength-wrap { display:flex; align-items:center; gap:.75rem; margin-top:.625rem; margin-bottom:.875rem; }
+.pwd-strength-bar { display:flex; gap:.25rem; flex:1; max-width:320px; }
+.pwd-strength-bar .seg { height:5px; border-radius:3px; flex:1; background:#e2e7ee; transition:background .2s; }
+.pwd-strength-bar .seg.on-weak { background:#dc2626; }
+.pwd-strength-bar .seg.on-fair { background:#f59e0b; }
+.pwd-strength-bar .seg.on-good { background:#eab308; }
+.pwd-strength-bar .seg.on-strong { background:#16a34a; }
+.pwd-strength-lbl { font-size:var(--fs-caption); font-weight:600; color:var(--az-navy); white-space:nowrap; }
+.pwd-criteria-grid { display:grid; grid-template-columns:1fr; gap:.28rem; }
+/* Keep the checklist inside the Password column. It used to be 420px wide and
+   bleed rightward under Confirm Password, which now carries its own match
+   indicator — the two collided. */
+#pwdStrengthRow { width:100%; }
+.pwd-crit { display:flex; align-items:center; gap:.4rem; font-size:var(--fs-caption); color:var(--az-muted); transition:color .15s; }
+.pwd-crit .material-icons { font-size:16px; color:#c7d0d6; flex-shrink:0; transition:color .15s; }
+.pwd-crit.met { color:var(--az-navy); }
+.pwd-crit.met .material-icons { color:var(--az-green); }
 
-.az-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gray-tx); margin-bottom:6px; }
-.az-breadcrumb a { color:var(--green); text-decoration:none; }
-.az-breadcrumb a:hover { text-decoration:underline; }
-.az-bc-sep { color:var(--gray-bd); }
-.az-page-title { font-size:20px; font-weight:700; color:var(--text); margin-bottom:12px; }
-
-/* ── Section (divider style, no box) ─────────────────────────── */
-.az-section { margin-bottom:4px; }
-.az-sec-hdr { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1.5px solid var(--gray-bd); cursor:pointer; user-select:none; }
-.az-sec-hdr h2 { font-size:12px; font-weight:700; color:var(--gray-tx); letter-spacing:.04em; text-transform:uppercase; }
-.az-sec-hdr .chev { flex-shrink:0; transition:transform var(--tr); }
-.az-section.collapsed .az-sec-hdr .chev { transform:rotate(180deg); }
-.az-sec-body { padding:10px 0 2px; }
-.az-section.collapsed .az-sec-body { display:none; }
-
-/* Subsection */
-.az-sub { margin-bottom:14px; }
-.az-sub-title { font-size:14px; font-weight:700; color:var(--text); padding-bottom:10px; margin-bottom:16px; border-bottom:1px solid var(--gray-bd); display:flex; align-items:center; justify-content:space-between; }
-.az-sub-title .chev-sm { width:16px; height:16px; cursor:pointer; transition:transform var(--tr); flex-shrink:0; }
-.az-sub.collapsed .az-sub-title .chev-sm { transform:rotate(180deg); }
-.az-sub.collapsed .az-sub-body { display:none; }
-
-/* ── Form grid ───────────────────────────────────────────────── */
-.frow { display:grid; gap:14px; margin-bottom:12px; }
-.frow.c3 { grid-template-columns:repeat(3,1fr); }
-.frow.c2 { grid-template-columns:repeat(2,1fr); }
-.frow.c1 { grid-template-columns:1fr; }
-.az-field { display:flex; flex-direction:column; gap:3px; }
-.az-field label { font-size:11.5px; font-weight:600; color:var(--gray-tx); display:flex; align-items:center; gap:4px; }
-.az-field label .req { color:var(--red); font-size:14px; margin-left:1px; line-height:1; }
-
-/* Input */
-.az-input { height:36px; padding:0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white); transition:border-color var(--tr),box-shadow var(--tr); width:100%; outline:none; font-family:var(--ff); }
-.az-input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
-.az-input::placeholder { color:#b0b8c1; }
-.az-input.error { border-color:var(--red); box-shadow:0 0 0 3px rgba(211,47,47,.08); }
-
-/* Select */
-.az-select { height:36px; padding:0 36px 0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 10px) center; -webkit-appearance:none; appearance:none; cursor:pointer; width:100%; outline:none; font-family:var(--ff); transition:border-color var(--tr),box-shadow var(--tr); }
-.az-select:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
-
-/* Password */
-.az-pwd-wrap { position:relative; }
-.az-pwd-wrap .az-input { padding-right:44px; }
-.az-pwd-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--gray-tx); display:flex; align-items:center; padding:0; }
-.az-pwd-toggle svg { width:18px; height:18px; }
-
-/* Date */
-.az-date-wrap { position:relative; }
-.az-date-wrap .az-input { padding-right:40px; }
-.az-date-icon { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--gray-tx); cursor:pointer; display:flex; }
-.az-date-icon svg { width:16px; height:16px; }
-
-/* Phone */
-.az-phone-wrap { display:flex; }
-.az-phone-flag { display:flex; align-items:center; gap:5px; padding:0 10px; height:36px; border:1px solid var(--gray-bd); border-right:none; border-radius:var(--r) 0 0 var(--r); background:var(--gray-bg); font-size:13px; cursor:pointer; white-space:nowrap; }
-.az-phone-flag svg { width:20px; }
-.az-phone-flag .caret { width:10px; height:10px; }
-.az-phone-wrap .az-input { border-radius:0 var(--r) var(--r) 0; }
-
-/* Tooltip */
-.az-tip { position:relative; display:inline-flex; }
-.az-tip-icon { width:16px; height:16px; color:var(--blue); cursor:help; flex-shrink:0; }
-.az-tip-box { position:absolute; left:24px; top:-4px; width:220px; background:var(--white); border:1px solid var(--gray-bd); border-radius:var(--r); padding:10px 12px; font-size:12px; color:var(--text); box-shadow:var(--shm); z-index:50; display:none; line-height:1.5; font-weight:400; }
-.az-tip-box::before { content:''; position:absolute; left:-6px; top:10px; width:10px; height:10px; background:var(--white); border:1px solid var(--gray-bd); border-right:none; border-top:none; transform:rotate(45deg); }
-.az-tip:hover .az-tip-box { display:block; }
-
-/* ── Bottom bar & Buttons ────────────────────────────────────── */
-.az-bottom-bar { display:flex; justify-content:flex-end; gap:10px; padding:12px 24px; border-top:1px solid var(--gray-bd); background:var(--white); margin-top:auto; }
-.btn-action { display:inline-flex; align-items:center; justify-content:center; gap:.375rem; border:none; border-radius:.25rem; padding:.5625rem 1.75rem; font-size:.8125rem; font-weight:700; cursor:pointer; text-decoration:none; white-space:nowrap; transition:background .12s,opacity .12s; font-family:var(--ff); }
-.btn-action:disabled { opacity:.6; cursor:not-allowed; }
-.btn-cancel { background:#2ed88e; color:#16303d; }
-.btn-cancel:hover { background:#25c47e; color:#16303d; }
-.btn-save { background:#6c757d; color:#fff; }
-.btn-save:hover { background:#5a6268; color:#fff; }
-.btn-submit { background:#16303d; color:#fff; }
-.btn-submit:hover { background:#1e4356; color:#fff; }
-
-/* ── Right panel ─────────────────────────────────────────────── */
-.az-right-panel { width:280px; min-width:280px; border-left:1px solid var(--gray-bd); background:var(--green-light); padding:24px 20px; overflow-y:auto; }
-.promo-title { font-size:17px; font-weight:700; color:var(--text); margin-bottom:12px; }
-.promo-body  { font-size:13px; line-height:1.75; color:var(--text); margin-bottom:20px; }
-.promo-body strong { font-weight:700; }
-.promo-img { width:100%; max-width:200px; display:block; margin:0 auto; }
-
-/* Summary panel (pages 2–3) */
-.sum-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:16px; text-align:center; }
-.sum-sec { margin-bottom:8px; }
-.sum-hdr { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-bd); cursor:pointer; }
-.sum-hdr span { font-size:13px; font-weight:600; color:var(--green); }
-.sum-hdr .chev-s { width:16px; height:16px; color:var(--green); transition:transform var(--tr); }
-.sum-sec.collapsed .sum-hdr .chev-s { transform:rotate(180deg); }
-.sum-sec.collapsed .sum-body { display:none; }
-.sum-body { padding:12px 0 4px; }
-.sum-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; margin-bottom:8px; }
-.sum-key { font-size:12px; color:var(--gray-tx); font-weight:500; }
-.sum-val { font-size:12px; color:var(--text); font-weight:600; word-break:break-word; }
-.az-verified { display:inline-flex; align-items:center; gap:4px; background:var(--green-light); color:var(--green); font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; margin-bottom:6px; }
-
-/* Field error */
-.az-field-error { font-size:12px; color:var(--red); margin-top:2px; display:flex; align-items:center; gap:4px; }
-.az-field-error svg { width:14px; height:14px; flex-shrink:0; }
-
-/* Checkbox */
-.az-check-wrap { display:flex; align-items:center; gap:10px; margin:8px 0; }
-.az-check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--green); }
-.az-check-wrap label { font-size:13px; cursor:pointer; color:var(--text); }
-.az-check-wrap label a { color:var(--green); text-decoration:none; }
-.az-check-wrap label a:hover { text-decoration:underline; }
-
-/* ── Modal ───────────────────────────────────────────────────── */
-.az-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center; }
-.az-overlay.open { display:flex; }
-.az-modal { background:var(--white); border-radius:var(--rl); width:90%; max-width:680px; max-height:90vh; display:flex; flex-direction:column; box-shadow:var(--shm); overflow:hidden; animation:modalIn .2s ease; }
-@keyframes modalIn { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
-.az-modal-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--gray-bd); }
-.az-modal-hdr h3 { font-size:16px; font-weight:700; }
-.az-modal-close { background:none; border:none; cursor:pointer; font-size:22px; color:var(--gray-tx); line-height:1; }
-.az-modal-close:hover { color:var(--text); }
-.az-modal-body { padding:24px 20px; overflow-y:auto; flex:1; line-height:1.8; font-size:13px; }
-.az-modal-body p + p { margin-top:16px; }
-.az-modal-ftr { padding:16px 20px; border-top:1px solid var(--gray-bd); display:flex; justify-content:center; }
-.az-success-body { display:flex; flex-direction:column; align-items:center; padding:40px 20px; text-align:center; gap:16px; }
-.az-success-icon { width:64px; height:64px; border-radius:50%; border:3px solid var(--green); display:flex; align-items:center; justify-content:center; }
-.az-success-icon svg { width:32px; height:32px; color:var(--green); }
-.az-success-body p { font-size:15px; font-weight:600; color:var(--text); line-height:1.5; }
-
-/* Charges amount field */
-.az-currency-wrap { position:relative; }
-.az-currency-wrap .az-input { padding-right:110px; }
-.az-currency-badge { position:absolute; right:0; top:0; bottom:0; display:flex; align-items:center; gap:4px; padding:0 12px; background:var(--gray-bg); border:1px solid var(--gray-bd); border-left:none; border-radius:0 var(--r) var(--r) 0; font-size:13px; color:var(--text); font-weight:600; cursor:pointer; white-space:nowrap; }
-.az-currency-badge svg { width:12px; height:12px; }
-
-/* ── Footer ──────────────────────────────────────────────────── */
-.az-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; font-size:12px; color:var(--gray-tx); border-top:1px solid var(--gray-bd); background:var(--white); }
-.az-footer-links { display:flex; gap:20px; }
-.az-footer-links a { color:var(--gray-tx); text-decoration:none; }
-.az-footer-links a:hover { color:var(--text); }
-.az-footer-access { display:flex; align-items:center; gap:10px; }
-.az-font-btn { background:none; border:none; cursor:pointer; font-weight:700; color:var(--text); padding:2px 4px; font-family:var(--ff); }
-.az-font-btn:hover { color:var(--green); }
-.az-contrast-btn { width:22px; height:22px; border-radius:50%; background:var(--text); color:var(--white); border:none; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; }
-
-/* ── Responsive ──────────────────────────────────────────────── */
-@media (max-width:1024px) { .az-right-panel { display:none; } }
-@media (max-width:900px)  { .frow.c3 { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:640px)  { .az-sidebar { display:none; } .frow.c3,.frow.c2 { grid-template-columns:1fr; } .az-form-area { padding:16px; } }
+/* ── Password reveal toggle + live match indicator ── */
+.pwd-field { position:relative; }
+.pwd-field .f-input { padding-right:2.6rem; }
+.pwd-eye { position:absolute; top:50%; right:.55rem; transform:translateY(-50%); background:none; border:none; padding:.22rem; display:flex; align-items:center; cursor:pointer; color:var(--az-muted); border-radius:.3rem; transition:color .12s,background .12s; }
+.pwd-eye:hover { color:var(--az-navy); background:rgba(22,48,61,.06); }
+.pwd-eye .material-icons { font-size:18px; }
+.pwd-match { display:flex; align-items:center; gap:.3rem; font-size:var(--fs-caption); font-weight:600; margin-top:.45rem; min-height:1rem; }
+.pwd-match .material-icons { font-size:15px; }
+.pwd-match.ok { color:#1aad6e; }
+.pwd-match.no { color:#d94141; }
+/* ── Terms acceptance row ── */
+.coa-terms { display:flex; align-items:flex-start; gap:.6rem; font-size:var(--fs-small); color:var(--az-navy); line-height:1.6; cursor:pointer; margin:0; }
+.coa-terms input[type=checkbox] { width:16px; height:16px; margin-top:.15rem; accent-color:#1aad6e; flex-shrink:0; cursor:pointer; }
+.coa-terms-link { color:#1aad6e; font-weight:600; text-decoration:none; }
+.coa-terms-link:hover { text-decoration:underline; }
+.amount-flag { width:18px; height:13px; border-radius:2px; flex-shrink:0; }
 </style>
-  <link rel="stylesheet" href="css/dark.css"/>
-  <script src="js/theme.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 
-<!-- ████ HEADER ████ -->
-<header class="app-hdr" role="banner">
-  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar" onclick="document.getElementById('sidebar').classList.toggle('sb-collapsed');this.classList.toggle('is-collapsed');this.setAttribute('aria-expanded',String(!this.classList.contains('is-collapsed')))"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
-    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
-  <g id="logo" transform="translate(0.275 -0.84)">
-    <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
-    <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
-  </g>
-</svg></span>
+<header class="ob-hdr">
+  <div class="ob-hdr-left">
+    <button class="ob-hamburger" id="obHamburger" onclick="toggleRail()" aria-label="Toggle steps" aria-expanded="true" title="Toggle steps">
+      <span class="material-icons icon-hamburger" aria-hidden="true">menu</span>
+      <span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span>
+    </button>
+    <a class="l-logo" href="index.html" aria-label="azentio home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg>
+    </a>
   </div>
-  <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
-    <div class="hdr-div" role="separator"></div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
-    <div class="hdr-div" role="separator"></div>
-    <div class="hdr-lang-wrap">
-      <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
-      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
-        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
-        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
-        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+  <div class="ob-hdr-right">
+    <a href="about-us.html" class="ob-icon-btn ob-icon-brand" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <a href="contact-us.html" class="ob-icon-btn" title="Contact Us" aria-label="Contact Us"><span class="material-icons">call</span></a>
+    <a href="faq.html" class="ob-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <span class="ob-hdr-div"></span>
+    <div class="ob-lang-wrap">
+      <button class="ob-lang-btn" onclick="document.getElementById('obLangMenu').classList.toggle('hidden')" aria-haspopup="listbox">
+        <span id="obLangCode">ENG</span>
+        <svg width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+      </button>
+      <div class="ob-lang-menu hidden" id="obLangMenu" role="listbox">
+        <button class="ob-lang-opt active" onclick="setObLang('ENG','us',this)"><span class="fi fi-us"></span> English</button>
+        <button class="ob-lang-opt" onclick="setObLang('FR','fr',this)"><span class="fi fi-fr"></span> French</button>
+        <button class="ob-lang-opt" onclick="setObLang('عربي','sa',this)"><span class="fi fi-sa"></span> عربي</button>
       </div>
     </div>
-    <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
   </div>
 </header>
 
-<div class="az-layout">
-
-  <!-- SIDEBAR -->
-  <aside class="az-sidebar" id="sidebar">
-    <ul class="az-steps">
-      <li class="az-step active">
-        <div class="az-step-circle">1</div>
-        <div class="az-step-info">
-          <span class="az-step-label">Identification details</span>
-          <span class="az-step-badge badge-orange">0%</span>
-        </div>
+<div class="ob-shell">
+  <!-- ── Vertical stepper ── -->
+  <aside class="ob-rail" id="obRail">
+    <div class="ob-rail-cap">Application progress</div>
+    <ol class="ob-steps">
+      <li class="ob-step active">
+        <span class="ob-step-num">1</span>
+        <span class="ob-step-body">
+          <span class="ob-step-lbl">Identification Details</span>
+          <span class="ob-step-pct pct-0" id="pctStep1">0%</span>
+        </span>
       </li>
-      <li class="az-step inactive">
-        <div class="az-step-circle">2</div>
-        <div class="az-step-info">
-          <span class="az-step-label">User Credentials</span>
-          <span class="az-step-badge badge-gray">0%</span>
-        </div>
+      <li class="ob-step">
+        <span class="ob-step-num">2</span>
+        <span class="ob-step-body">
+          <span class="ob-step-lbl">User Credentials</span>
+          <span class="ob-step-pct pct-0">0%</span>
+        </span>
       </li>
-      <li class="az-step inactive">
-        <div class="az-step-circle">3</div>
-        <div class="az-step-info">
-          <span class="az-step-label">Registration Charges</span>
-          <span class="az-step-badge badge-gray">0%</span>
-        </div>
+      <li class="ob-step">
+        <span class="ob-step-num">3</span>
+        <span class="ob-step-body">
+          <span class="ob-step-lbl">Registration Charges</span>
+          <span class="ob-step-pct pct-0">0%</span>
+        </span>
       </li>
-    </ul>
+    </ol>
   </aside>
 
-  <!-- MAIN -->
-  <main class="az-main">
-    <div class="az-content-wrap">
-      <div class="az-form-area">
+  <!-- ── Main form ── -->
+  <main class="ob-main">
+    <div class="ob-bc"><a href="index.html">Home</a><span class="sep">&#8250;</span><span>Create Online Account</span><span class="sep">&#8250;</span><span>Identification Details</span></div>
+    <h1 class="ob-title">Create Online Account</h1>
 
-        <nav class="az-breadcrumb">
-          <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
-          <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
-          <span>Identification Details</span>
-        </nav>
-        <h1 class="az-page-title">Create Online Account</h1>
-        <p style="font-size:12px;color:var(--gray-tx);margin-bottom:14px;display:flex;align-items:center;gap:6px;">
-          <span style="display:inline-flex;align-items:center;gap:3px;">
-            <span style="color:var(--red);font-size:11px;font-weight:700;">*</span> Required fields
-          </span>
-          <span style="color:var(--gray-bd);">·</span>
-          <span>Step <strong style="color:var(--text);">1</strong> of 3</span>
-        </p>
+    <form id="obForm" novalidate>
+      <div class="ob-card">
+        <div class="ob-card-body">
 
-        <!-- SECTION: Identification Details -->
-        <div class="az-section">
-          <div class="az-sec-hdr">
-            <h2>Identification Details</h2>
-            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-          </div>
-          <div class="az-sec-body">
-            <div class="frow c3">
-              <div class="az-field">
-                <label for="cif">CIF Number <span class="req">*</span></label>
-                <input class="az-input" type="number" id="cif" placeholder="e.g. 0012345678" min="0">
+          <div class="ob-field-group">
+            <div class="ob-field-group-lbl">Identification Details</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="cifNo">CIF Number <span class="ob-req">*</span></label>
+                <input id="cifNo" class="f-input" placeholder="Enter CIF number" data-required="true" autocomplete="off"/>
               </div>
-              <div class="az-field">
-                <label for="acctnum">Account Number <span class="req">*</span></label>
-                <input class="az-input" type="text" id="acctnum" placeholder="e.g. 001-123456-01">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="acctNo">Account Number <span class="ob-req">*</span></label>
+                <input id="acctNo" class="f-input" placeholder="Enter account number" data-required="true" autocomplete="off"/>
               </div>
-              <div class="az-field">
-                <label for="cardnum">Card Number <span class="req">*</span></label>
-                <input class="az-input" type="text" id="cardnum" placeholder="Last 4 digits of your card">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="cardNo">Card Number</label>
+                <input id="cardNo" class="f-input" placeholder="Enter card number" autocomplete="off"/>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- SECTION: Authentication Details -->
-        <div class="az-section">
-          <div class="az-sec-hdr">
-            <h2>Authentication Details</h2>
-            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-          </div>
-          <div class="az-sec-body">
-            <div class="frow c3">
-              <div class="az-field">
-                <label for="cardpin">Card PIN <span class="req">*</span></label>
-                <div class="az-pwd-wrap">
-                  <input class="az-input" type="password" id="cardpin" placeholder="">
-                  <button class="az-pwd-toggle" type="button" data-target="cardpin">
-                    <svg class="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg class="eye-hide hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  </button>
+          <div class="ob-field-group">
+            <div class="ob-field-group-lbl">Authentication Details</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="cardPin">Card PIN <span class="ob-req">*</span></label>
+                <div class="pwd-field">
+                  <input id="cardPin" type="password" class="f-input" inputmode="numeric" maxlength="6" placeholder="Enter card PIN" data-required="true" autocomplete="off"/>
+                  <button type="button" class="pwd-eye" aria-label="Show PIN" aria-pressed="false" onclick="togglePwd('cardPin',this)"><span class="material-icons">visibility</span></button>
                 </div>
               </div>
-              <div class="az-field">
-                <label for="idtype">ID Type</label>
-                <select class="az-select" id="idtype">
-                  <option value="">Select</option>
-                  <option>Passport</option>
-                  <option>National ID</option>
-                  <option>Driver's License</option>
-                  <option>Residence Permit</option>
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="idType">ID Type <span class="ob-req">*</span></label>
+                <select id="idType" class="f-input f-select" data-required="true">
+                  <option value="" disabled selected>Select ID type</option>
+                  <option>Emirates ID</option><option>Passport</option><option>Driving Licence</option><option>National ID</option>
                 </select>
               </div>
-              <div class="az-field">
-                <label for="idnum">ID Number <span class="req">*</span></label>
-                <input class="az-input" type="text" id="idnum" placeholder="Enter your ID number">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="idNumber">ID Number <span class="ob-req">*</span></label>
+                <input id="idNumber" class="f-input" placeholder="Enter ID number" data-required="true" autocomplete="off"/>
               </div>
-            </div>
-            <div class="frow c3">
-              <div class="az-field">
-                <label for="issuedate">Issue Date</label>
-                <div class="az-date-wrap">
-                  <input class="az-input" type="text" id="issuedate" placeholder="DD / MM / YYYY" readonly>
-                  <span class="az-date-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                </div>
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="idIssue">Issue Date <span class="ob-req">*</span></label>
+                <input id="idIssue" class="f-input" placeholder="DD / MM / YYYY" data-required="true" autocomplete="off"/>
               </div>
-              <div class="az-field">
-                <label for="expirydate">Expiry Date</label>
-                <div class="az-date-wrap">
-                  <input class="az-input" type="text" id="expirydate" placeholder="DD / MM / YYYY" readonly>
-                  <span class="az-date-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                </div>
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="idExpiry">Expiry Date <span class="ob-req">*</span></label>
+                <input id="idExpiry" class="f-input" placeholder="DD / MM / YYYY" data-required="true" autocomplete="off"/>
               </div>
-              <div class="az-field">
-                <label for="country">Country</label>
-                <select class="az-select" id="country">
-                  <option value="">Select</option>
-                  <option>Lebanon</option><option>UAE</option>
-                  <option>Saudi Arabia</option><option>Jordan</option>
-                  <option>Egypt</option><option>India</option>
-                  <option>United Kingdom</option><option>United States</option>
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="idCountry">Country <span class="ob-req">*</span></label>
+                <select id="idCountry" class="f-input f-select" data-required="true">
+                  <option value="" disabled selected>Select country</option>
+                  <option>United Arab Emirates</option><option>Saudi Arabia</option><option>Lebanon</option><option>India</option><option>United Kingdom</option>
                 </select>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- SECTION: Other Details -->
-        <div class="az-section">
-          <div class="az-sec-hdr">
-            <h2>Other Details</h2>
-            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-          </div>
-          <div class="az-sec-body">
-            <div class="frow c3">
-              <div class="az-field">
-                <label for="mobile">Registered Mobile Number <span class="req">*</span></label>
-                <div class="az-phone-wrap">
-                  <div class="az-phone-flag">
-                    <svg viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="20" height="14" fill="#fff"/>
-                      <rect width="20" height="4.67" fill="#EE161F"/>
-                      <rect y="9.33" width="20" height="4.67" fill="#EE161F"/>
-                      <path d="M10 3.5l1.2 3H14l-2.4 1.8.9 3L10 9.6l-2.5 1.7.9-3L6 6.5h2.8z" fill="#00A550" transform="scale(.55) translate(9,1)"/>
-                    </svg>
-                    <span>+961</span>
-                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          <div class="ob-field-group">
+            <div class="ob-field-group-lbl">Other Details</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="mobileNum">Registered Mobile Number <span class="ob-req">*</span></label>
+                <div class="phone-combo" id="mobilePhoneCombo" data-code="ae" data-dial="+971">
+                  <div class="phone-wrap">
+                    <button type="button" class="phone-pfx" id="mobilePhonePfxBtn" onclick="phoneCtryToggle('mobile')" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose country code">
+                      <span class="fi fi-ae" id="mobileCtryFlag" aria-hidden="true"></span>
+                      <span id="mobileCtryDial">+971</span>
+                      <svg class="phone-pfx-chev" width="8" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="currentColor"/></svg>
+                    </button>
+                    <input id="mobileNum" type="tel" placeholder="Enter mobile number" aria-label="Mobile number" data-required="true"/>
                   </div>
-                  <input class="az-input" type="tel" id="mobile" placeholder="e.g. 71 234 567">
+                  <div class="phone-ctry-panel hidden" id="mobileCtryPanel" role="listbox" aria-label="Country code">
+                    <div class="phone-ctry-search">
+                      <span class="material-icons">search</span>
+                      <input type="text" id="mobileCtrySearch" placeholder="Search country or code" autocomplete="off" oninput="phoneCtryFilter('mobile', this.value)"/>
+                    </div>
+                    <div class="phone-ctry-list" id="mobileCtryList"></div>
+                  </div>
                 </div>
               </div>
-              <div class="az-field">
-                <label for="dob">Date Of Birth</label>
-                <div class="az-date-wrap">
-                  <input class="az-input" type="text" id="dob" placeholder="DD / MM / YYYY" readonly>
-                  <span class="az-date-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                </div>
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="dob">Date Of Birth <span class="ob-req">*</span></label>
+                <input id="dob" class="f-input" placeholder="DD / MM / YYYY" data-required="true" autocomplete="off"/>
               </div>
-              <div class="az-field">
-                <label for="email">Email <span class="req">*</span></label>
-                <input class="az-input" type="email" id="email" placeholder="name@example.com">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="email">Email <span class="ob-req">*</span></label>
+                <input id="email" class="f-input" type="email" placeholder="you@example.com" data-required="true" autocomplete="email"/>
               </div>
             </div>
           </div>
+
         </div>
+      </div>
 
-        <div class="az-bottom-bar">
-          <button class="btn-action btn-cancel" onclick="location.href='login.html'">Cancel</button>
-          <button class="btn-action btn-submit" onclick="location.href='COA_user_credentials.html'" style="min-width:120px;display:inline-flex;align-items:center;gap:.375rem;">
-            Next
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-
-      </div><!-- /form-area -->
-
-      <!-- RIGHT PANEL -->
-      <aside class="az-right-panel">
-        <h3 class="promo-title">Create Your Online Account</h3>
-        <p class="promo-body">Don't have an <strong>online account</strong> yet? Sign up now to access <strong>personalized services, manage your account</strong>, and enjoy seamless features.</p>
-        <svg class="promo-img" viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg">
-          <rect x="55" y="36" width="155" height="100" rx="6" fill="#f0f4f8" stroke="#dde2e7" stroke-width="1.5"/>
-          <rect x="68" y="52" width="55" height="8" rx="3" fill="#e0e0e0"/>
-          <rect x="68" y="66" width="128" height="8" rx="3" fill="#e0e0e0"/>
-          <rect x="68" y="80" width="100" height="8" rx="3" fill="#e0e0e0"/>
-          <circle cx="190" cy="118" r="18" fill="#2db87a" opacity=".15"/>
-          <circle cx="190" cy="118" r="12" fill="#2db87a"/>
-          <path d="M184 118l4 4 8-8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="58" cy="108" r="13" fill="#a0616a"/>
-          <rect x="38" y="122" width="40" height="52" rx="7" fill="#6c63ff"/>
-          <rect x="27" y="138" width="14" height="28" rx="6" fill="#6c63ff"/>
-          <rect x="77" y="138" width="14" height="28" rx="6" fill="#6c63ff"/>
-          <rect x="41" y="174" width="13" height="38" rx="5" fill="#2f2e41"/>
-          <rect x="58" y="174" width="13" height="38" rx="5" fill="#2f2e41"/>
-          <circle cx="112" cy="152" r="15" fill="#2db87a" opacity=".12"/>
-          <text x="106" y="158" font-size="16" fill="#2db87a" font-weight="bold" font-family="sans-serif">$</text>
-          <line x1="0" y1="236" x2="220" y2="236" stroke="#ccc" stroke-width="1.2"/>
-        </svg>
-      </aside>
-
-    </div>
+      <div class="ob-footer">
+        <a href="index.html" class="btn-action btn-cancel">Cancel</a>
+        <button type="button" class="btn-action btn-submit" onclick="goNext()">Continue</button>
+      </div>
+    </form>
   </main>
+
+  <!-- ── Right side panel ── -->
+  <aside class="ob-side">
+    <div class="ob-side-copy">
+      <strong>Already bank with us?</strong> Register for online access in three short steps &mdash; we just need to confirm who you are.
+    </div>
+    <div class="ob-side-sub">Your details are verified against the records we already hold.</div>
+    <!-- Brand photo sits below the write-up. Until the asset exists the shape
+         band below stands in, so the panel never shows a broken image. -->
+    <img class="ob-side-photo" src="images/landing/banking-hero.png" alt=""
+         onerror="this.remove(); var b=document.getElementById('obSideShapes'); if (b) b.style.display='block';"/>
+    <svg class="ob-side-illo" id="obSideShapes" style="display:none" viewBox="0 0 260 124" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <g fill="#1aad6e">
+        <!-- arch + dot -->
+        <g transform="translate(0,0)">
+          <path d="M2,46 A26,26 0 0 1 54,46 L44,46 A16,16 0 0 0 12,46 Z"/>
+          <circle cx="28" cy="46" r="8"/>
+        </g>
+        <!-- bars -->
+        <g transform="translate(68,0)" opacity=".55">
+          <rect x="2"  y="4" width="5" height="48" rx="1"/>
+          <rect x="14" y="4" width="5" height="48" rx="1"/>
+          <rect x="26" y="4" width="5" height="48" rx="1"/>
+          <rect x="38" y="4" width="5" height="48" rx="1"/>
+          <rect x="50" y="4" width="5" height="48" rx="1"/>
+        </g>
+        <!-- azentio petals -->
+        <svg x="136" y="0" width="56" height="56" viewBox="130.9 0.6 22 28.2" preserveAspectRatio="xMidYMid meet" overflow="visible">
+          <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#1aad6e"/>
+          <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#1aad6e"/>
+        </svg>
+        <!-- concentric rings -->
+        <g transform="translate(204,0)" opacity=".7">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#1aad6e" stroke-width="5"/>
+          <circle cx="28" cy="28" r="10" fill="none" stroke="#1aad6e" stroke-width="5"/>
+        </g>
+        <!-- sparkle in disc -->
+        <g transform="translate(0,68)">
+          <circle cx="28" cy="28" r="26"/>
+          <path d="M28 6C28 19 19 28 6 28C19 28 28 37 28 50C28 37 37 28 50 28C37 28 28 19 28 6Z" fill="#eefaf4"/>
+        </g>
+        <!-- triangle -->
+        <g transform="translate(68,68)" opacity=".8">
+          <path d="M28,3 L55,53 L1,53 Z M28,27 L41,53 L15,53 Z" fill-rule="evenodd"/>
+        </g>
+        <!-- wave + squares -->
+        <g transform="translate(136,68)" opacity=".6">
+          <path d="M2,42 A13,13 0 0 1 28,42 A13,13 0 0 0 54,42" fill="none" stroke="#1aad6e" stroke-width="7" stroke-linecap="butt"/>
+          <rect x="4"  y="4" width="12" height="12"/>
+          <rect x="40" y="4" width="12" height="12"/>
+        </g>
+        <!-- opposed half discs -->
+        <g transform="translate(204,68)" opacity=".75">
+          <path d="M26,2 A26,26 0 0 0 26,54 Z"/>
+          <path d="M30,2 A26,26 0 0 1 30,54 Z" opacity=".45"/>
+        </g>
+      </g>
+    </svg>
+  </aside>
 </div>
 
-<!-- FOOTER -->
-<footer class="az-footer">
-  <span>Copyright 2025. All Rights Reserved</span>
-  <div class="az-footer-links">
-    <a href="#">Terms and conditions</a>
-    <a href="about-app.html" target="_blank">About App</a>
+<!-- ══ Success ══ -->
+<div class="modal-ov hidden" id="coaDone" role="dialog" aria-modal="true" aria-labelledby="coaDoneTitle">
+  <div class="az-modal modal-md" style="text-align:center;max-width:420px">
+    <button class="modal-close" onclick="closeModal('coaDone')" aria-label="Close">&#215;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#e4f9ee;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+      <span class="material-icons" style="color:#1aad6e;font-size:32px;">check_circle</span>
+    </div>
+    <div id="coaDoneTitle" class="modal-title">Your online account is ready</div>
+    <div style="margin-top:.5rem;font-size:var(--fs-small);color:var(--az-muted);line-height:1.6">You can now sign in with the user name and password you just created.</div>
+    <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1.75rem;">
+      <a href="login.html" class="btn-action btn-submit" style="text-decoration:none;">Go to log in</a>
+    </div>
   </div>
-  <div class="az-footer-access">
-    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
-    <button class="az-font-btn" data-scale="down">A&#8315;</button>
-    <button class="az-font-btn" data-scale="reset">A</button>
-    <button class="az-font-btn" data-scale="up">A&#8314;</button>
-    <button class="az-contrast-btn" title="High contrast">&#9681;</button>
-  </div>
-</footer>
+</div>
 
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/onboarding-rail.js"></script>
+<script src="js/datepicker.min.js"></script>
 <script>
-(function(){
-  // Section headers
-  document.querySelectorAll('.az-sec-hdr').forEach(function(h){
-    h.addEventListener('click',function(){ h.closest('.az-section').classList.toggle('collapsed'); });
-  });
-  // Password toggle
-  document.querySelectorAll('.az-pwd-toggle').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var inp = document.getElementById(btn.getAttribute('data-target'));
-      var hide = inp.type==='password';
-      inp.type = hide ? 'text' : 'password';
-      btn.querySelector('.eye-show').classList.toggle('hidden', hide);
-      btn.querySelector('.eye-hide').classList.toggle('hidden', !hide);
-    });
-  });
-  // Font size
-  var fs=1;
-  document.querySelectorAll('.az-font-btn').forEach(function(b){
-    b.addEventListener('click',function(){
-      var a=b.getAttribute('data-scale');
-      if(a==='up')   fs=Math.min(fs+0.1,1.4);
-      if(a==='down') fs=Math.max(fs-0.1,0.8);
-      if(a==='reset')fs=1;
-      document.documentElement.style.fontSize=(fs*14)+'px';
-    });
-  });
+'use strict';
 
-  // ── Date picker ───────────────────────────────────────────────
-  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  var DAYS=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  var cal={popup:null,field:null,y:0,m:0};
+function setObLang(code, flag, btn) {
+  document.getElementById('obLangCode').textContent = code;
+  document.documentElement.setAttribute('lang', code === 'FR' ? 'fr' : (code === 'ENG' ? 'en' : 'ar'));
+  document.querySelectorAll('.ob-lang-opt').forEach(function(o){ o.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('obLangMenu').classList.add('hidden');
+}
+document.addEventListener('click', function(e){
+  if (!e.target.closest('.ob-lang-wrap')) document.getElementById('obLangMenu').classList.add('hidden');
+});
 
-  function buildPopup(){
-    var d=document.createElement('div');
-    d.id='az-cal-popup';
-    d.style.cssText='position:fixed;z-index:400;background:#fff;border:1px solid #dde2e7;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.14);padding:12px 14px;width:264px;display:none;';
-    d.innerHTML=
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
-      +'<button id="cal-prev" style="background:none;border:none;cursor:pointer;font-size:18px;color:#2db87a;padding:0 6px;line-height:1;">&#8249;</button>'
-      +'<span id="cal-label" style="font-size:13px;font-weight:700;color:#1a2533;"></span>'
-      +'<button id="cal-next" style="background:none;border:none;cursor:pointer;font-size:18px;color:#2db87a;padding:0 6px;line-height:1;">&#8250;</button>'
-      +'</div>'
-      +'<div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>';
-    document.body.appendChild(d);
-    d.addEventListener('click',function(e){e.stopPropagation();});
-    document.getElementById('cal-prev').addEventListener('click',function(){
-      cal.m--; if(cal.m<0){cal.m=11;cal.y--;} renderCal();
-    });
-    document.getElementById('cal-next').addEventListener('click',function(){
-      cal.m++; if(cal.m>11){cal.m=0;cal.y++;} renderCal();
-    });
-    document.addEventListener('click',function(){ closeCal(); });
-    cal.popup=d;
-  }
+function toggleRail() {
+  var rail = document.getElementById('obRail');
+  var hamburger = document.getElementById('obHamburger');
+  var collapsed = rail.classList.toggle('collapsed');
+  hamburger.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+}
 
-  function renderCal(){
-    document.getElementById('cal-label').textContent=MONTHS[cal.m]+' '+cal.y;
-    var grid=document.getElementById('cal-grid');
-    grid.innerHTML='';
-    DAYS.forEach(function(d){
-      var h=document.createElement('div');
-      h.textContent=d;
-      h.style.cssText='font-size:11px;font-weight:700;color:#6b7280;padding:3px 0;';
-      grid.appendChild(h);
-    });
-    var first=new Date(cal.y,cal.m,1).getDay();
-    var total=new Date(cal.y,cal.m+1,0).getDate();
-    var now=new Date();
-    for(var i=0;i<first;i++) grid.appendChild(document.createElement('div'));
-    for(var day=1;day<=total;day++){
-      var btn=document.createElement('button');
-      btn.textContent=day;
-      var isTd=(day===now.getDate()&&cal.m===now.getMonth()&&cal.y===now.getFullYear());
-      btn.style.cssText='border:none;cursor:pointer;border-radius:50%;width:32px;height:32px;font-size:12px;font-family:inherit;'
-        +'background:'+(isTd?'#2db87a':'none')+';color:'+(isTd?'#fff':'#1a2533')+';font-weight:'+(isTd?'700':'400')+';';
-      if(isTd) btn.setAttribute('data-today','1');
-      btn.addEventListener('mouseenter',function(){if(!this.getAttribute('data-today'))this.style.background='#e8f7f0';});
-      btn.addEventListener('mouseleave',function(){if(!this.getAttribute('data-today'))this.style.background='none';});
-      (function(d){
-        btn.addEventListener('click',function(){
-          cal.field.value=String(d).padStart(2,'0')+' / '+String(cal.m+1).padStart(2,'0')+' / '+cal.y;
-          closeCal();
-        });
-      })(day);
-      grid.appendChild(btn);
+function ntfOpenSelect(id){
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  if (sel.showPicker) { try { sel.showPicker(); return; } catch(e) {} }
+  sel.focus();
+}
+function updateCurrFlag(sel){
+  var flagMap = {'AED':'ae','USD':'us','EUR':'eu','GBP':'gb'};
+  var flag = sel.closest('.amount-curr').querySelector('.amount-flag');
+  if (flag) { var fc = flagMap[sel.value] || 'ae'; flag.className = 'fi fi-' + fc + ' amount-flag'; }
+}
+/* ── Mobile number: searchable country/ISD-code combobox ──
+   Lets the user find a country by name (flags alone aren't identifiable)
+   and have the ISD code fill in automatically. */
+var PHONE_COUNTRIES = [
+  {code:'ae',name:'United Arab Emirates',dial:'+971'},
+  {code:'sa',name:'Saudi Arabia',dial:'+966'},
+  {code:'bh',name:'Bahrain',dial:'+973'},
+  {code:'kw',name:'Kuwait',dial:'+965'},
+  {code:'om',name:'Oman',dial:'+968'},
+  {code:'qa',name:'Qatar',dial:'+974'},
+  {code:'eg',name:'Egypt',dial:'+20'},
+  {code:'jo',name:'Jordan',dial:'+962'},
+  {code:'iq',name:'Iraq',dial:'+964'},
+  {code:'lb',name:'Lebanon',dial:'+961'},
+  {code:'us',name:'United States',dial:'+1'},
+  {code:'gb',name:'United Kingdom',dial:'+44'},
+  {code:'fr',name:'France',dial:'+33'},
+  {code:'de',name:'Germany',dial:'+49'},
+  {code:'ch',name:'Switzerland',dial:'+41'},
+  {code:'in',name:'India',dial:'+91'},
+  {code:'pk',name:'Pakistan',dial:'+92'},
+  {code:'bd',name:'Bangladesh',dial:'+880'},
+  {code:'ph',name:'Philippines',dial:'+63'},
+  {code:'cn',name:'China',dial:'+86'},
+  {code:'jp',name:'Japan',dial:'+81'}
+];
+function phoneCtryRender(key, list){
+  var listEl = document.getElementById(key + 'CtryList');
+  listEl.innerHTML = '';
+  if (!list.length) { listEl.innerHTML = '<div class="phone-ctry-empty">No matches found</div>'; return; }
+  list.forEach(function(c){
+    var item = document.createElement('div');
+    item.className = 'phone-ctry-opt';
+    item.setAttribute('role', 'option');
+    item.innerHTML = '<span class="fi fi-' + c.code + '"></span><span class="phone-ctry-opt-name">' + c.name + '</span><span class="phone-ctry-opt-dial">' + c.dial + '</span>';
+    item.onmousedown = function(e){ e.preventDefault(); phoneCtrySelect(key, c); };
+    listEl.appendChild(item);
+  });
+}
+function phoneCtryPosition(key){
+  var combo = document.getElementById(key + 'PhoneCombo');
+  var panel = document.getElementById(key + 'CtryPanel');
+  if (panel.parentElement !== document.body) document.body.appendChild(panel);
+  var r = combo.getBoundingClientRect();
+  panel.style.left = r.left + 'px';
+  panel.style.top = (r.bottom + 4) + 'px';
+}
+function phoneCtryOpen(key){
+  var panel = document.getElementById(key + 'CtryPanel');
+  var btn = document.getElementById(key + 'PhonePfxBtn');
+  panel.classList.remove('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  phoneCtryPosition(key);
+  phoneCtryRender(key, PHONE_COUNTRIES);
+  var search = document.getElementById(key + 'CtrySearch');
+  search.value = '';
+  setTimeout(function(){ search.focus(); }, 0);
+}
+function phoneCtryClose(key){
+  document.getElementById(key + 'CtryPanel').classList.add('hidden');
+  document.getElementById(key + 'PhonePfxBtn').setAttribute('aria-expanded', 'false');
+}
+function phoneCtryToggle(key){
+  var panel = document.getElementById(key + 'CtryPanel');
+  if (panel.classList.contains('hidden')) phoneCtryOpen(key);
+  else phoneCtryClose(key);
+}
+function phoneCtryFilter(key, q){
+  var needle = q.toLowerCase();
+  phoneCtryRender(key, PHONE_COUNTRIES.filter(function(c){
+    return c.name.toLowerCase().indexOf(needle) > -1 || c.dial.indexOf(needle) > -1;
+  }));
+}
+function phoneCtryApply(key, c){
+  document.getElementById(key + 'CtryFlag').className = 'fi fi-' + c.code;
+  document.getElementById(key + 'CtryDial').textContent = c.dial;
+  var combo = document.getElementById(key + 'PhoneCombo');
+  combo.dataset.code = c.code;
+  combo.dataset.dial = c.dial;
+}
+function phoneCtrySelect(key, c){
+  phoneCtryApply(key, c);
+  phoneCtryClose(key);
+  document.getElementById(key + 'Num').focus();
+}
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (panel.classList.contains('hidden')) return;
+    var key = panel.id.replace('CtryPanel', '');
+    var combo = document.getElementById(key + 'PhoneCombo');
+    if (combo && !combo.contains(e.target) && !panel.contains(e.target)) {
+      panel.classList.add('hidden');
+      var btn = document.getElementById(key + 'PhonePfxBtn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
-  }
-
-  function openCal(field,anchor){
-    if(!cal.popup) buildPopup();
-    cal.field=field;
-    var now=new Date(); cal.y=now.getFullYear(); cal.m=now.getMonth();
-    var v=field.value.replace(/\s/g,'');
-    if(/^\d{2}\/\d{2}\/\d{4}$/.test(v)){var p=v.split('/');cal.m=parseInt(p[1])-1;cal.y=parseInt(p[2]);}
-    renderCal();
-    var r=anchor.getBoundingClientRect();
-    cal.popup.style.top=(r.bottom+4)+'px';
-    var left=r.left;
-    if(left+264>window.innerWidth) left=window.innerWidth-272;
-    cal.popup.style.left=left+'px';
-    cal.popup.style.display='block';
-  }
-
-  function closeCal(){ if(cal.popup) cal.popup.style.display='none'; }
-
-  document.querySelectorAll('.az-date-wrap').forEach(function(wrap){
-    var inp=wrap.querySelector('.az-input');
-    var icon=wrap.querySelector('.az-date-icon');
-    icon.style.pointerEvents='auto';
-    icon.style.cursor='pointer';
-    icon.addEventListener('click',function(e){e.stopPropagation();openCal(inp,wrap);});
-    inp.addEventListener('click',function(e){e.stopPropagation();openCal(inp,wrap);});
   });
-}());
-
-/* Language selector */
-function setHdrLang(code, flagCode, optBtn) {
-  document.querySelectorAll('.hdr-lang').forEach(function(btn) {
-    var flagEl = btn.querySelector('.fi');
-    if (flagEl) { flagEl.className = 'fi fi-' + flagCode; }
-    btn.childNodes.forEach(function(n){ if (n.nodeType===3) n.textContent = code + ' '; });
+});
+window.addEventListener('scroll', function(){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (!panel.classList.contains('hidden')) phoneCtryPosition(panel.id.replace('CtryPanel', ''));
   });
-  if (optBtn) {
-    optBtn.closest('.hdr-lang-drop').querySelectorAll('.hdr-lang-opt').forEach(
+}, true);
+window.addEventListener('resize', function(){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (!panel.classList.contains('hidden')) phoneCtryPosition(panel.id.replace('CtryPanel', ''));
+  });
+});
+
+
+/* ── Validation / progress ── */
+function validateStep() {
+  var valid = true, firstInvalid = null;
+  document.querySelectorAll('#obForm [data-required="true"]').forEach(function(el){
+    var empty = !el.value || !el.value.trim();
+    el.classList.toggle('is-invalid', empty);
+    if (empty) { valid = false; if (!firstInvalid) firstInvalid = el; }
+  });
+  if (!valid && firstInvalid) { firstInvalid.scrollIntoView({behavior:'smooth', block:'center'}); firstInvalid.focus(); }
+  return valid;
+}
+function updateStepProgress() {
+  var reqs = document.querySelectorAll('#obForm [data-required="true"]');
+  var filled = 0;
+  reqs.forEach(function(el){ if (el.value && el.value.trim()) filled++; });
+  var pct = reqs.length ? Math.round((filled / reqs.length) * 100) : 0;
+  var badge = document.getElementById('pctStep1');
+  badge.textContent = pct + '%';
+  badge.classList.remove('pct-0','pct-mid','pct-done');
+  badge.classList.add(pct === 0 ? 'pct-0' : (pct === 100 ? 'pct-done' : 'pct-mid'));
+  var activeBody = document.querySelector('.ob-step.active .ob-step-body');
+  if (activeBody) activeBody.style.setProperty('--ob-pct', pct + '%');
+}
+document.getElementById('obForm').addEventListener('input', updateStepProgress);
+document.getElementById('obForm').addEventListener('change', updateStepProgress);
+
+/* ── Reveal toggle, shared with the credentials step ── */
+function togglePwd(inputId, btn) {
+  var inp = document.getElementById(inputId);
+  var reveal = inp.type === 'password';
+  inp.type = reveal ? 'text' : 'password';
+  btn.querySelector('.material-icons').textContent = reveal ? 'visibility_off' : 'visibility';
+  btn.setAttribute('aria-label', reveal ? 'Hide PIN' : 'Show PIN');
+  btn.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+}
+
+function fv(id){ var el = document.getElementById(id); return el ? el.value : ''; }
+
+function goNext() {
+  if (!validateStep()) return;
+  var combo = document.getElementById('mobilePhoneCombo');
+  localStorage.setItem('coa_identification', JSON.stringify({
+    cifNo: fv('cifNo'), acctNo: fv('acctNo'), cardNo: fv('cardNo'),
+    idType: fv('idType'), idNumber: fv('idNumber'), idIssue: fv('idIssue'),
+    idExpiry: fv('idExpiry'), idCountry: fv('idCountry'),
+    mobileNum: (combo.dataset.dial + ' ' + fv('mobileNum')),
+    dob: fv('dob'), email: fv('email')
+  }));
+  window.location.href = 'COA_user_credentials.html';
+}
+
+/* Restore anything already entered */
+(function restore(){
+  var raw = localStorage.getItem('coa_identification');
+  if (!raw) return;
+  try {
+    var d = JSON.parse(raw);
+    Object.keys(d).forEach(function(k){
+      if (k === 'mobileNum') return;
+      var el = document.getElementById(k);
+      if (el) el.value = d[k];
+    });
+    if (d.mobileNum) {
+      var parts = d.mobileNum.split(' ');
+      var dial = parts.shift();
+      var match = PHONE_COUNTRIES.filter(function(c){ return c.dial === dial; })[0];
+      if (match) phoneCtryApply('mobile', match);
+      document.getElementById('mobileNum').value = parts.join(' ');
+    }
+    updateStepProgress();
+  } catch(e){}
+})();
+</script>
+<script>obWireRail(['COA_identification_details.html','COA_user_credentials.html','COA_registration_charges.html'], 1, 'coa');</script>
+</body>
+</html>

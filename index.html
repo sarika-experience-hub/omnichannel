@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/bootstrap.min.css"/>
   <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <style>
 /* ── Tokens ── */
 :root {
@@ -18,7 +19,7 @@
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Poppins','Roboto',-apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px; color: var(--az-navy); background: #fff;
   -webkit-font-smoothing: antialiased;
 }
@@ -57,7 +58,7 @@ body {
 .btn-login {
   padding: .5rem 1.25rem;
   background: var(--az-navy); color: #fff; border: none;
-  border-radius: 6px; font-family: 'Roboto', sans-serif;
+  border-radius: 6px; font-family: 'Poppins','Roboto',sans-serif;
   font-size: 13.5px; font-weight: 700; cursor: pointer;
   text-decoration: none; transition: background .15s;
 }
@@ -65,7 +66,7 @@ body {
 .btn-register {
   padding: .5rem 1.25rem;
   background: var(--az-green); color: #fff; border: none;
-  border-radius: 6px; font-family: 'Roboto', sans-serif;
+  border-radius: 6px; font-family: 'Poppins','Roboto',sans-serif;
   font-size: 13.5px; font-weight: 700; cursor: pointer;
   text-decoration: none; transition: background .15s;
 }
@@ -76,7 +77,7 @@ body {
   display: flex; align-items: center; gap: 5px;
   background: none; border: 1px solid var(--az-border);
   border-radius: 6px; padding: .375rem .75rem;
-  font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500;
+  font-family: 'Poppins','Roboto',sans-serif; font-size: 13px; font-weight: 500;
   color: var(--az-navy); cursor: pointer;
 }
 .hdr-lang:hover { background: #f0f4f6; }
@@ -98,7 +99,7 @@ body {
   display: flex; align-items: center; gap: .625rem;
   padding: .5625rem 1rem; width: 100%;
   background: none; border: none; cursor: pointer;
-  font-family: 'Roboto', sans-serif; font-size: .8125rem;
+  font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small);
   color: var(--az-navy); text-align: left; transition: background .1s;
 }
 .hdr-lang-opt:hover { background: #f0faf5; }
@@ -138,13 +139,13 @@ body {
 }
 .hero-h1 span { color: var(--az-green); }
 .hero-sub {
-  font-size: 1rem; color: rgba(255,255,255,.8);
+  font-size:var(--fs-subhead); color: rgba(255,255,255,.8);
   line-height: 1.6; margin-bottom: 2rem; max-width: 480px;
 }
 .hero-btns { display: flex; gap: .75rem; flex-wrap: wrap; }
 .btn-hero-primary {
   padding: .75rem 2rem; background: var(--az-green); color: #fff;
-  border: none; border-radius: 6px; font-family: 'Roboto', sans-serif;
+  border: none; border-radius: 6px; font-family: 'Poppins','Roboto',sans-serif;
   font-size: 14px; font-weight: 700; cursor: pointer;
   text-decoration: none; transition: background .15s;
 }
@@ -152,7 +153,7 @@ body {
 .btn-hero-ghost {
   padding: .75rem 2rem; background: transparent;
   color: #fff; border: 2px solid rgba(255,255,255,.5);
-  border-radius: 6px; font-family: 'Roboto', sans-serif;
+  border-radius: 6px; font-family: 'Poppins','Roboto',sans-serif;
   font-size: 14px; font-weight: 700; cursor: pointer;
   text-decoration: none; transition: border-color .15s, background .15s;
 }
@@ -162,6 +163,57 @@ body {
 .hero-curve {
   position: absolute; top: 0; right: 0;
   width: 55%; height: 100%; pointer-events: none; z-index: 1; overflow: visible;
+}
+
+/* ══ Three primary entry points — the whole point of the landing page ══ */
+.entry-wrap { position: relative; z-index: 3; margin-top: -3.25rem; padding: 0 2rem 0 3rem; }
+.entry-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem; max-width: 1160px; margin: 0 auto;
+}
+.entry {
+  display: flex; flex-direction: column; gap: .5rem;
+  background: #fff; border: 1px solid var(--az-border, #e2e8ec);
+  border-radius: 1rem; padding: 1.3rem 1.4rem 1.4rem;
+  text-decoration: none; box-shadow: 0 6px 22px rgba(16, 36, 48, .09);
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+}
+.entry:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(16, 36, 48, .14); border-color: #d3e6dd; }
+.entry-top { display: flex; align-items: center; gap: .7rem; }
+.entry-ico {
+  width: 40px; height: 40px; border-radius: .65rem; background: #e3f7ec;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.entry-ico .material-icons { font-size: 21px; color: #1aad6e; }
+.entry.is-primary .entry-ico { background: var(--az-navy, #16303d); }
+.entry.is-primary .entry-ico .material-icons { color: #2ed88e; }
+.entry-t { font-size:var(--fs-subhead); font-weight: 700; color: var(--az-navy, #16303d); }
+.entry-d { font-size:var(--fs-small); color: #707070; line-height: 1.6; }
+.entry-go {
+  margin-top: auto; padding-top: .55rem;
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size:var(--fs-small); font-weight:600; color: #1aad6e;
+}
+.entry-go .material-icons { font-size: 16px; transition: transform .15s; }
+.entry:hover .entry-go .material-icons { transform: translateX(3px); }
+
+/* ══ Reach-us strip ══ */
+.reach { border-top: 1px solid var(--az-border, #e2e8ec); border-bottom: 1px solid var(--az-border, #e2e8ec); background: #fff; }
+.reach-in {
+  max-width: 1160px; margin: 0 auto; padding: 1rem 2rem;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;
+}
+.reach-i { display: flex; align-items: center; gap: .75rem; text-decoration: none; padding: .35rem .4rem; border-radius: .6rem; transition: background .12s; }
+.reach-i:hover { background: #f4faf7; }
+.reach-ico { width: 34px; height: 34px; border-radius: 50%; background: #e3f7ec; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.reach-ico .material-icons { font-size: 18px; color: #1aad6e; }
+.reach-k { font-size:var(--fs-micro); font-weight:600; letter-spacing: .07em; text-transform: uppercase; color: #8a979e; }
+.reach-v { font-size:var(--fs-body); font-weight: 700; color: var(--az-navy, #16303d); }
+
+@media (max-width: 900px) {
+  .entry-wrap { margin-top: -1.5rem; padding: 0 1.25rem; }
+  .entry-grid, .reach-in { grid-template-columns: 1fr; }
+  .reach-in { padding: .75rem 1.25rem; }
 }
 
 /* ── Section ── */
@@ -174,9 +226,9 @@ body {
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--az-green); margin-bottom: .5rem;
 }
-.section-title { font-size: 1.625rem; font-weight: 700; color: var(--az-navy); line-height: 1.25; }
+.section-title { font-size:var(--fs-display); font-weight: 700; color: var(--az-navy); line-height: 1.25; }
 .section-title.light { color: #fff; }
-.section-sub { font-size: .9375rem; color: var(--az-muted); margin-top: .5rem; }
+.section-sub { font-size:var(--fs-subhead); color: var(--az-muted); margin-top: .5rem; }
 .section-sub.light { color: rgba(255,255,255,.7); }
 
 /* ── Quick Services Grid ── */
@@ -210,7 +262,7 @@ body {
   margin-bottom: .875rem; flex-shrink: 0;
 }
 .svc-icon img { width: 32px; height: 32px; object-fit: contain; }
-.svc-label { font-size: .8125rem; font-weight: 600; line-height: 1.35; }
+.svc-label { font-size:var(--fs-small); font-weight: 600; line-height: 1.35; }
 
 /* ── Feature Cards (bank products, etc.) ── */
 .feat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 1.5rem; }
@@ -226,8 +278,8 @@ body {
   margin-bottom: 1rem;
 }
 .feat-card-icon img { width: 30px; height: 30px; object-fit: contain; }
-.feat-card-title { font-size: 1rem; font-weight: 700; margin-bottom: .4375rem; }
-.feat-card-text { font-size: .875rem; color: var(--az-muted); line-height: 1.6; }
+.feat-card-title { font-size:var(--fs-subhead); font-weight: 600; margin-bottom: .4375rem; }
+.feat-card-text { font-size:var(--fs-body); color: var(--az-muted); line-height: 1.6; }
 
 /* ── Stats bar ── */
 .stats-bar {
@@ -240,7 +292,7 @@ body {
 }
 .stat-item:last-child { border-right: none; }
 .stat-num { font-size: 2rem; font-weight: 700; color: var(--az-green); }
-.stat-lbl { font-size: .8125rem; color: rgba(255,255,255,.7); margin-top: .25rem; }
+.stat-lbl { font-size:var(--fs-small); color: rgba(255,255,255,.7); margin-top: .25rem; }
 
 /* ── CTA Band ── */
 .cta-band {
@@ -249,8 +301,8 @@ body {
   padding: 3rem 2.5rem;
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
 }
-.cta-band-text h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: .375rem; }
-.cta-band-text p { font-size: .9375rem; color: rgba(255,255,255,.75); }
+.cta-band-text h2 { font-size:var(--fs-display); font-weight: 700; color: #fff; margin-bottom: .375rem; }
+.cta-band-text p { font-size:var(--fs-subhead); color: rgba(255,255,255,.75); }
 .cta-band-btns { display: flex; gap: .75rem; flex-wrap: wrap; }
 
 
@@ -260,7 +312,7 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: .5rem;
   padding: 1rem 1.25rem; background: #fff;
   border: 1px solid var(--az-border); border-radius: 12px;
-  text-decoration: none; color: var(--az-navy); font-size: .8125rem; font-weight: 600;
+  text-decoration: none; color: var(--az-navy); font-size:var(--fs-small); font-weight: 600;
   min-width: 100px; text-align: center;
   transition: border-color .15s, box-shadow .15s;
 }
@@ -273,9 +325,9 @@ body {
   padding: 3rem 0 0;
 }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; padding-bottom: 2rem; }
-.footer-brand p { font-size: .875rem; line-height: 1.7; color: rgba(255,255,255,.6); margin-top: .75rem; max-width: 280px; }
-.footer-col h4 { font-size: .8125rem; font-weight: 700; color: #fff; margin-bottom: .875rem; text-transform: uppercase; letter-spacing: .07em; }
-.footer-col a { display: block; font-size: .8125rem; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: .5rem; transition: color .12s; }
+.footer-brand p { font-size:var(--fs-body); line-height: 1.7; color: rgba(255,255,255,.6); margin-top: .75rem; max-width: 280px; }
+.footer-col h4 { font-size:var(--fs-small); font-weight:600; color: #fff; margin-bottom: .875rem; text-transform: uppercase; letter-spacing: .07em; }
+.footer-col a { display: block; font-size:var(--fs-small); color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: .5rem; transition: color .12s; }
 .footer-col a:hover { color: var(--az-green); }
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,.1);
@@ -307,9 +359,9 @@ body {
 <div class="lp-topbar">
   <a href="tel:+96100000000">+961 0 000 0000</a>
   <span>|</span>
-  <a href="#">info@azentio.com</a>
+  <a href="mailto:info@azentio.com">info@azentio.com</a>
   <span>|</span>
-  <a href="locations.html">Branch Locator</a>
+  <a href="branches-atm.html" onclick="openNewWinModal(event,'branches-atm.html','Branch Locator')">Branch Locator</a>
 </div>
 
 <!-- ████ HEADER ████ -->
@@ -329,6 +381,8 @@ body {
 
   <!-- Actions -->
   <div class="lp-hdr-actions">
+    <a href="login.html" class="btn-login">Log in</a>
+    <a href="COA_identification_details.html" class="btn-register">Create an account</a>
     <div class="hdr-lang-wrap">
       <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#16303d"/></svg></button>
       <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
@@ -343,8 +397,6 @@ body {
         </button>
       </div>
     </div>
-    <a href="login.html" class="btn-login">Sign In</a>
-    <a href="#" class="btn-register" onclick="showWip();return false;">Open Account</a>
   </div>
 </header>
 
@@ -363,11 +415,61 @@ body {
     <h1 class="hero-h1">Banking Made<br/><span>Simple &amp; Secure</span></h1>
     <p class="hero-sub">Experience seamless digital banking with azentio — manage accounts, transfer funds, and grow your savings, all from one place.</p>
     <div class="hero-btns">
-      <a href="#" class="btn-hero-primary" onclick="showWip();return false;">Get Started</a>
-      <a href="#products" class="btn-hero-ghost">Explore Products</a>
+      <a href="retail-onboarding-1-personal-details.html" class="btn-hero-primary">Become our customer</a>
     </div>
   </div>
 </section>
+
+
+<!-- ████ THREE WAYS IN ████ -->
+<div class="entry-wrap">
+  <div class="entry-grid">
+    <a href="retail-onboarding-1-personal-details.html" class="entry is-primary">
+      <div class="entry-top">
+        <span class="entry-ico"><span class="material-icons" aria-hidden="true">person_add</span></span>
+        <span class="entry-t">Become our customer</span>
+      </div>
+      <p class="entry-d">New to azentio? Open your first account online — no branch visit needed.</p>
+      <span class="entry-go">Start onboarding <span class="material-icons" aria-hidden="true">arrow_forward</span></span>
+    </a>
+
+    <a href="COA_identification_details.html" class="entry">
+      <div class="entry-top">
+        <span class="entry-ico"><span class="material-icons" aria-hidden="true">password</span></span>
+        <span class="entry-t">Create online account</span>
+      </div>
+      <p class="entry-d">You bank with us already but have no online access. Register in three steps.</p>
+      <span class="entry-go">Register now <span class="material-icons" aria-hidden="true">arrow_forward</span></span>
+    </a>
+
+    <a href="login.html" class="entry">
+      <div class="entry-top">
+        <span class="entry-ico"><span class="material-icons" aria-hidden="true">login</span></span>
+        <span class="entry-t">Log in</span>
+      </div>
+      <p class="entry-d">Already set up online? Sign in to your accounts, cards and payments.</p>
+      <span class="entry-go">Go to log in <span class="material-icons" aria-hidden="true">arrow_forward</span></span>
+    </a>
+  </div>
+</div>
+
+<!-- ████ REACH US ████ -->
+<div class="reach">
+  <div class="reach-in">
+    <a href="tel:1800000000" class="reach-i">
+      <span class="reach-ico"><span class="material-icons" aria-hidden="true">call</span></span>
+      <span><span class="reach-k">Call us</span><br/><span class="reach-v">1800 000 000</span></span>
+    </a>
+    <a href="contact-us.html" class="reach-i">
+      <span class="reach-ico"><span class="material-icons" aria-hidden="true">mail</span></span>
+      <span><span class="reach-k">Contact us</span><br/><span class="reach-v">Message, email or callback</span></span>
+    </a>
+    <a href="branches-atm.html" class="reach-i">
+      <span class="reach-ico"><span class="material-icons" aria-hidden="true">location_on</span></span>
+      <span><span class="reach-k">Find a branch</span><br/><span class="reach-v">Branches &amp; ATMs near you</span></span>
+    </a>
+  </div>
+</div>
 
 <!-- ████ STATS BAR ████ -->
 <div class="stats-bar" role="region" aria-label="Key statistics">
@@ -398,27 +500,27 @@ body {
       <p class="section-sub">Access all banking services instantly — no branch visit required.</p>
     </div>
     <div class="services-grid">
-      <a href="login.html" class="svc-card">
+      <a href="currency-exchange-rate.html" class="svc-card" onclick="openNewWinModal(event,'currency-exchange-rate.html','Currency Exchange Rate')">
         <div class="svc-icon"><img src="images/landing/currency_exchange.svg" alt="Currency Exchange Rate" loading="lazy"/></div>
         <span class="svc-label">Currency Exchange Rate</span>
       </a>
-      <a href="login.html" class="svc-card">
+      <a href="branches-atm.html" class="svc-card" onclick="openNewWinModal(event,'branches-atm.html','Branches & ATMs Location')">
         <div class="svc-icon"><img src="images/landing/locations.svg" alt="Branches & ATMs Location" loading="lazy"/></div>
         <span class="svc-label">Branches &amp; ATMs Location</span>
       </a>
-      <a href="login.html" class="svc-card">
+      <a href="faq.html" class="svc-card" onclick="openNewWinModal(event,'faq.html','Frequently Asked Questions')">
         <div class="svc-icon"><img src="images/landing/faq.svg" alt="Frequently Asked Questions" loading="lazy"/></div>
         <span class="svc-label">Frequently Asked Questions</span>
       </a>
-      <a href="bank-products.html" class="svc-card">
+      <a href="bank-products.html" class="svc-card" onclick="openNewWinModal(event,'bank-products.html','Bank Products')">
         <div class="svc-icon"><img src="images/landing/bank_products.svg" alt="Bank Products" loading="lazy"/></div>
         <span class="svc-label">Bank Products</span>
       </a>
-      <a href="login.html" class="svc-card">
+      <a href="islamic-utilities.html" class="svc-card" onclick="openNewWinModal(event,'islamic-utilities.html','Prayer Timings Qibla Direction')">
         <div class="svc-icon"><img src="images/landing/prayer_timing.svg" alt="Prayer Timings Qibla Direction" loading="lazy"/></div>
         <span class="svc-label">Prayer Timings Qibla Direction</span>
       </a>
-      <a href="login.html" class="svc-card">
+      <a href="financial-calculator.html" class="svc-card" onclick="openNewWinModal(event,'financial-calculator.html','Financial Calculator')">
         <div class="svc-icon"><img src="images/landing/financing_calculator.svg" alt="Financing Calculator" loading="lazy"/></div>
         <span class="svc-label">Financing Calculator</span>
       </a>
@@ -432,52 +534,52 @@ body {
 <section class="section section-alt" id="products" aria-labelledby="prod-title">
   <div class="container">
     <div class="section-head">
-      <span class="section-tag">Our Products</span>
-      <h2 class="section-title" id="prod-title">Tailored Banking Solutions</h2>
-      <p class="section-sub">Financial products designed to help you save, invest, and grow.</p>
+      <span class="section-tag">What you can do</span>
+      <h2 class="section-title" id="prod-title">Everything in one place</h2>
+      <p class="section-sub">The same sections you will find once you are signed in.</p>
     </div>
     <div class="feat-cards">
       <div class="feat-card">
         <div class="feat-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12.01" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
         </div>
-        <div class="feat-card-title">Current &amp; Savings Accounts</div>
-        <div class="feat-card-text">Flexible accounts with competitive interest rates, no hidden fees, and instant access to your funds anytime.</div>
+        <div class="feat-card-title">Accounts</div>
+        <div class="feat-card-text">Current, savings and term deposit accounts. Open a new one online, view balances, and download statements.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </div>
+        <div class="feat-card-title">Transfers</div>
+        <div class="feat-card-text">Move money between your own accounts, to someone else at azentio, or internationally — now or scheduled.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>
+        </div>
+        <div class="feat-card-title">Payments</div>
+        <div class="feat-card-text">Pay bills, top up a prepaid card, manage billers and save your regular payees as favourites.</div>
       </div>
       <div class="feat-card">
         <div class="feat-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         </div>
-        <div class="feat-card-title">Credit &amp; Debit Cards</div>
-        <div class="feat-card-text">Premium cards with cashback rewards, travel benefits, and worldwide acceptance at millions of merchants.</div>
+        <div class="feat-card-title">Cards</div>
+        <div class="feat-card-text">Request credit, debit, prepaid and supplementary cards. Change a PIN, adjust a limit or replace a lost card.</div>
       </div>
       <div class="feat-card">
         <div class="feat-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
-        <div class="feat-card-title">Loans &amp; Financing</div>
-        <div class="feat-card-text">Personal, home, and business financing options with flexible repayment terms and competitive rates.</div>
+        <div class="feat-card-title">Financing</div>
+        <div class="feat-card-text">Apply for a facility, track your repayment schedule, make a payment or settle early.</div>
       </div>
       <div class="feat-card">
         <div class="feat-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M3 21v-2a4 4 0 0 1 4-4h2"/><circle cx="12" cy="7" r="4"/><path d="M14 15h7"/><path d="M14 19h7"/></svg>
         </div>
-        <div class="feat-card-title">Investment Products</div>
-        <div class="feat-card-text">Term deposits, mutual funds, and investment portfolios to grow your wealth with expert guidance.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <div class="feat-card-title">Home Mortgage</div>
-        <div class="feat-card-text">Make your dream home a reality with our tailored mortgage solutions and fast approval process.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div class="feat-card-title">International Transfers</div>
-        <div class="feat-card-text">Fast, secure money transfers to 150+ countries with real-time exchange rates and low fees.</div>
+        <div class="feat-card-title">Services</div>
+        <div class="feat-card-text">Request statements, update maturity instructions, report a lost document and manage your profile.</div>
       </div>
     </div>
   </div>
@@ -494,7 +596,7 @@ body {
         <p>Join over 2 million customers banking smarter with azentio.</p>
       </div>
       <div class="cta-band-btns">
-        <a href="#" class="btn-register" style="display:inline-block;text-decoration:none;padding:.75rem 2rem;font-size:14px" onclick="showWip();return false;">Open Account</a>
+        <a href="retail-onboarding-1-personal-details.html" class="btn-register" style="display:inline-block;text-decoration:none;padding:.75rem 2rem;font-size:14px">Open an account</a>
         <a href="#contact" class="btn-hero-ghost" style="display:inline-block;text-decoration:none;padding:.75rem 2rem;font-size:14px">Talk to Us</a>
       </div>
     </div>
@@ -515,12 +617,12 @@ body {
         <div class="feat-card-title">Call Us</div>
         <div class="feat-card-text">+961 0 000 0000<br/>Available 24/7 for support.</div>
       </a>
-      <a href="#" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
+      <a href="contact-us.html" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
         <div class="feat-card-icon"><img src="images/landing/contact_us.svg" alt="Contact Us" loading="lazy"/></div>
         <div class="feat-card-title">Contact Us</div>
         <div class="feat-card-text">Send us a message and we'll respond within 24 hours.</div>
       </a>
-      <a href="#" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
+      <a href="branches-atm.html" class="feat-card" style="text-decoration:none;color:var(--az-navy)">
         <div class="feat-card-icon"><img src="images/landing/locations.svg" alt="Locations" loading="lazy"/></div>
         <div class="feat-card-title">Find a Branch</div>
         <div class="feat-card-text">150+ branches and ATMs across the country near you.</div>
@@ -539,35 +641,35 @@ body {
       </div>
       <div class="footer-col">
         <h4>Services</h4>
-        <a href="#">Accounts</a>
-        <a href="#">Cards</a>
-        <a href="#">Transfers</a>
-        <a href="#">Loans</a>
-        <a href="#">Investments</a>
+        <a href="bank-products.html">Accounts</a>
+        <a href="bank-products.html">Cards</a>
+        <a href="bank-products.html">Transfers</a>
+        <a href="financial-calculator.html">Financing</a>
+        <a href="currency-exchange-rate.html">Exchange rates</a>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
-        <a href="#">About Us</a>
-        <a href="#">Our Customers</a>
-        <a href="#">Careers</a>
-        <a href="#">News</a>
-        <a href="#">Locations</a>
+        <a href="about-us.html">About Us</a>
+        <a href="about-app.html">About the App</a>
+        <a href="bank-products.html">Bank Products</a>
+        <a href="islamic-utilities.html">Islamic Utilities</a>
+        <a href="branches-atm.html">Locations</a>
       </div>
       <div class="footer-col">
         <h4>Support</h4>
-        <a href="#">Contact Us</a>
-        <a href="#">FAQ</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms &amp; Conditions</a>
-        <a href="#">Security</a>
+        <a href="contact-us.html">Contact Us</a>
+        <a href="faq.html">FAQ</a>
+        <a href="accessibility-commitment.html">Accessibility</a>
+        <a href="accessibility-features.html">Accessibility Features</a>
+        <a href="financial-calculator.html">Financial Calculator</a>
       </div>
     </div>
     <div class="footer-bottom">
       <span>Copyright &copy; 2025 azentio Banking. All Rights Reserved.</span>
       <div style="display:flex;gap:1rem">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Cookie Policy</a>
+        <a href="accessibility-commitment.html">Accessibility</a>
+        <a href="about-app.html">About App</a>
+        <a href="contact-us.html">Contact</a>
       </div>
     </div>
   </div>
@@ -604,7 +706,42 @@ function setHdrLang(code, flagCode, optBtn) {
   }
   window.addEventListener('scroll', onScroll, {passive:true});
 })();
+
+/* Quick Services / Branch Locator: these are the only links on this page
+   that leave the site shell — they open in a new window, via the app's
+   own confirmation modal (not a browser alert). Every page beyond this
+   one links back through its own left-hand panel (same window). */
+var newWinUrl = '';
+function openNewWinModal(e, url, label){
+  e.preventDefault();
+  newWinUrl = url;
+  document.getElementById('newWinModalLabel').textContent = label;
+  document.getElementById('newWinModal').style.display = 'flex';
+}
+function closeNewWinModal(){
+  document.getElementById('newWinModal').style.display = 'none';
+}
+function confirmNewWinModal(){
+  window.open(newWinUrl, '_blank');
+  closeNewWinModal();
+}
 </script>
+
+<!-- Open in New Window Modal -->
+<div id="newWinModal" style="display:none;position:fixed;inset:0;background:rgba(15,32,41,.45);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNewWinModal()">
+  <div style="background:#fff;border-radius:16px;padding:1.75rem 2rem;max-width:420px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.18);position:relative;">
+    <button onclick="closeNewWinModal()" aria-label="Close" style="position:absolute;top:1rem;right:1.1rem;background:none;border:none;cursor:pointer;font-size:18px;color:#8a979e;line-height:1;">&#x2715;</button>
+    <div style="font-size:var(--fs-section);font-weight:700;color:#16303d;margin-bottom:.65rem;">Open in a new window?</div>
+    <p style="font-size:var(--fs-body);color:#556b76;line-height:1.6;margin:0 0 1.5rem;"><strong id="newWinModalLabel" style="color:#16303d;font-weight:700;">This page</strong> opens in a new browser window, so you keep the current page open here.</p>
+    <div style="display:flex;justify-content:flex-end;gap:.6rem;">
+      <button onclick="closeNewWinModal()" style="background:#eef1f3;color:#45565e;border:none;border-radius:8px;padding:9px 22px;font-size:13.5px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="confirmNewWinModal()" style="background:#16303d;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.45rem;letter-spacing:.01em;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- WIP Modal -->
 <div id="wipModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
@@ -613,8 +750,8 @@ function setHdrLang(code, flagCode, optBtn) {
     <div style="width:56px;height:56px;border-radius:50%;background:#fff8e1;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     </div>
-    <div style="font-size:1.1rem;font-weight:700;color:#16303d;margin-bottom:.5rem;">Coming Soon</div>
-    <p style="font-size:.875rem;color:#556b76;line-height:1.6;margin-bottom:1.25rem;">This feature is currently under development and will be available shortly.</p>
+    <div style="font-size:var(--fs-section);font-weight:700;color:#16303d;margin-bottom:.5rem;">Coming Soon</div>
+    <p style="font-size:var(--fs-body);color:#556b76;line-height:1.6;margin-bottom:1.25rem;">This feature is currently under development and will be available shortly.</p>
     <button onclick="document.getElementById('wipModal').style.display='none'" style="background:#16303d;color:#fff;border:none;border-radius:8px;padding:9px 28px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;">OK</button>
   </div>
 </div>

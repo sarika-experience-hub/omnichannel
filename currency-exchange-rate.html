@@ -6,204 +6,385 @@
   <link rel="stylesheet" href="css/bootstrap.min.css"/>
   <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/flag-icons.min.css"/>
+  <!-- Poppins — corporate typeface. Loaded from the Google CDN, same as Material
+       Icons; to match fonts.css's fully-local policy it should be self-hosted later. -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/prelogin-header.css"/>
   <style>
+    /* ══ Shell ══════════════════════════════════════════════ */
+    :root{--az-font:'Poppins','Roboto',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;overflow:hidden}
-    body{font-family:'Roboto',-apple-system,sans-serif;font-size:14px;color:#16303d;background:#fff;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
-    .f-input{width:100%;border:1.5px solid #e2e8ec;border-radius:6px;padding:.5rem .75rem;font-family:'Roboto',sans-serif;font-size:.8125rem;color:#16303d;background:#fff;outline:none;transition:border-color .15s}
-    .f-input:focus{border-color:#2ed88e;box-shadow:0 0 0 3px rgba(46,216,142,.1)}
-    .f-select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E") no-repeat right 10px center;cursor:pointer}
-    .btn-primary{padding:.5rem 1.5rem;background:#16303d;color:#fff;border:none;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
-    .btn-primary:hover{background:#1e4356;color:#fff}
-    .btn-green{padding:.5rem 1.5rem;background:#2ed88e;color:#fff;border:none;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
-    .btn-green:hover{background:#25c47e}
-    .acc-card{border:1.5px solid #e2e8ec;border-radius:8px;overflow:hidden;margin-bottom:.875rem}
-    .acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;cursor:pointer;background:#fff;transition:background .1s}
-    .acc-hdr:hover{background:#f8f9fa}
-    .acc-hdr.open{background:#edfaf6}
-    .acc-body{padding:.875rem 1rem;border-top:1px solid #e2e8ec;display:none}
-    .acc-body.show{display:block}
-    
+    body{font-family:var(--az-font);font-size:14px;color:#16303d;background:#f9fafb;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+    /* styles.css hard-codes Roboto on many classes, so force the corporate face
+       page-wide; the icon font is excluded or the ligatures stop rendering. */
+    body *:not(.material-icons){font-family:var(--az-font) !important}
+
+    /* ══ Left panel — navy rail, matching retail/accounts.html ══ */
+    .prelogin-sidebar{background:#0f2029;border-right:1px solid rgba(255,255,255,.08)}
+    .pl-item{display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:var(--fs-small);font-weight:400;color:#cdd9d7;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .12s,color .12s}
+    .pl-item:hover{background:rgba(255,255,255,.06);color:#fff}
+    .pl-item.pl-active{background:rgba(46,216,142,.14);border-left-color:#2ed88e;color:#fff;font-weight:600}
+    .pl-item.pl-active:hover{background:rgba(46,216,142,.2)}
+    .pl-ico{width:18px;height:18px;flex-shrink:0;display:flex;align-items:center}
+    .pl-item svg{stroke:currentColor;opacity:.62;transition:opacity .12s}
+    .pl-item:hover svg,.pl-item.pl-active svg{opacity:1}
+    .pl-div{height:1px;background:rgba(255,255,255,.1);margin:.4rem .875rem .4rem 3rem}
+
+    /* ══ Breadcrumb + page heading (matches post-login pages) ══ */
+    .cx-bc{display:flex;align-items:center;gap:.375rem;font-size:var(--fs-caption);color:#8a979e;margin-bottom:.375rem;flex-wrap:wrap}
+    .cx-bc a{color:#8a979e;text-decoration:none}
+    .cx-bc a:hover{color:#16303d}
+    .cx-bc .sep{color:#ccc}
+    .cx-bc .cur{color:#16303d}
+    .cx-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem}
+    .cx-title{font-size:var(--fs-title);font-weight:500;line-height:1.2}
+
+    /* ══ Hero — same language as the post-login hero panels ══ */
+    /* overflow is visible so the currency menu can escape; the decoration
+       clips itself inside .cx-hero-deco instead */
+    /* the right padding reserves a clean band for the petal mark */
+    .cx-hero{position:relative;border-radius:1.1rem;padding:.9rem 7.5rem 1rem 1.4rem;background:#e3f7ec;border:1px solid #bfeed7;box-shadow:0 3px 8px rgba(26,173,110,.1);margin-bottom:1rem}
+    .cx-hero-deco{position:absolute;inset:0;border-radius:1.1rem;overflow:hidden;pointer-events:none;z-index:0}
+    /* Pre-login pages carry the azentio logo petals; the post-login heroes
+       keep the four-point sparkle, so the two sides stay distinguishable.
+       Paths lifted verbatim from the logo mark in this page's header. */
+    /* petals rotated 90° about their own centre (141.85, 14.72) so the mark lies flat */
+    /* the mark bleeds a little past the right edge so it reads as a graphic
+       device rather than a boxed-in logo; .cx-hero-deco does the clipping */
+    /* Decoration follows retail/accounts.html exactly — fill-opacity .12 over a
+       soft radial halo, anchored top-right in a 170px box. Pre-login keeps the
+       azentio petals (post-login heroes use the triangle) but the weight,
+       opacity and placement are now identical, so it reads as the same system
+       rather than a solid green slab. */
+    .cx-hero-deco::before{content:'';position:absolute;top:-10px;right:-10px;width:170px;height:170px;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='127.9 3.8 27.9 21.9'%3E%3Cg transform='rotate(90 141.85 14.72) translate(-11.301)'%3E%3Cpath d='M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z' fill='%231aad6e' fill-opacity='.12'/%3E%3Cpath d='M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z' fill='%231aad6e' fill-opacity='.12'/%3E%3C/g%3E%3C/svg%3E") no-repeat center/78%,
+        radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%}
+    .cx-hero-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.6rem}
+    .cx-hero-eyebrow{font-size:var(--fs-micro);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#707070;margin-bottom:.15rem}
+    .cx-hero-sub{font-size:var(--fs-body);font-weight:600;color:#16303d}
+    .cx-hero-pill{display:inline-flex;align-items:center;gap:.3rem;background:#fff;color:#1aad6e;border:1px solid #1aad6e;border-radius:2rem;padding:.3rem .8rem;font-size:var(--fs-micro);font-weight:600;white-space:nowrap}
+    .cx-hero-pill .material-icons{font-size:14px}
+
+    /* ── Converter ── */
+    .cx-conv{position:relative;z-index:1;display:flex;align-items:flex-end;gap:.7rem;flex-wrap:wrap}
+    .cx-field{flex:1 1 240px;min-width:0}
+    .cx-flbl{display:block;font-size:var(--fs-micro);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#707070;margin-bottom:.4rem}
+    /* overflow stays visible so the currency menu can escape the control */
+    .cx-ctrl{display:flex;align-items:stretch;background:#fff;border:1px solid #bfeed7;border-radius:.625rem;transition:border-color .15s,box-shadow .15s}
+    .cx-ctrl:focus-within{border-color:#1aad6e;box-shadow:0 0 0 3px rgba(26,173,110,.12)}
+    .cx-amt{flex:1;min-width:0;width:100%;border:none;outline:none;background:none;padding:.5rem .75rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-subhead);font-weight:700;color:#16303d;text-align:right;font-variant-numeric:tabular-nums}
+    /* ── Currency picker (custom, so flags + names can be shown) ── */
+    .cx-side{position:relative;display:flex;align-items:stretch;flex-shrink:0}
+    .cx-cur-btn{display:flex;align-items:center;gap:.45rem;padding:0 1.5rem 0 .75rem;background:#f4faf8;border:none;border-left:1px solid #e2eee8;border-radius:0 .55rem .55rem 0;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);font-weight:600;color:#16303d;cursor:pointer;transition:background .12s}
+    .cx-cur-btn:hover{background:#e7f5ee}
+    .cx-cur-btn:focus-visible{outline:2px solid #1aad6e;outline-offset:-2px}
+    .cx-cur-btn .cx-chev{position:absolute;right:.65rem;top:50%;transform:translateY(-50%);pointer-events:none;transition:transform .18s}
+    .cx-cur-btn[aria-expanded="true"] .cx-chev{transform:translateY(-50%) rotate(180deg)}
+    .cx-static{display:inline-flex;align-items:center;gap:.45rem;padding:0 .85rem;background:#f4faf8;border-left:1px solid #e2eee8;border-radius:0 .55rem .55rem 0;font-size:var(--fs-small);font-weight:600;color:#16303d}
+    .cx-side-out .cx-cur-btn{background:none;border-left:none;padding:0 1.35rem 0 0}
+    .cx-side-out .cx-cur-btn:hover{background:none;color:#1aad6e}
+    .cx-side-out .cx-cur-btn .cx-chev{right:.1rem}
+    .cx-side-out .cx-static{background:none;border-left:none;padding:0}
+
+    .cx-cur-menu{position:absolute;top:calc(100% + .45rem);right:0;z-index:40;width:265px;max-height:292px;overflow-y:auto;background:#fff;border:1px solid #e2e8ec;border-radius:.7rem;box-shadow:0 12px 30px rgba(22,48,61,.18);padding:.3rem}
+    .cx-cur-opt{display:flex;align-items:center;gap:.6rem;width:100%;border:none;background:none;padding:.48rem .55rem;border-radius:.45rem;cursor:pointer;text-align:left;font-family:'Poppins','Roboto',sans-serif;transition:background .1s}
+    .cx-cur-opt:hover{background:#f4faf8}
+    .cx-cur-opt.sel{background:#edf9f4}
+    .cx-opt-txt{flex:1;min-width:0}
+    .cx-opt-code{display:block;font-size:var(--fs-small);font-weight:600;color:#16303d;line-height:1.25}
+    .cx-opt-name{display:block;font-size:var(--fs-micro);color:#8a979e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cx-opt-rate{font-size:var(--fs-micro);font-weight:600;color:#1aad6e;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .cx-opt-tick{font-size:16px;color:#1aad6e;opacity:0;flex-shrink:0}
+    .cx-cur-opt.sel .cx-opt-tick{opacity:1}
+    .cx-flag{width:21px;height:15px;border-radius:2px;flex-shrink:0;box-shadow:0 0 0 1px rgba(22,48,61,.08)}
+    /* Not every flag ships in the bundled flag-icons set — fall back to a tidy country-code chip */
+    .cx-flag-fb{width:21px;height:15px;border-radius:2px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:#eef2f5;color:#5d6f7a;font-size:8px;font-weight:700;letter-spacing:.04em;line-height:1;box-shadow:0 0 0 1px rgba(22,48,61,.08)}
+    .cx-flag-slot{display:inline-flex;flex-shrink:0}
+    .cx-swap{flex:0 0 auto;align-self:flex-end;margin-bottom:.18rem;width:34px;height:34px;border-radius:50%;border:1px solid #bfeed7;background:#fff;color:#1aad6e;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,border-color .15s,transform .25s}
+    .cx-swap:hover{background:#edf9f4;border-color:#1aad6e}
+    .cx-swap:focus-visible{outline:2px solid #1aad6e;outline-offset:2px}
+    .cx-swap.cx-flip{transform:rotate(180deg)}
+    .cx-swap .material-icons{font-size:20px}
+    .cx-out{display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:#fff;border:1px solid #bfeed7;border-radius:.625rem;padding:.45rem .8rem;min-height:42px}
+    .cx-out-val{font-size:var(--fs-section);font-weight:700;color:#16303d;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s}
+    .cx-out-val.cx-pulse{color:#1aad6e}
+    .cx-out-cur{display:inline-flex;align-items:center;gap:.4rem;font-size:var(--fs-small);font-weight:600;color:#16303d;flex-shrink:0}
+    .cx-rate-note{position:relative;z-index:1;margin-top:.55rem;font-size:var(--fs-micro);color:#4a6b5d;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+    .cx-rate-note .material-icons{font-size:15px;color:#1aad6e}
+    .cx-rate-note strong{color:#16303d;font-variant-numeric:tabular-nums}
+
+    /* ══ Rates card ═════════════════════════════════════════ */
+    .cx-card{background:#fff;border:1px solid #e2e8ec;border-radius:.875rem;box-shadow:0 1px 3px rgba(22,48,61,.04);padding:1rem 1.5rem 1.2rem;margin-bottom:1.5rem}
+    .cx-card-hdr{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;font-size:var(--fs-subhead);font-weight:600;border-bottom:1px solid #e5e9ee;padding:0 0 .75rem;margin-bottom:1rem}
+    .cx-chip{font-size:var(--fs-micro);font-weight:600;color:#16303d;background:#edf9f4;border-radius:999px;padding:.22rem .7rem;white-space:nowrap}
+    .cx-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:.9rem}
+    .cx-search{position:relative;flex:1 1 250px;max-width:330px}
+    .cx-search .material-icons{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);font-size:18px;color:#8a979e;pointer-events:none}
+    .cx-search input{width:100%;border:1px solid #e2e7ee;border-radius:.625rem;padding:.6rem .8rem .6rem 2.35rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);color:#16303d;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+    .cx-search input:focus{border-color:#1aad6e;box-shadow:0 0 0 3px rgba(26,173,110,.1)}
+    .cx-export-dd{position:relative;display:inline-flex}
+    .cx-export{display:inline-flex;align-items:center;gap:.35rem;background:#fff;border:1.5px solid var(--az-blue,#00538A);color:var(--az-blue,#00538A);border-radius:.5rem;padding:.5rem .9rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);font-weight:600;cursor:pointer;transition:background .15s}
+    .cx-export:hover{background:#e4e7eb}
+    .cx-export .material-icons{font-size:17px;color:#1aad6e}
+    /* anchored to the button, so it stays put when the page scrolls */
+    .cx-export-menu{position:absolute;top:calc(100% + 6px);left:0;z-index:1000;background:#fff;border:1px solid #e2e8ec;border-radius:.5rem;box-shadow:0 8px 24px rgba(16,36,48,.12);padding:.35rem;min-width:118px}
+    .cx-export-menu button{display:block;width:100%;background:none;border:none;border-radius:.375rem;padding:.45rem .6rem;font-size:var(--fs-small);font-weight:500;color:#16303d;cursor:pointer;text-align:left;font-family:'Poppins','Roboto',sans-serif}
+    .cx-export-menu button:hover{background:#f1f5f9}
+
+    /* ── Table ── */
+    .cx-table-wrap{overflow-x:auto}
+    /* Below this width the table scrolls sideways rather than crushing its columns */
+    .cx-table{width:100%;min-width:460px;border-collapse:collapse}
+    .cx-table th{text-align:left;font-size:var(--fs-micro);font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#707070;padding:.55rem .9rem;border-bottom:1px solid #e5e9ee;white-space:nowrap;cursor:pointer;user-select:none;transition:color .12s}
+    .cx-table th:hover{color:#16303d}
+    .cx-table th.num .cx-th-in{justify-content:flex-end;width:100%}
+    .cx-th-in{display:inline-flex;align-items:center;gap:.2rem}
+    .cx-sort{font-size:15px;opacity:.3;transition:opacity .12s,color .12s}
+    .cx-table th.sorted .cx-sort{opacity:1;color:#1aad6e}
+    .cx-table td{padding:.7rem .9rem;border-bottom:1px solid #f1f5f7;font-size:var(--fs-small);color:#16303d;vertical-align:middle}
+    .cx-table tbody tr{cursor:pointer;transition:background .12s}
+    .cx-table tbody tr:hover{background:#f4faf8}
+    .cx-table tbody tr:last-child td{border-bottom:none}
+    .cx-cell-cur{display:flex;align-items:center;gap:.7rem}
+    .cx-code{font-weight:700;letter-spacing:.02em;white-space:nowrap}
+    .cx-name{font-size:var(--fs-micro);color:#8a979e;margin-top:.05rem;white-space:nowrap}
+    .cx-num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+    .cx-use{opacity:0;font-size:var(--fs-micro);font-weight:600;color:#1aad6e;display:inline-flex;align-items:center;gap:.2rem;white-space:nowrap;transition:opacity .12s}
+    .cx-table tbody tr:hover .cx-use{opacity:1}
+    .cx-use .material-icons{font-size:14px}
+    .cx-empty{text-align:center;padding:2.25rem 1rem;color:#8a979e;font-size:var(--fs-small)}
+    .cx-empty .material-icons{display:block;font-size:26px;opacity:.45;margin-bottom:.4rem}
+
+    /* ══ Confirm-to-open modal ══════════════════════════════ */
+    .cx-modal-txt{font-size:var(--fs-small);color:#52636d;line-height:1.55;margin-bottom:1rem}
+    .cx-modal-txt strong{color:#16303d}
+    .cx-modal-actions{display:flex;justify-content:flex-end;gap:.625rem;flex-wrap:wrap}
+    .cx-btn-ghost{background:#f1f3f5;border:none;color:#707070;border-radius:.5rem;padding:.7rem 1.5rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-body);font-weight:600;cursor:pointer;transition:background .15s,color .15s}
+    .cx-btn-ghost:hover{background:#e4e7eb;color:#16303d}
+    .cx-btn-primary{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,#16303D,#0d1f28);border:none;color:#fff;border-radius:.5rem;padding:.7rem 1.5rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-body);font-weight:600;cursor:pointer;transition:background .15s,transform .15s}
+    .cx-btn-primary:hover{background:linear-gradient(135deg,#0f232e,#081820);transform:translateY(-1px)}
+    .cx-btn-primary:active{transform:translateY(0)}
+    .cx-btn-primary .material-icons{font-size:17px}
+
+    /* ══ Toast ══════════════════════════════════════════════ */
+    .cx-toast{position:fixed;left:50%;bottom:1.5rem;transform:translate(-50%,1.5rem);background:#16303d;color:#fff;border-radius:.625rem;padding:.7rem 1.1rem;font-size:var(--fs-small);font-weight:500;display:flex;align-items:center;gap:.45rem;box-shadow:0 8px 24px rgba(22,48,61,.25);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:2200}
+    .cx-toast.show{opacity:1;transform:translate(-50%,0)}
+    .cx-toast .material-icons{font-size:17px;color:#2ed88e}
+
+    /* ══ Dark mode ══════════════════════════════════════════ */
+    html.dark body{background:#0f1b24;color:#d9e4ea}
+    html.dark .cx-title,html.dark .cx-bc .cur{color:#e6eef3}
+    html.dark .cx-card{background:#17252f;border-color:#243545;box-shadow:none}
+    html.dark .cx-card-hdr{color:#e6eef3;border-bottom-color:#243545}
+    html.dark .cx-chip{background:#13342a;color:#8fe3bd}
+    html.dark .cx-table td{color:#d9e4ea;border-bottom-color:#20303c}
+    html.dark .cx-table tbody tr:hover{background:#1c2c38}
+    html.dark .cx-table th{color:#9fb2bd;border-bottom-color:#243545}
+    html.dark .cx-search input{background:#111e27;border-color:#243545;color:#d9e4ea}
+    html.dark .cx-export{background:#1c2c38;color:#d9e4ea}
+    html.dark .cx-export:hover{background:#24343f}
+    html.dark .cx-export-menu{background:#162530;border-color:#243545}
+    html.dark .cx-export-menu button{color:#d9e4ea}
+    html.dark .cx-export-menu button:hover{background:#1c2c38}
+    html.dark .cx-hero{background:#12302a;border-color:#1d5243}
+    html.dark .cx-hero-sub,html.dark .cx-out-val,html.dark .cx-out-cur{color:#e6eef3}
+    html.dark .cx-ctrl,html.dark .cx-out{background:#17252f;border-color:#1d5243}
+    html.dark .cx-amt,html.dark .cx-cur select{color:#e6eef3}
+    html.dark .cx-cur{background:#13262f;border-left-color:#1d5243}
+    html.dark .cx-swap{background:#17252f;border-color:#1d5243}
+    html.dark .cx-rate-note{color:#9ac9b4}
+    html.dark .cx-rate-note strong{color:#e6eef3}
+    html.dark .cx-flag-fb{background:#24343f;color:#9fb2bd}
+    html.dark .cx-cur-btn,html.dark .cx-static{background:#13262f;border-left-color:#1d5243;color:#e6eef3}
+    html.dark .cx-cur-btn:hover{background:#17323c}
+    html.dark .cx-side-out .cx-cur-btn,html.dark .cx-side-out .cx-static{background:none}
+    html.dark .cx-cur-menu{background:#17252f;border-color:#243545;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+    html.dark .cx-cur-opt:hover{background:#1c2c38}
+    html.dark .cx-cur-opt.sel{background:#13342a}
+    html.dark .cx-opt-code{color:#e6eef3}
+
+    /* no room to reserve a mark band on narrow screens */
+    @media (max-width:860px){
+      .cx-hero{padding-right:1.35rem}
+      .cx-hero-deco{display:none}
+    }
+    @media (max-width:640px){
+      .cx-hero{padding:1.1rem 1.1rem 1.2rem}
+      .cx-swap{align-self:center;transform:rotate(90deg)}
+      .cx-swap.cx-flip{transform:rotate(270deg)}
+    }
   </style>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
-<header style="height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:#fff;border-bottom:1px solid #e2e8ec;position:sticky;top:0;z-index:100">
-  <a href="index.html" style="text-decoration:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="120" height="26" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></a>
-  <div style="display:flex;align-items:center;gap:6px">
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
-    <div style="width:1px;height:24px;background:#e2e8ec;margin:0 4px"></div>
-    <button style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;color:#16303d;padding:5px 8px;border-radius:6px">
-      ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#16303d"/></svg>
+<header class="pl-hdr">
+  <div class="pl-hdr-left">
+    <button class="pl-hamburger" id="plHamburger" onclick="plToggleNav()" aria-label="Toggle navigation" aria-expanded="true" title="Toggle navigation">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
+    <a class="pl-hdr-logo" href="index.html" aria-label="azentio home"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></a>
+  </div>
+  <div class="pl-hdr-right">
+    <a href="about-us.html" class="pl-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <a href="contact-us.html" class="pl-icon-btn" title="Contact Us" aria-label="Contact Us"><span class="material-icons">call</span></a>
+    <a href="faq.html" class="pl-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <span class="pl-hdr-div"></span>
+    <div class="pl-lang-wrap">
+      <button class="pl-lang-btn" onclick="plToggleLang(event)" aria-haspopup="listbox" aria-label="Change language">
+        <span id="plLangCode">ENG</span>
+        <svg width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+      </button>
+      <div class="pl-lang-menu" id="plLangMenu" role="listbox" hidden>
+        <button class="pl-lang-opt active" onclick="plSetLang('ENG','us',this)"><span class="fi fi-us"></span> English</button>
+        <button class="pl-lang-opt" onclick="plSetLang('FR','fr',this)"><span class="fi fi-fr"></span> French</button>
+        <button class="pl-lang-opt" onclick="plSetLang('عربي','sa',this)"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
   </div>
 </header>
 <div style="display:flex;flex:1;overflow:hidden">
 <aside class="prelogin-sidebar">
-  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h1"/><path d="M16 11l2 2 4-4"/></svg></span>
+  <a href="login.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h1"/><path d="M16 11l2 2 4-4"/></svg></span>
     <span>Login</span>
   </a>
-  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></span>
+  <a href="COA_identification_details.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></span>
     <span>Create Account</span>
   </a>
-  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+  <a href="retail-onboarding-1-personal-details.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
     <span>Become Our Customer</span>
   </a>
-  <div class="sidebar-divider" style="height:1px;background:#d0dade;margin:.25rem .875rem .25rem 3rem"></div>
-  <a href="bank-products.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M3 5l18 0"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+  <div class="pl-div"></div>
+  <a href="bank-products.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M3 5l18 0"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
     <span>Bank Products</span>
   </a>
-  <a href="branches-atm.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+  <a href="branches-atm.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
     <span>Branches and ATM locations</span>
   </a>
-  <a href="currency-exchange-rate.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:700;color:#fff;text-decoration:none;border-left:3px solid #2ed88e;background:#2ed88e;color:#fff;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+  <a href="currency-exchange-rate.html" class="pl-item pl-active">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
     <span>Currency Exchange Rate</span>
   </a>
-  <a href="financial-calculator.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg></span>
+  <a href="financial-calculator.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg></span>
     <span>Financial Calculator</span>
   </a>
-  <a href="faq.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+  <a href="faq.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
     <span>Frequently Asked Questions</span>
   </a>
-  <a href="islamic-utilities.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
+  <a href="islamic-utilities.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
     <span>Islamic Utilities</span>
   </a>
-  <div class="sidebar-divider" style="height:1px;background:#d0dade;margin:.25rem .875rem .25rem 3rem"></div>
+  <div class="pl-div"></div>
 </aside>
   <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
-    <main style="flex:1;padding:1.5rem 2rem">
-<a href="index.html" style="color:#16303d;text-decoration:none">Home</a> <span style="color:#8a979e;margin:0 4px">›</span> <span style="color:#8a979e">Currency Exchange Rate</span>
-<div style="display:flex;justify-content:flex-end;margin:.75rem 0">
-  <button style="display:inline-flex;align-items:center;gap:.375rem;background:none;border:none;cursor:pointer;font-size:.875rem;font-weight:600;color:#16303d">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    Export
-  </button>
+    <main style="flex:1;padding:.75rem 1.75rem 1.5rem">
+
+<div class="cx-bc">
+  <a href="index.html" data-nav-label="Home">Home</a>
+  <span class="sep">›</span>
+  <span class="cur">Currency Exchange Rate</span>
 </div>
-<div style="border:1px solid #e2e8ec;border-radius:8px;overflow:hidden">
-  <table style="width:100%;border-collapse:collapse">
-    <thead>
-      <tr style="background:#f7f9fb">
-        <th style="padding:.875rem 1rem;text-align:left;font-size:.875rem;font-weight:600;border-bottom:1px solid #e2e8ec;width:40%">Currencies</th>
-        <th style="padding:.875rem 1rem;text-align:left;font-size:.875rem;font-weight:600;border-bottom:1px solid #e2e8ec;width:30%">Bank Buys (AED)</th>
-        <th style="padding:.875rem 1rem;text-align:left;font-size:.875rem;font-weight:600;border-bottom:1px solid #e2e8ec;width:30%">Bank Sells (AED)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-au" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">AUD</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.3236</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.5681</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-ch" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">CHF</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">3.8820</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">4.2907</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-eu" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">EUR</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">3.7884</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">4.1872</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-jp" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">JPY</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.0222</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.0246</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-nz" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">NZD</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.2257</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.3376</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-sg" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">SGD</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.5918</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.8646</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-us" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">USD</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">3.6000</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">3.7650</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-ca" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">CAD</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.5682</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">2.8385</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-dk" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">DKK</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.5267</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.5526</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-gb" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">GBP</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">4.4496</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">4.9180</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-no" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">NOK</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.3421</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.3789</td>
-      </tr>
-      <tr>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;display:flex;align-items:center;gap:.75rem">
-          <span class="fi fi-se" style="width:28px;height:20px;border-radius:3px"></span>
-          <span style="font-size:.875rem;font-weight:500">SEK</span>
-        </td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.3152</td>
-        <td style="padding:.875rem 1rem;border-bottom:1px solid #e2e8ec;font-size:.875rem;color:#16303d">0.3498</td>
-      </tr>
-    </tbody>
-  </table>
+
+<div class="cx-top-bar">
+  <h1 class="cx-title">Currency Exchange Rate</h1>
 </div>
+
+<!-- ── Hero: live converter ── -->
+<section class="cx-hero" aria-label="Currency converter">
+  <span class="cx-hero-deco" aria-hidden="true"></span>
+  <div class="cx-hero-head">
+    <div>
+      <div class="cx-hero-eyebrow">Currency Converter</div>
+      <div class="cx-hero-sub">See what your money is worth today</div>
+    </div>
+    <span class="cx-hero-pill"><span class="material-icons" aria-hidden="true">bolt</span> Indicative rates</span>
+  </div>
+
+  <div class="cx-conv">
+    <div class="cx-field">
+      <label class="cx-flbl" for="cxAmount">You exchange</label>
+      <div class="cx-ctrl">
+        <input id="cxAmount" class="cx-amt" type="text" inputmode="decimal" autocomplete="off" value="1,000.00" aria-label="Amount to exchange"/>
+        <div class="cx-side" id="cxLeftSide"></div>
+      </div>
+    </div>
+
+    <button type="button" class="cx-swap" id="cxSwap" title="Swap direction" aria-label="Swap conversion direction">
+      <span class="material-icons" aria-hidden="true">swap_horiz</span>
+    </button>
+
+    <div class="cx-field">
+      <span class="cx-flbl" id="cxOutLbl">You receive</span>
+      <div class="cx-out">
+        <span class="cx-out-val" id="cxResult" aria-live="polite">3,600.00</span>
+        <div class="cx-side cx-side-out" id="cxRightSide"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cx-rate-note" id="cxRateNote"></div>
+</section>
+
+<!-- ── Rates table ── -->
+<section class="cx-card" aria-label="Exchange rates">
+  <div class="cx-card-hdr">
+    <span>Exchange Rates</span>
+    <span class="cx-chip" id="cxCount">12 currencies</span>
+  </div>
+
+  <div class="cx-toolbar">
+    <div class="cx-search">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input id="cxSearch" type="search" placeholder="Search by currency or code…" aria-label="Search currencies" autocomplete="off"/>
+    </div>
+    <div class="cx-export-dd">
+      <button type="button" class="cx-export" id="cxExportBtn" onclick="cxToggleExportMenu(event)" aria-haspopup="true" aria-expanded="false">
+        <span class="material-icons" aria-hidden="true" style="font-size:17px;">file_download</span> Export
+        <span class="material-icons" aria-hidden="true" style="font-size:18px;">arrow_drop_down</span>
+      </button>
+      <div class="cx-export-menu" id="cxExportMenu" style="display:none" role="menu">
+        <button type="button" role="menuitem" onclick="cxExportCsv()">CSV</button>
+        <button type="button" role="menuitem" onclick="cxExportExcel()">Excel</button>
+        <button type="button" role="menuitem" onclick="cxExportPdf()">PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead>
+        <tr>
+          <th data-sort="code" scope="col"><span class="cx-th-in">Currencies <span class="material-icons cx-sort" aria-hidden="true">unfold_more</span></span></th>
+          <th data-sort="buy" class="num" scope="col"><span class="cx-th-in">Bank Buys (AED) <span class="material-icons cx-sort" aria-hidden="true">unfold_more</span></span></th>
+          <th data-sort="sell" class="num" scope="col"><span class="cx-th-in">Bank Sells (AED) <span class="material-icons cx-sort" aria-hidden="true">unfold_more</span></span></th>
+        </tr>
+      </thead>
+      <tbody id="cxBody"></tbody>
+    </table>
+  </div>
+
+  <div class="cx-empty hidden" id="cxEmpty">
+    <span class="material-icons" aria-hidden="true">search_off</span>
+    No currencies match your search.
+  </div>
+</section>
     </main>
 <footer style="height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;border-top:1px solid #e2e8ec;background:#fff;font-size:12px;color:#8a979e">
   <div>Copyright 2025. All Rights Reserved &nbsp;<a href="#" style="color:#8a979e;text-decoration:none">Terms and conditions</a>&nbsp;<a href="#" style="color:#8a979e;text-decoration:none">About App</a></div>
-  <div style="display:flex;align-items:center;gap:8px"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+  <div style="display:flex;align-items:center;gap:8px"><a href="accessibility-commitment.html">Accessibility</a>
     <div style="display:flex;gap:3px">
       <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:11px;font-weight:700;cursor:pointer">A<sup>-</sup></button>
       <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:12px;font-weight:700;cursor:pointer">A</button>
@@ -214,6 +395,363 @@
 </footer>
   </div>
 </div>
+
+<div class="cx-toast" id="cxToast" role="status" aria-live="polite"><span class="material-icons" aria-hidden="true">check_circle</span><span id="cxToastTxt"></span></div>
+
 <script src="js/app.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════════
+   Rates — exactly the published figures, nothing derived or edited
+   ════════════════════════════════════════════════════════════ */
+var CX_BASE = { code:'AED', flag:'ae' };
+var CX_RATES = [
+  { code:'AUD', name:'Australian Dollar',  flag:'au', buy:2.3236, sell:2.5681 },
+  { code:'CHF', name:'Swiss Franc',        flag:'ch', buy:3.8820, sell:4.2907 },
+  { code:'EUR', name:'Euro',               flag:'eu', buy:3.7884, sell:4.1872 },
+  { code:'JPY', name:'Japanese Yen',       flag:'jp', buy:0.0222, sell:0.0246 },
+  { code:'NZD', name:'New Zealand Dollar', flag:'nz', buy:2.2257, sell:2.3376 },
+  { code:'SGD', name:'Singapore Dollar',   flag:'sg', buy:2.5918, sell:2.8646 },
+  { code:'USD', name:'US Dollar',          flag:'us', buy:3.6000, sell:3.7650 },
+  { code:'CAD', name:'Canadian Dollar',    flag:'ca', buy:2.5682, sell:2.8385 },
+  { code:'DKK', name:'Danish Krone',       flag:'dk', buy:0.5267, sell:0.5526 },
+  { code:'GBP', name:'Pound Sterling',     flag:'gb', buy:4.4496, sell:4.9180 },
+  { code:'NOK', name:'Norwegian Krone',    flag:'no', buy:0.3421, sell:0.3789 },
+  { code:'SEK', name:'Swedish Krona',      flag:'se', buy:0.3152, sell:0.3498 }
+];
+
+function cxById(code){ for (var i=0;i<CX_RATES.length;i++) if (CX_RATES[i].code===code) return CX_RATES[i]; return null; }
+
+/* The bundled flag-icons set doesn't carry every country, so probe once
+   and fall back to a country-code chip rather than an empty square. */
+var cxFlagCache = {};
+function cxHasFlag(cc){
+  if (cxFlagCache.hasOwnProperty(cc)) return cxFlagCache[cc];
+  var probe = document.createElement('span');
+  probe.className = 'fi fi-' + cc;
+  probe.style.cssText = 'position:absolute;left:-9999px';
+  document.body.appendChild(probe);
+  var bg = getComputedStyle(probe).backgroundImage;
+  document.body.removeChild(probe);
+  return (cxFlagCache[cc] = !!bg && bg !== 'none');
+}
+function cxFlagHtml(cc){
+  return cxHasFlag(cc)
+    ? '<span class="fi fi-' + cc + ' cx-flag" aria-hidden="true"></span>'
+    : '<span class="cx-flag-fb" aria-hidden="true">' + cc.toUpperCase() + '</span>';
+}
+function cxMoney(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function cxRate(n){ return n.toFixed(4); }
+
+/* ════════════════════════════════════════════════════════════
+   Converter — foreign→AED uses the bank's buy rate,
+   AED→foreign uses the bank's sell rate
+   ════════════════════════════════════════════════════════════ */
+var cxDir = 'toAED';          /* 'toAED' | 'fromAED' */
+var cxPick = 'USD';
+
+var CX_CHEV = '<svg class="cx-chev" xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10.53 7" aria-hidden="true">' +
+  '<path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#1aad6e"/></svg>';
+
+/* The currency picker is custom rather than a native <select> so each
+   option can carry its flag, full name and current rate. */
+function cxPickerHtml(cur){
+  var opts = CX_RATES.slice().sort(function(a,b){ return a.code.localeCompare(b.code); }).map(function(r){
+    var rate = (cxDir === 'toAED') ? r.buy : r.sell;
+    return '<button type="button" class="cx-cur-opt' + (r.code === cur.code ? ' sel' : '') + '"' +
+             ' role="option" aria-selected="' + (r.code === cur.code) + '" data-code="' + r.code + '">' +
+             cxFlagHtml(r.flag) +
+             '<span class="cx-opt-txt">' +
+               '<span class="cx-opt-code">' + r.code + '</span>' +
+               '<span class="cx-opt-name">' + r.name + '</span>' +
+             '</span>' +
+             '<span class="cx-opt-rate">' + cxRate(rate) + '</span>' +
+             '<span class="material-icons cx-opt-tick" aria-hidden="true">check</span>' +
+           '</button>';
+  }).join('');
+
+  return '<button type="button" class="cx-cur-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose currency">' +
+           cxFlagHtml(cur.flag) + '<span>' + cur.code + '</span>' + CX_CHEV +
+         '</button>' +
+         '<div class="cx-cur-menu hidden" role="listbox" aria-label="Currencies">' + opts + '</div>';
+}
+
+function cxStaticHtml(code, flag){
+  return '<span class="cx-static">' + cxFlagHtml(flag) + '<span>' + code + '</span></span>';
+}
+
+function cxCloseMenus(){
+  Array.prototype.forEach.call(document.querySelectorAll('.cx-cur-menu'), function(m){ m.classList.add('hidden'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.cx-cur-btn'), function(b){ b.setAttribute('aria-expanded','false'); });
+}
+
+function cxParseAmount(){
+  var raw = (document.getElementById('cxAmount').value || '').replace(/,/g,'').trim();
+  var n = parseFloat(raw);
+  return isNaN(n) || n < 0 ? 0 : n;
+}
+
+function cxConvert(){
+  var cur    = cxById(cxPick) || CX_RATES[0];
+  var amount = cxParseAmount();
+  var out, rate, note;
+
+  if (cxDir === 'toAED') {
+    rate = cur.buy;
+    out  = amount * rate;
+    note = '1 ' + cur.code + ' = <strong>' + cxRate(rate) + ' AED</strong> &middot; bank buys ' + cur.code;
+  } else {
+    rate = cur.sell;
+    out  = amount / rate;
+    note = '1 ' + cur.code + ' = <strong>' + cxRate(rate) + ' AED</strong> &middot; bank sells ' + cur.code;
+  }
+
+  var res = document.getElementById('cxResult');
+  res.textContent = cxMoney(out);
+  res.classList.add('cx-pulse');
+  setTimeout(function(){ res.classList.remove('cx-pulse'); }, 320);
+
+  document.getElementById('cxRateNote').innerHTML =
+    '<span class="material-icons" aria-hidden="true">trending_up</span> ' + note;
+}
+
+function cxPaintDirection(){
+  var cur    = cxById(cxPick) || CX_RATES[0];
+  var left   = document.getElementById('cxLeftSide');
+  var right  = document.getElementById('cxRightSide');
+  var inLbl  = document.querySelector('label[for="cxAmount"]');
+  var outLbl = document.getElementById('cxOutLbl');
+
+  /* The picker always sits on whichever side holds the foreign currency;
+     the AED side is a fixed chip. */
+  if (cxDir === 'toAED') {
+    left.innerHTML  = cxPickerHtml(cur);
+    right.innerHTML = cxStaticHtml(CX_BASE.code, CX_BASE.flag);
+    inLbl.textContent  = 'You exchange';
+    outLbl.textContent = 'You receive';
+  } else {
+    left.innerHTML  = cxStaticHtml(CX_BASE.code, CX_BASE.flag);
+    right.innerHTML = cxPickerHtml(cur);
+    inLbl.textContent  = 'You exchange';
+    outLbl.textContent = 'You receive';
+  }
+  cxConvert();
+}
+
+function cxSetCurrency(code){
+  cxPick = code;
+  cxPaintDirection();
+}
+
+/* ════════════════════════════════════════════════════════════
+   Rates table — search + sort, rendered from the same figures
+   ════════════════════════════════════════════════════════════ */
+var cxSortKey = 'code', cxSortDir = 1;
+
+function cxVisibleRows(){
+  var q = (document.getElementById('cxSearch').value || '').trim().toLowerCase();
+  var rows = CX_RATES.filter(function(r){
+    return !q || r.code.toLowerCase().indexOf(q) > -1 || r.name.toLowerCase().indexOf(q) > -1;
+  });
+  return rows.sort(function(a,b){
+    var x = a[cxSortKey], y = b[cxSortKey];
+    if (typeof x === 'string') return x.localeCompare(y) * cxSortDir;
+    return (x - y) * cxSortDir;
+  });
+}
+
+function cxRenderTable(){
+  var rows = cxVisibleRows();
+  var body = document.getElementById('cxBody');
+
+  body.innerHTML = rows.map(function(r){
+    return '<tr data-code="' + r.code + '" tabindex="0">' +
+      '<td><div class="cx-cell-cur">' +
+        cxFlagHtml(r.flag) +
+        '<span><span class="cx-code">' + r.code + '</span>' +
+        '<div class="cx-name">' + r.name + '</div></span>' +
+        '<span class="cx-use"><span class="material-icons" aria-hidden="true">calculate</span>Convert</span>' +
+      '</div></td>' +
+      '<td class="cx-num">' + cxRate(r.buy) + '</td>' +
+      '<td class="cx-num">' + cxRate(r.sell) + '</td>' +
+    '</tr>';
+  }).join('');
+
+  document.getElementById('cxEmpty').classList.toggle('hidden', rows.length > 0);
+  document.getElementById('cxCount').textContent =
+    rows.length + (rows.length === 1 ? ' currency' : ' currencies');
+
+  /* sort indicators */
+  Array.prototype.forEach.call(document.querySelectorAll('.cx-table th'), function(th){
+    var on = th.getAttribute('data-sort') === cxSortKey;
+    th.classList.toggle('sorted', on);
+    th.querySelector('.cx-sort').textContent = on
+      ? (cxSortDir === 1 ? 'arrow_upward' : 'arrow_downward')
+      : 'unfold_more';
+  });
+}
+
+function cxToast(msg){
+  var t = document.getElementById('cxToast');
+  document.getElementById('cxToastTxt').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(cxToast._t);
+  cxToast._t = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+}
+
+function cxDownloadBlob(blob, filename){
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+
+function cxEscHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function cxExportCsv(){
+  cxCloseExportMenu();
+  var rows = cxVisibleRows();
+  var csv  = ['Currency,Name,Bank Buys (AED),Bank Sells (AED)'].concat(rows.map(function(r){
+    return [r.code, '"' + r.name + '"', cxRate(r.buy), cxRate(r.sell)].join(',');
+  })).join('\r\n');
+  cxDownloadBlob(new Blob([csv], { type:'text/csv;charset=utf-8;' }), 'azentio-exchange-rates.csv');
+  cxToast('Exported ' + rows.length + ' rates to CSV');
+}
+
+function cxExportExcel(){
+  cxCloseExportMenu();
+  var rows = cxVisibleRows();
+  var html = '<table><tr><th>Currency</th><th>Name</th><th>Bank Buys (AED)</th><th>Bank Sells (AED)</th></tr>' +
+    rows.map(function(r){
+      return '<tr><td>'+cxEscHtml(r.code)+'</td><td>'+cxEscHtml(r.name)+'</td><td>'+cxRate(r.buy)+'</td><td>'+cxRate(r.sell)+'</td></tr>';
+    }).join('') + '</table>';
+  cxDownloadBlob(new Blob(['﻿' + html], { type:'application/vnd.ms-excel' }), 'azentio-exchange-rates.xls');
+  cxToast('Exported ' + rows.length + ' rates to Excel');
+}
+
+function cxExportPdf(){
+  cxCloseExportMenu();
+  var rows = cxVisibleRows();
+  var win = window.open('', '_blank');
+  if (!win) { alert('Please allow pop-ups for this site to export as PDF.'); return; }
+  var rowsHtml = rows.map(function(r){
+    return '<tr><td>'+cxEscHtml(r.code)+'</td><td>'+cxEscHtml(r.name)+'</td><td>'+cxRate(r.buy)+'</td><td>'+cxRate(r.sell)+'</td></tr>';
+  }).join('');
+  win.document.open();
+  win.document.write(
+    '<html><head><title>Exchange Rates</title><style>' +
+    'body{font-family:Arial,sans-serif;padding:24px;color:#16303d;}' +
+    'h1{font-size:18px;margin-bottom:16px;}' +
+    'table{width:100%;border-collapse:collapse;font-size:12px;}' +
+    'th,td{border:1px solid #e2e8ec;padding:6px 8px;text-align:left;}' +
+    'th{background:#f4f7f9;}' +
+    '</style></head><body>' +
+    '<h1>azentio Bank — Exchange Rates</h1>' +
+    '<table><thead><tr><th>Currency</th><th>Name</th><th>Bank Buys (AED)</th><th>Bank Sells (AED)</th></tr></thead>' +
+    '<tbody>' + rowsHtml + '</tbody></table>' +
+    '</body></html>'
+  );
+  win.document.close();
+  win.focus();
+  setTimeout(function(){ win.print(); }, 300);
+  cxToast('Exported ' + rows.length + ' rates to PDF');
+}
+
+/* ── Export dropdown ── */
+function cxToggleExportMenu(ev){
+  if (ev) ev.stopPropagation();
+  var menu = document.getElementById('cxExportMenu');
+  var btn  = document.getElementById('cxExportBtn');
+  /* purely CSS-anchored now — no coordinate maths needed */
+  var open = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  if (btn) btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+}
+function cxCloseExportMenu(){
+  var menu = document.getElementById('cxExportMenu');
+  var btn  = document.getElementById('cxExportBtn');
+  if (menu) menu.style.display = 'none';
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+document.addEventListener('click', function(ev){
+  var dd = document.querySelector('.cx-export-dd');
+  if (dd && !dd.contains(ev.target)) cxCloseExportMenu();
+});
+
+
+/* ════════════════════════════════════════════════════════════
+   Wiring
+   ════════════════════════════════════════════════════════════ */
+(function(){
+  cxPaintDirection();
+  cxRenderTable();
+
+  document.getElementById('cxAmount').addEventListener('input', cxConvert);
+  document.getElementById('cxAmount').addEventListener('blur', function(){
+    var n = cxParseAmount();
+    this.value = cxMoney(n);
+    cxConvert();
+  });
+  /* custom currency picker — delegated, since the markup is re-rendered */
+  document.addEventListener('click', function(e){
+    var opt = e.target.closest && e.target.closest('.cx-cur-opt');
+    if (opt) { cxCloseMenus(); cxSetCurrency(opt.getAttribute('data-code')); return; }
+
+    var btn = e.target.closest && e.target.closest('.cx-cur-btn');
+    if (btn) {
+      var menu = btn.parentElement.querySelector('.cx-cur-menu');
+      var willOpen = menu.classList.contains('hidden');
+      cxCloseMenus();
+      if (willOpen) { menu.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); }
+      return;
+    }
+    if (!e.target.closest || !e.target.closest('.cx-cur-menu')) cxCloseMenus();
+  });
+
+  document.getElementById('cxSwap').addEventListener('click', function(){
+    cxDir = (cxDir === 'toAED') ? 'fromAED' : 'toAED';
+    this.classList.toggle('cx-flip', cxDir === 'fromAED');
+    cxPaintDirection();
+  });
+
+  document.getElementById('cxSearch').addEventListener('input', cxRenderTable);
+
+  /* header sorting */
+  Array.prototype.forEach.call(document.querySelectorAll('.cx-table th[data-sort]'), function(th){
+    th.addEventListener('click', function(){
+      var key = th.getAttribute('data-sort');
+      cxSortDir = (key === cxSortKey) ? -cxSortDir : 1;
+      cxSortKey = key;
+      cxRenderTable();
+    });
+  });
+
+  /* pick a currency straight from the table */
+  function cxUseRow(tr){
+    if (!tr) return;
+    cxSetCurrency(tr.getAttribute('data-code'));
+    document.querySelector('.cx-hero').scrollIntoView({ behavior:'smooth', block:'start' });
+    cxToast(tr.getAttribute('data-code') + ' loaded into the converter');
+  }
+  document.getElementById('cxBody').addEventListener('click', function(e){
+    cxUseRow(e.target.closest('tr[data-code]'));
+  });
+  document.getElementById('cxBody').addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') {
+      var tr = e.target.closest('tr[data-code]');
+      if (tr) { e.preventDefault(); cxUseRow(tr); }
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') cxCloseMenus();
+  });
+
+})();
+</script>
+<script src="js/prelogin-header.js"></script>
 </body>
 </html>

@@ -8,12 +8,12 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;overflow:hidden}
-    body{font-family:'Roboto',-apple-system,sans-serif;font-size:14px;color:#16303d;background:#fff;display:flex;flex-direction:column}
-    .btn-outline{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.5rem;border:1.5px solid #16303d;color:#16303d;background:transparent;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s}
+    body{font-family:'Poppins','Roboto',-apple-system,sans-serif;font-size:14px;color:#16303d;background:#fff;display:flex;flex-direction:column}
+    .btn-outline{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.5rem;border:1.5px solid #16303d;color:#16303d;background:transparent;border-radius:6px;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-body);font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s}
     .btn-outline:hover{background:rgba(22,48,61,.06);color:#16303d}
-    .btn-navyoutline{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;border:1.5px solid #16303d;color:#16303d;background:#fff;border-radius:8px;font-family:'Roboto',sans-serif;font-size:.9375rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s;width:100%;max-width:260px;justify-content:center}
+    .btn-navyoutline{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;border:1.5px solid #16303d;color:#16303d;background:#fff;border-radius:8px;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-subhead);font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s;width:100%;max-width:260px;justify-content:center}
     .btn-navyoutline:hover{background:#f0f4f6;color:#16303d}
-    .ql-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.875rem .5rem;font-size:.75rem;font-weight:500;color:#16303d;text-decoration:none;flex:1;min-width:0;border-right:1px solid #e2e8ec;transition:background .12s}
+    .ql-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.875rem .5rem;font-size:var(--fs-caption);font-weight:500;color:#16303d;text-decoration:none;flex:1;min-width:0;border-right:1px solid #e2e8ec;transition:background .12s}
     .ql-item:last-child{border-right:none}
     .ql-item:hover{background:#f0f4f6;color:#16303d}
     .ql-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center}
@@ -30,7 +30,7 @@
     <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
     <a href="faq.html" target="_blank" class="hdr-icon-btn" title="Help" aria-label="Help"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
     <div style="width:1px;height:24px;background:#e2e8ec;margin:0 4px"></div>
-    <button style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;color:#16303d;padding:5px 8px;border-radius:6px">
+    <button style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Poppins','Roboto',sans-serif;font-size:13px;font-weight:500;color:#16303d;padding:5px 8px;border-radius:6px">
       ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#16303d"/></svg>
     </button>
   </div>
@@ -48,8 +48,8 @@
     </svg>
     <!-- Not a customer text -->
     <div style="position:absolute;bottom:25%;left:2rem;color:#fff">
-      <h2 style="font-size:1.625rem;font-weight:700;margin-bottom:.375rem">Not a customer yet?</h2>
-      <p style="font-size:.9375rem;color:rgba(255,255,255,.8);margin-bottom:1rem">Start your journey with us today</p>
+      <h2 style="font-size:var(--fs-display);font-weight:700;margin-bottom:.375rem">Not a customer yet?</h2>
+      <p style="font-size:var(--fs-subhead);color:rgba(255,255,255,.8);margin-bottom:1rem">Start your journey with us today</p>
       <a href="login.html" class="btn-outline" style="border-color:rgba(255,255,255,.8);color:#fff">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Become our customer
@@ -59,10 +59,10 @@
 
   <!-- Right: login panel -->
   <div style="width:420px;flex-shrink:0;background:#edfaf6;border-left:1px solid #cdeade;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 2rem;text-align:center">
-    <h2 style="font-size:1.5rem;font-weight:700;color:#16303d;margin-bottom:.25rem">Existing Customer</h2>
-    <p style="font-size:.875rem;color:#8a979e;margin-bottom:2rem">Login to your account or create one</p>
+    <h2 style="font-size:var(--fs-display);font-weight:700;color:#16303d;margin-bottom:.25rem">Existing Customer</h2>
+    <p style="font-size:var(--fs-body);color:#8a979e;margin-bottom:2rem">Login to your account or create one</p>
     <div style="margin-bottom:2rem">
-      <p style="font-size:1rem;font-weight:600;color:#16303d;margin-bottom:.875rem">Have an online account?</p>
+      <p style="font-size:var(--fs-subhead);font-weight:600;color:#16303d;margin-bottom:.875rem">Have an online account?</p>
       <a href="login.html" class="btn-navyoutline">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="7" cy="12" r="1.5"/><path d="M11 12h6"/><rect x="3" y="6" width="18" height="12" rx="2"/></svg>
         Login Now
@@ -70,7 +70,7 @@
     </div>
     <div style="width:100%;max-width:260px;height:1px;background:#cdeade;margin-bottom:2rem"></div>
     <div>
-      <p style="font-size:1rem;font-weight:600;color:#16303d;margin-bottom:.875rem">No online account?</p>
+      <p style="font-size:var(--fs-subhead);font-weight:600;color:#16303d;margin-bottom:.875rem">No online account?</p>
       <a href="login.html" class="btn-navyoutline">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
         Create Account

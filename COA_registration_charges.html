@@ -1,582 +1,701 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>azentio – Create Online Account – Registration Charges</title>
+<link rel="stylesheet" href="css/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/fonts.css"/>
 <link rel="stylesheet" href="css/flag-icons.min.css"/>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Online Account – Registration Charges | Azentio</title>
+<link rel="stylesheet" href="css/datepicker.css"/>
+<link rel="stylesheet" href="css/styles.css"/>
+<link rel="stylesheet" href="css/onboarding-rail.css"/>
+<link rel="stylesheet" href="css/dark.css"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script src="js/theme.js"></script>
 <style>
-/* ── Reset & Variables ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --green:#2db87a; --green-light:#e8f7f0; --green-dark:#1f9e63;
-  --navy:#1c3a52;  --navy-mid:#2a5070;
-  --gray-sb:#efefef; --gray-bd:#dde2e7; --gray-tx:#6b7280; --gray-bg:#f7f8fa;
-  --orange:#f57c00; --orange-lt:#fff3e0;
-  --red:#d32f2f;   --blue:#1976d2;
-  --white:#fff;    --text:#1a2533;
-  --ff:'Segoe UI',system-ui,-apple-system,sans-serif;
-  --r:6px; --rl:10px;
-  --sh:0 2px 8px rgba(0,0,0,.08); --shm:0 4px 16px rgba(0,0,0,.12);
-  --tr:.2s ease;
+/* ══ Retail Onboarding — shared shell (header, stepper, right panel, footer) ══
+   Scoped to the three retail-onboarding-*.html pages; reuses the app's shared
+   .f-input/.f-select/.btn-action/.amount-field/.phone-wrap/.modal-ov classes
+   from styles.css, and mirrors general-account-opening.html's static
+   .gao-card / .gao-field-group / .gao-footer conventions so the look matches
+   the rest of the retail app. */
+body { background:#f9fafb; font-family:'Poppins','Roboto',sans-serif; color:var(--az-navy); }
+
+/* ── Public header (no sidebar/avatar — pre-login) ── */
+.ob-hdr { height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 1.25rem; border-bottom:1px solid var(--az-border); position:sticky; top:0; background:#fff; z-index:50; }
+.ob-hdr-left { display:flex; align-items:center; }
+.ob-hamburger { width:36px; height:36px; background:none; border:none; border-radius:.5rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; margin-right:.5rem; transition:background .12s; }
+.ob-hamburger:hover { background:rgba(22,48,61,.07); }
+.ob-hamburger .material-icons { font-size:22px; color:var(--az-navy); line-height:1; }
+.ob-hamburger .icon-collapsed { display:none; }
+.ob-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
+.ob-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
+.ob-hdr .l-logo { display:flex; align-items:center; padding:0 .75rem; }
+.ob-hdr .l-logo svg { height:28px; width:auto; }
+.ob-hdr-right { display:flex; align-items:center; gap:.25rem; }
+.ob-hdr-div { width:1px; height:22px; background:var(--az-border); margin:0 6px; }
+.ob-icon-btn { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; color:#1aad6e; text-decoration:none; transition:background .12s,color .12s; border:none; background:none; cursor:pointer; }
+.ob-icon-btn:hover { background:#eafaf2; color:#148c58; }
+.ob-icon-brand { color:#1aad6e; }
+.ob-icon-brand:hover { background:#eafaf2; color:#148c58; }
+.ob-icon-btn .material-icons { font-size:21px; }
+.ob-lang-wrap { position:relative; }
+.ob-lang-btn { display:flex; align-items:center; gap:5px; background:none; border:1px solid var(--az-border); border-radius:6px; cursor:pointer; padding:.3rem .625rem; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-caption); font-weight:500; color:var(--az-navy); }
+.ob-lang-btn:hover { background:#f0f4f6; }
+.ob-lang-menu { position:absolute; top:calc(100% + 6px); right:0; background:#fff; border:1px solid var(--az-border); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.14); min-width:130px; padding:4px 0; z-index:200; }
+.ob-lang-opt { display:flex; align-items:center; gap:10px; padding:8px 14px; width:100%; background:none; border:none; cursor:pointer; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); color:var(--az-navy); text-align:left; }
+.ob-lang-opt:hover { background:#f0faf5; }
+.ob-lang-opt.active { font-weight:700; }
+
+/* ── Shell: stepper | main | side panel ── */
+.ob-shell { display:flex; align-items:stretch; min-height:calc(100vh - 60px); }
+.ob-rail { width:258px; flex-shrink:0; background:linear-gradient(180deg,#142b38 0%,#0f2029 55%); border-right:1px solid rgba(255,255,255,.08); padding:1.5rem .875rem; transition:width .2s,padding .2s,opacity .15s; overflow:hidden; }
+.ob-rail.collapsed { width:0; padding:1.5rem 0; opacity:0; border-right:none; }
+.ob-rail-cap { font-size:var(--fs-micro); font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#5d7a78; padding:0 .6rem; margin-bottom:1.15rem; white-space:nowrap; }
+.ob-steps { list-style:none; padding-left:0; margin-bottom:0; }
+.ob-step { display:flex; align-items:flex-start; gap:.7rem; padding:.5rem .6rem 1.6rem; position:relative; }
+.ob-step:not(:last-child)::after { content:''; position:absolute; left:22px; top:38px; bottom:6px; width:2px; border-radius:2px; background:rgba(255,255,255,.13); }
+.ob-step.done:not(:last-child)::after { background:linear-gradient(180deg,var(--az-green),rgba(46,216,142,.3)); }
+.ob-step-num { width:26px; height:26px; border-radius:50%; background:transparent; border:2px solid rgba(255,255,255,.26); color:#8fa3a0; font-size:var(--fs-caption); font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .22s,border-color .22s,color .22s,box-shadow .22s; }
+.ob-step.done .ob-step-num { background:var(--az-green); border-color:var(--az-green); color:#0f2029; }
+.ob-step.active .ob-step-num { background:#fff; border-color:#fff; color:#0f2029; box-shadow:0 0 0 4px rgba(255,255,255,.09); }
+/* Label + percentage share one line; the live progress bar is drawn underneath
+   with pseudo-elements so the row itself never has to wrap. */
+.ob-step-body { position:relative; flex:1; min-width:0; display:flex; align-items:center; justify-content:space-between; gap:.4rem; flex-wrap:nowrap; padding:.15rem 0 .5rem; }
+.ob-step-lbl { font-size:var(--fs-small); font-weight:600; color:#8fa3a0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ob-step.active .ob-step-lbl, .ob-step.done .ob-step-lbl { color:#fff; }
+.ob-step-pct { font-size:var(--fs-micro); font-weight:600; padding:.1rem .36rem; border-radius:.75rem; white-space:nowrap; flex-shrink:0; font-variant-numeric:tabular-nums; }
+.ob-step-pct.pct-0 { background:rgba(255,255,255,.08); color:#8fa3a0; }
+.ob-step-pct.pct-mid { background:rgba(234,179,8,.18); color:#fbbf24; }
+.ob-step-pct.pct-done { background:rgba(46,216,142,.18); color:var(--az-green); }
+.ob-step.active .ob-step-body::before { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; border-radius:2px; background:rgba(255,255,255,.1); }
+.ob-step.active .ob-step-body::after { content:''; position:absolute; left:0; bottom:0; height:3px; width:var(--ob-pct,0%); border-radius:2px; background:linear-gradient(90deg,#2ed88e,#8af2c6); transition:width .35s cubic-bezier(.4,0,.2,1); }
+
+.ob-main { flex:1; min-width:0; padding:1.5rem 2rem 3rem; }
+.ob-bc { display:flex; align-items:center; gap:.375rem; font-size:var(--fs-caption); color:var(--az-muted); margin-bottom:.375rem; flex-wrap:wrap; }
+.ob-bc a { color:var(--az-blue); text-decoration:none; }
+.ob-bc a:hover { text-decoration:underline; }
+.ob-bc .sep { color:#c7d0d6; }
+.ob-title { font-size:var(--fs-heading); font-weight:600; color:var(--az-navy); margin-bottom:1.25rem; }
+
+/* ── Card — static section, no expand/collapse (matches .gao-card) ── */
+.ob-card { background:#fff; border:1px solid var(--az-border); border-radius:.875rem; box-shadow:0 1px 3px rgba(22,48,61,.04); margin-bottom:1.5rem; padding:1.25rem 1.75rem 1.75rem; }
+.ob-card-hdr { display:flex; align-items:center; justify-content:space-between; padding:0 0 .75rem; border-bottom:1px solid #eef1f4; margin-bottom:1.25rem; cursor:default; user-select:auto; }
+.ob-card-title { font-size:var(--fs-subhead); font-weight:600; color:var(--az-navy); }
+.ob-card-body { padding:0; }
+
+/* ── Field groups (matches .gao-field-group / .gao-field-group-lbl) ── */
+.ob-field-group { margin-bottom:2rem; }
+.ob-field-group:last-child { margin-bottom:0; }
+.ob-field-group-lbl { font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--az-blue,#2563eb); margin-bottom:1.1rem; }
+
+/* ── Larger, softer inputs — matches general-account-opening.html's field style ── */
+.ob-card-body .f-label { font-size:var(--fs-label); font-weight:500; margin-bottom:.5rem; }
+.ob-card-body .f-input,
+.ob-card-body .f-select,
+.ob-card-body .f-currency,
+.ob-card-body .amount-field,
+.ob-card-body .phone-wrap {
+  border-radius:.625rem; border-color:#e2e7ee;
 }
-body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(--white); min-height:100vh; display:flex; flex-direction:column; }
-.hidden { display:none !important; }
+.ob-card-body .f-input,
+.ob-card-body .f-currency .fp,
+.ob-card-body .f-currency input,
+.ob-card-body .amount-curr,
+.ob-card-body .amount-inp,
+.ob-card-body .phone-pfx,
+.ob-card-body .phone-wrap input {
+  padding:.75rem .95rem; font-size:var(--fs-body);
+}
+.ob-card-body .f-select { padding-right:2.25rem; }
+.ob-card-body .f-input::placeholder,
+.ob-card-body .f-currency input::placeholder,
+.ob-card-body .amount-inp::placeholder,
+.ob-card-body .phone-wrap input::placeholder {
+  text-shadow:none; -webkit-text-fill-color:currentColor; opacity:1;
+}
+.ob-card-body .f-input:focus,
+.ob-card-body .f-currency:focus-within,
+.ob-card-body .amount-field:focus-within,
+.ob-card-body .phone-wrap:focus-within {
+  border-color:var(--az-blue,#00538A);
+  box-shadow:none;
+}
 
-/* ── Header ── */
-.app-hdr { height:56px; background:#fff; border-bottom:1px solid #e2e8ec; display:flex; align-items:center; position:sticky; top:0; z-index:100; padding-right:1.25rem; box-shadow:0 1px 4px rgba(22,48,61,.06); }
-.hdr-logo { width:240px; flex-shrink:0; display:flex; align-items:center; padding:0 1.25rem; overflow:hidden; }
-.hdr-logo-svg { display:flex; align-items:center; }
-.hdr-logo-svg svg { height:28px; width:auto; }
-.hdr-right { display:flex; align-items:center; gap:.5rem; margin-left:auto; }
-.hdr-icon-btn { background:none; border:none; cursor:pointer; padding:.375rem; display:flex; align-items:center; position:relative; border-radius:.375rem; transition:background .12s; }
-.hdr-icon-btn:hover { background:#f0f4f6; }
-.hdr-icon-btn img { width:20px; height:20px; }
-.notif-dot { position:absolute; top:4px; right:4px; width:7px; height:7px; background:#2ed88e; border-radius:50%; border:1.5px solid #fff; }
-.hdr-div { width:1px; height:24px; background:#e2e8ec; margin:0 .125rem; }
-.hdr-lang { font-size:.875rem; font-weight:500; color:#16303d; border:none; background:none; cursor:pointer; display:flex; align-items:center; gap:.25rem; padding:.3125rem .5rem; border-radius:.375rem; }
-.hdr-lang:hover { background:#f0f4f6; }
-.hdr-lang-wrap { position: relative; display: flex; align-items: center; }
-.hdr-lang-wrap::after { content: ''; position: absolute; top: 100%; left: -10px; right: -10px; height: 12px; }
-.hdr-lang-drop { position: absolute; top: calc(100% + 12px); right: 0; min-width: 150px; background: #fff; border: 1px solid #e2e8ec; border-radius: .5rem; box-shadow: 0 8px 24px rgba(0,0,0,.13); z-index: 9997; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity .2s .4s, transform .2s .4s; padding: .25rem 0; overflow: hidden; }
-.hdr-lang-wrap:hover .hdr-lang-drop { opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity .15s, transform .15s; }
-.hdr-lang-opt { display: flex; align-items: center; gap: .625rem; padding: .5625rem 1rem; width: 100%; background: none; border: none; cursor: pointer; font-family: inherit; font-size: .8125rem; color: #16303d; text-align: left; transition: background .1s; }
-.hdr-lang-opt:hover { background: #f0faf5; }
-.hdr-lang-opt.active { font-weight: 700; background: #f5fdf9; }
-.hdr-lang-opt .fi { width: 20px; height: 15px; border-radius: 2px; flex-shrink: 0; }
-.hdr-avatar { width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid #e2e8ec; cursor:pointer; }
-.btn-logout { background:#2ed88e; color:#fff; border:none; border-radius:20px; padding:.3125rem 1.125rem; font-size:.8125rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s; text-decoration:none; display:inline-block; }
-.btn-logout:hover { background:#25c47e; }
+/* ── Footer CTA — matches .gao-footer's "Modern CTA row" ── */
+.ob-footer { display:flex; align-items:center; justify-content:flex-end; gap:.75rem; padding-top:1rem; }
+.ob-footer .btn-action { border-radius:.5rem; padding:.7rem 1.75rem; font-size:var(--fs-body); transition:background .15s,box-shadow .15s,transform .15s; }
+.ob-footer .btn-cancel, .ob-footer .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.ob-footer .btn-cancel:hover, .ob-footer .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.ob-footer .btn-submit { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; border:none; }
+.ob-footer .btn-submit:hover { background:linear-gradient(135deg,#0f232e,#081820); transform:translateY(-1px); }
+.ob-footer .btn-submit:active { transform:translateY(0); }
 
-/* ── Layout ── */
-.az-layout { display:flex; flex:1; min-height:0; }
+/* ── Right side panel: welcome illustration (step 1) ── */
+.ob-side { position:relative; overflow:hidden; width:288px; flex-shrink:0; background:#eefaf4; border:1px solid #d4efe2; margin:1.5rem 2rem 1.5rem 0; border-radius:1rem; padding:1.6rem 1.4rem; align-self:flex-start; }
+/* Brand mark motif behind the panel, same treatment as the accounts hero */
+.ob-side::before { content:''; position:absolute; top:-18px; right:-18px; width:150px; height:150px; pointer-events:none;
+  background:
+    var(--az-hero-mark) no-repeat center/76%,
+    radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%; }
+.ob-side > * { position:relative; z-index:1; }
+.ob-side-copy { font-size:var(--fs-subhead); line-height:1.6; color:var(--az-navy); margin-bottom:1.75rem; }
+.ob-side-copy strong { color:var(--az-navy); }
+.ob-side-sub { font-weight:600; margin-bottom:1.5rem; }
+.ob-side-illo { width:100%; display:block; margin-top:.25rem; }
+.ob-side-photo { width:100%; height:auto; display:block; margin-top:.25rem; }
 
-/* ── Sidebar ── */
-.az-sidebar { width:240px; min-width:240px; background:var(--gray-sb); border-right:1px solid var(--gray-bd); padding:20px 0; position:relative; transition:width var(--tr),min-width var(--tr); }
-.az-sidebar.collapsed { width:56px; min-width:56px; }
-.az-sb-toggle { position:absolute; top:20px; right:-14px; width:28px; height:28px; border-radius:50%; background:var(--white); border:1px solid var(--gray-bd); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10; box-shadow:var(--sh); }
-.az-sb-toggle svg { width:14px; height:14px; transition:transform var(--tr); }
-.az-sidebar.collapsed .az-sb-toggle svg { transform:rotate(180deg); }
-.az-steps { list-style:none; padding:4px 0; }
-.az-step { display:flex; align-items:center; gap:12px; padding:11px 16px; border-left:4px solid transparent; margin-bottom:2px; }
-.az-step.completed { border-left-color:#1a7a4a; background:rgba(45,184,122,.05); }
-.az-step.active    { border-left-color:#f57c00; background:rgba(245,124,0,.04); }
-.az-step.inactive  { border-left-color:var(--gray-bd); }
-.az-step-circle { width:30px; height:30px; min-width:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; border:2px solid transparent; flex-shrink:0; }
-.az-step-circle svg { width:13px; height:13px; }
-.az-step.completed .az-step-circle { background:#1a7a4a; border-color:#1a7a4a; color:var(--white); }
-.az-step.active    .az-step-circle { background:var(--white); border-color:#f57c00; color:#f57c00; }
-.az-step.inactive  .az-step-circle { background:var(--white); border-color:#c0c8d0; color:#c0c8d0; }
-.az-step-info { display:flex; align-items:center; justify-content:space-between; flex:1; gap:8px; overflow:hidden; min-width:0; }
-.az-sidebar.collapsed .az-step-info { display:none; }
-.az-step-label { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
-.az-step.completed .az-step-label { color:var(--text); }
-.az-step.active    .az-step-label { color:var(--text); }
-.az-step.inactive  .az-step-label { color:var(--gray-tx); }
-.az-step-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; flex-shrink:0; }
-.badge-green  { background:var(--green-light); color:#1a7a4a; }
-.badge-orange { background:var(--orange-lt);   color:var(--orange); }
-.badge-gray   { background:var(--gray-bd);     color:var(--gray-tx); }
+/* ── Responsive: stack side panel below on small screens ── */
+@media (max-width:1200px) {
+  .ob-shell { flex-direction:column; }
+  .ob-rail { width:auto; border-right:none; border-bottom:1px solid rgba(255,255,255,.08); }
+  .ob-rail.collapsed { padding:0; }
+  .ob-steps { display:flex; gap:1.5rem; flex-wrap:wrap; }
+  .ob-step:not(:last-child)::after { display:none; }
+  .ob-side { width:auto; margin:0 2rem 1.5rem; }
+}
 
-/* ── Main ── */
-.az-main { flex:1; min-width:0; display:flex; flex-direction:column; }
-.az-content-wrap { flex:1; display:flex; }
-.az-form-area { flex:1; min-width:0; padding:16px 24px 12px; display:flex; flex-direction:column; }
-.az-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gray-tx); margin-bottom:6px; }
-.az-breadcrumb a { color:var(--green); text-decoration:none; }
-.az-breadcrumb a:hover { text-decoration:underline; }
-.az-bc-sep { color:var(--gray-bd); }
-.az-page-title { font-size:20px; font-weight:700; color:var(--text); margin-bottom:12px; }
+/* ── Required marker ── */
+.ob-req { color:#c62828; }
 
-/* ── Section ── */
-.az-section { margin-bottom:4px; }
-.az-sec-hdr { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1.5px solid var(--gray-bd); cursor:pointer; user-select:none; }
-.az-sec-hdr h2 { font-size:12px; font-weight:700; color:var(--gray-tx); letter-spacing:.04em; text-transform:uppercase; }
-.az-sec-hdr .chev { flex-shrink:0; transition:transform var(--tr); }
-.az-section.collapsed .az-sec-hdr .chev { transform:rotate(180deg); }
-.az-sec-body { padding:10px 0 2px; }
-.az-section.collapsed .az-sec-body { display:none; }
+/* ── Mobile number: searchable country/ISD-code combobox ── */
+.phone-combo { position:relative; }
+.phone-pfx { display:flex; align-items:center; gap:.375rem; margin:0; background:#f8fafb; border:none; border-right:1px solid var(--az-border); cursor:pointer; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); color:var(--az-navy); transition:background .12s; }
+.phone-pfx:hover { background:#f0f4f6; }
+.phone-pfx:focus-visible { outline:2px solid var(--az-blue,#00538A); outline-offset:-2px; }
+.phone-pfx .fi { flex-shrink:0; }
+.phone-pfx-chev { color:var(--az-muted); flex-shrink:0; transition:transform .15s; margin-left:.125rem; }
+.phone-pfx[aria-expanded="true"] .phone-pfx-chev { transform:rotate(180deg); }
+.phone-ctry-panel { position:fixed; z-index:1050; background:#fff; border:1px solid var(--az-border); border-radius:.625rem; box-shadow:0 8px 24px rgba(16,32,48,.16); max-height:280px; min-width:260px; overflow:hidden; display:flex; flex-direction:column; }
+.phone-ctry-search { display:flex; align-items:center; gap:.5rem; padding:.625rem .75rem; border-bottom:1px solid #eef1f4; flex-shrink:0; }
+.phone-ctry-search .material-icons { font-size:18px; color:var(--az-muted); }
+.phone-ctry-search input { flex:1; min-width:0; border:none; outline:none; font-size:var(--fs-small); font-family:'Poppins','Roboto',sans-serif; color:var(--az-navy); background:transparent; }
+.phone-ctry-list { overflow-y:auto; padding:.25rem; }
+.phone-ctry-opt { display:flex; align-items:center; gap:.5rem; padding:.5rem .625rem; border-radius:.375rem; font-size:var(--fs-small); color:var(--az-navy); cursor:pointer; font-family:'Poppins','Roboto',sans-serif; }
+.phone-ctry-opt:hover, .phone-ctry-opt.active { background:#f0f9f5; }
+.phone-ctry-opt .fi { flex-shrink:0; }
+.phone-ctry-opt-name { flex:1; }
+.phone-ctry-opt-dial { color:var(--az-muted); font-size:var(--fs-caption); }
+.phone-ctry-empty { padding:.75rem; font-size:var(--fs-small); color:#8a97a0; text-align:center; }
 
-/* ── Form grid ── */
-.frow { display:grid; gap:14px; margin-bottom:12px; }
-.frow.c2 { grid-template-columns:repeat(2,1fr); max-width:560px; }
-.az-field { display:flex; flex-direction:column; gap:3px; }
-.az-field label { font-size:11.5px; font-weight:600; color:var(--gray-tx); }
-.az-field label .req { color:var(--red); font-size:14px; margin-left:1px; line-height:1; }
+/* ══ OTP verification modal — 4-digit code entry ══ */
+.otp-modal { max-width:420px; padding:1.75rem 1.75rem 1.5rem; border-radius:1rem; box-shadow:0 24px 60px rgba(10,28,38,.28); }
+.otp-badge { width:52px; height:52px; border-radius:50%; background:#e3f7ec; border:1px solid #bfeed7; display:flex; align-items:center; justify-content:center; margin-bottom:1rem; }
+.otp-badge .material-icons { font-size:26px; color:#1aad6e; }
+.otp-title { font-size:var(--fs-subhead); font-weight:600; color:var(--az-navy); margin-bottom:.3rem; }
+.otp-sub { font-size:var(--fs-small); color:var(--az-muted); line-height:1.55; margin-bottom:1.35rem; }
+.otp-sub b { color:var(--az-navy); font-weight:600; font-variant-numeric:tabular-nums; }
+.otp-inputs { display:flex; gap:.6rem; }
+.otp-digit { width:100%; height:58px; text-align:center; font-size:var(--fs-display); font-weight:700; color:var(--az-navy); font-family:'Poppins','Roboto',sans-serif; border:1.5px solid #e2e7ee; border-radius:.75rem; background:#fbfcfd; outline:none; caret-color:#1aad6e; transition:border-color .15s,box-shadow .15s,background .15s; }
+.otp-digit:focus { border-color:var(--az-navy); background:#fff; box-shadow:0 0 0 3px rgba(22,48,61,.08); }
+.otp-digit.filled { border-color:#1aad6e; background:#fff; }
+.otp-wrap.err .otp-digit { border-color:#d94141; background:#fff6f6; }
+.otp-wrap.ok  .otp-digit { border-color:#1aad6e; background:#f2fcf7; }
+.otp-wrap.err { animation:otpShake .32s cubic-bezier(.36,.07,.19,.97); }
+@keyframes otpShake { 10%,90%{transform:translateX(-2px)} 30%,70%{transform:translateX(4px)} 50%{transform:translateX(-5px)} }
+.otp-msg { min-height:1.15rem; font-size:var(--fs-caption); font-weight:600; margin:.7rem 0 .5rem; }
+.otp-msg.err { color:#d94141; }
+.otp-msg.ok  { color:#1aad6e; }
+.otp-foot { display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:1.4rem; }
+.otp-resend { background:none; border:none; padding:0; color:var(--az-blue); font-weight:600; font-size:var(--fs-small); cursor:pointer; font-family:'Poppins','Roboto',sans-serif; }
+.otp-resend:hover:not(:disabled) { text-decoration:underline; }
+.otp-resend:disabled { color:#a8b4bc; cursor:default; }
+.otp-timer { display:inline-flex; align-items:center; gap:.3rem; font-size:var(--fs-small); color:var(--az-muted); font-variant-numeric:tabular-nums; }
+.otp-timer .material-icons { font-size:15px; }
+.otp-cta { display:flex; gap:.75rem; }
+.otp-cta .btn-action { flex:1; border-radius:.5rem; padding:.72rem 1rem; font-size:var(--fs-body); text-align:center; }
+.otp-cta .btn-cancel { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.otp-cta .btn-cancel:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.otp-cta .btn-submit { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; border:none; transition:transform .15s,opacity .15s; }
+.otp-cta .btn-submit:hover:not(:disabled) { transform:translateY(-1px); }
+.otp-cta .btn-submit:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+@media (prefers-reduced-motion:reduce) { .otp-wrap.err { animation:none; } .otp-digit, .otp-cta .btn-submit { transition:none; } }
+/* ── "You have entered" summary accordion ── */
+.ob-sum-grp { margin-bottom:.75rem; }
+.ob-sum-grp:last-child { margin-bottom:0; }
+.ob-sum-hdr { display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer; padding:.5rem 0; border-bottom:1px solid #cdeedd; font-weight:700; color:var(--az-navy); font-size:var(--fs-body); user-select:none; }
+.ob-sum-hdr:hover { color:#0d1f28; }
+.ob-sum-hdr .material-icons { font-size:20px; color:#4b6b5b; transition:transform .2s; flex-shrink:0; }
+.ob-sum-hdr.collapsed .material-icons { transform:rotate(-90deg); }
+.ob-sum-tick { width:16px; height:16px; border-radius:50%; background:#1aad6e; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; margin-right:.4rem; }
+.ob-sum-tick .material-icons { font-size:11px; color:#fff; transform:none !important; }
+.ob-sum-hdr-l { display:flex; align-items:center; min-width:0; }
+.ob-sum-body { padding-top:.5rem; font-size:var(--fs-caption); color:var(--az-navy); }
+.ob-sum-body.ob-hidden { display:none; }
+.ob-sum-row { display:flex; align-items:baseline; justify-content:space-between; gap:.7rem; padding:.34rem 0; border-bottom:1px solid rgba(22,48,61,.065); }
+.ob-sum-row:last-child { border-bottom:none; }
+.ob-sum-k { color:#5c7a6c; flex-shrink:0; }
+.ob-sum-v { font-weight:600; text-align:right; min-width:0; overflow-wrap:anywhere; }
+.ob-sum-v.empty { color:#9bb0a4; font-weight:400; }
+/* ── Help popover + info trigger ──
+   The trigger is a quiet outline glyph that only picks up colour on hover or
+   while its popover is open, so it reads as an affordance rather than an alert. */
+.ob-info-wrap { position:relative; display:inline-flex; vertical-align:middle; }
+.ob-info-btn { width:16px; height:16px; border-radius:50%; background:none; border:none; color:#a9b6be; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; line-height:1; transition:color .12s; }
+.ob-info-btn .material-icons { font-size:16px; }
+.ob-info-btn:hover { color:var(--az-blue); }
+.ob-info-btn[aria-expanded="true"] { color:var(--az-blue); }
+.ob-info-btn:focus-visible { outline:2px solid var(--az-blue); outline-offset:2px; }
 
-/* Input */
-.az-input { height:36px; padding:0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white); transition:border-color var(--tr),box-shadow var(--tr); width:100%; outline:none; font-family:var(--ff); }
-.az-input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
-.az-input.readonly { background:var(--gray-bg); cursor:default; }
+.ob-tooltip { position:absolute; top:calc(100% + 10px); left:-10px; z-index:60; width:320px; max-width:min(320px,78vw); background:#fff; border:1px solid #e6ebef; border-radius:.875rem; box-shadow:0 18px 44px rgba(16,36,48,.16),0 2px 6px rgba(16,36,48,.05); padding:1.05rem 1.15rem; font-size:var(--fs-small); line-height:1.55; color:var(--az-navy); font-weight:400; text-align:left; }
+.ob-tooltip.ob-hidden { display:none; }
+.ob-tooltip::before { content:''; position:absolute; top:-7px; left:15px; width:12px; height:12px; background:#fff; border-left:1px solid #e6ebef; border-top:1px solid #e6ebef; transform:rotate(45deg); }
+.ob-tip-title { font-size:var(--fs-body); font-weight:600; color:var(--az-navy); margin-bottom:.75rem; }
+.ob-tip-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.6rem; }
+.ob-tip-list li { position:relative; padding-left:1rem; }
+.ob-tip-list li::before { content:''; position:absolute; left:.22rem; top:.52rem; width:4px; height:4px; border-radius:50%; background:var(--az-navy); }
+.ob-tip-list b { font-weight:700; }
+.ob-tip-note { margin-top:.9rem; padding-top:.8rem; border-top:1px solid #edf1f4; color:#5e717c; }
+.ob-tip-note b { color:var(--az-navy); font-weight:700; }
+.ob-field-lbl { display:flex; align-items:center; gap:.4rem; margin-bottom:.375rem; font-size:var(--fs-small); font-weight:600; color:var(--az-navy); }
+/* ── Password strength meter + live criteria checklist ── */
+.pwd-strength-wrap { display:flex; align-items:center; gap:.75rem; margin-top:.625rem; margin-bottom:.875rem; }
+.pwd-strength-bar { display:flex; gap:.25rem; flex:1; max-width:320px; }
+.pwd-strength-bar .seg { height:5px; border-radius:3px; flex:1; background:#e2e7ee; transition:background .2s; }
+.pwd-strength-bar .seg.on-weak { background:#dc2626; }
+.pwd-strength-bar .seg.on-fair { background:#f59e0b; }
+.pwd-strength-bar .seg.on-good { background:#eab308; }
+.pwd-strength-bar .seg.on-strong { background:#16a34a; }
+.pwd-strength-lbl { font-size:var(--fs-caption); font-weight:600; color:var(--az-navy); white-space:nowrap; }
+.pwd-criteria-grid { display:grid; grid-template-columns:1fr; gap:.28rem; }
+/* Keep the checklist inside the Password column. It used to be 420px wide and
+   bleed rightward under Confirm Password, which now carries its own match
+   indicator — the two collided. */
+#pwdStrengthRow { width:100%; }
+.pwd-crit { display:flex; align-items:center; gap:.4rem; font-size:var(--fs-caption); color:var(--az-muted); transition:color .15s; }
+.pwd-crit .material-icons { font-size:16px; color:#c7d0d6; flex-shrink:0; transition:color .15s; }
+.pwd-crit.met { color:var(--az-navy); }
+.pwd-crit.met .material-icons { color:var(--az-green); }
 
-/* Select */
-.az-select { height:36px; padding:0 36px 0 10px; border:1px solid var(--gray-bd); border-radius:var(--r); font-size:14px; color:var(--text); background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 10px) center; -webkit-appearance:none; appearance:none; cursor:pointer; width:100%; outline:none; font-family:var(--ff); transition:border-color var(--tr),box-shadow var(--tr); }
-.az-select:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(45,184,122,.12); }
-
-/* Currency amount wrapper */
-.az-currency-wrap { position:relative; display:flex; }
-.az-currency-wrap .az-input { border-radius:0 var(--r) var(--r) 0; border-left:none; flex:1; font-weight:600; }
-.az-currency-btn { display:flex; align-items:center; gap:6px; padding:0 12px; background:var(--gray-bg); border:1px solid var(--gray-bd); border-radius:var(--r) 0 0 var(--r); font-size:13px; color:var(--text); font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; min-width:90px; transition:background var(--tr),border-color var(--tr); user-select:none; }
-.az-currency-btn:hover { background:#e8ecef; border-color:#b0b8c1; }
-.az-currency-btn.open { background:#e8f7f0; border-color:var(--green); color:var(--green); }
-.az-currency-btn .cur-flag { font-size:16px; line-height:1; }
-.az-currency-btn .cur-code { font-size:13px; font-weight:700; }
-.az-currency-btn .cur-caret { width:12px; height:12px; margin-left:2px; transition:transform var(--tr); flex-shrink:0; }
-.az-currency-btn.open .cur-caret { transform:rotate(180deg); }
-.az-currency-drop { position:absolute; top:calc(100% + 4px); left:0; min-width:200px; background:var(--white); border:1px solid var(--gray-bd); border-radius:var(--r); box-shadow:0 6px 20px rgba(0,0,0,.13); z-index:100; display:none; overflow:hidden; }
-.az-currency-drop.open { display:block; animation:dropIn .15s ease; }
-@keyframes dropIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
-.az-cur-opt { display:flex; align-items:center; gap:10px; padding:9px 14px; cursor:pointer; font-size:13px; color:var(--text); transition:background .1s; border-bottom:1px solid var(--gray-bg); }
-.az-cur-opt:last-child { border-bottom:none; }
-.az-cur-opt:hover { background:#f0faf5; }
-.az-cur-opt.active { background:var(--green-light); font-weight:700; }
-.az-cur-opt .opt-flag { font-size:17px; }
-.az-cur-opt .opt-code { font-weight:700; min-width:38px; }
-.az-cur-opt .opt-name { color:var(--gray-tx); font-size:12px; }
-.az-cur-opt .opt-check { margin-left:auto; color:var(--green); display:none; }
-.az-cur-opt.active .opt-check { display:block; }
-/* Fee info strip */
-.az-fee-info { display:none; margin-top:8px; padding:8px 12px; background:#f0faf5; border:1px solid #c3e6d4; border-radius:var(--r); font-size:12px; color:#1a7a4a; line-height:1.5; }
-.az-fee-info.show { display:flex; align-items:flex-start; gap:8px; }
-.az-fee-info svg { flex-shrink:0; margin-top:1px; }
-
-/* Checkbox */
-.az-check-wrap { display:flex; align-items:center; gap:10px; margin-top:12px; }
-.az-check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--green); flex-shrink:0; }
-.az-check-wrap label { font-size:13px; cursor:pointer; color:var(--text); }
-.az-check-wrap label a { color:var(--green); text-decoration:none; }
-.az-check-wrap label a:hover { text-decoration:underline; }
-
-/* Bottom bar & Buttons */
-.az-bottom-bar { display:flex; justify-content:flex-end; gap:10px; padding:12px 24px; border-top:1px solid var(--gray-bd); background:var(--white); margin-top:auto; }
-.btn-action { display:inline-flex; align-items:center; justify-content:center; gap:.375rem; border:none; border-radius:.25rem; padding:.5625rem 1.75rem; font-size:.8125rem; font-weight:700; cursor:pointer; text-decoration:none; white-space:nowrap; transition:background .12s,opacity .12s; font-family:var(--ff); }
-.btn-action:disabled { opacity:.6; cursor:not-allowed; }
-.btn-cancel { background:#2ed88e; color:#16303d; }
-.btn-cancel:hover { background:#25c47e; color:#16303d; }
-.btn-save { background:#6c757d; color:#fff; }
-.btn-save:hover { background:#5a6268; color:#fff; }
-.btn-submit { background:#16303d; color:#fff; }
-.btn-submit:hover { background:#1e4356; color:#fff; }
-
-/* ── Right panel ── */
-.az-right-panel { width:280px; min-width:280px; border-left:1px solid var(--gray-bd); background:var(--green-light); padding:24px 20px; overflow-y:auto; }
-.sum-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:16px; text-align:center; }
-.sum-sec { margin-bottom:8px; }
-.sum-hdr { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-bd); cursor:pointer; }
-.sum-hdr span { font-size:13px; font-weight:600; color:var(--green); }
-.sum-hdr .chev-s { width:16px; height:16px; color:var(--green); transition:transform var(--tr); }
-.sum-sec.collapsed .sum-hdr .chev-s { transform:rotate(180deg); }
-.sum-sec.collapsed .sum-body { display:none; }
-.sum-body { padding:12px 0 4px; }
-.sum-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; margin-bottom:8px; }
-.sum-key { font-size:12px; color:var(--gray-tx); font-weight:500; }
-.sum-val { font-size:12px; color:var(--text); font-weight:600; word-break:break-word; }
-.az-verified { display:inline-flex; align-items:center; gap:4px; background:var(--green-light); color:var(--green); font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; margin-bottom:6px; }
-
-/* ── Modal ── */
-.az-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center; }
-.az-overlay.open { display:flex; }
-.az-modal { background:var(--white); border-radius:var(--rl); width:90%; max-width:680px; max-height:90vh; display:flex; flex-direction:column; box-shadow:var(--shm); overflow:hidden; animation:mIn .2s ease; }
-.az-modal.narrow { max-width:440px; }
-@keyframes mIn { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
-.az-modal-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--gray-bd); flex-shrink:0; }
-.az-modal-hdr h3 { font-size:16px; font-weight:700; }
-.az-modal-close { background:none; border:none; cursor:pointer; font-size:22px; color:var(--gray-tx); line-height:1; }
-.az-modal-close:hover { color:var(--text); }
-.az-modal-body { padding:24px 20px; overflow-y:auto; flex:1; line-height:1.8; font-size:13px; }
-.az-modal-body p { margin-bottom:16px; }
-.az-modal-body p:last-child { margin-bottom:0; }
-.az-modal-ftr { padding:16px 20px; border-top:1px solid var(--gray-bd); display:flex; justify-content:center; flex-shrink:0; }
-.az-success-body { display:flex; flex-direction:column; align-items:center; padding:40px 20px; text-align:center; gap:16px; }
-.az-success-icon { width:64px; height:64px; border-radius:50%; border:3px solid var(--green); display:flex; align-items:center; justify-content:center; }
-.az-success-icon svg { width:32px; height:32px; color:var(--green); }
-.az-success-body p { font-size:15px; font-weight:600; color:var(--text); line-height:1.5; }
-
-/* ── Footer ── */
-.az-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; font-size:12px; color:var(--gray-tx); border-top:1px solid var(--gray-bd); background:var(--white); }
-.az-footer-links { display:flex; gap:20px; }
-.az-footer-links a { color:var(--gray-tx); text-decoration:none; }
-.az-footer-links a:hover { color:var(--text); }
-.az-footer-access { display:flex; align-items:center; gap:10px; }
-.az-font-btn { background:none; border:none; cursor:pointer; font-weight:700; color:var(--text); padding:2px 4px; font-family:var(--ff); }
-.az-font-btn:hover { color:var(--green); }
-.az-contrast-btn { width:22px; height:22px; border-radius:50%; background:var(--text); color:var(--white); border:none; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; }
-
-/* ── Responsive ── */
-@media (max-width:1024px) { .az-right-panel { display:none; } }
-@media (max-width:640px)  { .az-sidebar { display:none; } .frow.c2 { grid-template-columns:1fr; } .az-form-area { padding:16px; } }
-.hdr-hamburger { background:none; border:none; cursor:pointer; padding:.375rem .5rem; display:flex; align-items:center; justify-content:center; border-radius:.375rem; transition:background .12s; color:#16303d; }
-.hdr-hamburger:hover { background:#f0f4f6; }
-.hdr-hamburger .material-icons { font-size:22px; color:#16303d; line-height:1; }
-.hdr-hamburger .icon-collapsed { display:none; }
-.hdr-hamburger[aria-expanded="false"] .icon-hamburger { display:none; }
-.hdr-hamburger[aria-expanded="false"] .icon-collapsed { display:inline-flex; transform:scaleX(-1); }
+/* ── Password reveal toggle + live match indicator ── */
+.pwd-field { position:relative; }
+.pwd-field .f-input { padding-right:2.6rem; }
+.pwd-eye { position:absolute; top:50%; right:.55rem; transform:translateY(-50%); background:none; border:none; padding:.22rem; display:flex; align-items:center; cursor:pointer; color:var(--az-muted); border-radius:.3rem; transition:color .12s,background .12s; }
+.pwd-eye:hover { color:var(--az-navy); background:rgba(22,48,61,.06); }
+.pwd-eye .material-icons { font-size:18px; }
+.pwd-match { display:flex; align-items:center; gap:.3rem; font-size:var(--fs-caption); font-weight:600; margin-top:.45rem; min-height:1rem; }
+.pwd-match .material-icons { font-size:15px; }
+.pwd-match.ok { color:#1aad6e; }
+.pwd-match.no { color:#d94141; }
+/* ── Terms acceptance row ── */
+.coa-terms { display:flex; align-items:flex-start; gap:.6rem; font-size:var(--fs-small); color:var(--az-navy); line-height:1.6; cursor:pointer; margin:0; }
+.coa-terms input[type=checkbox] { width:16px; height:16px; margin-top:.15rem; accent-color:#1aad6e; flex-shrink:0; cursor:pointer; }
+.coa-terms-link { color:#1aad6e; font-weight:600; text-decoration:none; }
+.coa-terms-link:hover { text-decoration:underline; }
+.amount-flag { width:18px; height:13px; border-radius:2px; flex-shrink:0; }
+/* ── CTA panel — matches retail/term-deposit-account-opening.html exactly:
+     no card, just a hairline top rule, terms on the left, buttons on the right. ── */
+.coa-footer { background:none; border:none; border-top:1px solid #eef1f4; border-radius:0; box-shadow:none; padding:2rem 0 0; margin:0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem; }
+.coa-footer-left { display:flex; align-items:center; gap:.5rem; font-size:var(--fs-body); color:var(--az-navy); cursor:pointer; margin:0; }
+.coa-footer-left input[type=checkbox] {
+  appearance:none; -webkit-appearance:none; margin:0; flex-shrink:0;
+  width:18px; height:18px; border:1.5px solid var(--az-border,#e2e8ec); border-radius:.25rem;
+  background:#fff center/12px no-repeat; cursor:pointer;
+  transition:background-color .15s, border-color .15s, box-shadow .15s;
+}
+.coa-footer-left input[type=checkbox]:hover { border-color:var(--az-green,#2ed88e); }
+.coa-footer-left input[type=checkbox]:focus-visible { outline:none; box-shadow:0 0 0 .1875rem rgba(46,216,142,.25); }
+.coa-footer-left input[type=checkbox]:checked {
+  background-color:var(--az-green,#2ed88e); border-color:var(--az-green,#2ed88e);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.2 3.2L11 1' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.coa-footer-left a { color:var(--az-blue,#00538A); font-weight:500; text-decoration:none; }
+.coa-footer-left a:hover { text-decoration:underline; }
+.coa-footer-left.is-invalid span { color:#dc2626; }
+.coa-footer-right { display:flex; align-items:center; gap:.625rem; margin-left:auto; }
+.coa-footer-right .btn-action { border-radius:.5rem; padding:.7rem 1.75rem; font-size:var(--fs-body); transition:background .15s, transform .15s; }
+.coa-footer-right .btn-cancel, .coa-footer-right .btn-save { background:var(--btn-ghost-bg,#e6eaee); color:var(--btn-ghost-fg,#5c7080); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd,#cfd8df); }
+.coa-footer-right .btn-cancel:hover, .coa-footer-right .btn-save:hover { background:var(--btn-ghost-bg-hover,#d9e0e6); color:var(--az-navy,#16303d); box-shadow:inset 0 0 0 1px var(--btn-ghost-bd-hover,#bcc8d1); }
+.coa-footer-right .btn-submit { background:linear-gradient(135deg,var(--az-navy),#0d1f28); color:#fff; border:none; }
+.coa-footer-right .btn-submit:hover { background:linear-gradient(135deg,#0f232e,#081820); transform:translateY(-1px); }
+.coa-tc-error { color:#dc2626; font-size:var(--fs-caption); margin-top:.5rem; display:none; }
+.coa-tc-error.show { display:block; }
+html.dark .coa-footer { border-top-color:#243545; }
 </style>
-  <link rel="stylesheet" href="css/dark.css"/>
-  <script src="js/theme.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
 
-<!-- ████ HEADER ████ -->
-<header class="app-hdr" role="banner">
-  <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar" onclick="document.getElementById('sidebar').classList.toggle('collapsed');this.classList.toggle('is-collapsed');this.setAttribute('aria-expanded',String(!this.classList.contains('is-collapsed')))"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
-    <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
-  <g id="logo" transform="translate(0.275 -0.84)">
-    <path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
-    <path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/>
-    <path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/>
-  </g>
-</svg></span>
+<header class="ob-hdr">
+  <div class="ob-hdr-left">
+    <button class="ob-hamburger" id="obHamburger" onclick="toggleRail()" aria-label="Toggle steps" aria-expanded="true" title="Toggle steps">
+      <span class="material-icons icon-hamburger" aria-hidden="true">menu</span>
+      <span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span>
+    </button>
+    <a class="l-logo" href="index.html" aria-label="azentio home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg>
+    </a>
   </div>
-  <div class="hdr-right">
-    <a href="about-us.html" target="_blank" class="hdr-icon-btn" title="About Us" aria-label="About Us"><img src="images/icons/about_us.svg" width="18" height="18" alt="about us" loading="lazy"/></a>
-    <div class="hdr-div" role="separator"></div>
-    <a href="contact-us.html" target="_blank" class="hdr-icon-btn" title="Support" aria-label="Support"><img src="images/icons/call_us.svg" width="18" height="18" alt="services" loading="lazy"/></a>
-    <a href="faq.html" target="_blank" class="hdr-icon-btn" title="FAQ" aria-label="FAQ"><img src="images/icons/information.svg" width="18" height="18" alt="information" loading="lazy"/></a>
-    <div class="hdr-div" role="separator"></div>
-    <div class="hdr-lang-wrap">
-      <button class="hdr-lang" aria-label="Language: English" aria-haspopup="true">ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg></button>
-      <div class="hdr-lang-drop" role="listbox" aria-label="Select language">
-        <button class="hdr-lang-opt active" onclick="setHdrLang('ENG','us',this)" role="option" aria-selected="true"><span class="fi fi-us"></span> English</button>
-        <button class="hdr-lang-opt" onclick="setHdrLang('FR','fr',this)" role="option" aria-selected="false"><span class="fi fi-fr"></span> French</button>
-        <button class="hdr-lang-opt" onclick="setHdrLang('عربي','sa',this)" role="option" aria-selected="false"><span class="fi fi-sa"></span> عربي</button>
+  <div class="ob-hdr-right">
+    <a href="about-us.html" class="ob-icon-btn ob-icon-brand" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <a href="contact-us.html" class="ob-icon-btn" title="Contact Us" aria-label="Contact Us"><span class="material-icons">call</span></a>
+    <a href="faq.html" class="ob-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <span class="ob-hdr-div"></span>
+    <div class="ob-lang-wrap">
+      <button class="ob-lang-btn" onclick="document.getElementById('obLangMenu').classList.toggle('hidden')" aria-haspopup="listbox">
+        <span id="obLangCode">ENG</span>
+        <svg width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+      </button>
+      <div class="ob-lang-menu hidden" id="obLangMenu" role="listbox">
+        <button class="ob-lang-opt active" onclick="setObLang('ENG','us',this)"><span class="fi fi-us"></span> English</button>
+        <button class="ob-lang-opt" onclick="setObLang('FR','fr',this)"><span class="fi fi-fr"></span> French</button>
+        <button class="ob-lang-opt" onclick="setObLang('عربي','sa',this)"><span class="fi fi-sa"></span> عربي</button>
       </div>
     </div>
-    <svg class="hdr-avatar" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#334155;flex-shrink:0;"><text x="18" y="23" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="#fff">SR</text></svg>
   </div>
 </header>
 
-<div class="az-layout">
-
-  <!-- SIDEBAR -->
-  <aside class="az-sidebar" id="sidebar">
-    <ul class="az-steps">
-      <li class="az-step completed">
-        <div class="az-step-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="az-step-info">
-          <span class="az-step-label">Identification details</span>
-          <span class="az-step-badge badge-green">100%</span>
-        </div>
+<div class="ob-shell">
+  <!-- ── Vertical stepper ── -->
+  <aside class="ob-rail" id="obRail">
+    <div class="ob-rail-cap">Application progress</div>
+    <ol class="ob-steps">
+      <li class="ob-step done">
+        <span class="ob-step-num"><span class="material-icons" style="font-size:16px;">check</span></span>
+        <span class="ob-step-body">
+          <span class="ob-step-lbl">Identification Details</span>
+          <span class="ob-step-pct pct-done">100%</span>
+        </span>
       </li>
-      <li class="az-step completed">
-        <div class="az-step-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="az-step-info">
-          <span class="az-step-label">User Credentials</span>
-          <span class="az-step-badge badge-green">100%</span>
-        </div>
+      <li class="ob-step done">
+        <span class="ob-step-num"><span class="material-icons" style="font-size:16px;">check</span></span>
+        <span class="ob-step-body">
+          <span class="ob-step-lbl">User Credentials</span>
+          <span class="ob-step-pct pct-done">100%</span>
+        </span>
       </li>
-      <li class="az-step active">
-        <div class="az-step-circle">3</div>
-        <div class="az-step-info">
-          <span class="az-step-label">Registration Charges</span>
-          <span class="az-step-badge badge-gray">0%</span>
-        </div>
+      <li class="ob-step active">
+        <span class="ob-step-num">3</span>
+        <span class="ob-step-body">
+          <span class="ob-step-lbl">Registration Charges</span>
+          <span class="ob-step-pct pct-0" id="pctStep3">0%</span>
+        </span>
       </li>
-    </ul>
+    </ol>
   </aside>
 
-  <!-- MAIN -->
-  <main class="az-main">
-    <div class="az-content-wrap">
-      <div class="az-form-area">
+  <!-- ── Main form ── -->
+  <main class="ob-main">
+    <div class="ob-bc"><a href="index.html">Home</a><span class="sep">&#8250;</span><span>Create Online Account</span><span class="sep">&#8250;</span><span>Registration Charges</span></div>
+    <h1 class="ob-title">Create Online Account</h1>
 
-        <nav class="az-breadcrumb">
-          <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
-          <span>Registration Charges</span>
-        </nav>
-        <h1 class="az-page-title">Create Online Account</h1>
-        <p style="font-size:12px;color:var(--gray-tx);margin-bottom:14px;display:flex;align-items:center;gap:6px;">
-          <span style="display:inline-flex;align-items:center;gap:3px;"><span style="color:var(--red);font-size:11px;font-weight:700;">*</span> Required fields</span>
-          <span style="color:var(--gray-bd);">·</span>
-          <span>Step <strong style="color:var(--text);">3</strong> of 3</span>
-        </p>
+    <form id="obForm" novalidate>
+      <div class="ob-card">
+        <div class="ob-card-body">
 
-        <!-- SECTION: Registration Charges -->
-        <div class="az-section">
-          <div class="az-sec-hdr">
-            <h2>Registration Charges</h2>
-            <svg class="chev" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
-          </div>
-          <div class="az-sec-body">
-
-            <div class="frow c2">
-              <div class="az-field">
-                <label for="from-account">From Account <span class="req">*</span></label>
-                <select class="az-select" id="from-account">
-                  <option value="">Select account</option>
-                  <option value="savings" data-bal="USD 12,430.50" data-type="Savings">Savings Account – 0012345890</option>
-                  <option value="current" data-bal="USD 4,875.00" data-type="Current">Current Account – 0098765432</option>
+          <div class="ob-field-group">
+            <div class="ob-field-group-lbl">Registration Charges</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="fromAcct">From Account <span class="ob-req">*</span></label>
+                <select id="fromAcct" class="f-input f-select" data-required="true">
+                  <option value="" disabled selected>Select account</option>
+                  <option>Current Account &mdash; AED 248,350.00</option>
+                  <option>Savings Account &mdash; AED 81,200.00</option>
+                  <option>Salary Account &mdash; AED 38,000.00</option>
                 </select>
               </div>
-              <div class="az-field">
-                <label for="charges-amount">Charges Amount <span class="req">*</span></label>
-                <div class="az-currency-wrap" id="currency-wrap">
-                  <button type="button" class="az-currency-btn" id="currency-btn" aria-haspopup="listbox" aria-expanded="false">
-                    <span class="cur-flag" id="cur-flag">🌐</span>
-                    <span class="cur-code" id="cur-code">USD</span>
-                    <svg class="cur-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-                  </button>
-                  <div class="az-currency-drop" id="currency-drop" role="listbox">
-                    <div class="az-cur-opt active" data-code="USD" data-flag="🇺🇸" data-name="US Dollar" data-rate="1" data-fee="15.00" role="option">
-                      <span class="opt-flag">🇺🇸</span><span class="opt-code">USD</span><span class="opt-name">US Dollar</span>
-                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <div class="az-cur-opt" data-code="LBP" data-flag="🇱🇧" data-name="Lebanese Pound" data-rate="89500" data-fee="1342500.00" role="option">
-                      <span class="opt-flag">🇱🇧</span><span class="opt-code">LBP</span><span class="opt-name">Lebanese Pound</span>
-                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <div class="az-cur-opt" data-code="EUR" data-flag="🇪🇺" data-name="Euro" data-rate="0.92" data-fee="13.80" role="option">
-                      <span class="opt-flag">🇪🇺</span><span class="opt-code">EUR</span><span class="opt-name">Euro</span>
-                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <div class="az-cur-opt" data-code="GBP" data-flag="🇬🇧" data-name="British Pound" data-rate="0.79" data-fee="11.85" role="option">
-                      <span class="opt-flag">🇬🇧</span><span class="opt-code">GBP</span><span class="opt-name">British Pound</span>
-                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <div class="az-cur-opt" data-code="SAR" data-flag="🇸🇦" data-name="Saudi Riyal" data-rate="3.75" data-fee="56.25" role="option">
-                      <span class="opt-flag">🇸🇦</span><span class="opt-code">SAR</span><span class="opt-name">Saudi Riyal</span>
-                      <svg class="opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
+              <div class="col-12 col-md-4">
+                <label class="f-label" for="chargeAmt">Charges Amount</label>
+                <div class="amount-field">
+                  <div class="amount-curr" onclick="document.getElementById('chargeCcy').focus()">
+                    <span class="fi fi-ae amount-flag" id="chargeCcyFlag" aria-hidden="true"></span>
+                    <select id="chargeCcy" aria-label="Currency" onchange="chargeCcyChange(this)">
+                      <option value="ae" selected>AED</option>
+                      <option value="us">USD</option>
+                    </select>
+                    <svg width="10" height="7" viewBox="0 0 10.53 7" aria-hidden="true" style="flex-shrink:0;pointer-events:none"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#1aad6e"/></svg>
                   </div>
-                  <input class="az-input" type="text" id="charges-amount" readonly placeholder="Select currency">
+                  <input id="chargeAmt" class="amount-inp" value="25.00" readonly aria-readonly="true"/>
                 </div>
-                <div class="az-fee-info" id="fee-info">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  <span id="fee-info-text">One-time registration fee of USD 15.00 will be debited from your selected account.</span>
-                </div>
+                <div style="font-size:var(--fs-micro);color:#8a979e;margin-top:.35rem">One-off registration fee, debited on submit.</div>
               </div>
-            </div><!-- /frow c2 -->
-
-            <div class="az-check-wrap">
-              <input type="checkbox" id="tc-check">
-              <label for="tc-check">
-                I agree to the <a href="#" id="tc-link">terms and conditions</a>
-              </label>
             </div>
-
           </div>
+
+
         </div>
-
-        <div class="az-bottom-bar">
-          <button class="btn-action btn-cancel" onclick="location.href='login.html'">Cancel</button>
-          <button class="btn-action btn-save" onclick="location.href='COA_user_credentials.html'" style="display:inline-flex;align-items:center;gap:.375rem;"><svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M19 12H5M12 19l-7-7 7-7'/></svg> Previous</button>
-          <button class="btn-action btn-submit" id="submit-btn" disabled style="min-width:120px;display:inline-flex;align-items:center;gap:.375rem;">Submit <svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg></button>
-        </div>
-
-      </div><!-- /form-area -->
-
-      <!-- RIGHT PANEL -->
-      <aside class="az-right-panel">
-        <h2 class="sum-title">You have entered</h2>
-
-        <!-- Identification Details – COLLAPSED -->
-        <div class="sum-sec collapsed" id="sum-id">
-          <div class="sum-hdr">
-            <span>Identification details</span>
-            <svg class="chev-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
-          </div>
-          <div class="sum-body">
-            <div class="sum-row"><span class="sum-key">Card Number</span><span class="sum-val">0012345890</span></div>
-            <div class="az-verified">&#10003; Verified</div>
-            <div class="sum-row"><span class="sum-key">Card PIN</span><span class="sum-val">lorem ipsum</span></div>
-            <div class="sum-row"><span class="sum-key">ID Type</span><span class="sum-val">lorem ipsum</span></div>
-            <div class="sum-row"><span class="sum-key">ID Number</span><span class="sum-val">lorem ipsum</span></div>
-            <div class="sum-row"><span class="sum-key">Expiry Date</span><span class="sum-val">lorem ipsum</span></div>
-            <div class="sum-row"><span class="sum-key">Country</span><span class="sum-val">lorem ipsum</span></div>
-            <div class="sum-row"><span class="sum-key">Issue Date</span><span class="sum-val">-----</span></div>
-            <div class="sum-row"><span class="sum-key">Mobile</span><span class="sum-val">lorem</span></div>
-            <div class="sum-row"><span class="sum-key">Date Of Birth</span><span class="sum-val">lorem</span></div>
-            <div class="sum-row"><span class="sum-key">Email</span><span class="sum-val">lorem</span></div>
-          </div>
-        </div>
-
-        <!-- User Credentials – EXPANDED (immediate previous = expanded) -->
-        <div class="sum-sec" id="sum-creds">
-          <div class="sum-hdr">
-            <span>User Credentials</span>
-            <svg class="chev-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
-          </div>
-          <div class="sum-body">
-            <div class="sum-row"><span class="sum-key">Username</span><span class="sum-val">SHADABPERVAIZ</span></div>
-            <div class="sum-row"><span class="sum-key">Security Q.</span><span class="sum-val">First pet name</span></div>
-          </div>
-        </div>
-
-      </aside>
-
-    </div>
-  </main>
-</div>
-
-<!-- FOOTER -->
-<footer class="az-footer">
-  <span>Copyright 2025. All Rights Reserved</span>
-  <div class="az-footer-links">
-    <a href="#" id="footer-tc">Terms and conditions</a>
-    <a href="about-app.html" target="_blank">About App</a>
-  </div>
-  <div class="az-footer-access">
-    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
-    <button class="az-font-btn" data-scale="down">A&#8315;</button>
-    <button class="az-font-btn" data-scale="reset">A</button>
-    <button class="az-font-btn" data-scale="up">A&#8314;</button>
-    <button class="az-contrast-btn" title="High contrast">&#9681;</button>
-  </div>
-</footer>
-
-<!-- MODAL: Terms & Conditions -->
-<div class="az-overlay" id="tc-modal">
-  <div class="az-modal">
-    <div class="az-modal-hdr">
-      <h3>Terms and Conditions</h3>
-      <button class="az-modal-close" id="tc-close">&times;</button>
-    </div>
-    <div class="az-modal-body">
-      <p>Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua. Ut Enim Ad Minim Veniam, Quis Nostrud Exercitation Ullamco Laboris Nisi Ut Aliquip Ex Ea Commodo Consequat. Duis Aute Irure Dolor In Reprehenderit In Voluptate Velit Esse Cillum Dolore Eu Fugiat Nulla Pariatur. Excepteur Sint Occaecat Cupidatat Non Proident, Sunt In Culpa Qui Officia Deserunt Mollit Anim Id Est Laborum.</p>
-      <p>Sed Ut Perspiciatis Unde Omnis Iste Natus Error Sit Voluptatem Accusantium Doloremque Laudantium, Totam Rem Aperiam, Eaque Ipsa Quae Ab Illo Inventore Veritatis Et Quasi Architecto Beatae Vitae Dicta Sunt Explicabo. Nemo Enim Ipsam Voluptatem Quia Voluptas Sit Aspernatur Aut Odit Aut Fugit, Sed Quia Consequuntur Magni Dolores Eos Qui Ratione Voluptatem Sequi Nesciunt.</p>
-      <p>Neque Porro Quisquam Est, Qui Dolorem Ipsum Quia Dolor Sit Amet, Consectetur, Adipisci Velit, Sed Quia Non Numquam Eius Modi Tempora Incidunt Ut Labore Et Dolore Magnam Aliquam Quaerat Voluptatem. Ut Enim Ad Minima Veniam, Quis Nostrum Exercitationem Ullam Corporis Suscipit Laboriosam, Nisi Ut Aliquid Ex Ea Commodi Consequatur?</p>
-    </div>
-    <div class="az-modal-ftr">
-      <button class="btn-action btn-submit" id="tc-ok">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Success -->
-<div class="az-overlay" id="success-modal">
-  <div class="az-modal narrow">
-    <div class="az-success-body">
-      <div class="az-success-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <p>You have successfully created<br>your online Account</p>
-      <button class="btn-action btn-submit" id="success-ok">OK</button>
+
+      <!-- Terms sit inside the CTA panel, as on term-deposit-account-opening.html -->
+      <div class="coa-footer">
+        <div>
+          <label class="coa-footer-left" for="agreeTerms">
+            <input type="checkbox" id="agreeTerms"/>
+            <span>I agree to the <a href="#">Terms and Conditions</a> of online banking registration</span>
+          </label>
+          <div class="coa-tc-error" id="errTerms">Please accept the Terms and Conditions to continue.</div>
+        </div>
+        <div class="coa-footer-right">
+          <a href="index.html" class="btn-action btn-cancel">Cancel</a>
+          <a href="COA_user_credentials.html" class="btn-action btn-save">Previous</a>
+          <button type="button" class="btn-action btn-submit" onclick="submitCoa()">Submit</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- ── Right side panel: "You have entered" summary ── -->
+  <aside class="ob-side">
+    <div class="ob-side-title">You have entered</div>
+    <div class="ob-sum-grp">
+      <div class="ob-sum-hdr collapsed" id="sumHdrI" onclick="toggleSum('sumBodyI','sumHdrI')">
+        <span class="ob-sum-hdr-l"><span class="ob-sum-tick"><span class="material-icons">check</span></span>Identification details</span>
+        <span class="material-icons">expand_more</span>
+      </div>
+      <div class="ob-sum-body ob-hidden" id="sumBodyI"></div>
+    </div>
+    <div class="ob-sum-grp">
+      <div class="ob-sum-hdr" id="sumHdrC" onclick="toggleSum('sumBodyC','sumHdrC')">
+        <span class="ob-sum-hdr-l"><span class="ob-sum-tick"><span class="material-icons">check</span></span>User credentials</span>
+        <span class="material-icons">expand_more</span>
+      </div>
+      <div class="ob-sum-body" id="sumBodyC"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- ══ Success ══ -->
+<div class="modal-ov hidden" id="coaDone" role="dialog" aria-modal="true" aria-labelledby="coaDoneTitle">
+  <div class="az-modal modal-md" style="text-align:center;max-width:420px">
+    <button class="modal-close" onclick="closeModal('coaDone')" aria-label="Close">&#215;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#e4f9ee;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+      <span class="material-icons" style="color:#1aad6e;font-size:32px;">check_circle</span>
+    </div>
+    <div id="coaDoneTitle" class="modal-title">Your online account is ready</div>
+    <div style="margin-top:.5rem;font-size:var(--fs-small);color:var(--az-muted);line-height:1.6">You can now sign in with the user name and password you just created.</div>
+    <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1.75rem;">
+      <a href="login.html" class="btn-action btn-submit" style="text-decoration:none;">Go to log in</a>
     </div>
   </div>
 </div>
 
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/onboarding-rail.js"></script>
+<script src="js/datepicker.min.js"></script>
 <script>
-(function(){
+'use strict';
 
-  // Section headers
-  document.querySelectorAll('.az-sec-hdr').forEach(function(h){
-    h.addEventListener('click',function(){ h.closest('.az-section').classList.toggle('collapsed'); });
+function setObLang(code, flag, btn) {
+  document.getElementById('obLangCode').textContent = code;
+  document.documentElement.setAttribute('lang', code === 'FR' ? 'fr' : (code === 'ENG' ? 'en' : 'ar'));
+  document.querySelectorAll('.ob-lang-opt').forEach(function(o){ o.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('obLangMenu').classList.add('hidden');
+}
+document.addEventListener('click', function(e){
+  if (!e.target.closest('.ob-lang-wrap')) document.getElementById('obLangMenu').classList.add('hidden');
+});
+
+function toggleRail() {
+  var rail = document.getElementById('obRail');
+  var hamburger = document.getElementById('obHamburger');
+  var collapsed = rail.classList.toggle('collapsed');
+  hamburger.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+}
+
+function ntfOpenSelect(id){
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  if (sel.showPicker) { try { sel.showPicker(); return; } catch(e) {} }
+  sel.focus();
+}
+function updateCurrFlag(sel){
+  var flagMap = {'AED':'ae','USD':'us','EUR':'eu','GBP':'gb'};
+  var flag = sel.closest('.amount-curr').querySelector('.amount-flag');
+  if (flag) { var fc = flagMap[sel.value] || 'ae'; flag.className = 'fi fi-' + fc + ' amount-flag'; }
+}
+/* ── Mobile number: searchable country/ISD-code combobox ──
+   Lets the user find a country by name (flags alone aren't identifiable)
+   and have the ISD code fill in automatically. */
+var PHONE_COUNTRIES = [
+  {code:'ae',name:'United Arab Emirates',dial:'+971'},
+  {code:'sa',name:'Saudi Arabia',dial:'+966'},
+  {code:'bh',name:'Bahrain',dial:'+973'},
+  {code:'kw',name:'Kuwait',dial:'+965'},
+  {code:'om',name:'Oman',dial:'+968'},
+  {code:'qa',name:'Qatar',dial:'+974'},
+  {code:'eg',name:'Egypt',dial:'+20'},
+  {code:'jo',name:'Jordan',dial:'+962'},
+  {code:'iq',name:'Iraq',dial:'+964'},
+  {code:'lb',name:'Lebanon',dial:'+961'},
+  {code:'us',name:'United States',dial:'+1'},
+  {code:'gb',name:'United Kingdom',dial:'+44'},
+  {code:'fr',name:'France',dial:'+33'},
+  {code:'de',name:'Germany',dial:'+49'},
+  {code:'ch',name:'Switzerland',dial:'+41'},
+  {code:'in',name:'India',dial:'+91'},
+  {code:'pk',name:'Pakistan',dial:'+92'},
+  {code:'bd',name:'Bangladesh',dial:'+880'},
+  {code:'ph',name:'Philippines',dial:'+63'},
+  {code:'cn',name:'China',dial:'+86'},
+  {code:'jp',name:'Japan',dial:'+81'}
+];
+function phoneCtryRender(key, list){
+  var listEl = document.getElementById(key + 'CtryList');
+  listEl.innerHTML = '';
+  if (!list.length) { listEl.innerHTML = '<div class="phone-ctry-empty">No matches found</div>'; return; }
+  list.forEach(function(c){
+    var item = document.createElement('div');
+    item.className = 'phone-ctry-opt';
+    item.setAttribute('role', 'option');
+    item.innerHTML = '<span class="fi fi-' + c.code + '"></span><span class="phone-ctry-opt-name">' + c.name + '</span><span class="phone-ctry-opt-dial">' + c.dial + '</span>';
+    item.onmousedown = function(e){ e.preventDefault(); phoneCtrySelect(key, c); };
+    listEl.appendChild(item);
   });
-
-  // Summary accordion
-  document.querySelectorAll('.sum-hdr').forEach(function(h){
-    h.addEventListener('click',function(){ h.closest('.sum-sec').classList.toggle('collapsed'); });
+}
+function phoneCtryPosition(key){
+  var combo = document.getElementById(key + 'PhoneCombo');
+  var panel = document.getElementById(key + 'CtryPanel');
+  if (panel.parentElement !== document.body) document.body.appendChild(panel);
+  var r = combo.getBoundingClientRect();
+  panel.style.left = r.left + 'px';
+  panel.style.top = (r.bottom + 4) + 'px';
+}
+function phoneCtryOpen(key){
+  var panel = document.getElementById(key + 'CtryPanel');
+  var btn = document.getElementById(key + 'PhonePfxBtn');
+  panel.classList.remove('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  phoneCtryPosition(key);
+  phoneCtryRender(key, PHONE_COUNTRIES);
+  var search = document.getElementById(key + 'CtrySearch');
+  search.value = '';
+  setTimeout(function(){ search.focus(); }, 0);
+}
+function phoneCtryClose(key){
+  document.getElementById(key + 'CtryPanel').classList.add('hidden');
+  document.getElementById(key + 'PhonePfxBtn').setAttribute('aria-expanded', 'false');
+}
+function phoneCtryToggle(key){
+  var panel = document.getElementById(key + 'CtryPanel');
+  if (panel.classList.contains('hidden')) phoneCtryOpen(key);
+  else phoneCtryClose(key);
+}
+function phoneCtryFilter(key, q){
+  var needle = q.toLowerCase();
+  phoneCtryRender(key, PHONE_COUNTRIES.filter(function(c){
+    return c.name.toLowerCase().indexOf(needle) > -1 || c.dial.indexOf(needle) > -1;
+  }));
+}
+function phoneCtryApply(key, c){
+  document.getElementById(key + 'CtryFlag').className = 'fi fi-' + c.code;
+  document.getElementById(key + 'CtryDial').textContent = c.dial;
+  var combo = document.getElementById(key + 'PhoneCombo');
+  combo.dataset.code = c.code;
+  combo.dataset.dial = c.dial;
+}
+function phoneCtrySelect(key, c){
+  phoneCtryApply(key, c);
+  phoneCtryClose(key);
+  document.getElementById(key + 'Num').focus();
+}
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (panel.classList.contains('hidden')) return;
+    var key = panel.id.replace('CtryPanel', '');
+    var combo = document.getElementById(key + 'PhoneCombo');
+    if (combo && !combo.contains(e.target) && !panel.contains(e.target)) {
+      panel.classList.add('hidden');
+      var btn = document.getElementById(key + 'PhonePfxBtn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
   });
-
-  // ── Currency dropdown ─────────────────────────────────────
-  var curBtn   = document.getElementById('currency-btn');
-  var curDrop  = document.getElementById('currency-drop');
-  var curFlag  = document.getElementById('cur-flag');
-  var curCode  = document.getElementById('cur-code');
-  var amtInput = document.getElementById('charges-amount');
-  var feeInfo  = document.getElementById('fee-info');
-  var feeText  = document.getElementById('fee-info-text');
-  var selCur   = { code:'USD', flag:'🇺🇸', fee:'15.00' };
-
-  curBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var open = curDrop.classList.toggle('open');
-    curBtn.classList.toggle('open', open);
-    curBtn.setAttribute('aria-expanded', String(open));
+});
+window.addEventListener('scroll', function(){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (!panel.classList.contains('hidden')) phoneCtryPosition(panel.id.replace('CtryPanel', ''));
   });
-
-  curDrop.querySelectorAll('.az-cur-opt').forEach(function(opt) {
-    opt.addEventListener('click', function() {
-      // Update selection
-      curDrop.querySelectorAll('.az-cur-opt').forEach(function(o){ o.classList.remove('active'); });
-      opt.classList.add('active');
-      selCur = { code: opt.dataset.code, flag: opt.dataset.flag, fee: opt.dataset.fee, name: opt.dataset.name };
-      // Update button
-      curFlag.textContent = selCur.flag;
-      curCode.textContent = selCur.code;
-      // Update amount
-      amtInput.value = Number(selCur.fee).toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
-      // Show fee info
-      feeText.textContent = 'One-time registration fee of ' + selCur.code + ' ' + Number(selCur.fee).toLocaleString('en-US',{minimumFractionDigits:2}) + ' will be debited from your selected account.';
-      feeInfo.classList.add('show');
-      // Close dropdown
-      curDrop.classList.remove('open');
-      curBtn.classList.remove('open');
-      curBtn.setAttribute('aria-expanded', 'false');
-    });
+}, true);
+window.addEventListener('resize', function(){
+  document.querySelectorAll('.phone-ctry-panel').forEach(function(panel){
+    if (!panel.classList.contains('hidden')) phoneCtryPosition(panel.id.replace('CtryPanel', ''));
   });
+});
 
-  // Close on outside click
-  document.addEventListener('click', function() {
-    curDrop.classList.remove('open');
-    curBtn.classList.remove('open');
-    curBtn.setAttribute('aria-expanded', 'false');
+
+/* ── Summary accordion ── */
+function toggleSum(bodyId, hdrId) {
+  var b = document.getElementById(bodyId), h = document.getElementById(hdrId);
+  var willShow = b.classList.contains('ob-hidden');
+  b.classList.toggle('ob-hidden', !willShow);
+  h.classList.toggle('collapsed', !willShow);
+}
+
+function chargeCcyChange(sel) {
+  document.getElementById('chargeCcyFlag').className =
+    sel.value ? 'fi amount-flag fi-' + sel.value : 'fi amount-flag';
+}
+
+/* ── Validation / progress ── */
+function validateStep() {
+  var valid = true, firstInvalid = null;
+  document.querySelectorAll('#obForm [data-required="true"]').forEach(function(el){
+    var empty = !el.value || !el.value.trim();
+    el.classList.toggle('is-invalid', empty);
+    if (empty) { valid = false; if (!firstInvalid) firstInvalid = el; }
   });
+  var agree = document.getElementById('agreeTerms');
+  document.getElementById('errTerms').classList.toggle('show', !agree.checked);
+  document.querySelector('.coa-footer-left').classList.toggle('is-invalid', !agree.checked);
+  if (!agree.checked) { valid = false; if (!firstInvalid) firstInvalid = agree; }
+  if (!valid && firstInvalid) { firstInvalid.scrollIntoView({behavior:'smooth', block:'center'}); firstInvalid.focus(); }
+  return valid;
+}
+function updateStepProgress() {
+  var reqs = document.querySelectorAll('#obForm [data-required="true"]');
+  var filled = 0;
+  reqs.forEach(function(el){ if (el.value && el.value.trim()) filled++; });
+  var total = reqs.length + 1;                       /* +1 for the terms tick */
+  var done  = filled + (document.getElementById('agreeTerms').checked ? 1 : 0);
+  var pct = total ? Math.round((done / total) * 100) : 0;
+  var badge = document.getElementById('pctStep3');
+  badge.textContent = pct + '%';
+  badge.classList.remove('pct-0','pct-mid','pct-done');
+  badge.classList.add(pct === 0 ? 'pct-0' : (pct === 100 ? 'pct-done' : 'pct-mid'));
+  var activeBody = document.querySelector('.ob-step.active .ob-step-body');
+  if (activeBody) activeBody.style.setProperty('--ob-pct', pct + '%');
+}
+document.getElementById('obForm').addEventListener('input', updateStepProgress);
+document.getElementById('obForm').addEventListener('change', updateStepProgress);
 
-  // Pre-select USD on load
-  curFlag.textContent = '🇺🇸';
-  curCode.textContent = 'USD';
-  amtInput.value = '15.00';
-  feeInfo.classList.add('show');
+function submitCoa() {
+  if (!validateStep()) return;
+  openModal('coaDone');
+}
 
-
-  // ── T&C checkbox gates Submit ─────────────────────────────────────
-  var tcCheck=document.getElementById('tc-check');
-  var submitBtn=document.getElementById('submit-btn');
-  tcCheck.addEventListener('change',function(){ submitBtn.disabled=!tcCheck.checked; });
-
-  // Open T&C modal
-  function openTC(e){ e.preventDefault(); document.getElementById('tc-modal').classList.add('open'); }
-  document.getElementById('tc-link').addEventListener('click',openTC);
-  document.getElementById('footer-tc').addEventListener('click',openTC);
-
-  // Close T&C modal
-  document.getElementById('tc-close').addEventListener('click',function(){ document.getElementById('tc-modal').classList.remove('open'); });
-  document.getElementById('tc-ok').addEventListener('click',function(){ document.getElementById('tc-modal').classList.remove('open'); });
-  document.getElementById('tc-modal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); });
-
-  // Submit -> success modal
-  submitBtn.addEventListener('click',function(){ document.getElementById('success-modal').classList.add('open'); });
-
-  // Success OK -> back to page 1
-  document.getElementById('success-ok').addEventListener('click',function(){
-    document.getElementById('success-modal').classList.remove('open');
-    location.href='login.html';
-  });
-
-  // Font size
-  var fs=1;
-  document.querySelectorAll('.az-font-btn').forEach(function(b){
-    b.addEventListener('click',function(){
-      var a=b.getAttribute('data-scale');
-      if(a==='up')    fs=Math.min(fs+0.1,1.4);
-      if(a==='down')  fs=Math.max(fs-0.1,0.8);
-      if(a==='reset') fs=1;
-      document.documentElement.style.fontSize=(fs*14)+'px';
-    });
-  });
-}());
-
-/* Language selector */
-function setHdrLang(code, flagCode, optBtn) {
-  document.querySelectorAll('.hdr-lang').forEach(function(btn) {
-    var flagEl = btn.querySelector('.fi');
-    if (flagEl) { flagEl.className = 'fi fi-' + flagCode; }
-    btn.childNodes.forEach(function(n){ if (n.nodeType===3) n.textContent = code + ' '; });
-  });
-  if (optBtn) {
-    optBtn.closest('.hdr-lang-drop').querySelectorAll('.hdr-lang-opt').forEach(function(o){ o.classList.remove('active'); o.setAttribute('aria-selected','false'); });
-    optBtn.classList.add('active');
-    optBtn.setAttribute('aria-selected','true');
-  }
-}</script>
+/* ── Summaries from steps 1 and 2 ── */
+function coaRows(el, rows) {
+  var box = document.getElementById(el);
+  if (!box) return;
+  box.innerHTML = rows.map(function(r){
+    return '<div class="ob-sum-row"><span class="ob-sum-k">' + r[0] + '</span>' +
+           '<span class="ob-sum-v' + (r[1] ? '' : ' empty') + '">' + (r[1] || 'Not provided') + '</span></div>';
+  }).join('');
+}
+(function buildSummaries(){
+  try {
+    var d = JSON.parse(localStorage.getItem('coa_identification') || '{}');
+    coaRows('sumBodyI', [
+      ['CIF Number', d.cifNo], ['Account Number', d.acctNo], ['Card Number', d.cardNo],
+      ['ID Type', d.idType], ['ID Number', d.idNumber], ['Issue Date', d.idIssue],
+      ['Expiry Date', d.idExpiry], ['Country', d.idCountry],
+      ['Mobile Number', d.mobileNum], ['Date Of Birth', d.dob], ['Email', d.email]
+    ]);
+  } catch(e){}
+  try {
+    var c = JSON.parse(localStorage.getItem('coa_credentials') || '{}');
+    coaRows('sumBodyC', [
+      ['User Name', c.userName],
+      ['Password', c.userName ? '••••••••' : ''],
+      ['Security Question', c.secQuestion],
+      ['Answer', c.secAnswer ? '••••••' : '']
+    ]);
+  } catch(e){}
+})();
+updateStepProgress();
+</script>
+<script>obWireRail(['COA_identification_details.html','COA_user_credentials.html','COA_registration_charges.html'], 3, 'coa');</script>
 </body>
 </html>

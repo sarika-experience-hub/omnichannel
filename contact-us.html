@@ -7,165 +7,314 @@
   <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/flag-icons.min.css"/>
   <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/prelogin-header.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/brand-shapes.css"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;overflow:hidden}
-    body{font-family:'Roboto',-apple-system,sans-serif;font-size:14px;color:#16303d;background:#fff;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
-    .f-input{width:100%;border:1.5px solid #e2e8ec;border-radius:6px;padding:.5rem .75rem;font-family:'Roboto',sans-serif;font-size:.8125rem;color:#16303d;background:#fff;outline:none;transition:border-color .15s}
+    html,body{min-height:100%}
+    /* the page scrolls as one document — no nested scroll container */
+    .prelogin-sidebar{position:sticky;top:60px;align-self:flex-start;height:calc(100vh - 60px)}
+    body{font-family:'Poppins','Roboto',-apple-system,sans-serif;font-size:14px;color:#16303d;background:#f9fafb;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+    .f-input{width:100%;border:1.5px solid #e2e8ec;border-radius:6px;padding:.5rem .75rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);color:#16303d;background:#fff;outline:none;transition:border-color .15s}
     .f-input:focus{border-color:#2ed88e;box-shadow:0 0 0 3px rgba(46,216,142,.1)}
-    .f-select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E") no-repeat right 10px center;cursor:pointer}
-    .btn-primary{padding:.5rem 1.5rem;background:#16303d;color:#fff;border:none;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
+    .btn-primary{padding:.5rem 1.5rem;background:#16303d;color:#fff;border:none;border-radius:6px;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-body);font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
     .btn-primary:hover{background:#1e4356;color:#fff}
-    .btn-green{padding:.5rem 1.5rem;background:#2ed88e;color:#fff;border:none;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
-    .btn-green:hover{background:#25c47e}
-    .acc-card{border:1.5px solid #e2e8ec;border-radius:8px;overflow:hidden;margin-bottom:.875rem}
-    .acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;cursor:pointer;background:#fff;transition:background .1s}
-    .acc-hdr:hover{background:#f8f9fa}
-    .acc-hdr.open{background:#edfaf6}
-    .acc-body{padding:.875rem 1rem;border-top:1px solid #e2e8ec;display:none}
-    .acc-body.show{display:block}
-    
+
+    /* ── Left nav — navy rail, matching bank-products.html / branches-atm.html ── */
+    .prelogin-sidebar{background:#0f2029;border-right:1px solid rgba(255,255,255,.08)}
+    .pl-item{display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:var(--fs-small);font-weight:400;color:#cdd9d7;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .12s,color .12s}
+    .pl-item:hover{background:rgba(255,255,255,.06);color:#fff}
+    .pl-item.pl-active{background:rgba(46,216,142,.14);border-left-color:#2ed88e;color:#fff;font-weight:600}
+    .pl-item.pl-active:hover{background:rgba(46,216,142,.2)}
+    .pl-ico{width:18px;height:18px;flex-shrink:0;display:flex;align-items:center}
+    .pl-item svg{stroke:currentColor;opacity:.62;transition:opacity .12s}
+    .pl-item:hover svg,.pl-item.pl-active svg{opacity:1}
+    .pl-div{height:1px;background:rgba(255,255,255,.1);margin:.4rem .875rem .4rem 3rem}
+
+    /* ── Page head — shared with bank-products / branches-atm ── */
+    .bp-bc{display:flex;align-items:center;gap:.375rem;margin-bottom:.375rem;font-size:var(--fs-caption);flex-wrap:wrap}
+    .bp-bc a{color:#8a979e;text-decoration:none}
+    .bp-bc a:hover{color:#16303d}
+    .bp-bc .sep{color:#ccc}
+    .bp-bc .cur{color:#16303d}
+    .bp-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem}
+    .bp-title{font-size:var(--fs-title);font-weight:500;line-height:1.2;color:#16303d}
+
+
+    /* ── Search over the help topics ── */
+    .cu-search-wrap{position:relative;max-width:460px;margin:0 0 1rem;z-index:50}
+    .cu-search{width:100%;border:1.5px solid #e2e8ec;border-radius:.6rem;background:#fff;padding:.6rem .75rem .6rem 2.3rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);color:#16303d;outline:none;transition:border-color .15s,box-shadow .15s}
+    .cu-search:focus{border-color:#1aad6e;box-shadow:0 0 0 3px rgba(26,173,110,.12)}
+    .cu-search-ico{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:#1aad6e;font-size:18px;pointer-events:none}
+    .cu-sugg{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #e2e8ec;border-radius:.6rem;box-shadow:0 10px 28px rgba(16,36,48,.14);padding:.3rem;z-index:60;max-height:240px;overflow-y:auto}
+    .cu-sugg[hidden]{display:none}
+    .cu-sugg a{display:flex;align-items:center;gap:.5rem;padding:.5rem .6rem;border-radius:.4rem;font-size:var(--fs-small);color:#16303d;text-decoration:none}
+    .cu-sugg a:hover,.cu-sugg a.cu-cursor{background:#f0faf5}
+    .cu-sugg .material-icons{font-size:16px;color:#1aad6e}
+    .cu-sugg-empty{padding:.7rem;font-size:var(--fs-small);color:#8a979e;text-align:center}
+
+    /* ── Scroll body ── */
+    .cu-scroll{padding-right:.25rem}
+    /* every box the same width, and equal height within its row */
+    .cu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.875rem;margin-bottom:.875rem;align-items:stretch}
+    @media (max-width:1100px){ .cu-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media (max-width:720px){ .cu-grid{grid-template-columns:1fr} }
+    .cu-card{display:flex;flex-direction:column;border:1px solid #e2e8ec;border-radius:1rem;background:#fff;padding:1.15rem 1.25rem 1.25rem;transition:box-shadow .15s,border-color .15s}
+    .cu-card .cu-actions{margin-top:auto;padding-top:.2rem}
+    .cu-card:hover{box-shadow:0 4px 16px rgba(22,48,61,.08);border-color:#d3e6dd}
+    .cu-card-hd{display:flex;align-items:center;gap:.7rem;margin-bottom:.85rem}
+    .cu-ico{width:38px;height:38px;border-radius:.65rem;background:#e3f7ec;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .cu-ico .material-icons{font-size:20px;color:#1aad6e}
+    .cu-card-title{font-size:var(--fs-subhead);font-weight:600;color:#16303d}
+    .cu-note{font-size:var(--fs-caption);color:#8a979e;line-height:1.6}
+    .cu-val{display:flex;align-items:center;gap:.4rem;margin:.1rem 0 .7rem}
+    .cu-val a{font-size:var(--fs-section);font-weight:700;color:#16303d;text-decoration:none;letter-spacing:.01em}
+    .cu-val a:hover{color:#1aad6e}
+    .cu-val.sm a{font-size:var(--fs-subhead);font-weight:600;color:#1aad6e}
+    .cu-copy{background:none;border:none;cursor:pointer;color:#8a979e;padding:.2rem;border-radius:.3rem;display:flex;align-items:center;transition:color .12s,background .12s}
+    .cu-copy:hover{color:#1aad6e;background:#eafaf2}
+    .cu-copy .material-icons{font-size:16px}
+    .cu-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.2rem}
+    /* Secondary CTA — white fill with a corporate-green border. Label stays
+       navy: #1aad6e text on white is only ~2.8:1, under the AA floor. */
+    .cu-btn{display:inline-flex;align-items:center;gap:.35rem;border-radius:.5rem;padding:.45rem .85rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-caption);font-weight:600;cursor:pointer;text-decoration:none;border:1.5px solid #1aad6e;background:#fff;color:#16303d;transition:background .12s,border-color .12s,transform .12s}
+    .cu-btn:hover{background:#f2fcf7;border-color:#148c58;color:#16303d}
+    .cu-btn:active{transform:translateY(1px)}
+    .cu-btn .material-icons{font-size:15px}
+    .cu-btn-fill{background:linear-gradient(135deg,#16303d,#0d1f28);border-color:transparent;color:#fff}
+    .cu-btn-fill:hover{background:linear-gradient(135deg,#0f232e,#081820);color:#fff}
+    .cu-card-wide{grid-column:1/-1}
+    .cu-social{display:flex;gap:.6rem;flex-wrap:wrap}
+    .cu-social a{width:36px;height:36px;border-radius:50%;background:#1aad6e;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:background .12s,transform .12s}
+    .cu-social a:hover{background:#148c58;transform:translateY(-1px)}
+
+    .cu-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.875rem;margin-bottom:.875rem}
+    .cu-field label{display:block;font-size:var(--fs-label);font-weight:500;color:#16303d;margin-bottom:.5rem}
+    .cu-req{color:#c62828}
+    .cu-in{width:100%;border:1.5px solid #e2e7ee;border-radius:.625rem;padding:.65rem .9rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);color:#16303d;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+    .cu-in:focus{border-color:#1aad6e;box-shadow:0 0 0 3px rgba(26,173,110,.12)}
+    .cu-in.bad{border-color:#d94141;background:#fff8f8}
+    select.cu-in{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%231aad6e'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:2.2rem;cursor:pointer}
+    textarea.cu-in{resize:vertical;min-height:90px;line-height:1.6}
+    .cu-err{font-size:var(--fs-micro);font-weight:600;color:#d94141;margin-top:.35rem;min-height:.9rem}
+    .cu-count{font-size:var(--fs-micro);color:#8a979e;text-align:right;margin-top:.3rem;font-variant-numeric:tabular-nums}
+    .cu-count.over{color:#d94141;font-weight:700}
+    .cu-form-foot{display:flex;align-items:center;justify-content:flex-end;gap:.75rem;flex-wrap:wrap}
+    .cu-ok{display:flex;align-items:flex-start;gap:.6rem;background:#f2fcf7;border:1px solid #bfeed7;border-radius:.75rem;padding:.9rem 1rem;font-size:var(--fs-small);color:#16303d;line-height:1.6}
+    .cu-ok .material-icons{color:#1aad6e;font-size:20px;flex-shrink:0}
+    .cu-ok b{display:block;margin-bottom:.15rem}
+
+    /* ── Callback modal ── */
+    .cu-ov{position:fixed;inset:0;background:rgba(10,28,38,.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
+    .cu-ov[hidden]{display:none}
+    .cu-modal{background:#fff;border-radius:1rem;max-width:430px;width:100%;padding:1.6rem 1.6rem 1.4rem;position:relative;box-shadow:0 24px 60px rgba(10,28,38,.3);max-height:90vh;overflow-y:auto}
+    .cu-modal-x{position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:var(--fs-title);line-height:1;color:#8a979e;cursor:pointer}
+    .cu-modal-x:hover{color:#16303d}
+    .cu-modal-h{font-size:var(--fs-subhead);font-weight:600;color:#16303d;margin-bottom:.3rem}
+    .cu-modal-sub{font-size:var(--fs-small);color:#8a979e;line-height:1.55;margin-bottom:1.2rem}
+    .cu-modal-lg{max-width:560px}
+    .cu-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:.5rem;margin-bottom:.4rem}
+    .cu-slot{border:1.5px solid #e2e7ee;border-radius:.6rem;background:#fff;padding:.55rem .4rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-caption);font-weight:600;color:#16303d;cursor:pointer;transition:border-color .12s,background .12s,color .12s}
+    .cu-slot:hover:not(:disabled){border-color:#1aad6e}
+    .cu-slot.sel{border-color:#1aad6e;background:#f2fcf7;color:#1aad6e}
+    .cu-slot:disabled{opacity:.42;cursor:not-allowed;background:#f7f8f9}
+
+    /* ── Toast ── */
+    .cu-toast{position:fixed;left:50%;bottom:2rem;transform:translate(-50%,16px);background:#16303d;color:#fff;border-radius:.6rem;padding:.65rem 1rem;font-size:var(--fs-small);font-weight:600;display:flex;align-items:center;gap:.45rem;box-shadow:0 10px 30px rgba(10,28,38,.3);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:3000}
+    .cu-toast.show{opacity:1;transform:translate(-50%,0)}
+    .cu-toast .material-icons{font-size:17px;color:#2ed88e}
+
+    @media (prefers-reduced-motion:reduce){ .cu-btn,.cu-social a,.cu-toast{transition:none} }
+
+    html.dark body{background:#0d1b24}
+    html.dark .bp-title,html.dark .bp-bc .cur{color:#e6eef3}
+    html.dark .cu-card{background:#111e27;border-color:#243545}
+    html.dark .cu-card-title,html.dark .cu-val a,html.dark .cu-field label{color:#e6eef3}
+    html.dark .cu-ico{background:rgba(26,173,110,.16)}
+    html.dark .cu-in{background:#0d1b24;border-color:#243545;color:#e6eef3}
+    html.dark .cu-modal{background:#111e27}
+    html.dark .cu-modal-h{color:#e6eef3}
   </style>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
 </head>
 <body>
-<header style="height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:#fff;border-bottom:1px solid #e2e8ec;position:sticky;top:0;z-index:100">
-  <a href="index.html" style="text-decoration:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="120" height="26" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></a>
-  <div style="display:flex;align-items:center;gap:6px">
-    <button style="background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center" title="Support">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" width="20" height="20"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+<header class="pl-hdr">
+  <div class="pl-hdr-left">
+    <button class="pl-hamburger" id="plHamburger" onclick="plToggleNav()" aria-label="Toggle navigation" aria-expanded="true" title="Toggle navigation">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <button style="background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center" title="Help">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    </button>
-    <div style="width:1px;height:24px;background:#e2e8ec;margin:0 4px"></div>
-    <button style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;color:#16303d;padding:5px 8px;border-radius:6px">
-      ENG <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 10.53 7"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#16303d"/></svg>
-    </button>
+    <a class="pl-hdr-logo" href="index.html" aria-label="azentio home"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623"><g transform="translate(0.275 -0.84)"><path d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M25.83,39.369l12.8-14.123V25H26.192V22.3H41.615v3.914l-12.8,14.123v.243h13v2.7H25.828V39.369Z" transform="translate(-1.95 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M44.242,32.873c0-6.7,4.6-11.1,10.174-11.1,6.34,0,9.973,4.438,9.973,10.733v1.171H47.511c.04,4.681,2.785,7.3,7.146,7.3a6.249,6.249,0,0,0,6.34-4.6l3.109.727c-1.172,3.914-4.644,6.7-9.489,6.7-6.381,0-10.377-4.478-10.377-10.934ZM61.12,31.1a6.341,6.341,0,0,0-6.7-6.456A6.729,6.729,0,0,0,47.594,31.1Z" transform="translate(-3.457 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M68.025,22.3h3.189v3.066h.243a6.855,6.855,0,0,1,6.421-3.59c4.885,0,7.833,3.67,7.833,8.311V43.28H82.522V30.288a5.314,5.314,0,0,0-5.41-5.528,5.829,5.829,0,0,0-5.9,6.012V43.28H68.027V22.3Z" transform="translate(-5.24 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M92.49,37.311V25.006H88.534V22.3h4.16V16.211h2.988V22.3h6.46v2.7h-6.46V37.271c0,2.259.928,3.227,3.149,3.227h3.029V43.28H98.871c-3.836,0-6.381-1.735-6.381-5.972Z" transform="translate(-6.642 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M108.721,25.006h-3.957V22.3h7.146v20.98h-3.189ZM108,16.168a2.249,2.249,0,0,1,2.3-2.3,2.319,2.319,0,1,1,0,4.638A2.235,2.235,0,0,1,108,16.168Z" transform="translate(-7.575 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M116.271,32.79a10.962,10.962,0,1,1,21.924,0,10.962,10.962,0,1,1-21.924,0Zm18.654,0c0-4.641-3.189-8.111-7.712-8.111s-7.673,3.51-7.673,8.111,3.189,8.111,7.673,8.111S134.925,37.471,134.925,32.79Z" transform="translate(-9.244 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="#2ed88e"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="#2ed88e"/></g></svg></a>
+  </div>
+  <div class="pl-hdr-right">
+    <a href="about-us.html" class="pl-icon-btn" title="About Us" aria-label="About Us"><svg width="15" height="19" viewBox="130.9 0.6 22 28.2" aria-hidden="true" focusable="false"><path d="M142.3,28.6V11.084A10.251,10.251,0,0,1,152.549.842v17.52A10.251,10.251,0,0,1,142.3,28.6Z" transform="translate(-11.301)" fill="currentColor"/><path d="M153.748,18.359V.84A10.25,10.25,0,0,1,164,11.081V28.6A10.251,10.251,0,0,1,153.748,18.359Z" transform="translate(-11.301)" fill="currentColor"/></svg></a>
+    <a href="contact-us.html" class="pl-icon-btn" title="Contact Us" aria-label="Contact Us"><span class="material-icons">call</span></a>
+    <a href="faq.html" class="pl-icon-btn" title="Help" aria-label="Help"><span class="material-icons">help</span></a>
+    <span class="pl-hdr-div"></span>
+    <div class="pl-lang-wrap">
+      <button class="pl-lang-btn" onclick="plToggleLang(event)" aria-haspopup="listbox" aria-label="Change language">
+        <span id="plLangCode">ENG</span>
+        <svg width="9" height="6" viewBox="0 0 10.53 7" aria-hidden="true"><path d="M9.225,0L5.695,3.62,2.075.09,0,1.795,5.325,7,10.53,1.675Z" fill="#2ed88e"/></svg>
+      </button>
+      <div class="pl-lang-menu" id="plLangMenu" role="listbox" hidden>
+        <button class="pl-lang-opt active" onclick="plSetLang('ENG','us',this)"><span class="fi fi-us"></span> English</button>
+        <button class="pl-lang-opt" onclick="plSetLang('FR','fr',this)"><span class="fi fi-fr"></span> French</button>
+        <button class="pl-lang-opt" onclick="plSetLang('عربي','sa',this)"><span class="fi fi-sa"></span> عربي</button>
+      </div>
+    </div>
   </div>
 </header>
-<div style="display:flex;flex:1;overflow:hidden">
+<div style="display:flex;flex:1;align-items:stretch">
 <aside class="prelogin-sidebar">
-  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h1"/><path d="M16 11l2 2 4-4"/></svg></span>
+  <a href="login.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h1"/><path d="M16 11l2 2 4-4"/></svg></span>
     <span>Login</span>
   </a>
-  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></span>
+  <a href="COA_identification_details.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></span>
     <span>Create Account</span>
   </a>
-  <a href="login.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+  <a href="retail-onboarding-1-personal-details.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
     <span>Become Our Customer</span>
   </a>
-  <div class="sidebar-divider" style="height:1px;background:#d0dade;margin:.25rem .875rem .25rem 3rem"></div>
-  <a href="bank-products.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M3 5l18 0"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+  <div class="pl-div"></div>
+  <a href="bank-products.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M3 5l18 0"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
     <span>Bank Products</span>
   </a>
-  <a href="branches-atm.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+  <a href="branches-atm.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
     <span>Branches and ATM locations</span>
   </a>
-  <a href="currency-exchange-rate.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+  <a href="currency-exchange-rate.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
     <span>Currency Exchange Rate</span>
   </a>
-  <a href="financial-calculator.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg></span>
+  <a href="financial-calculator.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg></span>
     <span>Financial Calculator</span>
   </a>
-  <a href="faq.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+  <a href="faq.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
     <span>Frequently Asked Questions</span>
   </a>
-  <a href="islamic-utilities.html" style="display:flex;align-items:center;gap:.625rem;padding:.5625rem .75rem .5625rem .875rem;font-size:.8125rem;font-weight:400;color:#16303d;text-decoration:none;border-left:3px solid transparent;border-radius:0 4px 4px 0;transition:background .1s">
-    <span style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
+  <a href="islamic-utilities.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
     <span>Islamic Utilities</span>
   </a>
-  <div class="sidebar-divider" style="height:1px;background:#d0dade;margin:.25rem .875rem .25rem 3rem"></div>
+  <div class="pl-div"></div>
 </aside>
-  <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
-    <main style="flex:1;padding:1.5rem 2rem">
-<a href="index.html" style="color:#16303d;text-decoration:none">Home</a> <span style="color:#8a979e;margin:0 4px">›</span> <span style="color:#8a979e">Need help? Contact us</span>
-<div style="display:flex;gap:2rem;margin-top:1rem">
-  <div style="flex:1;max-width:620px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
-      <!-- Visit us -->
-      <div style="padding-right:2rem;padding-bottom:2rem;border-right:1px solid #e2e8ec;border-bottom:1px solid #e2e8ec">
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:.875rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">Visit us</h3>
-        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.625rem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><rect x="3" y="9" width="18" height="11" rx="1"/><path d="M3 9l9-5 9 5"/><line x1="9" y1="21" x2="9" y2="14"/><line x1="15" y1="21" x2="15" y2="14"/></svg>
-          <div>
-            <a href="branches-atm.html" style="display:block;font-size:.9375rem;font-weight:600;color:#2ed88e;text-decoration:none">Branches</a>
-            <a href="branches-atm.html" style="display:block;font-size:.9375rem;font-weight:600;color:#2ed88e;text-decoration:none;margin-top:.25rem">ATM</a>
-          </div>
-        </div>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <main style="flex:1;padding:.75rem 1.75rem 1.5rem">
+<div class="bp-bc">
+  <a href="index.html">Home</a>
+  <span class="sep">&#8250;</span>
+  <span class="cur">Contact Us</span>
+</div>
+<div class="bp-top-bar">
+  <h1 class="bp-title">Contact Us</h1>
+</div>
+
+<div class="cu-search-wrap">
+    <span class="material-icons cu-search-ico" aria-hidden="true">search</span>
+    <input class="cu-search" id="cuSearch" type="search" autocomplete="off" role="combobox"
+           aria-expanded="false" aria-controls="cuSugg" aria-label="Search help topics"
+           placeholder="Search a topic &mdash; cards, transfers, branches&hellip;"/>
+  <div class="cu-sugg" id="cuSugg" role="listbox" hidden></div>
+</div>
+
+<div class="cu-scroll">
+  <div class="cu-grid">
+
+    <div class="cu-card">
+      <div class="cu-card-hd">
+        <span class="cu-ico"><span class="material-icons" aria-hidden="true">call</span></span>
+        <span class="cu-card-title">Call us</span>
       </div>
-      <!-- Write to us -->
-      <div style="padding-left:2rem;padding-bottom:2rem;border-bottom:1px solid #e2e8ec">
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:.875rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">Write to &nbsp; us</h3>
-        <p style="font-size:.875rem;color:#8a979e;margin-bottom:.875rem">You can also reach out to us via mail</p>
-        <div style="display:flex;align-items:center;gap:1rem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <a href="mailto:contactus@azentio.com" style="font-size:.9375rem;font-weight:600;color:#2ed88e;text-decoration:none">contactus@azentio.com</a>
-        </div>
+      <p class="cu-note">Toll free / phone banking</p>
+      <div class="cu-val">
+        <a href="tel:1800000000">1800 000 000</a>
+        <button type="button" class="cu-copy" onclick="cuCopy('1800000000','Phone number copied')" aria-label="Copy phone number" title="Copy number"><span class="material-icons" aria-hidden="true">content_copy</span></button>
       </div>
-      <!-- Call us -->
-      <div style="padding-right:2rem;padding-top:2rem;border-right:1px solid #e2e8ec">
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:.875rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">Call us</h3>
-        <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:.625rem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.96-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <div>
-            <p style="font-size:.8125rem;color:#8a979e;margin-bottom:.25rem">Toll Free Number/<br/>Phone Banking number</p>
-            <a href="tel:1800000000" style="font-size:1.125rem;font-weight:700;color:#2ed88e;text-decoration:none;display:block;margin-bottom:.25rem">1800000000</a>
-            <p style="font-size:.75rem;color:#8a979e;line-height:1.5">Dear user, clicking this number will open the calling application, allowing you to make a call directly.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Website -->
-      <div style="padding-left:2rem;padding-top:2rem">
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:.875rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">Website</h3>
-        <div style="display:flex;align-items:center;gap:1rem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2ed88e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <a href="https://www.azentio.com" target="_blank" style="font-size:.9375rem;font-weight:600;color:#2ed88e;text-decoration:none">https://www.azentio.com</a>
-        </div>
+      <p class="cu-note" style="margin-bottom:.8rem">Opens your calling app so you can dial directly.</p>
+      <div class="cu-actions">
+        <button type="button" class="cu-btn cu-btn-fill" onclick="cuOpenCallback()">Request a callback</button>
       </div>
     </div>
-    <!-- Follow us -->
-    <div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid #e2e8ec">
-      <h3 style="font-size:1rem;font-weight:700;margin-bottom:.875rem;padding-bottom:.5rem;border-bottom:1px solid #e2e8ec">Follow us</h3>
-      <div style="display:flex;gap:.75rem">
-        <a href="#" style="width:40px;height:40px;background:#2ed88e;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none">
-          <svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-        </a>
-        <a href="#" style="width:40px;height:40px;background:#2ed88e;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none">
-          <svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-        </a>
-        <a href="#" style="width:40px;height:40px;background:#2ed88e;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none">
-          <svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="#2ed88e" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
-        </a>
+
+    <div class="cu-card">
+      <div class="cu-card-hd">
+        <span class="cu-ico"><span class="material-icons" aria-hidden="true">mail</span></span>
+        <span class="cu-card-title">Write to us</span>
       </div>
+      <p class="cu-note">We reply within one working day</p>
+      <div class="cu-val sm">
+        <a href="mailto:contactus@azentio.com">contactus@azentio.com</a>
+        <button type="button" class="cu-copy" onclick="cuCopy('contactus@azentio.com','Email address copied')" aria-label="Copy email address" title="Copy address"><span class="material-icons" aria-hidden="true">content_copy</span></button>
+      </div>
+      <div class="cu-actions">
+        <a class="cu-btn" href="mailto:contactus@azentio.com?subject=Website%20enquiry">Email us</a>
+      </div>
+    </div>
+
+    <div class="cu-card">
+      <div class="cu-card-hd">
+        <span class="cu-ico"><span class="material-icons" aria-hidden="true">location_on</span></span>
+        <span class="cu-card-title">Visit us</span>
+      </div>
+      <p class="cu-note" style="margin-bottom:.8rem">Find your nearest branch or cash machine.</p>
+      <div class="cu-actions">
+        <a href="branches-atm.html" class="cu-btn">Branches</a>
+        <a href="branches-atm.html" class="cu-btn">ATMs</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cu-grid">
+    <div class="cu-card">
+      <div class="cu-card-hd">
+        <span class="cu-ico"><span class="material-icons" aria-hidden="true">public</span></span>
+        <span class="cu-card-title">Online</span>
+      </div>
+      <p class="cu-note" style="margin-bottom:.8rem">Product news, guides and answers to common questions.</p>
+      <div class="cu-actions">
+        <a href="https://www.azentio.com" target="_blank" rel="noopener noreferrer" data-direct class="cu-btn">azentio.com</a>
+        <a href="faq.html" class="cu-btn">FAQs</a>
+      </div>
+    </div>
+
+    <div class="cu-card">
+      <div class="cu-card-hd">
+        <span class="cu-ico"><span class="material-icons" aria-hidden="true">edit_note</span></span>
+        <span class="cu-card-title">Send us a message</span>
+      </div>
+      <p class="cu-note" style="margin-bottom:.8rem">Tell us what you need and we&rsquo;ll come back to you within one working day.</p>
+      <div class="cu-actions">
+        <button type="button" class="cu-btn" onclick="cuOpenForm()">Write a message</button>
+      </div>
+    </div>
+  <!-- ── Follow us ── -->
+  <div class="cu-card">
+    <div class="cu-card-hd">
+      <span class="cu-ico"><span class="material-icons" aria-hidden="true">group</span></span>
+      <span class="cu-card-title">Follow us</span>
+    </div>
+    <p class="cu-note" style="margin-bottom:.8rem">Keep up with us on social.</p>
+    <div class="cu-social">
+      <a href="https://www.linkedin.com/company/azentio" target="_blank" rel="noopener noreferrer" data-direct aria-label="azentio on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="#fff" width="17" height="17"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a href="https://x.com/azentio" target="_blank" rel="noopener noreferrer" data-direct aria-label="azentio on X" title="X"><svg viewBox="0 0 24 24" fill="#fff" width="17" height="17"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+      <a href="https://www.youtube.com/@azentio" target="_blank" rel="noopener noreferrer" data-direct aria-label="azentio on YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="#fff" width="17" height="17"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="#1aad6e" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
     </div>
   </div>
-  <!-- Right: decorative image -->
-  <div style="width:300px;flex-shrink:0;position:relative">
-    <div style="width:260px;height:320px;border-radius:50% 50% 0 0;overflow:hidden;margin:0 auto">
-      <img src="images/landing/hero.png" alt="Contact" style="width:100%;height:100%;object-fit:cover;object-position:center top"/>
-    </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center">
-      <svg viewBox="0 0 200 60" fill="none" width="200" height="60" style="opacity:.7">
-        <path d="M10 50 Q50 10 100 30 Q150 50 190 10" stroke="#2ed88e" stroke-width="3" fill="none"/>
-        <rect x="90" y="28" width="8" height="8" fill="#2ed88e" rx="1"/>
-      </svg>
-    </div>
   </div>
 </div>
     </main>
 <footer style="height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;border-top:1px solid #e2e8ec;background:#fff;font-size:12px;color:#8a979e">
-  <div>Copyright 2025. All Rights Reserved &nbsp;<a href="#" style="color:#8a979e;text-decoration:none">Terms and conditions</a>&nbsp;<a href="about-app.html" target="_blank" style="color:#8a979e;text-decoration:none">About App</a></div>
-  <div style="display:flex;align-items:center;gap:8px"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+  <div>Copyright 2025. All Rights Reserved &nbsp;<a href="#" style="color:#8a979e;text-decoration:none">Terms and conditions</a>&nbsp;<a href="about-app.html" style="color:#8a979e;text-decoration:none">About App</a></div>
+  <div style="display:flex;align-items:center;gap:8px"><a href="accessibility-commitment.html">Accessibility</a>
     <div style="display:flex;gap:3px">
       <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:11px;font-weight:700;cursor:pointer">A<sup>-</sup></button>
       <button style="border:1px solid #e2e8ec;background:#fff;border-radius:3px;padding:2px 5px;font-size:12px;font-weight:700;cursor:pointer">A</button>
@@ -176,6 +325,353 @@
 </footer>
   </div>
 </div>
+<!-- ── Send us a message ── -->
+<div class="cu-ov" id="cuMsgOv" hidden role="dialog" aria-modal="true" aria-labelledby="cuMsgTitle">
+  <div class="cu-modal cu-modal-lg">
+    <button type="button" class="cu-modal-x" onclick="cuCloseForm()" aria-label="Close">&#215;</button>
+    <div class="cu-modal-h" id="cuMsgTitle">Send us a message</div>
+    <p class="cu-modal-sub">Tell us what you need and we&rsquo;ll reply within one working day.</p>
+
+    <form id="cuForm" novalidate>
+      <div class="cu-row">
+        <div class="cu-field">
+          <label for="cuName">Full name <span class="cu-req">*</span></label>
+          <input id="cuName" class="cu-in" placeholder="Enter your full name" autocomplete="name"/>
+          <div class="cu-err" id="errName"></div>
+        </div>
+        <div class="cu-field">
+          <label for="cuEmail">Email <span class="cu-req">*</span></label>
+          <input id="cuEmail" class="cu-in" type="email" placeholder="you@example.com" autocomplete="email"/>
+          <div class="cu-err" id="errEmail"></div>
+        </div>
+      </div>
+      <div class="cu-field" style="margin-bottom:.875rem">
+        <label for="cuTopic">What is it about? <span class="cu-req">*</span></label>
+        <select id="cuTopic" class="cu-in">
+          <option value="" disabled selected>Select a topic</option>
+          <option>Accounts</option>
+          <option>Cards</option>
+          <option>Payments &amp; transfers</option>
+          <option>Financing</option>
+          <option>Online &amp; mobile banking</option>
+          <option>Something else</option>
+        </select>
+        <div class="cu-err" id="errTopic"></div>
+      </div>
+      <div class="cu-field" style="margin-bottom:.875rem">
+        <label for="cuMsg">Message <span class="cu-req">*</span></label>
+        <textarea id="cuMsg" class="cu-in" maxlength="600" placeholder="Describe what you need help with&hellip;"></textarea>
+        <div class="cu-count" id="cuCount">0 / 600</div>
+        <div class="cu-err" id="errMsg"></div>
+      </div>
+      <div class="cu-form-foot">
+        <button type="button" class="cu-btn" onclick="cuResetForm()">Clear</button>
+        <button type="submit" class="cu-btn cu-btn-fill" id="cuSend">Send message</button>
+      </div>
+    </form>
+
+    <div class="cu-ok" id="cuSent" hidden>
+      <span class="material-icons" aria-hidden="true">check_circle</span>
+      <span>
+        <b>Thanks &mdash; your message is on its way.</b>
+        We&rsquo;ll reply to <span id="cuSentTo" style="font-weight:600"></span> within one working day. Your reference is <span id="cuSentRef" style="font-weight:700"></span>.
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Request a callback ── -->
+<div class="cu-ov" id="cuCbOv" hidden role="dialog" aria-modal="true" aria-labelledby="cuCbTitle">
+  <div class="cu-modal">
+    <button type="button" class="cu-modal-x" onclick="cuCloseCallback()" aria-label="Close">&#215;</button>
+    <div class="cu-modal-h" id="cuCbTitle">Request a callback</div>
+    <p class="cu-modal-sub">Leave a number and pick a slot &mdash; an adviser will call you back.</p>
+
+    <form id="cuCbForm" novalidate>
+      <div class="cu-field" style="margin-bottom:.875rem">
+        <label for="cuCbPhone">Mobile number <span class="cu-req">*</span></label>
+        <input id="cuCbPhone" class="cu-in" type="tel" inputmode="tel" placeholder="e.g. 050 123 4567" autocomplete="tel"/>
+        <div class="cu-err" id="errCbPhone"></div>
+      </div>
+      <div class="cu-field" style="margin-bottom:.875rem">
+        <label for="cuCbDay">Preferred day</label>
+        <select id="cuCbDay" class="cu-in" onchange="cuRenderSlots()"></select>
+      </div>
+      <div class="cu-field" style="margin-bottom:1.2rem">
+        <label>Preferred time <span class="cu-req">*</span></label>
+        <div class="cu-slots" id="cuSlots"></div>
+        <div class="cu-err" id="errCbSlot"></div>
+      </div>
+      <div class="cu-form-foot">
+        <button type="button" class="cu-btn" onclick="cuCloseCallback()">Cancel</button>
+        <button type="submit" class="cu-btn cu-btn-fill">Confirm</button>
+      </div>
+    </form>
+
+    <div class="cu-ok" id="cuCbDone" hidden>
+      <span class="material-icons" aria-hidden="true">check_circle</span>
+      <span>
+        <b>Callback booked.</b>
+        We&rsquo;ll ring <span id="cuCbEcho" style="font-weight:600"></span>.
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="cu-toast" id="cuToast" role="status" aria-live="polite"><span class="material-icons" aria-hidden="true">check_circle</span><span id="cuToastTxt"></span></div>
+
 <script src="js/app.js"></script>
+<script src="js/prelogin-header.js"></script>
+<script>
+'use strict';
+
+/* ══ Toast ══ */
+var cuToastT = null;
+function cuToast(msg) {
+  var t = document.getElementById('cuToast');
+  document.getElementById('cuToastTxt').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(cuToastT);
+  cuToastT = setTimeout(function () { t.classList.remove('show'); }, 2200);
+}
+
+/* ══ Copy to clipboard — with a fallback for non-secure contexts ══ */
+function cuCopy(text, msg) {
+  function done() { cuToast(msg); }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, legacy);
+  } else { legacy(); }
+  function legacy() {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { cuToast('Press Ctrl+C to copy'); }
+    ta.remove();
+  }
+}
+
+/* ══ Branch hours — Sun–Thu 08:00–17:00, Sat 09:00–13:00, Fri closed.
+   Still drives the callback slot picker, even though the page no longer
+   shows an open/closed banner. ══ */
+var CU_HOURS = { 0:[8,17], 1:[8,17], 2:[8,17], 3:[8,17], 4:[8,17], 5:null, 6:[9,13] };
+function cuHM(h) {
+  var ap = h >= 12 ? 'PM' : 'AM', hh = h % 12 || 12;
+  return hh + ':00 ' + ap;
+}
+
+/* ══ Help search ══ */
+var CU_TOPICS = [
+  { t:'Open a new account',            icon:'account_balance', href:'bank-products.html' },
+  { t:'Bank products and rates',       icon:'inventory_2',     href:'bank-products.html' },
+  { t:'Find a branch',                 icon:'store',           href:'branches-atm.html' },
+  { t:'Find an ATM',                   icon:'local_atm',       href:'branches-atm.html' },
+  { t:'Today’s exchange rates',   icon:'currency_exchange',href:'currency-exchange-rate.html' },
+  { t:'Work out a financing payment',  icon:'calculate',       href:'financial-calculator.html' },
+  { t:'Cards — common questions', icon:'credit_card',     href:'faq.html' },
+  { t:'Payments and transfers',        icon:'swap_horiz',      href:'faq.html' },
+  { t:'Forgot my password',            icon:'lock_reset',      href:'forgot-password.html' },
+  { t:'Forgot my user name',           icon:'badge',           href:'forgot-username.html' },
+  { t:'Islamic banking utilities',     icon:'mosque',          href:'islamic-utilities.html' },
+  { t:'Accessibility help',            icon:'accessibility_new',href:'accessibility-features.html' },
+  { t:'Become our customer',           icon:'person_add',      href:'retail-onboarding-1-personal-details.html' }
+];
+var cuCursor = -1;
+
+function cuRenderSugg() {
+  var q    = document.getElementById('cuSearch').value.trim().toLowerCase();
+  var box  = document.getElementById('cuSugg');
+  var inp  = document.getElementById('cuSearch');
+  if (!q) { box.hidden = true; inp.setAttribute('aria-expanded', 'false'); cuCursor = -1; return; }
+  var hits = CU_TOPICS.filter(function (x) { return x.t.toLowerCase().indexOf(q) > -1; }).slice(0, 7);
+  box.innerHTML = hits.length
+    ? hits.map(function (x, i) {
+        return '<a href="' + x.href + '" role="option" data-i="' + i + '">' +
+               '<span class="material-icons" aria-hidden="true">' + x.icon + '</span>' + x.t + '</a>';
+      }).join('')
+    : '<div class="cu-sugg-empty">No topic matches &ldquo;' + q.replace(/[<>&]/g, '') + '&rdquo; — try the form below.</div>';
+  box.hidden = false;
+  inp.setAttribute('aria-expanded', 'true');
+  cuCursor = -1;
+}
+function cuMoveCursor(step) {
+  var items = document.querySelectorAll('#cuSugg a');
+  if (!items.length) return;
+  cuCursor = (cuCursor + step + items.length) % items.length;
+  items.forEach(function (a, i) { a.classList.toggle('cu-cursor', i === cuCursor); });
+  items[cuCursor].scrollIntoView({ block: 'nearest' });
+}
+
+/* ══ Message form — opens in a modal ══ */
+function cuOpenForm() {
+  document.getElementById('cuMsgOv').hidden = false;
+  document.getElementById('cuForm').hidden = false;
+  document.getElementById('cuSent').hidden = true;
+  cuResetForm();
+  setTimeout(function () { document.getElementById('cuName').focus(); }, 60);
+}
+function cuCloseForm() { document.getElementById('cuMsgOv').hidden = true; }
+function cuSetErr(id, errId, msg) {
+  document.getElementById(id).classList.toggle('bad', !!msg);
+  document.getElementById(errId).textContent = msg || '';
+  return !msg;
+}
+function cuValidate() {
+  var name  = document.getElementById('cuName').value.trim();
+  var email = document.getElementById('cuEmail').value.trim();
+  var topic = document.getElementById('cuTopic').value;
+  var msg   = document.getElementById('cuMsg').value.trim();
+  var ok = true;
+  ok = cuSetErr('cuName',  'errName',  name  ? '' : 'Tell us your name.') && ok;
+  ok = cuSetErr('cuEmail', 'errEmail', !email ? 'We need an email to reply to.'
+        : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? '' : 'That email address does not look right.')) && ok;
+  ok = cuSetErr('cuTopic', 'errTopic', topic ? '' : 'Pick a topic.') && ok;
+  ok = cuSetErr('cuMsg',   'errMsg',   msg.length >= 10 ? '' : 'Add a little more detail (at least 10 characters).') && ok;
+  return ok;
+}
+function cuResetForm() {
+  document.getElementById('cuForm').reset();
+  ['cuName','cuEmail','cuTopic','cuMsg'].forEach(function (id) { document.getElementById(id).classList.remove('bad'); });
+  ['errName','errEmail','errTopic','errMsg'].forEach(function (id) { document.getElementById(id).textContent = ''; });
+  document.getElementById('cuCount').textContent = '0 / 600';
+  document.getElementById('cuCount').classList.remove('over');
+}
+function cuRef() {
+  return 'AZ-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+}
+
+/* ══ Callback modal ══ */
+var cuSlot = null;
+var CU_SLOT_HOURS = [9, 10, 11, 12, 14, 15, 16];
+
+function cuOpenCallback() {
+  document.getElementById('cuCbOv').hidden = false;
+  document.getElementById('cuCbForm').hidden = false;
+  document.getElementById('cuCbDone').hidden = true;
+  cuSlot = null;
+  cuFillDays();
+  cuRenderSlots();
+  document.getElementById('cuCbPhone').focus();
+}
+function cuCloseCallback() { document.getElementById('cuCbOv').hidden = true; }
+
+function cuFillDays() {
+  var sel = document.getElementById('cuCbDay');
+  var names = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var out = [], now = new Date();
+  for (var i = 0; i < 5; i++) {
+    var d = new Date(now.getTime() + i * 86400000);
+    if (!CU_HOURS[d.getDay()]) continue;          /* skip the closed day */
+    var label = i === 0 ? 'Today' : (i === 1 ? 'Tomorrow' : names[d.getDay()]);
+    out.push('<option value="' + i + '">' + label + ' · ' + d.getDate() + ' ' +
+             ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + '</option>');
+  }
+  sel.innerHTML = out.join('');
+}
+function cuRenderSlots() {
+  var sel  = document.getElementById('cuCbDay');
+  var off  = parseInt(sel.value || '0', 10);
+  var now  = new Date();
+  var isToday = off === 0;
+  cuSlot = null;
+  document.getElementById('cuSlots').innerHTML = CU_SLOT_HOURS.map(function (h) {
+    /* a slot in the past today can't be booked */
+    var past = isToday && h <= now.getHours();
+    return '<button type="button" class="cu-slot" data-h="' + h + '"' + (past ? ' disabled' : '') +
+           ' onclick="cuPickSlot(this)">' + cuHM(h) + '</button>';
+  }).join('');
+  document.getElementById('errCbSlot').textContent = '';
+}
+function cuPickSlot(btn) {
+  document.querySelectorAll('.cu-slot').forEach(function (b) { b.classList.remove('sel'); });
+  btn.classList.add('sel');
+  cuSlot = btn;
+  document.getElementById('errCbSlot').textContent = '';
+}
+
+/* ══ Wiring ══ */
+(function () {
+  var search = document.getElementById('cuSearch');
+  search.addEventListener('input', cuRenderSugg);
+  search.addEventListener('keydown', function (e) {
+    var box = document.getElementById('cuSugg');
+    if (e.key === 'ArrowDown') { e.preventDefault(); cuMoveCursor(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); cuMoveCursor(-1); }
+    else if (e.key === 'Enter') {
+      var sel = document.querySelector('#cuSugg a.cu-cursor') || document.querySelector('#cuSugg a');
+      if (sel && !box.hidden) { e.preventDefault(); location.href = sel.getAttribute('href'); }
+    } else if (e.key === 'Escape') { box.hidden = true; search.setAttribute('aria-expanded', 'false'); }
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.cu-search-wrap')) {
+      document.getElementById('cuSugg').hidden = true;
+      search.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  var msg = document.getElementById('cuMsg');
+  msg.addEventListener('input', function () {
+    var n = this.value.length;
+    var c = document.getElementById('cuCount');
+    c.textContent = n + ' / 600';
+    c.classList.toggle('over', n >= 600);
+  });
+  ['cuName','cuEmail','cuTopic','cuMsg'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      if (this.classList.contains('bad')) cuValidate();
+    });
+  });
+
+  document.getElementById('cuForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!cuValidate()) {
+      var bad = document.querySelector('#cuForm .bad');
+      if (bad) bad.focus();
+      return;
+    }
+    var btn = document.getElementById('cuSend');
+    btn.disabled = true;
+    btn.innerHTML = 'Sending…';
+    setTimeout(function () {
+      document.getElementById('cuSentTo').textContent  = document.getElementById('cuEmail').value.trim();
+      document.getElementById('cuSentRef').textContent = cuRef();
+      document.getElementById('cuForm').hidden = true;
+      document.getElementById('cuSent').hidden = false;
+      cuToast('Message sent');
+      btn.disabled = false;
+      btn.innerHTML = 'Send message';
+    }, 700);
+  });
+
+  document.getElementById('cuCbForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var phone = document.getElementById('cuCbPhone').value.trim();
+    var okPhone = cuSetErr('cuCbPhone', 'errCbPhone',
+      phone.replace(/\D/g, '').length >= 7 ? '' : 'Enter a number we can call you on.');
+    if (!cuSlot) document.getElementById('errCbSlot').textContent = 'Pick a time that suits you.';
+    if (!okPhone || !cuSlot) return;
+    var day = document.getElementById('cuCbDay');
+    document.getElementById('cuCbEcho').textContent =
+      phone + ' on ' + day.options[day.selectedIndex].text.split(' · ')[0].toLowerCase() +
+      ' at ' + cuSlot.textContent;
+    this.hidden = true;
+    document.getElementById('cuCbDone').hidden = false;
+    cuToast('Callback booked');
+  });
+
+  document.getElementById('cuCbOv').addEventListener('click', function (e) {
+    if (e.target === this) cuCloseCallback();
+  });
+  document.getElementById('cuMsgOv').addEventListener('click', function (e) {
+    if (e.target === this) cuCloseForm();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!document.getElementById('cuCbOv').hidden) cuCloseCallback();
+    if (!document.getElementById('cuMsgOv').hidden) cuCloseForm();
+  });
+})();
+</script>
 </body>
 </html>

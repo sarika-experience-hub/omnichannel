@@ -1,0 +1,67 @@
+<title>Quick Access Highlight Check</title>
+<link rel="stylesheet" href="css/fonts.css"/>
+<style>
+  :root{
+    --az-green:#1aad6e; --az-green-light:#edf9f4; --az-navy:#16303d;
+    --az-muted:#707070; --az-border:#e2e8ec;
+  }
+  body{ font-family:'Poppins','Roboto',Arial,sans-serif; background:#f9fafb; margin:0; padding:2rem; color:var(--az-navy); }
+  h2{ font-size:var(--fs-subhead); margin:0 0 1rem; }
+  .hub{ display:grid; grid-template-columns:260px 1fr; gap:1.25rem; max-width:760px; }
+  .qa-panel{ background:transparent; padding:1rem; }
+  .qa-hdr{ font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; color:var(--az-muted); text-transform:uppercase; margin-bottom:.75rem; padding:0 .25rem; }
+  .qa-list{ display:flex; flex-direction:column; gap:.625rem; }
+  .qa-item{ position:relative; overflow:hidden; display:block; width:100%; text-align:left; border:1px solid var(--az-border); border-radius:.75rem; background:#f8fafb; padding:.75rem .875rem; cursor:pointer; transition:all .15s; font-family:'Poppins','Roboto',sans-serif; }
+  .qa-item:hover{ background:#eef2f4; }
+  .qa-item.active{ background:var(--az-green-light); border:1.5px solid var(--az-green); box-shadow:0 3px 10px rgba(26,173,110,.18); }
+  .qa-item.active::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--az-green); }
+  .qa-item-top{ display:flex; align-items:center; gap:.375rem; font-size:var(--fs-micro); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:.35rem; color:var(--az-green); }
+  .qa-item .val{ font-size:var(--fs-subhead); font-weight:700; color:var(--az-navy); margin-bottom:.15rem; display:block; }
+  .qa-item-type{ font-size:var(--fs-micro); color:var(--az-muted); margin-bottom:.35rem; }
+  .badge-s{ display:inline-block; font-size:var(--fs-micro); padding:.15rem .5rem; margin-top:.4rem; border-radius:99px; font-weight:600; }
+  .s-active{ background:#e7f8ef; color:#1aad6e; }
+
+  .aic-panel{ border:1px solid var(--az-border); border-radius:1rem; background:#fff; padding:1.25rem 1.5rem; }
+  .aic-hdr{ display:flex; align-items:center; gap:.5rem; font-size:var(--fs-body); font-weight:700; color:var(--az-navy); margin-bottom:1rem; }
+  .aic-row{ display:flex; align-items:center; justify-content:space-between; padding:.7rem 0; border-bottom:1px solid #f0f4f7; font-size:var(--fs-small); }
+  .aic-row:last-child{ border-bottom:none; }
+  .aic-lbl{ color:var(--az-muted); }
+  .aic-val{ font-weight:600; color:var(--az-navy); }
+
+  .note{ max-width:760px; margin-top:1.5rem; font-size:var(--fs-small); color:var(--az-muted); line-height:1.5; }
+</style>
+
+<h2>Quick access — on the grey page canvas (as currently shipped)</h2>
+<div class="hub">
+  <div class="qa-panel">
+    <div class="qa-hdr">Accounts <span>3</span></div>
+    <div class="qa-list">
+      <button class="qa-item active">
+        <div class="qa-item-top">Current Account</div>
+        <span class="val">AED 248,868.00</span>
+        <div class="qa-item-type">····4200</div>
+        <span class="badge-s s-active">Active</span>
+      </button>
+      <button class="qa-item">
+        <div class="qa-item-top">Savings Account</div>
+        <span class="val">AED 92,410.00</span>
+        <div class="qa-item-type">····4201</div>
+        <span class="badge-s s-active">Active</span>
+      </button>
+      <button class="qa-item">
+        <div class="qa-item-top">Salary Account</div>
+        <span class="val">AED 12,050.00</span>
+        <div class="qa-item-type">····4202</div>
+        <span class="badge-s s-active">Active</span>
+      </button>
+    </div>
+  </div>
+  <div class="aic-panel">
+    <div class="aic-hdr">Account Information</div>
+    <div class="aic-row"><span class="aic-lbl">Account Holder</span><span class="aic-val">Sara Rahman</span></div>
+    <div class="aic-row"><span class="aic-lbl">Account Number</span><span class="aic-val">IBAN8000</span></div>
+    <div class="aic-row"><span class="aic-lbl">Status</span><span class="aic-val">Active</span></div>
+  </div>
+</div>
+
+<div class="note">Left: the quick-access list as it renders now — selected item (Current Account) has a 1.5px green border, a soft green shadow, and a 3px green accent bar on the left edge, sitting on the transparent/grey panel. Right: a white info panel for contrast.</div>
