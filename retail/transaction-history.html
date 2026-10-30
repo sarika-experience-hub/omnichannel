@@ -30,7 +30,7 @@
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
     <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
@@ -197,7 +197,7 @@
   <h1 class="page-title">Transaction History</h1>
   <div class="d-flex align-items-center gap-2">
     <span style="font-size:var(--fs-small);color:var(--az-muted);">Account:</span>
-    <select class="f-input f-select" style="min-width:200px;padding:.35rem 2rem .35rem .75rem;font-size:var(--fs-small);">
+    <select class="f-input f-select" style="width:auto;min-width:200px;padding:.35rem 2rem .35rem .75rem;font-size:var(--fs-small);">
       <option>Current Account — AED 248,350.00</option>
       <option>Savings Account — AED 84,200.00</option>
       <option>Salary Account — AED 18,500.00</option>
@@ -235,10 +235,31 @@
 <!-- Smart Filter Bar -->
 <div class="th-filter-bar">
 
-  <!-- Row: Date quick-presets + transaction type, combined onto one row -->
-  <div class="th-filter-row th-filter-row-combined">
-    <div class="th-filter-group">
-      <span class="th-filter-lbl">Period</span>
+  <!-- Search across the listing, with export beside it -->
+  <div class="th-filter-row th-filter-search-row">
+      <div class="th-search-box">
+        <span class="material-icons th-search-ico">search</span>
+        <input type="text" id="thSearch" class="th-search-input" placeholder="Search transactions, merchants, references…" oninput="thDoSearch(this.value)" autocomplete="off"/>
+        <button class="th-search-cls" id="thSearchCls" onclick="thClearSearch()" style="display:none" aria-label="Clear search">
+          <span class="material-icons" style="font-size:16px;">close</span>
+        </button>
+      </div>
+      <div class="th-export-dd">
+        <button type="button" class="th-card-export-btn" id="thExportBtn" onclick="toggleExportMenu(event)" aria-haspopup="true" aria-expanded="false">
+          <span class="material-icons" style="font-size:15px;">download</span> Export
+          <span class="material-icons" style="font-size:16px;">arrow_drop_down</span>
+        </button>
+        <div class="th-export-menu" id="thExportMenu" style="display:none" role="menu">
+          <button type="button" role="menuitem" onclick="thExportCsv()">CSV</button>
+          <button type="button" role="menuitem" onclick="thExportExcel()">Excel</button>
+          <button type="button" role="menuitem" onclick="thExportPdf()">PDF</button>
+        </div>
+      </div>
+  </div>
+
+  <!-- Quick date presets -->
+  <div class="th-filter-row">
+    <span class="th-filter-lbl">Period</span>
       <div class="th-pill-group" id="datePillGroup" role="group" aria-label="Date period">
         <button class="th-pill" onclick="setDatePill(this,'today')">Today</button>
         <button class="th-pill" onclick="setDatePill(this,'7d')">Last 7 days</button>
@@ -249,9 +270,11 @@
           <span class="material-icons" style="font-size:13px;vertical-align:-2px;">date_range</span> Custom range
         </button>
       </div>
-    </div>
-    <div class="th-filter-group">
-      <span class="th-filter-lbl">Type</span>
+  </div>
+
+  <!-- Transaction type -->
+  <div class="th-filter-row">
+    <span class="th-filter-lbl">Type</span>
       <div class="th-pill-group" id="typePillGroup" role="group" aria-label="Transaction type">
         <button class="th-tpill th-tpill-active" onclick="setTypePill(this,'all')">All</button>
         <button class="th-tpill th-tpill-cr" onclick="setTypePill(this,'credit')">
@@ -267,11 +290,18 @@
           <span class="material-icons" style="font-size:13px;vertical-align:-2px;">receipt_long</span> Bill Payments
         </button>
       </div>
-    </div>
-    <button class="th-more-btn th-more-btn-push" id="thMoreBtn" onclick="toggleMoreFilters()">
+  </div>
+
+  <!-- Advanced filters toggle, and whatever filters are currently on -->
+  <div class="th-filter-bottom" id="thFilterBottom">
+    <button class="th-more-btn" id="thMoreBtn" onclick="toggleMoreFilters()">
       <span class="material-icons" style="font-size:15px;">tune</span>
       More filters
       <span class="material-icons" id="thMoreChev" style="font-size:15px;transition:transform .2s;">expand_more</span>
+    </button>
+    <span id="thActiveChips"></span>
+    <button type="button" class="th-reset-lnk" id="thResetLnk" onclick="resetThFilters()">
+      <span class="material-icons" style="font-size:14px;">restart_alt</span> Reset all
     </button>
   </div>
 
@@ -340,13 +370,6 @@
   <div class="th-card-header">
     <div class="th-card-header-left">
       <span class="th-card-title">Transactions</span>
-      <div class="th-search-box">
-        <span class="material-icons th-search-ico">search</span>
-        <input type="text" id="thSearch" class="th-search-input" placeholder="Search transactions, merchants, references…" oninput="thDoSearch(this.value)" autocomplete="off"/>
-        <button class="th-search-cls" id="thSearchCls" onclick="thClearSearch()" style="display:none" aria-label="Clear search">
-          <span class="material-icons" style="font-size:16px;">close</span>
-        </button>
-      </div>
     </div>
     <div class="th-card-header-right">
       <span class="th-record-count">Showing 1–10 of 24 records</span>
@@ -359,17 +382,6 @@
       <button type="button" class="th-action-btn th-action-btn-sm">
         <img src="../images/icons/share.svg" width="14" height="14" alt="" loading="lazy"/> Share
       </button>
-      <div class="th-export-dd">
-        <button type="button" class="th-card-export-btn" id="thExportBtn" onclick="toggleExportMenu(event)" aria-haspopup="true" aria-expanded="false">
-          <span class="material-icons" style="font-size:15px;">download</span> Export
-          <span class="material-icons" style="font-size:16px;">arrow_drop_down</span>
-        </button>
-        <div class="th-export-menu" id="thExportMenu" style="display:none" role="menu">
-          <button type="button" role="menuitem" onclick="thExportCsv()">CSV</button>
-          <button type="button" role="menuitem" onclick="thExportExcel()">Excel</button>
-          <button type="button" role="menuitem" onclick="thExportPdf()">PDF</button>
-        </div>
-      </div>
     </div>
   </div>
 
