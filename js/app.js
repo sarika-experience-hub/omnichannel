@@ -8,7 +8,12 @@
    Shows only icons when collapsed.
    Arrow: ◄ = open (click to collapse) | ► = collapsed (click to expand)
    ─────────────────────────────────────────────── */
-var _sbOpen = true;
+/* The tray is off-screen below 992px, so the flag has to start matching
+   that — it used to start open while the CSS kept the panel hidden, which
+   made the first tap a no-op and forced a second tap to open the menu. */
+var _sbOpen = !(typeof window !== 'undefined' && window.matchMedia
+  ? window.matchMedia('(max-width: 991.98px)').matches
+  : false);
 
 function toggleSidebar() {
   _sbOpen = !_sbOpen;
@@ -27,7 +32,7 @@ function toggleSidebar() {
   }
 
   /* Mobile overlay dismiss */
-  if (window.innerWidth <= 767) {
+  if (window.innerWidth <= 991) {
     if (sb) sb.classList.toggle('mobile-open', _sbOpen);
     toggleOverlay(_sbOpen);
   }

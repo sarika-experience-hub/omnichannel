@@ -63,13 +63,10 @@ function obWireRail(files, current, journey, onLeave) {
       return;
     }
 
-    if (n > furthest) {
-      li.classList.add('is-locked');
-      li.setAttribute('aria-disabled', 'true');
-      var locked = li.querySelector('.ob-step-lbl');
-      if (locked) locked.title = 'Complete the earlier steps first';
-      return;
-    }
+    /* Steps ahead of the furthest reached used to be locked and dimmed to
+       .45 opacity, which put the label at roughly 2.3:1 on the navy rail —
+       unreadable. Every step is reachable now, so the rail works as
+       navigation rather than as a disabled progress read-out. */
 
     var lbl = li.querySelector('.ob-step-lbl');
     li.classList.add('is-link');
