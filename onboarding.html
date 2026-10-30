@@ -224,7 +224,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 .az-right-panel { width:280px; min-width:280px; border-left:1px solid var(--gray-bd); background:var(--green-light); padding:24px 20px; overflow-y:auto; flex-shrink:0; }
 .promo-title { font-size:16px; font-weight:700; color:var(--text); line-height:1.6; margin-bottom:14px; }
 .promo-body  { font-size:13px; line-height:1.8; color:var(--text); }
-.promo-img   { width:100%; max-width:200px; display:block; margin:24px auto 0; }
+.promo-img   { width:100%; height:auto; display:block; margin:24px auto 0; border-radius:.6rem; }
 .sum-title   { font-size:16px; font-weight:700; color:var(--text); margin-bottom:16px; text-align:center; }
 .sum-sec     { margin-bottom:4px; }
 .sum-hdr     { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-bd); cursor:pointer; }
@@ -282,6 +282,26 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 .hdr-lang-opt:hover { background: #f0faf5; }
 .hdr-lang-opt.active { font-weight: 700; background: #f5fdf9; }
 .hdr-lang-opt .fi { width: 20px; height: 15px; border-radius: 2px; flex-shrink: 0; }
+
+/* ══ Step rail — matched to COA_identification_details ══════════════════
+   This rail was a light grey panel with an orange accent: a different
+   palette from every other onboarding screen, and its inactive labels sat
+   at 4.20:1 on that grey, under the 4.5:1 minimum. It now carries the same
+   navy gradient and the same label colours as the .ob-rail used by the
+   COA and Become-our-customer steps (white active, #8fa3a0 inactive,
+   6.29:1). ══════════════════════════════════════════════════════════ */
+.az-sidebar {
+  background: linear-gradient(180deg,#142b38 0%,#0f2029 55%) !important;
+  border-right: 1px solid rgba(255,255,255,.08) !important;
+}
+.az-step-label { color: #8fa3a0 !important; }
+.az-step.active .az-step-label { color: #fff !important; }
+.az-step.active { border-left-color: #2ed88e !important; background: rgba(46,216,142,.08) !important; }
+.az-step.inactive { border-left-color: rgba(255,255,255,.1) !important; }
+.az-step.active .az-step-circle { background: #fff !important; border: none !important; color: #0f2029 !important; }
+.az-step.inactive .az-step-circle { background: transparent !important; border: 2px solid rgba(143,163,160,.5) !important; color: #8fa3a0 !important; }
+.az-step.clickable:hover { background: rgba(255,255,255,.05) !important; }
+.az-sidebar .az-step-badge { background: rgba(255,255,255,.12) !important; color: #cdd9d7 !important; }
 </style>  <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
@@ -1211,7 +1231,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
       <aside class="az-right-panel" id="rp-promo" aria-label="Welcome information">
         <p class="promo-title">Welcome to <strong>Azentio's digital onboarding!</strong> Create your account <strong>quickly</strong> and <strong>securely</strong> to get instant access to all our digital banking services.</p>
         <p class="promo-body">Start your journey to smarter, seamless banking today.</p>
-        <img src="../screens/onboarding/undraw_setup_wizard_re_nday.svg" class="promo-img" alt="Digital onboarding illustration">
+        <img src="images/landing/banking-hero.png" class="promo-img" alt="" width="440" height="248" loading="lazy" decoding="async">
       </aside>
 
       <!-- Steps 2–8: summary -->

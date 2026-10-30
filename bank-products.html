@@ -41,7 +41,9 @@
     .bp-title{font-size:var(--fs-title);font-weight:500;line-height:1.2;color:#16303d}
 
     .bp-acc-item{border:1px solid #e2e8ec;border-radius:1rem;background:#fff;margin-bottom:.875rem;overflow:hidden;transition:box-shadow .15s}
-    .bp-acc-item.open{box-shadow:0 4px 16px rgba(22,48,61,.08)}
+    /* An expanded item takes the hero panel tint (.acct-hero), so the open card reads as the active surface rather than one white card among four. */
+    .bp-acc-item.open{background:#e3f7ec;border-color:#bfeed7;box-shadow:0 3px 8px rgba(26,173,110,.1)}
+    .bp-acc-item.open .bp-acc-hdr:hover{background:rgba(255,255,255,.4)}
     .bp-acc-hdr{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:1rem 1.25rem;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:'Poppins','Roboto',sans-serif}
     .bp-acc-hdr:hover{background:#f8fafb}
     .bp-acc-title{font-size:var(--fs-subhead);font-weight:600;color:#16303d}
@@ -58,6 +60,8 @@
     html.dark body{background:#0d1b24}
     html.dark .bp-title,html.dark .bp-bc .cur{color:#e6eef3}
     html.dark .bp-acc-item{background:#111e27;border-color:#243545}
+    html.dark .bp-acc-item.open{background:#12302a;border-color:#1d5243}
+    html.dark .bp-acc-item.open .bp-acc-hdr:hover{background:rgba(255,255,255,.06)}
     html.dark .bp-acc-hdr:hover{background:#162530}
     html.dark .bp-acc-title{color:#e6eef3}
     html.dark .bp-acc-body-in{color:#d9e4ea}
@@ -128,6 +132,15 @@
   <a href="islamic-utilities.html" class="pl-item">
     <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
     <span>Islamic Utilities</span>
+  </a>
+  <div class="pl-div"></div>
+  <a href="accessibility-commitment.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.4" r="1.15" fill="#16303d" stroke="none"/><path d="M7.6 10.3c2.9.85 5.9.85 8.8 0"/><path d="M12 10.6V14"/><path d="M12 14l-2 4.2"/><path d="M12 14l2 4.2"/></svg></span>
+    <span>Our Accessibility Commitment</span>
+  </a>
+  <a href="accessibility-features.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="17" y2="13"/><line x1="7" y1="17" x2="13" y2="17"/></svg></span>
+    <span>Features</span>
   </a>
   <div class="pl-div"></div>
 </aside>

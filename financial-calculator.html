@@ -113,6 +113,9 @@
     html.dark .phone-pfx{background:#162530;border-color:#243545;color:#d9e4ea}
     html.dark .phone-ctry-panel{background:#111e27;border-color:#243545}
     html.dark .btn-green{background:#111e27;border-color:#243545;color:#d9e4ea}
+  
+    /* Open state: the same chevron, mirrored. */
+    .f-select.is-open{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1,7L5,3,9,7,10,5.2,5,0,0,5.2Z' fill='%231aad6e'/%3E%3C/svg%3E")}
   </style>
   <script src="js/theme.js"></script>
 </head>
@@ -180,6 +183,15 @@
   <a href="islamic-utilities.html" class="pl-item">
     <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21v-4a4 4 0 0 1 4-4h1"/><path d="M21 21H3"/><path d="M10 3.2A4 4 0 0 1 16 7a4 4 0 0 1-4 4 6 6 0 0 1 6 6H6a6 6 0 0 1 6-6 4 4 0 0 1-4-4 4 4 0 0 1 2.8-3.8"/></svg></span>
     <span>Islamic Utilities</span>
+  </a>
+  <div class="pl-div"></div>
+  <a href="accessibility-commitment.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.4" r="1.15" fill="#16303d" stroke="none"/><path d="M7.6 10.3c2.9.85 5.9.85 8.8 0"/><path d="M12 10.6V14"/><path d="M12 14l-2 4.2"/><path d="M12 14l2 4.2"/></svg></span>
+    <span>Our Accessibility Commitment</span>
+  </a>
+  <a href="accessibility-features.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="17" y2="13"/><line x1="7" y1="17" x2="13" y2="17"/></svg></span>
+    <span>Features</span>
   </a>
   <div class="pl-div"></div>
 </aside>
@@ -487,5 +499,24 @@ fcCalc();
 </script>
 <script src="js/app.js"></script>
 <script src="js/prelogin-header.js"></script>
+
+<script>
+/* Native selects expose no open state to CSS, so track it by hand: the
+   arrow points up while the list is down. */
+(function () {
+  'use strict';
+  function close(el){ el.classList.remove('is-open'); }
+  document.querySelectorAll('.f-select').forEach(function (sel) {
+    sel.addEventListener('mousedown', function () { this.classList.toggle('is-open'); });
+    sel.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        this.classList.add('is-open');
+      } else if (e.key === 'Escape' || e.key === 'Tab') { close(this); }
+    });
+    sel.addEventListener('change', function () { close(this); });
+    sel.addEventListener('blur', function () { close(this); });
+  });
+})();
+</script>
 </body>
 </html>

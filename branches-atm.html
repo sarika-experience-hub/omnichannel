@@ -71,9 +71,12 @@
 
     /* ── Right column: filters + map + actions ── */
     .ba-right{display:flex;flex-direction:column;gap:.875rem;min-height:0}
-    .ba-filter-card{border:1px solid #e2e8ec;border-radius:1rem;background:#fff;padding:1rem 1.125rem;flex-shrink:0}
+    /* Hero panel tint, with the green left border the financial calculator uses. */
+    .ba-filter-card{border:1px solid #bfeed7;border-left:3px solid #1aad6e;border-radius:1rem;background:#e3f7ec;padding:1rem 1.125rem;flex-shrink:0;box-shadow:0 3px 8px rgba(26,173,110,.1)}
     .ba-filter-row{display:flex;align-items:flex-end;gap:.875rem;flex-wrap:wrap}
     .ba-filter-field{flex:1;min-width:130px}
+    .ba-filter-cta{display:flex;gap:.625rem;flex-wrap:wrap;margin-top:.875rem}
+    .ba-filter-cta .ba-btn{padding-top:.55rem;padding-bottom:.55rem;padding-left:1.1rem;padding-right:1.1rem}
     .ba-icon-btn{width:2.5rem;height:2.5rem;border:1.5px solid #e2e8ec;border-radius:.625rem;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
     .ba-icon-btn:hover{border-color:#1aad6e;background:#edf9f4}
     .ba-icon-btn .material-icons{font-size:19px;color:#16303d;transition:color .15s}
@@ -82,8 +85,9 @@
     .ba-map-card{flex:1;min-height:0;border-radius:1rem;overflow:hidden;border:1px solid #e2e8ec}
     .ba-map-card iframe{width:100%;height:100%;border:none;display:block}
 
-    .ba-actions{display:flex;gap:.875rem;flex-shrink:0}
-    .ba-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem;border-radius:.625rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);font-weight:600;letter-spacing:.02em;cursor:pointer;transition:all .15s;text-decoration:none}
+    .ba-actions{display:flex;gap:.875rem;flex-shrink:0;flex-wrap:wrap}
+    /* Sized to their labels — flex:1 made each one span half the row. */
+    .ba-btn{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem;border-radius:.625rem;font-family:'Poppins','Roboto',sans-serif;font-size:var(--fs-small);font-weight:600;letter-spacing:.02em;cursor:pointer;transition:all .15s;text-decoration:none;padding-left:1.5rem;padding-right:1.5rem}
     .ba-btn .material-icons{font-size:18px}
     .ba-btn-primary{background:linear-gradient(135deg,#16303d,#0d1f28);color:#fff;border:none;box-shadow:0 2px 8px rgba(22,48,61,.18)}
     .ba-btn-primary:hover{opacity:.92;color:#fff}
@@ -181,6 +185,15 @@
     <span>Islamic Utilities</span>
   </a>
   <div class="pl-div"></div>
+  <a href="accessibility-commitment.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.4" r="1.15" fill="#16303d" stroke="none"/><path d="M7.6 10.3c2.9.85 5.9.85 8.8 0"/><path d="M12 10.6V14"/><path d="M12 14l-2 4.2"/><path d="M12 14l2 4.2"/></svg></span>
+    <span>Our Accessibility Commitment</span>
+  </a>
+  <a href="accessibility-features.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="17" y2="13"/><line x1="7" y1="17" x2="13" y2="17"/></svg></span>
+    <span>Features</span>
+  </a>
+  <div class="pl-div"></div>
 </aside>
   <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
     <main style="flex:1;padding:.75rem 1.75rem 1.5rem;display:flex;flex-direction:column;min-height:0;overflow:hidden">
@@ -259,8 +272,12 @@
           <label class="f-label">City</label>
           <select class="f-input f-select"><option value="">Select</option><option>Beirut</option><option>Tripoli</option></select>
         </div>
-        <button class="ba-icon-btn" title="Search" aria-label="Search"><span class="material-icons" aria-hidden="true">search</span></button>
-        <button class="ba-icon-btn" title="Use my location" aria-label="Use my location"><span class="material-icons" aria-hidden="true">my_location</span></button>
+      </div>
+      <!-- The actions sit below the fields rather than squeezed in beside
+           the last select, so they can carry labels instead of bare icons. -->
+      <div class="ba-filter-cta">
+        <button class="ba-btn ba-btn-primary"><span class="material-icons" aria-hidden="true">search</span> Search</button>
+        <button class="ba-btn ba-btn-outline"><span class="material-icons" aria-hidden="true">my_location</span> Use my location</button>
       </div>
     </div>
     <!-- Map -->

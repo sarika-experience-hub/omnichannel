@@ -46,7 +46,27 @@
     /* overflow is visible so the currency menu can escape; the decoration
        clips itself inside .cx-hero-deco instead */
     /* the right padding reserves a clean band for the petal mark */
-    .cx-hero{position:relative;border-radius:1.1rem;padding:.9rem 7.5rem 1rem 1.4rem;background:#e3f7ec;border:1px solid #bfeed7;box-shadow:0 3px 8px rgba(26,173,110,.1);margin-bottom:1rem}
+    /* Two columns, same construction as .fc-grid on the calculator page. */
+    .cx-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:1.5rem;align-items:start}
+    .cx-side-col{position:sticky;top:1rem;align-self:start;height:fit-content}
+    /* The converter is a side panel now, so it drops the banner's wide
+       right padding — that space existed to clear the decorative mark. */
+    .cx-hero{position:relative;border-radius:1.1rem;padding:1.1rem 1.25rem 1.2rem;background:#e3f7ec;border:1px solid #bfeed7;box-shadow:0 3px 8px rgba(26,173,110,.1);margin-bottom:0}
+    /* Stacked vertically in a narrow column rather than side by side. */
+    .cx-side-col .cx-conv{flex-direction:column;align-items:stretch;gap:.6rem}
+    /* .cx-field carries flex:1 1 240px for the old side-by-side row. In a
+       column the basis applies to the main axis — height — so each field
+       stretched to 240px tall. Size to content here instead. */
+    .cx-side-col .cx-field{flex:0 0 auto}
+    .cx-side-col .cx-swap{align-self:center;transform:rotate(90deg)}
+    .cx-side-col .cx-hero-head{flex-direction:column;align-items:flex-start;gap:.5rem}
+    .cx-side-col .cx-hero-deco{display:none}
+    @media (max-width:1100px){
+      .cx-grid{grid-template-columns:1fr}
+      .cx-side-col{position:static}
+      .cx-side-col .cx-conv{flex-direction:row;align-items:center}
+      .cx-side-col .cx-swap{transform:none}
+    }
     .cx-hero-deco{position:absolute;inset:0;border-radius:1.1rem;overflow:hidden;pointer-events:none;z-index:0}
     /* Pre-login pages carry the azentio logo petals; the post-login heroes
        keep the four-point sparkle, so the two sides stay distinguishable.
@@ -110,7 +130,7 @@
     .cx-swap.cx-flip{transform:rotate(180deg)}
     .cx-swap .material-icons{font-size:20px}
     .cx-out{display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:#fff;border:1px solid #bfeed7;border-radius:.625rem;padding:.45rem .8rem;min-height:42px}
-    .cx-out-val{font-size:var(--fs-section);font-weight:700;color:#16303d;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s}
+    .cx-out-val{flex:1;text-align:right;font-size:var(--fs-section);font-weight:700;color:#16303d;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s}
     .cx-out-val.cx-pulse{color:#1aad6e}
     .cx-out-cur{display:inline-flex;align-items:center;gap:.4rem;font-size:var(--fs-small);font-weight:600;color:#16303d;flex-shrink:0}
     .cx-rate-note{position:relative;z-index:1;margin-top:.55rem;font-size:var(--fs-micro);color:#4a6b5d;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
@@ -288,6 +308,15 @@
     <span>Islamic Utilities</span>
   </a>
   <div class="pl-div"></div>
+  <a href="accessibility-commitment.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.4" r="1.15" fill="#16303d" stroke="none"/><path d="M7.6 10.3c2.9.85 5.9.85 8.8 0"/><path d="M12 10.6V14"/><path d="M12 14l-2 4.2"/><path d="M12 14l2 4.2"/></svg></span>
+    <span>Our Accessibility Commitment</span>
+  </a>
+  <a href="accessibility-features.html" class="pl-item">
+    <span class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#16303d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="17" y2="13"/><line x1="7" y1="17" x2="13" y2="17"/></svg></span>
+    <span>Features</span>
+  </a>
+  <div class="pl-div"></div>
 </aside>
   <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
     <main style="flex:1;padding:.75rem 1.75rem 1.5rem">
@@ -303,42 +332,7 @@
 </div>
 
 <!-- ── Hero: live converter ── -->
-<section class="cx-hero" aria-label="Currency converter">
-  <span class="cx-hero-deco" aria-hidden="true"></span>
-  <div class="cx-hero-head">
-    <div>
-      <div class="cx-hero-eyebrow">Currency Converter</div>
-      <div class="cx-hero-sub">See what your money is worth today</div>
-    </div>
-    <span class="cx-hero-pill"><span class="material-icons" aria-hidden="true">bolt</span> Indicative rates</span>
-  </div>
-
-  <div class="cx-conv">
-    <div class="cx-field">
-      <label class="cx-flbl" for="cxAmount">You exchange</label>
-      <div class="cx-ctrl">
-        <input id="cxAmount" class="cx-amt" type="text" inputmode="decimal" autocomplete="off" value="1,000.00" aria-label="Amount to exchange"/>
-        <div class="cx-side" id="cxLeftSide"></div>
-      </div>
-    </div>
-
-    <button type="button" class="cx-swap" id="cxSwap" title="Swap direction" aria-label="Swap conversion direction">
-      <span class="material-icons" aria-hidden="true">swap_horiz</span>
-    </button>
-
-    <div class="cx-field">
-      <span class="cx-flbl" id="cxOutLbl">You receive</span>
-      <div class="cx-out">
-        <span class="cx-out-val" id="cxResult" aria-live="polite">3,600.00</span>
-        <div class="cx-side cx-side-out" id="cxRightSide"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="cx-rate-note" id="cxRateNote"></div>
-</section>
-
-<!-- ── Rates table ── -->
+<div class="cx-grid">
 <section class="cx-card" aria-label="Exchange rates">
   <div class="cx-card-hdr">
     <span>Exchange Rates</span>
@@ -381,6 +375,41 @@
     No currencies match your search.
   </div>
 </section>
+<aside class="cx-side-col"><section class="cx-hero" aria-label="Currency converter">
+  <span class="cx-hero-deco" aria-hidden="true"></span>
+  <div class="cx-hero-head">
+    <div>
+      <div class="cx-hero-eyebrow">Currency Converter</div>
+      <div class="cx-hero-sub">See what your money is worth today</div>
+    </div>
+    <span class="cx-hero-pill"><span class="material-icons" aria-hidden="true">bolt</span> Indicative rates</span>
+  </div>
+
+  <div class="cx-conv">
+    <div class="cx-field">
+      <label class="cx-flbl" for="cxAmount">You exchange</label>
+      <div class="cx-ctrl">
+        <input id="cxAmount" class="cx-amt" type="text" inputmode="decimal" autocomplete="off" value="1,000.00" aria-label="Amount to exchange"/>
+        <div class="cx-side" id="cxLeftSide"></div>
+      </div>
+    </div>
+
+    <button type="button" class="cx-swap" id="cxSwap" title="Swap direction" aria-label="Swap conversion direction">
+      <span class="material-icons" aria-hidden="true">swap_horiz</span>
+    </button>
+
+    <div class="cx-field">
+      <span class="cx-flbl" id="cxOutLbl">You receive</span>
+      <div class="cx-out">
+        <span class="cx-out-val" id="cxResult" aria-live="polite">3,600.00</span>
+        <div class="cx-side cx-side-out" id="cxRightSide"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cx-rate-note" id="cxRateNote"></div>
+</section></aside>
+</div><!-- ── Rates table ── -->
     </main>
 <footer style="height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;border-top:1px solid #e2e8ec;background:#fff;font-size:12px;color:#8a979e">
   <div>Copyright 2025. All Rights Reserved &nbsp;<a href="#" style="color:#8a979e;text-decoration:none">Terms and conditions</a>&nbsp;<a href="#" style="color:#8a979e;text-decoration:none">About App</a></div>

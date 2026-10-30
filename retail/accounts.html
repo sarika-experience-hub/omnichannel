@@ -41,10 +41,31 @@
 /* ── Pill-tab preview variant (demo only, scoped to .az-tabs-pill) ── */
 .az-tabs-pill { display: flex; flex: 0 1 620px; gap: .3rem; background: var(--az-green-light,#edf9f4); border-radius: 22px; padding: 4px; width: 620px; max-width: 620px; height: 44px; box-sizing: border-box; margin: .25rem 0; }
 .az-tabs-pill .az-tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: .4rem; text-align: center; border-radius: 18px; height: 36px; padding: 0 .75rem; margin: 0; border-bottom: none; box-sizing: border-box; }
+.az-tabs-pill .az-tab .az-tab-lbl { margin-left: .4rem; }
 .az-tabs-pill .az-tab .material-icons { font-size: 17px; }
 .az-tabs-pill .az-tab:hover { color: var(--az-navy,#16303d); }
 .az-tabs-pill .az-tab.active { background: linear-gradient(135deg, var(--az-navy,#16303D), #0d1f28); color: #fff; border-bottom: none; }
 .az-tabs-pill .az-tab.active .material-icons { color: #2ed88e; }
+
+/* ── Phone: the tab strip scrolls rather than squeezing ──
+   Three labelled pills need 620px; at 375px they stay legible and the
+   strip scrolls sideways instead. Icons alone were not readable enough
+   to carry the tab on their own. */
+@media (max-width: 575.98px) {
+  .az-tabs-pill {
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    padding: 3px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .az-tabs-pill::-webkit-scrollbar { display: none; }
+  .az-tabs-pill .az-tab { flex: 0 0 auto; height: 38px; padding: 0 .85rem; }
+}
 
 /* View toggle removed for simplified 3-account view; keep bal-toggle style */
 .view-toggle { display: none !important; }
@@ -63,7 +84,8 @@
 /* ── Accounts hub — Quick Access + Active Account (max 3 accounts) ── */
 .acct-hub { display: grid; grid-template-columns: 260px 1fr; gap: 1.25rem; align-items: start; }
 .qa-panel { border: none; border-radius: 1rem; background: transparent; padding: 1rem; }
-.qa-hdr { font-size:var(--fs-micro); font-weight:600; letter-spacing: .06em; color: var(--az-muted,#707070); text-transform: uppercase; margin-bottom: .75rem; padding: 0 .25rem; }
+.qa-hdr { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: .45rem .625rem; font-size:var(--fs-micro); font-weight:600; letter-spacing: .04em; color: var(--az-muted,#707070); text-transform: uppercase; margin-bottom: .75rem; padding: 0 .25rem; }
+.qa-hdr-txt { min-width: 0; white-space: nowrap; }
 .qa-hdr-count { color: var(--az-navy,#16303d); }
 .qa-list { display: flex; flex-direction: column; gap: .625rem; }
 .qa-item { position: relative; overflow: hidden; display: block; width: 100%; text-align: left; border: 1px solid var(--az-border,#e2e8ec); border-radius: .75rem; background: #fcfdfd; padding: .75rem .875rem; cursor: pointer; transition: all .15s; font-family: 'Poppins','Roboto',sans-serif; }
@@ -77,6 +99,41 @@
 .qa-item .val { font-size:var(--fs-subhead); font-weight: 700; color: var(--az-navy,#16303d); margin-bottom: .15rem; display: block; }
 .qa-item-type { font-size:var(--fs-micro); color: var(--az-muted,#707070); margin-bottom: .35rem; }
 .qa-item-badge { font-size:var(--fs-micro); padding: .15rem .5rem; margin-top: .4rem; }
+
+/* ── Phone: the account list becomes a thumbnail strip ──
+   Stacked full-width, three accounts pushed the hero — the detail they
+   select — about 400px down the page, so you scrolled past the list to
+   see what you had picked. Across, each account is a thumbnail sized to
+   show two and a bit, which both shortens the column and signals there
+   is more to the side. Scroll-snap makes the swipe land on a card. */
+@media (max-width: 575.98px) {
+  .qa-list {
+    flex-direction: row;
+    gap: .5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    /* room for the active card s shadow, and the edge it is inset from */
+    padding: .25rem .25rem .5rem;
+    margin: -.25rem -.25rem -.5rem;
+    scrollbar-width: none;
+  }
+  .qa-list::-webkit-scrollbar { display: none; }
+
+  .qa-item {
+    flex: 0 0 auto;
+    width: 10.5rem;
+    scroll-snap-align: start;
+    padding: .625rem .75rem;
+  }
+  /* The left accent bar belongs to a stacked row; across, the border and
+     fill already mark the selection. */
+  .qa-item.active::before { display: none; }
+  .qa-item-top { margin-bottom: .25rem; }
+  .qa-item .val { font-size:var(--fs-body); }
+  .qa-item-badge { margin-top: .3rem; }
+}
 
 .acct-main-col { display: flex; flex-direction: column; gap: 1.25rem; }
 
@@ -183,12 +240,25 @@
 .copy-tip { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); background: var(--az-navy,#16303d); color: #fff; font-size:var(--fs-micro); padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .2s; font-family: 'Poppins','Roboto',sans-serif; }
 .acct-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--az-navy,#16303d); color: #fff; padding: .7rem 1.25rem; border-radius: .5rem; font-size:var(--fs-small); font-weight: 600; font-family: 'Poppins','Roboto',sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 99999; }
 .acct-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.bal-toggle-btn { background: none; border: 1.5px solid var(--az-border,#e2e8ec); border-radius: .25rem; cursor: pointer; color: var(--az-muted,#707070); padding: 0 .75rem; height: 2.5rem; box-sizing: border-box; display: inline-flex; align-items: center; gap: .25rem; font-size:var(--fs-caption); font-family: 'Poppins','Roboto',sans-serif; line-height: 1; transition: all .15s; }
-.bal-toggle-btn:hover { color: var(--az-green); border-color: var(--az-green); }
-.bal-toggle-btn .material-icons { font-size: 16px; }
-.btn-open-account { background: var(--az-navy,#16303d)!important; color: #fff!important; border: none; border-radius: .5rem; padding: 0 1.75rem; height: 2.5rem; box-sizing: border-box; font-size:var(--fs-body); font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: opacity .2s; letter-spacing: .01em; box-shadow: 0 1px 3px rgba(22,48,61,.18); }
-.btn-open-account:hover { opacity: .92; }
+.btn-open-account { background: #1AAD6E!important; color: #fff!important; border: none; border-radius: .5rem; padding: 0 1.75rem; height: 2.5rem; box-sizing: border-box; font-size:var(--fs-body); font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none!important; transition: opacity .2s; letter-spacing: .01em; box-shadow: 0 1px 3px rgba(22,48,61,.18); }
+.btn-open-account:hover { background: #158a58!important; opacity: 1; }
+.btn-open-account .material-icons { color: #fff; }
+/* Shares the heading line, so it is a chip rather than a button — green
+   on a green tint carries the action without a second heavy block in a
+   column of cards. The heading beside it names the account type, so the
+   label only has to carry the verb. */
+/* A quiet utility beside the list heading — it hides figures, it does not
+   start a journey, so it stays an outline rather than a filled control. */
+.qa-chip { display: inline-flex; align-items: center; justify-content: center; gap: .25rem; flex-shrink: 0; padding: .3rem .65rem; border-radius: 1rem; background: #fff; border: 1px solid var(--az-border,#e2e8ec); color: var(--az-muted,#707070); font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-micro); font-weight: 600; letter-spacing: .04em; white-space: nowrap; cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+.qa-chip:hover { border-color: var(--az-green,#2ed88e); color: var(--az-navy,#16303d); background: #f6fdfa; }
+.qa-chip .material-icons { font-size: 14px; }
+html.dark .qa-chip { background: #111e27; border-color: #243545; color: #8fa3b4; }
+html.dark .qa-chip:hover { color: #d9e4ea; border-color: #1aad6e; background: #13342a; }
+@media (max-width: 575.98px) {
+  .qa-chip { min-height: 32px; }
+}
 .btn-open-account .material-icons { font-size: 17px; }
+
 
 /* Empty state (fewer than 3 accounts) */
 .acct-empty-slot { border: 2px dashed var(--az-border,#e2e8ec); border-radius: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; padding: 2rem 1rem; color: var(--az-muted); text-align: center; min-height: 220px; }
@@ -203,7 +273,7 @@
 <!-- ████ HEADER ████ -->
 <header class="app-hdr" role="banner">
   <button class="hdr-hamburger" id="collapseBtn" aria-label="Toggle navigation" aria-expanded="true" title="Toggle sidebar"><span class="material-icons icon-hamburger" aria-hidden="true">menu</span><span class="material-icons icon-collapsed" aria-hidden="true">menu_open</span></button>
-  <div class="hdr-logo" id="hdrLogo" onclick="location.href='../index.html'" title="Go to dashboard" style="cursor:pointer">
+  <div class="hdr-logo" id="hdrLogo" onclick="location.href='retail-dashboard.html'" title="Go to dashboard" style="cursor:pointer">
     <span class="hdr-logo-svg" aria-label="azentio" role="img"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="28" viewBox="0 0 152.97 40.623">
   <g id="logo" transform="translate(0.275 -0.84)">
     <path id="Path_12569" data-name="Path 12569" d="M.354,32.831c0-6.456,4.037-11.054,10.014-11.054a8.083,8.083,0,0,1,7.146,3.914h.243V22.3h3.229V39.489c0,.647.4.968,1.049.968H23V43.28h-2.06a3.025,3.025,0,0,1-3.069-3.106v-.2h-.243a7.874,7.874,0,0,1-7.025,3.833C4.589,43.807.349,39.246.349,32.833Zm17.523.043c0-5.2-3.229-8.191-7.146-8.191-4.117,0-7.106,3.39-7.106,8.191s3.109,8.07,7.146,8.07C15.172,40.944,17.877,37.273,17.877,32.873Z" transform="translate(0 -2.967)" fill="#16303d" stroke="#16303d" stroke-width="1.247"/>
@@ -369,22 +439,22 @@
 <div class="content-card">
   <div class="tabs-header-row">
     <div class="az-tabs az-tabs-pill" role="tablist">
-      <button class="az-tab active" id="tabGenBtn" onclick="switchTab('general');acctsToggleCta('general')" role="tab" aria-selected="true" aria-controls="tabGeneral"><span class="material-icons">account_balance_wallet</span> General Accounts</button>
-      <button class="az-tab" id="tabTermBtn" onclick="switchTab('term');acctsToggleCta('term')" role="tab" aria-selected="false" aria-controls="tabTerm"><span class="material-icons">savings</span> Term Deposit Accounts</button>
-      <button class="az-tab" id="tabFinBtn" onclick="switchTab('financing');acctsToggleCta('financing')" role="tab" aria-selected="false" aria-controls="tabFinancing"><span class="material-icons">account_balance</span> Financing Accounts</button>
+      <button class="az-tab active" id="tabGenBtn" onclick="switchTab('general')" role="tab" aria-selected="true" aria-controls="tabGeneral" title="General Accounts" aria-label="General Accounts"><span class="material-icons">account_balance_wallet</span><span class="az-tab-lbl">General Accounts</span></button>
+      <button class="az-tab" id="tabTermBtn" onclick="switchTab('term')" role="tab" aria-selected="false" aria-controls="tabTerm" title="Term Deposit Accounts" aria-label="Term Deposit Accounts"><span class="material-icons">savings</span><span class="az-tab-lbl">Term Deposit Accounts</span></button>
+      <button class="az-tab" id="tabFinBtn" onclick="switchTab('financing')" role="tab" aria-selected="false" aria-controls="tabFinancing" title="Financing Accounts" aria-label="Financing Accounts"><span class="material-icons">account_balance</span><span class="az-tab-lbl">Financing Accounts</span></button>
     </div>
     <div class="d-flex align-items-center gap-2">
-      <button class="bal-toggle-btn" id="balToggleBtn" onclick="toggleBalVisibility()" title="Toggle balance visibility" aria-label="Toggle balance visibility"><span class="material-icons">visibility</span> Balance</button>
-      <a href="general-account-opening.html" class="btn-open-account" id="ctaGeneral"><span class="material-icons">add_circle_outline</span> Open New General Account</a>
-      <a href="term-deposit-account-opening.html" class="btn-open-account hidden" id="ctaTerm"><span class="material-icons">add_circle_outline</span> Create Term Deposit</a>
-      <a href="financing-facility-request.html" class="btn-open-account hidden" id="ctaFinancing"><span class="material-icons">add_circle_outline</span> Apply for Financing</a>
+      <a href="general-account-opening.html" class="btn-open-account" id="acctPrimaryCta" title="Add a new general account"><span class="material-icons">add</span> <span id="acctPrimaryCtaTxt">Add New Account</span></a>
     </div>
   </div>
   <!-- General Accounts Tab -->
   <div id="tabGeneral" role="tabpanel" aria-labelledby="tabGenBtn">
     <div class="acct-hub">
       <div class="qa-panel">
-        <div class="qa-hdr">General Accounts <span class="qa-hdr-count" id="qaHdrCount">(0)</span></div>
+        <div class="qa-hdr">
+          <span class="qa-hdr-txt">General Accounts <span class="qa-hdr-count" id="qaHdrCount">(0)</span></span>
+          <button type="button" class="qa-chip bal-toggle" id="balToggleBtn" onclick="toggleBalVisibility()" aria-pressed="false" title="Hide Amount" aria-label="Hide Amount"><span class="material-icons">visibility</span> <span class="bal-toggle-txt">Hide Amount</span></button>
+        </div>
         <div class="qa-list" id="qaList"></div>
       </div>
       <div class="acct-main-col">
@@ -461,7 +531,10 @@
   <div id="tabTerm" class="hidden" role="tabpanel" aria-labelledby="tabTermBtn">
     <div class="acct-hub">
       <div class="qa-panel">
-        <div class="qa-hdr">Term Deposit Accounts <span class="qa-hdr-count" id="tdQaHdrCount">(0)</span></div>
+        <div class="qa-hdr">
+          <span class="qa-hdr-txt">Term Deposit Accounts <span class="qa-hdr-count" id="tdQaHdrCount">(0)</span></span>
+          <button type="button" class="qa-chip bal-toggle" id="balToggleBtnTerm" onclick="toggleBalVisibility()" aria-pressed="false" title="Hide Amount" aria-label="Hide Amount"><span class="material-icons">visibility</span> <span class="bal-toggle-txt">Hide Amount</span></button>
+        </div>
         <div class="qa-list" id="tdQaList"></div>
       </div>
       <div class="acct-main-col">
@@ -534,7 +607,10 @@
   <div id="tabFinancing" class="hidden" role="tabpanel" aria-labelledby="tabFinBtn">
     <div class="acct-hub">
       <div class="qa-panel">
-        <div class="qa-hdr">Financing Accounts <span class="qa-hdr-count" id="finQaHdrCount">(0)</span></div>
+        <div class="qa-hdr">
+          <span class="qa-hdr-txt">Financing Accounts <span class="qa-hdr-count" id="finQaHdrCount">(0)</span></span>
+          <button type="button" class="qa-chip bal-toggle" id="balToggleBtnFin" onclick="toggleBalVisibility()" aria-pressed="false" title="Hide Amount" aria-label="Hide Amount"><span class="material-icons">visibility</span> <span class="bal-toggle-txt">Hide Amount</span></button>
+        </div>
         <div class="qa-list" id="finQaList"></div>
       </div>
       <div class="acct-main-col">
@@ -660,12 +736,6 @@
 <!-- ████ ACCOUNTS UX JS ████ -->
 <script>
 /* ── Swap top-bar CTA to match active tab ── */
-function acctsToggleCta(t){
-  var cg=document.getElementById('ctaGeneral'), ct=document.getElementById('ctaTerm'), cf=document.getElementById('ctaFinancing');
-  if(cg) cg.classList.toggle('hidden', t!=='general');
-  if(ct) ct.classList.toggle('hidden', t!=='term');
-  if(cf) cf.classList.toggle('hidden', t!=='financing');
-}
 
 /* ── Balance visibility toggle (star mask) ── */
 var balancesHidden=false;
@@ -714,9 +784,24 @@ function applyBalanceMasking(freshRender){
 function toggleBalVisibility(){
   balancesHidden=!balancesHidden;
   applyBalanceMasking();
-  var btn=document.getElementById('balToggleBtn');
-  if(btn){var ic=btn.querySelector('.material-icons');
-    if(ic) ic.textContent=balancesHidden?'visibility_off':'visibility';}
+  syncBalToggleLabel();
+}
+/* The control is labelled with the action it performs, not the state it is
+   in — hidden amounts offer "View Amount", visible ones offer "Hide". */
+function syncBalToggleLabel(){
+  /* One per tab, so they all move together rather than the hidden ones
+     drifting out of step with the visible one. */
+  var label=balancesHidden?'View Amount':'Hide Amount';
+  var icon=balancesHidden?'visibility_off':'visibility';
+  document.querySelectorAll('.bal-toggle').forEach(function(btn){
+    var ic=btn.querySelector('.material-icons');
+    var tx=btn.querySelector('.bal-toggle-txt');
+    if(ic) ic.textContent=icon;
+    if(tx) tx.textContent=label;
+    btn.setAttribute('title',label);
+    btn.setAttribute('aria-label',label);
+    btn.setAttribute('aria-pressed',String(balancesHidden));
+  });
 }
 
 /* ── Copy IBAN ── */
@@ -1228,7 +1313,24 @@ renderFinHero();
 <script>
   /* ── Local override of app.js's switchTab: this page has a third (Financing) tab.
      Must run after app.js loads, since app.js also declares a global switchTab(). ── */
+  /* What the header's primary action points at on each tab. */
+  var ACCT_CTA={
+    general:  { href:'general-account-opening.html',      label:'Add New Account', title:'Add a new general account' },
+    term:     { href:'term-deposit-account-opening.html', label:'Add New Deposit', title:'Add a new term deposit' },
+    financing:{ href:'financing-facility-request.html',   label:'Apply for Financing', title:'Apply for new financing' }
+  };
+  function syncAcctCta(t){
+    var a=document.getElementById('acctPrimaryCta'), c=ACCT_CTA[t];
+    if(!a||!c) return;
+    a.setAttribute('href',c.href);
+    a.setAttribute('title',c.title);
+    a.setAttribute('aria-label',c.title);
+    var tx=document.getElementById('acctPrimaryCtaTxt');
+    if(tx) tx.textContent=c.label;
+  }
+
   function switchTab(t){
+    syncAcctCta(t);
     var panels={general:'tabGeneral',term:'tabTerm',financing:'tabFinancing'};
     var btns={general:'tabGenBtn',term:'tabTermBtn',financing:'tabFinBtn'};
     Object.keys(panels).forEach(function(key){
@@ -1241,8 +1343,8 @@ renderFinHero();
 
   (function() {
     var tab = new URLSearchParams(window.location.search).get('tab');
-    if (tab === 'term') { switchTab('term'); acctsToggleCta('term'); }
-    if (tab === 'financing') { switchTab('financing'); acctsToggleCta('financing'); }
+    if (tab === 'term') { switchTab('term'); }
+    if (tab === 'financing') { switchTab('financing'); }
   })();
 </script>
 </body>

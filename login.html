@@ -106,11 +106,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         Username
       </button>
-      <button class="l-tab" onclick="switchTab('touchid',this)">
+      <button class="l-tab" data-method="touchid" onclick="switchTab('touchid',this)">
         <span class="material-icons" style="font-size:15px">fingerprint</span>
         Touch ID
       </button>
-      <button class="l-tab" onclick="switchTab('faceid',this)">
+      <button class="l-tab" data-method="faceid" onclick="switchTab('faceid',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/><path d="M9 15s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>
         Face ID
       </button>
@@ -144,6 +144,7 @@
           <option value="dashboard" selected>Dashboard</option>
           <option value="accounts">Accounts</option>
           <option value="payments">Payments</option>
+          <option value="corporate">Corporate Dashboard</option>
         </select>
       </div>
 
@@ -184,6 +185,8 @@
         <select class="f-select" id="c_startIn">
           <option value="dashboard" selected>Dashboard</option>
           <option value="accounts">Accounts</option>
+          <option value="payments">Payments</option>
+          <option value="corporate">Corporate Dashboard</option>
         </select>
       </div>
 
@@ -442,10 +445,18 @@ function handleLogin(){
     return;
   }
   // Captcha hidden — go directly to dashboard
-  var si=document.getElementById('startIn').value;
-  if(si==='accounts'){window.location.href='retail/accounts.html';}
-  else if(si==='payments'){window.location.href='retail/payments-bill-payment.html';}
-  else{window.location.href='retail/retail-dashboard.html';}
+  goToStartIn(document.getElementById('startIn').value);
+}
+/* Where each "Start In" choice lands. Both the plain and the captcha
+   path route through here so the two cannot drift apart. */
+var START_IN_URLS = {
+  accounts:  'retail/accounts.html',
+  payments:  'retail/payments-bill-payment.html',
+  corporate: 'corporate/maker-dashboard.html',
+  dashboard: 'retail/retail-dashboard.html'
+};
+function goToStartIn(si){
+  window.location.href = START_IN_URLS[si] || START_IN_URLS.dashboard;
 }
 function showCaptcha(u,p,si){
   document.getElementById('stateLogin').style.display='none';
@@ -465,10 +476,7 @@ function validateAndLogin(){
     document.getElementById('captchaVal').style.borderColor='#dc2626';
     return;
   }
-  var si=document.getElementById('c_startIn').value;
-  if(si==='accounts'){window.location.href='retail/accounts.html';}
-  else if(si==='payments'){window.location.href='retail/payments-bill-payment.html';}
-  else{window.location.href='retail/retail-dashboard.html';}
+  goToStartIn(document.getElementById('c_startIn').value);
 }
 function resetForm(){
   document.getElementById('username').value='';
