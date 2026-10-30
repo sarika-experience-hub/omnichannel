@@ -26,6 +26,36 @@
 .pl-lang-opt.active { font-weight:700; }
 /* Collapsible nav rail */
 .prelogin-sidebar { transition:width .2s, padding .2s, opacity .15s; }
+
+/* Below tablet the rail overlays the page instead of taking a 240px
+   column out of it. It had no media query at all, so on a phone the
+   content was squeezed into whatever was left. */
+@media (max-width: 991.98px) {
+  /* !important throughout: several of these pages set position:sticky
+     in their own inline <style>, which would otherwise win on source
+     order and leave the rail docked in the flow. */
+  .prelogin-sidebar {
+    position: fixed !important; top: var(--az-hdr-h, 60px) !important;
+    left: 0 !important; bottom: 0 !important; height: auto !important;
+    align-self: auto !important;
+    z-index: 1041 !important; width: var(--az-sidebar-w, 240px) !important;
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+    box-shadow: 0 0 40px rgba(0,0,0,.35);
+  }
+  .prelogin-sidebar.pl-open { transform: translateX(0) !important; }
+  /* The collapsed state is the default here, so neutralise the desktop
+     width-collapse which would otherwise fight the transform. */
+  .prelogin-sidebar.pl-collapsed {
+    width: var(--az-sidebar-w, 240px) !important;
+    padding-left: 0 !important; padding-right: 0 !important;
+    opacity: 1; transform: translateX(-100%);
+  }
+  .pl-scrim {
+    position: fixed; inset: 0; z-index: 1040;
+    background: rgba(0,0,0,.4); border: 0; padding: 0;
+  }
+}
 .prelogin-sidebar.pl-collapsed { width:0 !important; min-width:0 !important; padding-left:0 !important; padding-right:0 !important; opacity:0; overflow:hidden; border-right:none !important; }
 
 html.dark .pl-hdr { background:#111e27; border-bottom-color:#243545; }
@@ -76,3 +106,134 @@ html.dark .pl-link, html.dark main p > a:not([class]), html.dark main li > a:not
 html.dark footer a { color: #6ab7e8 !important; }
 html.dark footer a:hover { color: #e6eef3 !important; }
 html.dark .bp-bc a:hover, html.dark .iu-bc a:hover, html.dark .faq-bc a:hover { color: #e6eef3; }
+
+/* ── Header on a narrow screen ───────────────────────────────────────── */
+@media (max-width: 575.98px) {
+  /* The right-hand cluster ran 184px wide and pushed the page 35px past
+     the viewport. The secondary icon links drop out here — they all have
+     destinations in the nav rail and the footer — leaving the hamburger,
+     the brand and the language picker. */
+  .pl-hdr { padding: 0 .75rem !important; }
+  .pl-hdr-right { gap: .125rem !important; }
+  .pl-hdr-right { gap: .1rem !important; }
+  .pl-icon-btn { width: 28px !important; height: 28px !important; }
+  .pl-icon-btn svg { width: 17px !important; height: 17px !important; }
+  .pl-hdr-div { margin: 0 2px !important; }
+}
+
+/* ══ Accessibility pages — side panel ═══════════════════════════════════
+   Replaces a block that shipped two runs of lorem ipsum, a hotlinked
+   Wikipedia logo, and the 16% figure drawn as 100 inline-styled divs. */
+.ax-panel {
+  position: relative; overflow: hidden;
+  width: 320px; flex-shrink: 0; align-self: flex-start;
+  background: #e3f7ec; border: 1px solid #bfeed7;
+  border-radius: .75rem; padding: 1.5rem 1.375rem;
+  box-shadow: 0 3px 8px rgba(26,173,110,.1);
+}
+/* The corner brand mark, same treatment as .acct-hero and the onboarding
+   side panel: --az-hero-mark over a soft halo. These pages carry no
+   data-module, so they get the pre-login cut triangle by default. */
+.ax-panel::before {
+  content: ''; position: absolute; top: -10px; right: -10px;
+  width: 170px; height: 170px; pointer-events: none;
+  background:
+    var(--az-hero-mark) no-repeat center/78%,
+    radial-gradient(circle closest-side, rgba(26,173,110,.06) 0%, rgba(26,173,110,.06) 99%, transparent 100%) no-repeat center/100%;
+}
+.ax-panel > * { position: relative; z-index: 1; }
+.ax-panel-t {
+  font-size: var(--fs-heading); font-weight: 700;
+  color: var(--az-navy, #16303d); margin: 0;
+}
+.ax-panel-s {
+  font-size: var(--fs-small); color: var(--az-muted, #707070);
+  margin: .2rem 0 1.25rem;
+}
+
+/* ── The statistic ── */
+/* The panel is white now, so the nested card takes the tint instead —
+   otherwise it would read as one flat surface. */
+.ax-stat {
+  background: #fff; border: 1px solid #cdeedd;
+  border-radius: .625rem; padding: 1.1rem 1rem; margin-bottom: .875rem;
+}
+/* Six figures read as "1 in 6" at a glance; a hundred of them read as
+   texture and cost a hundred DOM nodes. */
+.ax-figs { display: flex; gap: .3rem; margin-bottom: .7rem; }
+.ax-fig { width: 22px; height: 30px; fill: #d6dee4; flex: none; }
+.ax-fig.is-on { fill: var(--az-green, #2ed88e); }
+.ax-stat-lead {
+  font-size: var(--fs-small); line-height: 1.6;
+  color: var(--az-navy, #16303d); margin: 0;
+}
+.ax-stat-lead strong { font-size: var(--fs-subhead); font-weight: 700; }
+.ax-stat-src {
+  font-size: var(--fs-micro); color: var(--az-muted, #707070);
+  margin: .45rem 0 0; text-transform: uppercase; letter-spacing: .06em;
+}
+
+/* ── The standard ── */
+.ax-card {
+  background: var(--az-navy, #16303d); border-radius: .625rem;
+  padding: 1rem 1.1rem; margin-bottom: 1.25rem;
+}
+.ax-card-k {
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.6);
+}
+.ax-card-v {
+  font-size: var(--fs-subhead); font-weight: 700;
+  color: var(--az-green, #2ed88e); margin: .2rem 0 .35rem;
+}
+.ax-card-d {
+  font-size: var(--fs-caption); line-height: 1.55;
+  color: rgba(255,255,255,.78); margin: 0;
+}
+
+/* ── What it is tested with ── */
+.ax-sub {
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--az-muted, #707070);
+  margin: 0 0 .5rem;
+}
+.ax-list { list-style: none; margin: 0 0 1.25rem; padding: 0; }
+.ax-list li {
+  position: relative; padding-left: 1.1rem; margin-bottom: .45rem;
+  font-size: var(--fs-caption); line-height: 1.55;
+  color: var(--az-navy, #16303d);
+}
+.ax-list li::before {
+  content: ''; position: absolute; left: 0; top: .42em;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--az-green, #2ed88e);
+}
+
+/* ── Feedback route ── */
+.ax-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .5rem; padding: .7rem .9rem;
+  background: #fff; border: 1px solid #cdeedd;
+  border-radius: .5rem; text-decoration: none;
+  font-size: var(--fs-small); font-weight: 600;
+  color: var(--az-blue, #00538A); transition: border-color .15s, background .15s;
+}
+.ax-cta:hover { border-color: var(--az-blue, #00538A); background: #f3f8fc; }
+
+@media (max-width: 991.98px) {
+  /* The article and this panel sit in an unclassed flex row, so the row
+     itself has to be told to wrap — giving the panel a width it cannot
+     honour just left it overflowing its column. */
+  div:has(> .ax-panel) { flex-wrap: wrap; }
+  .ax-panel { width: auto; flex: 1 1 100%; min-width: 0; }
+}
+
+
+/* ── Mobile header: logo tucked against the hamburger ── */
+@media (max-width: 575.98px) {
+  .pl-hdr { padding-left: .4rem !important; padding-right: .5rem !important; }
+  .pl-hdr-left { gap: .3rem !important; }
+  /* Only the logo link — .pl-hdr-left also holds the hamburger, whose
+     own icon must keep its 20px size. */
+  .pl-hdr-left > a svg { width: 84px !important; height: auto !important; }
+}

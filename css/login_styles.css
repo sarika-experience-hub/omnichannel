@@ -9,7 +9,10 @@
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
 /* Pin the entire page to the viewport — scroll is impossible */
-html { height:100%; }
+/* The app sets this in styles.css, which this page does not link, so its
+   root stayed at the browser default of 16px and every rem — the whole
+   --fs-* scale included — resolved about 14% large. */
+html { height:100%; font-size:14px; }
 body {
   position:fixed; inset:0; overflow:hidden;
   font-family:'Poppins','Roboto',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -88,13 +91,19 @@ body {
 
 /* ── LEFT: form panel ── */
 .l-form-side {
-  width:380px; flex-shrink:0;
+  width:440px; flex-shrink:0;
   background:#f7f9fb;
   display:flex; flex-direction:column; justify-content:flex-start;
+  /* The panel is wider than the form it holds, so the children centre
+     rather than stretch. */
+  align-items:center;
   padding:clamp(0.75rem, 2.5vh, 1.5rem) 2.5rem 1rem;
   border-left:1px solid var(--az-border);
   overflow:hidden; /* never scrolls */
 }
+/* The form keeps the 300px measure it had when the panel was 380px wide;
+   the extra 60px becomes breathing room on either side, not wider fields. */
+.l-form-side > * { width:100%; max-width:300px; }
 
 .l-panel-eyebrow {
   font-size:10.5px; font-weight:700; letter-spacing:.12em;
@@ -126,6 +135,28 @@ body {
 .l-tab.active { color:var(--az-navy); border-bottom-color:var(--az-green); font-weight:700; }
 .l-tab-pane { display:none; }
 .l-tab-pane.active { display:block; }
+
+/* Touch ID and Face ID are device capabilities — a desktop browser has
+   neither, so those two methods only appear on a small viewport. That
+   leaves one method on the web, and a single-tab strip is not a choice,
+   so the strip itself is hidden there too and the username pane is
+   pinned on (in case a narrow session had selected a biometric tab). */
+@media (min-width: 768px) {
+  .l-tab[data-method="touchid"],
+  .l-tab[data-method="faceid"] { display: none; }
+  .l-tabs { display: none; }
+  /* "Choose how you would like to sign in" describes the tab strip. With
+     one method left there is nothing to choose, so the line goes with it. */
+  .l-subtitle { display: none; }
+  #pane-touchid, #pane-faceid { display: none !important; }
+  #pane-username { display: block !important; }
+}
+/* On a small screen every method is offered, and the strip may need to
+   wrap rather than squeeze three labels onto one line. */
+@media (max-width: 767.98px) {
+  .l-tabs { flex-wrap: wrap; }
+  .l-tab { flex: 1 1 auto; min-width: 33%; font-size: 12.5px; padding: .45rem .35rem; }
+}
 
 /* Touch/Face ID pane */
 .biometric-pane {
@@ -259,15 +290,20 @@ body {
 
 /* Form fields */
 .f-grp { margin-bottom:.35rem; }
-.f-lbl { display:block; font-size:13.5px; font-weight:600; color:var(--az-navy); margin-bottom:2px; }
-.f-inp {
-  width:100%; border:1.5px solid var(--az-border);
-  border-radius:7px; padding:7px 11px;
-  font-family:'Poppins','Roboto',sans-serif; font-size:13px;
-  color:var(--az-navy); background:#fff; outline:none;
-  transition:border-color .15s, box-shadow .15s;
+.f-lbl {
+  display:block; font-size:var(--fs-label); font-weight:500;
+  color:var(--az-navy); margin-bottom:.5rem;
 }
-.f-inp:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.15); }
+.f-inp {
+  width:100%; border:1.5px solid #e2e7ee;
+  border-radius:.625rem; padding:.75rem .95rem;
+  font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-body);
+  font-weight:400; color:var(--az-navy); background:#fff; outline:none;
+  transition:border-color .15s, box-shadow .15s;
+  -webkit-appearance:none; appearance:none;
+}
+.f-inp:focus { border-color:var(--az-green); box-shadow:0 0 0 .1875rem rgba(46,216,142,.12); }
+.f-inp[readonly], .f-inp:disabled { background:#f8fafb; color:var(--az-muted); cursor:default; }
 .f-inp-wrap { position:relative; }
 .f-pw-toggle {
   position:absolute; right:10px; top:50%; transform:translateY(-50%);
@@ -295,11 +331,11 @@ body {
 .otp-row { display:flex; gap:8px; justify-content:center; margin:.25rem 0 .625rem; }
 .otp-inp {
   width:44px; height:48px; text-align:center; font-size:var(--fs-heading); font-weight:700;
-  border:1.5px solid var(--az-border); border-radius:8px;
+  border:1.5px solid #e2e7ee; border-radius:.625rem;
   font-family:'Poppins','Roboto',sans-serif; color:var(--az-navy); outline:none;
   transition:border-color .15s, box-shadow .15s;
 }
-.otp-inp:focus { border-color:var(--az-green); box-shadow:0 0 0 3px rgba(46,216,142,.15); }
+.otp-inp:focus { border-color:var(--az-green); box-shadow:0 0 0 .1875rem rgba(46,216,142,.12); }
 .otp-resend { text-align:center; font-size:12px; color:var(--az-muted); margin-bottom:.25rem; }
 .otp-resend a { color:#00538a; font-weight:400; text-decoration:none; transition:color .15s, opacity .15s; }
 .otp-resend a:hover { color:#003d66; opacity:.75; }
@@ -496,16 +532,16 @@ body {
 .f-inp-wrap .f-inp { padding-right:38px; }
 
 .f-select {
-  width:100%; border:1.5px solid var(--az-border);
-  border-radius:7px; padding:7px 30px 7px 11px;
-  font-family:'Poppins','Roboto',sans-serif; font-size:13px;
-  color:var(--az-navy); background:#fff; outline:none;
-  transition:border-color .15s; cursor:pointer;
+  width:100%; border:1.5px solid #e2e7ee;
+  border-radius:.625rem; padding:.75rem 2.25rem .75rem .95rem;
+  font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-body);
+  font-weight:400; color:var(--az-navy); background-color:#fff; outline:none;
+  transition:border-color .15s, box-shadow .15s; cursor:pointer;
   -webkit-appearance:none; appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M9%2C0L5%2C4%2C1%2C0%2C0%2C1.8%2C5%2C7%2C10%2C1.8Z' fill='%2316303d'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 12px center;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M9,0L5,4,1,0,0,1.8,5,7,10,1.8Z' fill='%232ed88e'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .75rem center;
 }
-.f-select:focus { border-color:var(--az-green); }
+.f-select:focus { border-color:var(--az-green); box-shadow:0 0 0 .1875rem rgba(46,216,142,.12); }
 
 .captcha-row { display:flex; align-items:center; gap:8px; margin-top:4px; flex-wrap:wrap; }
 .captcha-row svg { flex-shrink:0; border-radius:4px; }

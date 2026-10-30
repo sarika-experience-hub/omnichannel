@@ -355,18 +355,83 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
 .page-top-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin-bottom: .5rem; }
 
 /* ── Buttons ───────────────────────────────────── */
-.btn-open-account {
+.btn-primary-action,
+.btn-open-account,
+.ptl-new-btn,
+.btn-req-cheq,
+.btn-add-ben,
+.btn-request-card {
   display: inline-flex; align-items: center; gap: .4375rem;
   padding: .4375rem .875rem;
-  border: 1.5px solid var(--az-green);
-  color: var(--az-navy); background: #fff;
-  border-radius: .375rem;
+  border: none;
+  color: #fff; background: #1AAD6E;
+  border-radius: .5rem;
   font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight:600;
   cursor: pointer; white-space: nowrap; text-decoration: none;
   transition: background .12s;
 }
-.btn-open-account:hover { background: #edf6f1; border-color: var(--az-green); color: var(--az-navy); }
-.btn-open-account img { width: 16px; height: 16px; }
+.btn-primary-action:hover,
+.btn-open-account:hover,
+.ptl-new-btn:hover,
+.btn-req-cheq:hover,
+.btn-add-ben:hover,
+.btn-request-card:hover { background: #158a58; color: #fff; }
+.btn-primary-action img, .btn-open-account img, .ptl-new-btn img, .btn-req-cheq img,
+.btn-add-ben img, .btn-request-card img { width: 16px; height: 16px; }
+.btn-primary-action .material-icons, .btn-open-account .material-icons, .ptl-new-btn .material-icons, .btn-req-cheq .material-icons,
+.btn-add-ben .material-icons, .btn-request-card .material-icons { font-size: 17px; color: #fff; }
+
+/* --- cta-mobile-rollout ---
+   On a phone the primary action spans its column rather than sitting as a
+   short button against a full-width layout, and takes the 44px minimum
+   the rest of the app uses for a thumb. !important because seven pages
+   carry their own copy of .btn-open-account with !important on it. */
+@media (max-width: 575.98px) {
+  .btn-primary-action,
+  .btn-open-account,
+  .ptl-new-btn,
+  .btn-req-cheq,
+  .btn-add-ben,
+  .btn-request-card {
+    width: 100% !important;
+    justify-content: center !important;
+    height: auto !important;
+    min-height: 44px !important;
+    padding: .7rem 1rem !important;
+  }
+  .tabs-header-row { flex-wrap: wrap; row-gap: .625rem; }
+  /* The wrapper may also hold the visibility chip; wrapping gives the
+     action its own line instead of the two splitting one. */
+  .tabs-header-row > .d-flex { flex: 1 1 100%; flex-wrap: wrap; row-gap: .5rem; }
+  .tabs-header-row > .d-flex > .btn-open-account,
+  .tabs-header-row > .d-flex > .ptl-new-btn,
+  .tabs-header-row > .d-flex > .btn-req-cheq,
+  .tabs-header-row > .d-flex > .btn-add-ben,
+  .tabs-header-row > .d-flex > .btn-request-card { flex: 1 1 100%; }
+  .page-top-bar > .btn-primary-action,
+  .page-top-bar > .ptl-new-btn,
+  .page-top-bar > .btn-req-cheq,
+  .page-top-bar > .btn-add-ben,
+  .page-top-bar > .btn-request-card { flex: 1 1 100%; }
+}
+
+/* The amount / number visibility toggle, as an outlined chip beside the
+   heading it belongs to. Quiet on purpose: it hides figures, it does not
+   start a journey. */
+.qa-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: .25rem; flex-shrink: 0; padding: .3rem .65rem;
+  border-radius: 1rem; background: #fff;
+  border: 1px solid var(--az-border, #e2e8ec);
+  color: var(--az-muted, #707070);
+  font-family: 'Poppins','Roboto',sans-serif;
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: .04em;
+  white-space: nowrap; cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.qa-chip:hover { border-color: var(--az-green, #2ed88e); color: var(--az-navy, #16303d); background: #f6fdfa; }
+.qa-chip .material-icons { font-size: 14px; }
+@media (max-width: 575.98px) { .qa-chip { min-height: 32px; } }
 .bill-badge {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 17px; height: 17px; padding: 0 4px;
@@ -683,9 +748,7 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
 .qr-frame-corner.br { bottom:0;right:0;border-width:0 4px 4px 0; border-radius:0 0 4px 0; }
 
 /* Add beneficiary button */
-.btn-add-ben { display:inline-flex; align-items:center; gap:.4375rem; padding:.4375rem .875rem; border:1.5px solid var(--az-navy); color:var(--az-navy); background:#fff; border-radius:.375rem; font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight:600; cursor:pointer; white-space:nowrap; text-decoration:none; transition:background .12s; }
-.btn-add-ben:hover { background:#edf6f1; border-color: var(--az-green); color:var(--az-navy); }
-.btn-add-ben img { width:16px; height:16px; }
+/* .btn-add-ben shares the primary-action rule above. */
 
 /* Success check icon */
 .success-circle { width:72px; height:72px; border-radius:50%; border:3px solid var(--az-green); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
@@ -879,14 +942,7 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
 .s-replaced { background: #607d8b; color: #fff; }
 
 /* Request card button */
-.btn-request-card {
-  display: inline-flex; align-items: center; gap: .4375rem;
-  padding: .4375rem .875rem; border: 1.5px solid var(--az-green);
-  color: var(--az-navy); background: #fff; border-radius: .375rem;
-  font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-small); font-weight:600;
-  cursor: pointer; white-space: nowrap; text-decoration: none;
-  transition: background .12s;
-}
+/* .btn-request-card shares the primary-action rule above. */
 .btn-request-card:hover { background: #f0faf5; color: var(--az-navy); }
 .btn-request-card img { width: 16px; height: 16px; }
 
@@ -982,10 +1038,15 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
   .acct-row { gap: .75rem; }
   .acct-name-col { width: 160px; }
 }
-@media (max-width: 767.98px) {
-  .app-sidebar { transform: translateX(-100%); transition: transform .22s ease, width .22s ease; }
+/* The tray overlays the content instead of pushing it, from tablet down.
+   Docked at 220px it was squeezing the content column to 548px at 768. */
+@media (max-width: 991.98px) {
+  .app-sidebar { transform: translateX(-100%); transition: transform .22s ease, width .22s ease; z-index: 1041; }
   .app-sidebar.mobile-open { transform: translateX(0); width: var(--az-sidebar-w) !important; }
   .app-main { margin-left: 0 !important; overflow-y: auto; }
+}
+
+@media (max-width: 767.98px) {
   .hdr-logo { width: auto; }
   .page-title { font-size:var(--fs-heading); }
   .acct-row { flex-direction: column; align-items: flex-start; }
@@ -994,11 +1055,18 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
   .form-footer .tc { min-width: unset; }
   .btn-action { justify-content: center; }
   .tabs-header-row { padding: 0 .75rem; }
-  /* Mobile header — keep only notifications + avatar */
-  .hdr-right > a.hdr-icon-btn,
-  .hdr-right > .hdr-div,
-  .hdr-right > button.hdr-icon-btn { display: none; }
-  .hdr-avatar { width: 38px; height: 38px; }
+  /* Mobile header — every icon stays; they are compacted to fit rather
+     than dropped. The full set needs 439px of a 375px screen at desktop
+     sizing, so the logo, the buttons and the gaps all come down. */
+  .hdr-right { gap: .1rem; }
+  .hdr-icon-btn { width: 28px; height: 28px; }
+  .hdr-icon-btn .material-icons { font-size: 17px; }
+  .hdr-icon-btn svg { width: 17px; height: 17px; }
+  /* The hairline separators are decoration; on a phone that space is
+     better spent keeping every actual control on screen. */
+  .hdr-div { display: none; }
+  .hdr-lang { padding-left: .2rem; padding-right: .2rem; font-size: 11px; }
+  .hdr-avatar { width: 30px; height: 30px; font-size: 11px; }
 
   /* ── Notification panel: full-screen overlay on mobile ── */
   .notif-wrap:hover .notif-dropdown { opacity:0; pointer-events:none; transform:translateY(8px); }
@@ -1303,8 +1371,7 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
 .btn-cheq-det:hover { background:#edf6f1; border-color: var(--az-green); color:var(--az-navy); }
 
 /* Request Chequebook button */
-.btn-req-cheq { display:inline-flex;align-items:center;gap:.4375rem;padding:.4375rem .875rem;border:1.5px solid var(--az-navy);color:var(--az-navy);background:#fff;border-radius:.375rem;font-size:var(--fs-small);font-weight:600;cursor:pointer;text-decoration:none;transition:background .12s; }
-.btn-req-cheq:hover { background:#edf6f1; border-color: var(--az-green); }
+/* .btn-req-cheq shares the primary-action rule above. */
 
 /* Locate on Map button */
 .btn-locate-map { display:inline-flex;align-items:center;gap:.4375rem;padding:.4375rem .875rem;border:1.5px solid var(--az-green);color:var(--az-navy);background:#fff;border-radius:.375rem;font-size:var(--fs-small);font-weight:500;cursor:pointer;text-decoration:none;transition:background .12s; }
@@ -1594,4 +1661,34 @@ body[data-module="onboarding"] { --az-hero-mark: var(--mark-onboarding); }
   .as-doc { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .as-info-grid { grid-template-columns: 1fr; }
   .as-summary { flex-wrap: wrap; }
+}
+
+
+/* ── Mobile header: logo tucked against the hamburger ──────────────────
+   At 375px the mark ran 148px wide and sat adrift of the menu button,
+   crowding the actions on the right. Smaller, and set right beside it. */
+@media (max-width: 575.98px) {
+  .app-hdr { padding-left: .35rem; padding-right: .35rem; gap: .2rem; }
+  .hdr-hamburger { margin-right: 0; }
+  #hdrLogo, .hdr-logo { margin-left: 0; }
+  #hdrLogo svg, .hdr-logo svg, #hdrLogo img, .hdr-logo img { width: 84px; height: auto; }
+}
+
+/* ══ Hero panels — the accent edge ══════════════════════════════════════
+   The financial calculator's estimate panel (.fc-prev) carries a 3px
+   brand-green left border. Every other hero-tinted panel now does the
+   same, so the mint surface reads as one component across the app.
+   !important because most of these are declared with a shorthand
+   `border:` in page-level <style> blocks, which would otherwise reset
+   the left edge back. */
+.acct-hero,
+.crd-hero-side,
+.ob-side,
+.ax-panel,
+.cx-hero,
+.au-hero,
+.ba-filter-card,
+.bp-acc-item.open,
+.faq-acc-item.open {
+  border-left: 3px solid #1aad6e !important;
 }

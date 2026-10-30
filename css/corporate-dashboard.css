@@ -1,0 +1,130 @@
+/* ══ Corporate dashboards — retail look and feel ═══════════════════════
+   The maker and checker dashboards already share the retail panel shell
+   (white card, 1px border, .875rem radius), so this file closes the gaps
+   that were left: the panel header colour, the card shadow, the action
+   link, the status chips and the greeting bar. Loaded after the page's
+   own maker-/checker-dashboard.css so these win, and nothing in the page
+   markup has to change.
+
+   The sidebar is handled separately by retail-sidebar-navy.css, which the
+   two pages now link — the corporate menu is flat (no .sb-grp-lbl), so the
+   grouping rules in that file simply never match. ══════════════════════ */
+
+/* ── Panels ──
+   Retail's card sits a touch flatter: 0 1px 6px at .06 rather than
+   0 2px 8px at .07. Same radius and fill, so only the shadow moves. */
+.mk-panel,
+.ck-panel,
+.mk-panel-borderless {
+  box-shadow: 0 1px 6px rgba(22, 48, 61, .06);
+}
+
+/* ── Panel headers ──
+   Everything already matched except the colour: these titles were navy,
+   where retail sets them muted so the panel's content carries the weight
+   and the headers read as quiet labels. */
+.mk-panel-title,
+.ck-panel-title,
+.mk-wb-title ~ .mk-panel-title {
+  color: var(--az-muted, #707070);
+}
+
+/* The "View all" affordance: retail uses the caption size at weight 500. */
+.mk-panel-action,
+.ck-panel-action {
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  color: var(--az-blue, #00538A);
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+  text-decoration: none;
+  transition: color .15s;
+}
+.mk-panel-action:hover,
+.ck-panel-action:hover { color: var(--az-navy, #16303d); }
+
+/* ── Greeting bar ──
+   Retail keeps the name and the context line on one scale (subhead), with
+   the name carrying the weight. The corporate version had a larger title
+   over a smaller subtitle, which read as a page heading rather than a
+   greeting. */
+.mk-wb-title,
+.ck-wb-title {
+  font-size: var(--fs-subhead);
+  font-weight: 600;
+  color: var(--az-navy, #16303d);
+  line-height: 1.2;
+  margin: 0 0 .1rem;
+}
+.mk-wb-sub,
+.ck-wb-sub {
+  font-size: var(--fs-subhead);
+  font-weight: 400;
+  color: var(--az-muted, #707070);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Status chips ──
+   Both dashboards used a tinted fill with no border: the maker's .mk-sp
+   and the checker's .status-pill. Retail settled on one pattern for every
+   status in the app — white fill, 1px border and text in the status
+   colour — so a row of them reads as one component rather than a row of
+   coloured blocks. Each status keeps its own hue: "returned" is a
+   distinct outcome from "rejected", and the purple carries that. */
+.mk-sp,
+.status-pill {
+  background: #fff;
+  border: 1px solid currentColor;
+}
+.mk-sp-pending  { background: #fff; color: #b35a00; border-color: rgba(179, 90, 0, .35); }
+.mk-sp-approved { background: #fff; color: #15803d; border-color: rgba(21, 128, 61, .35); }
+.mk-sp-returned { background: #fff; color: #6b21a8; border-color: rgba(107, 33, 168, .35); }
+.mk-sp-draft    { background: #fff; color: #5a6777; border-color: rgba(90, 103, 119, .35); }
+
+.sp-pending  { background: #fff; color: var(--sb-pending-fg);  border-color: rgba(179, 90, 0, .35); }
+.sp-approved { background: #fff; color: #15803d;               border-color: rgba(21, 128, 61, .35); }
+.sp-returned { background: #fff; color: var(--sb-returned-fg); border-color: rgba(107, 33, 168, .35); }
+
+/* The chip's leading dot keeps the status colour it already carries */
+.mk-chip-dot.dot-submitted { background: var(--az-blue, #00538A); }
+.mk-chip-dot.dot-approved  { background: #15803d; }
+.mk-chip-dot.dot-rejected  { background: #b91c1c; }
+.mk-chip-dot.dot-draft     { background: #5a6777; }
+.mk-chip-dot.dot-processing{ background: #b45309; }
+
+/* ── Responsive ──
+   Same treatment the retail pages got: grid and flex items default to
+   min-width:auto, so a wide table props its track open instead of letting
+   its own scroller handle it. */
+.mk-wrap > *, .ck-wrap > *,
+.mk-main-row > *, .mk-bottom-row > *,
+.mk-panel, .ck-panel { min-width: 0; }
+
+@media (max-width: 991.98px) {
+  .mk-main-row, .mk-bottom-row,
+  .ck-main-row, .ck-bottom-row { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile header ─────────────────────────────────────────────────────
+   The corporate header carries a role switcher the retail one does not,
+   which pushed the action cluster to 226px and 30px past a 375px screen.
+   Below 576px it keeps its icon and chevron but drops the role label —
+   the control still works, it just stops spelling itself out. */
+@media (max-width: 575.98px) {
+  .role-switcher-btn .role-sw-label,
+  .role-switcher-btn .role-sw-name { display: none !important; }
+  .role-switcher-btn { padding-left: .4rem !important; padding-right: .4rem !important; gap: .2rem !important; }
+}
+
+/* The corporate header carries four extra dividers, a role switcher and
+   two more icon buttons than retail — 12 controls against retail's 8. The
+   language control drops to its chevron and the logo takes another step
+   down so the whole set still lands inside a 375px screen. */
+@media (max-width: 575.98px) {
+  .app-hdr { padding-left: .25rem !important; padding-right: .25rem !important; gap: .15rem !important; }
+  #hdrLogo svg, .hdr-logo svg { width: 76px !important; }
+  .hdr-lang .lang-txt { display: none !important; }
+  .hdr-lang { padding-left: .15rem !important; padding-right: .15rem !important; }
+}

@@ -301,3 +301,91 @@ body { background:#f9fafb; font-family:'Poppins','Roboto',sans-serif; color:var(
 
 html.dark .ob-back-btn { background:#111e27; border-color:#243545; color:#e6eef3; }
 
+
+
+/* ── Stacked layout (the shell turns column at 1200px) ───────────────── */
+@media (max-width: 1200px) {
+  /* Horizontal now, so the collapse gesture takes the height, not the
+     width — collapsing width left a sliver of rail with the steps
+     clipped inside it. */
+  .ob-rail { width: auto !important; }
+  .ob-rail.collapsed {
+    width: auto !important;
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    border-bottom-width: 0 !important;
+    transition: max-height .2s ease, padding .2s ease, opacity .15s ease;
+  }
+
+  /* The summary panel spans the full width at the foot instead of sitting
+     inset inside a column that is already padded. */
+  .ob-side {
+    width: auto !important;
+    /* The shell is a column here, so align-self:flex-start sizes the panel
+       to its content on the cross axis — it has to stretch to fill. */
+    align-self: stretch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+}
+
+
+/* ── Header on a narrow screen ───────────────────────────────────────── */
+@media (max-width: 575.98px) {
+  /* The header's right cluster ran 184px wide and pushed the page 35px
+     past the viewport. The secondary icon buttons drop out; the hamburger,
+     the brand and the language picker are what matter here. */
+  .ob-hdr { padding: 0 .75rem !important; }
+  .ob-hdr-right { gap: .125rem !important; }
+  .ob-hdr-right { gap: .1rem !important; }
+  .ob-icon-btn { width: 28px !important; height: 28px !important; }
+  .ob-icon-btn .material-icons { font-size: 17px !important; }
+  .ob-icon-btn svg { width: 17px !important; height: 17px !important; }
+  .ob-hdr-div { margin: 0 2px !important; }
+}
+
+
+/* ── Mobile header: logo tucked against the hamburger ── */
+@media (max-width: 575.98px) {
+  .ob-hdr-left { gap: .3rem !important; }
+  /* Only the logo link — .ob-hdr-left also holds the hamburger. */
+  .ob-hdr-left > a svg, .ob-hdr-left > a img { width: 84px !important; height: auto !important; }
+}
+
+/* ══ Footer actions on a phone ════════════════════════════════════════
+   On one row at 375px the terms label was squeezed to 91px and broke over
+   four lines, and the buttons measured 38px tall against a 16px checkbox —
+   both well under the 44px (iOS) / 48dp (Material) minimum for something
+   operated with a thumb.
+
+   So: terms take a line of their own, then the actions beneath them. The
+   primary goes first, which is what both platforms specify for stacked
+   buttons — it also keeps Cancel away from where the thumb expects the
+   confirm. Secondary actions share the row below it; flex-grow means a
+   lone Cancel fills the width, while Save Draft and Cancel sit side by
+   side on the steps that carry both. */
+@media (max-width: 575.98px) {
+  .ob-footer { flex-wrap: wrap; justify-content: stretch; gap: .75rem; }
+
+  .ob-footer .ob-footer-terms,
+  .ob-footer .coa-terms { flex: 1 1 100%; order: 0; margin-right: 0; }
+
+  .ob-footer .btn-action {
+    min-height: 48px;
+    padding: .85rem 1rem;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ob-footer .btn-submit { flex: 1 1 100%; order: 1; }
+  .ob-footer .btn-save   { flex: 1 1 calc(50% - .375rem); order: 2; }
+  .ob-footer .btn-cancel { flex: 1 1 calc(50% - .375rem); order: 3; }
+
+  /* The label is the real tap target and is full-width now, but the box
+     itself should still be big enough to aim at. */
+  .coa-terms input[type="checkbox"] { width: 20px; height: 20px; flex-shrink: 0; }
+}

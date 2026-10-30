@@ -504,3 +504,47 @@
   .th-more-actions { grid-column: 1 / -1; }
   .th-pill, .th-tpill { font-size:var(--fs-micro); padding: .2rem .6rem; }
 }
+
+/* ══ Filter card — top rows ═══════════════════════════════════════════
+   The search field and Export head the filter card rather than sitting in
+   the transaction card's header, so the whole act of narrowing the list —
+   search, period, type, advanced — reads as one block. */
+.th-filter-search-row { padding: .75rem 1.25rem; gap: .75rem; align-items: center; }
+.th-filter-search-row .th-search-box { flex: 1 1 auto; min-width: 0; }
+.th-filter-search-row .th-export-dd { flex-shrink: 0; }
+/* Filled here, not outlined: in the card header it sat among other ghost
+   actions, but on this row it is the only control beside the field. */
+.th-filter-search-row .th-card-export-btn {
+  background: var(--az-navy); border-color: var(--az-navy); color: #fff;
+  padding: .45rem 1rem; font-size: var(--fs-small);
+}
+.th-filter-search-row .th-card-export-btn:hover { background: #0f242e; }
+
+/* The chips sit inline with the More filters button */
+#thActiveChips { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+
+html.dark .th-filter-search-row .th-card-export-btn {
+  background: #1d3340; border-color: #2a4452; color: #e6eef3;
+}
+html.dark .th-filter-search-row .th-card-export-btn:hover { background: #24404f; }
+
+/* The corporate copy builds the same search + export row under its own
+   class names, and neither had a rule anywhere in the stylesheets — so the
+   row laid out as a block and dropped Export onto a line of its own. */
+.th-search-row {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .75rem 1.25rem;
+  border-bottom: 1px solid var(--az-border);
+}
+.th-search-row .th-search-box { flex: 1 1 auto; min-width: 0; }
+.th-export-btn {
+  display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0;
+  background: var(--az-navy); border: 1.5px solid var(--az-navy); color: #fff;
+  border-radius: .375rem; padding: .45rem 1rem;
+  font-size: var(--fs-small); font-weight: 600;
+  font-family: 'Poppins','Roboto',sans-serif;
+  cursor: pointer; white-space: nowrap; transition: background .15s;
+}
+.th-export-btn:hover { background: #0f242e; }
+html.dark .th-export-btn { background: #1d3340; border-color: #2a4452; color: #e6eef3; }
+html.dark .th-export-btn:hover { background: #24404f; }

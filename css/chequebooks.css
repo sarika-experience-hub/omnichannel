@@ -122,16 +122,7 @@
 }
 
 /* ── Buttons ── */
-.btn-req-cheq {
-  display:inline-flex; align-items:center; gap:.4rem;
-  background:linear-gradient(135deg,var(--az-navy,#16303d),#0d1f28); color:#fff;
-  border:none; border-radius:.5rem; padding:.55rem 1.1rem;
-  font-family:var(--az-font); font-size:var(--fs-small); font-weight:600;
-  text-decoration:none; cursor:pointer; white-space:nowrap;
-  transition:background .15s, transform .15s;
-}
-.btn-req-cheq:hover { background:linear-gradient(135deg,#0f232e,#081820); color:#fff; transform:translateY(-1px); }
-.btn-req-cheq .material-icons { font-size:17px; color:#2ed88e; }
+/* .btn-req-cheq is the shared primary-action button in styles.css. */
 
 .btn-cheq-det {
   display:inline-flex; align-items:center; gap:.3rem;
