@@ -217,6 +217,12 @@ body{
   .l-hero{flex:none;height:240px;padding:2rem 1.5rem}
   .l-panel{width:100%;border-left:none;border-top:1px solid var(--border);overflow:auto;padding:1.5rem}
 }
+
+/* Footer links: blue, separated, underlined on hover — as app-wide. */
+.l-footer a { color:#00538A !important; text-decoration:none; padding:.1rem .15rem; border-radius:3px; }
+.l-footer a:hover { color:#003f6b !important; text-decoration:underline; text-underline-offset:2px; }
+.l-footer a:focus-visible { outline:2px solid #00538A; outline-offset:1px; }
+.l-footer > div:first-child a::before { content:'·'; display:inline-block; margin:0 .5rem 0 .55rem; color:#c3ccd2; }
 </style>
   <link rel="stylesheet" href="css/dark.css"/>
   <script src="js/theme.js"></script>
@@ -334,17 +340,17 @@ body{
 </div>
 
 <footer class="l-footer">
-  <div>
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms of Use</a>
-    <a href="#">Security</a>
-    <a href="#">Contact Us</a>
+  <div>Copyright 2025. All Rights Reserved
+    <a href="terms-and-conditions.html">Terms and conditions</a>
+    <a href="about-app.html">About App</a>
   </div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <span>© 2025 azentio Software</span>
+  <div style="display:flex;align-items:center;gap:8px">
+    <a href="accessibility-commitment.html">Accessibility</a>
     <div class="acc-btns">
-      <button class="acc-btn" title="Decrease font size" onclick="adjustFont(-1)">A−</button>
-      <button class="acc-btn" title="Increase font size" onclick="adjustFont(1)">A+</button>
+      <button class="acc-btn">A<sup>-</sup></button>
+      <button class="acc-btn">A</button>
+      <button class="acc-btn">A<sup>+</sup></button>
+      <button class="acc-btn acc-btn-theme" onclick="toggleDarkMode()">&#9681;</button>
     </div>
   </div>
 </footer>

@@ -254,7 +254,13 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 /* ── Footer ──────────────────────────────────────────────────────── */
 .az-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; font-size:12px; color:var(--gray-tx); border-top:1px solid var(--gray-bd); background:var(--white); flex-shrink:0; }
 .az-footer-links { display:flex; gap:20px; }
-.az-footer-links a { color:var(--gray-tx); text-decoration:none; }
+/* Blue and underlined on hover, as everywhere else. The 20px gap above
+   already separates them, so no middot is added here. */
+.az-footer-links a { color:var(--az-blue,#00538A); text-decoration:none; padding:.1rem .15rem; border-radius:3px; }
+.az-footer-links a:hover { color:#003f6b; text-decoration:underline; text-underline-offset:2px; }
+.az-footer-links a:focus-visible { outline:2px solid var(--az-blue,#00538A); outline-offset:1px; }
+.az-footer-access a { color:var(--az-blue,#00538A); text-decoration:none; }
+.az-footer-access a:hover { color:#003f6b; text-decoration:underline; text-underline-offset:2px; }
 .az-footer-links a:hover { color:var(--text); }
 .az-footer-access { display:flex; align-items:center; gap:10px; }
 .az-font-btn { background:none; border:none; cursor:pointer; font-weight:700; color:var(--text); padding:2px 4px; font-family:var(--ff); }
@@ -418,7 +424,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 1 · Personal Details ─── -->
         <div class="az-form-area step-panel" id="step1">
           <nav class="az-breadcrumb" aria-label="Breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep" aria-hidden="true">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep" aria-hidden="true">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep" aria-hidden="true">›</span>
             <span>Personal Details</span>
           </nav>
@@ -535,7 +541,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 2 · Identification Details ─── -->
         <div class="az-form-area step-panel hidden" id="step2">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Identification Details</span>
           </nav>
@@ -629,7 +635,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 3 · Additional Details ─── -->
         <div class="az-form-area step-panel hidden" id="step3">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Additional Details</span>
           </nav>
@@ -743,7 +749,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 4 · Employment Details ─── -->
         <div class="az-form-area step-panel hidden" id="step4">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Employment Details</span>
           </nav>
@@ -866,7 +872,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 5 · Selfie ─── -->
         <div class="az-form-area step-panel hidden" id="step5">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Selfie</span>
           </nav>
@@ -899,7 +905,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 6 · Signature ─── -->
         <div class="az-form-area step-panel hidden" id="step6">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Signature</span>
           </nav>
@@ -944,7 +950,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 7 · Branch Details ─── -->
         <div class="az-form-area step-panel hidden" id="step7">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Branch Details</span>
           </nav>
@@ -1019,7 +1025,7 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
         <!-- ─── STEP 8 · Products ─── -->
         <div class="az-form-area step-panel hidden" id="step8">
           <nav class="az-breadcrumb">
-            <a href="retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
+            <a href="./retail/retail-dashboard.html">Home</a><span class="az-bc-sep">›</span>
             <a href="#">Become Our Customer</a><span class="az-bc-sep">›</span>
             <span>Products</span>
           </nav>
@@ -1328,11 +1334,11 @@ body { font-family:var(--ff); font-size:14px; color:var(--text); background:var(
 <footer class="az-footer">
   <span>Copyright 2025. All Rights Reserved</span>
   <div class="az-footer-links">
-    <a href="#">Terms and conditions</a>
-    <a href="about-app.html" target="_blank">About App</a>
+    <a href="terms-and-conditions.html">Terms and conditions</a>
+    <a href="about-app.html">About App</a>
   </div>
   <div class="az-footer-access">
-    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <a href="accessibility-commitment.html">Accessibility</a>
     <button class="az-font-btn" onclick="changeFontSize(-1)" aria-label="Decrease font size">A<sup>-</sup></button>
     <button class="az-font-btn" onclick="changeFontSize(0)"  aria-label="Reset font size">A</button>
     <button class="az-font-btn" onclick="changeFontSize(1)"  aria-label="Increase font size">A<sup>+</sup></button>
