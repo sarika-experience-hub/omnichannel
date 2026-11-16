@@ -36,18 +36,32 @@
     .qa-panel { border:none; border-radius:1rem; background:transparent; padding:1rem; }
     .qa-hdr { font-size:var(--fs-micro); font-weight:600; letter-spacing:.06em; color:var(--az-muted,#707070); text-transform:uppercase; margin-bottom:.75rem; padding:0 .25rem; }
     .qa-hdr-count { color:var(--az-navy,#16303d); }
-    .qa-list { display:flex; flex-direction:column; gap:.625rem; max-height:calc(100vh - 280px); min-height:240px; overflow-y:auto; overflow-x:hidden; padding-right:.5rem; scrollbar-width:thin; scrollbar-color:#8a97a0 #eef1f4; }
-    .qa-list::-webkit-scrollbar { width:8px; }
-    .qa-list::-webkit-scrollbar-track { background:#eef1f4; border-radius:4px; }
-    .qa-list::-webkit-scrollbar-thumb { background:#8a97a0; border-radius:4px; border:1.5px solid #eef1f4; }
-    .qa-list::-webkit-scrollbar-thumb:hover { background:var(--az-navy,#16303d); }
+    /* No inner scrollbar: the list shows five and expands on request. */
+    .qa-list { display:flex; flex-direction:column; gap:.5rem; }
     .qa-item { position:relative; overflow:hidden; display:block; width:100%; flex-shrink:0; text-align:left; border:1px solid var(--az-border,#e2e8ec); border-radius:.75rem; background:#fcfdfd; padding:.75rem .875rem; cursor:pointer; transition:all .15s; font-family:'Poppins','Roboto',sans-serif; }
     .qa-item:hover { background:#f4f7f7; }
     .qa-item.active { background:var(--az-green-light); border:1.5px solid var(--az-green,#1aad6e); box-shadow:0 3px 10px rgba(26,173,110,.18); }
     .qa-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--az-green,#1aad6e); }
-    .qa-item-top { display:flex; align-items:center; gap:.375rem; font-size:var(--fs-micro); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:.35rem; color:var(--az-green); }
-    .qa-item .val { font-size:var(--fs-subhead); font-weight:700; color:var(--az-navy,#16303d); margin-bottom:.15rem; display:block; }
-    .qa-item-type { font-size:var(--fs-micro); color:var(--az-muted,#707070); margin-bottom:.35rem; }
+    /* Name on its own line; the category and biller share the next one. */
+    .qa-item .val { font-size:var(--fs-small); font-weight:700; color:var(--az-navy,#16303d); display:block; line-height:1.35; }
+    .qa-item-meta { display:flex; align-items:center; gap:.3rem; margin-top:.15rem; font-size:var(--fs-micro); color:var(--az-muted,#707070); min-width:0; }
+    .qa-item-meta .material-icons { font-size:13px; flex-shrink:0; }
+    .qa-item-cat { font-weight:600; text-transform:uppercase; letter-spacing:.03em; }
+    .qa-item-sep { opacity:.5; }
+    .qa-item-biller { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    /* The per-item accent still rides on the star and category */
+    .qa-item.accent-green  .qa-item-cat, .qa-item.accent-green  .qa-item-meta .material-icons { color:var(--az-green-dark,#1aad6e); }
+    .qa-item.accent-blue   .qa-item-cat, .qa-item.accent-blue   .qa-item-meta .material-icons { color:#2563eb; }
+    .qa-item.accent-purple .qa-item-cat, .qa-item.accent-purple .qa-item-meta .material-icons { color:#7c3aed; }
+
+    /* Expander under the list */
+    .fav-more-btn { display:flex; align-items:center; justify-content:center; gap:.3rem; width:100%; margin-top:.5rem; padding:.5rem; min-height:36px; background:none; border:1px dashed var(--az-border,#e2e8ec); border-radius:.625rem; color:var(--az-blue,#00538A); font-family:'Poppins','Roboto',sans-serif; font-size:var(--fs-caption); font-weight:600; cursor:pointer; transition:background .15s, border-color .15s; }
+    .fav-more-btn:hover { background:#f4f7f9; border-color:var(--az-blue,#00538A); }
+    /* The strip scrolls sideways on a phone, so there is nothing to
+       expand — the button would only sit between the cards and the panel. */
+    @media (max-width:575.98px) { .fav-more-btn { display:none !important; } }
+    .fav-more-btn .material-icons { font-size:16px; transition:transform .2s; }
+    .fav-more-btn[aria-expanded="true"] .material-icons { transform:rotate(180deg); }
 
     .acct-field .lbl { font-size:var(--fs-micro); color:var(--az-muted,#707070); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.2rem; font-weight:500; }
     .acct-field .val { font-size:var(--fs-small); font-weight:600; color:var(--az-navy,#16303d); white-space:nowrap; }
@@ -79,8 +93,8 @@
     .ptl-meta-field .lbl { font-size:var(--fs-micro); font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--az-muted,#707070); margin-bottom:.2rem; }
     .ptl-meta-field .val { font-size:var(--fs-small); font-weight:600; color:var(--az-navy,#16303d); }
     .ptl-detail-footer { display:flex; align-items:center; justify-content:flex-end; gap:.5rem; padding-top:.9rem; border-top:1px solid #f0f4f7; }
-    .ptl-act-btn { display:inline-flex; align-items:center; gap:.35rem; padding:.4375rem 1rem; border:1.5px solid var(--az-border,#e2e8ec); border-radius:.5rem; background:#fff; font-size:var(--fs-caption); font-weight:600; color:var(--az-navy,#16303d); cursor:pointer; text-decoration:none!important; transition:all .15s; }
-    .ptl-act-btn:hover { border-color:var(--az-blue,#00538A); color:var(--az-blue,#00538A); background:#eff6ff; }
+    .ptl-act-btn { display:inline-flex; align-items:center; gap:.35rem; padding:.4375rem 1rem; border:1.5px solid var(--az-border,#e2e8ec); border-radius:.5rem; background:#fff; font-size:var(--fs-caption); font-weight:600; color:var(--az-blue,#00538A); cursor:pointer; text-decoration:none!important; transition:all .15s; }
+    .ptl-act-btn:hover { border-color: var(--az-blue,#00538A); color: var(--az-blue,#00538A); background: #eff6ff; }
     .ptl-act-btn.ptl-act-delete:hover { border-color:#dc2626; color:#dc2626; background:#fef2f2; }
     .ptl-act-btn .material-icons { font-size:15px; }
 
@@ -207,6 +221,7 @@
         </div>
         <div class="qa-hdr">Your Favorites <span class="qa-hdr-count" id="favHdrCount">(0)</span></div>
         <div class="qa-list" id="favQaList"></div>
+        <button type="button" class="fav-more-btn" id="favMoreBtn" onclick="favToggleAll()" aria-controls="favQaList" aria-expanded="false" style="display:none"></button>
         <div class="bp-empty" id="favEmptyState" style="padding:1.5rem .5rem;">
           <span class="material-icons">search_off</span>
           No favorites found.
@@ -264,8 +279,8 @@
     </div>
   </div>
   <footer class="app-footer" role="contentinfo">
-    <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
-    <div class="d-flex align-items-center gap-2"><a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <div>Copyright 2025. All Rights Reserved <a href="../terms-and-conditions.html">Terms and conditions</a><a href="../about-app.html">About App</a></div>
+    <div class="d-flex align-items-center gap-2"><a href="../accessibility-commitment.html">Accessibility</a>
       <div class="acc-btns">
         <button class="acc-btn">A<sup>-</sup></button><button class="acc-btn">A</button><button class="acc-btn">A<sup>+</sup></button>
         <button class="acc-btn" style="background:var(--az-navy);color:#fff">&#9681;</button>
@@ -367,19 +382,65 @@ function favCopyRef() {
   }
 }
 
+/* How many favourites the list shows before it is expanded. Five keeps the
+   column about as tall as the detail panel beside it. */
+var FAV_COLLAPSED = 5;
+var favShowAll = false;
+/* Below this the list is a horizontal strip that scrolls, so every
+   favourite is reachable without capping the list. */
+function favIsStrip() { return window.matchMedia('(max-width: 575.98px)').matches; }
+
+window.favToggleAll = function () {
+  favShowAll = !favShowAll;
+  favRenderQuickList();
+};
+
+/* Crossing the breakpoint changes whether the list is capped at all. */
+(function () {
+  var mq = window.matchMedia('(max-width: 575.98px)');
+  var onChange = function () { favRenderQuickList(); };
+  if (mq.addEventListener) mq.addEventListener('change', onChange);
+  else if (mq.addListener) mq.addListener(onChange);
+})();
+
 function favRenderQuickList() {
   var visible = favFilteredList();
   document.getElementById('favHdrCount').textContent = '(' + visible.length + ')';
 
+  /* A selection past the cut has to drag the list open with it, or the
+     highlighted card — and the chevron pointing at the panel — is hidden. */
+  var selIdx = visible.map(function (f) { return f.id; }).indexOf(selectedFavId);
+  var forced = selIdx >= FAV_COLLAPSED;
+  var expanded = favIsStrip() || favShowAll || forced;
+  var shown = expanded ? visible : visible.slice(0, FAV_COLLAPSED);
+
   var list = document.getElementById('favQaList');
-  list.innerHTML = visible.map(function(f, i) {
+  list.innerHTML = shown.map(function(f, i) {
     var accent = FAV_ACCENTS[i % FAV_ACCENTS.length];
     return '<button type="button" class="qa-item ' + accent + (f.id === selectedFavId ? ' active' : '') + '" onclick="favSelect(\'' + f.id + '\')">' +
-      '<div class="qa-item-top"><span class="material-icons" style="font-size:14px">star</span> ' + f.category + '</div>' +
       '<span class="val">' + f.name + '</span>' +
-      '<div class="qa-item-type">' + f.biller + '</div>' +
+      '<div class="qa-item-meta">' +
+        '<span class="material-icons">star</span>' +
+        '<span class="qa-item-cat">' + f.category + '</span>' +
+        '<span class="qa-item-sep">·</span>' +
+        '<span class="qa-item-biller">' + f.biller + '</span>' +
+      '</div>' +
       '</button>';
   }).join('');
+
+  var more = document.getElementById('favMoreBtn');
+  if (more) {
+    var hidden = visible.length - shown.length;
+    if (favIsStrip() || visible.length <= FAV_COLLAPSED) {
+      more.style.display = 'none';
+    } else {
+      more.style.display = '';
+      more.setAttribute('aria-expanded', String(expanded));
+      more.innerHTML = expanded
+        ? '<span class="material-icons">expand_more</span> Show fewer'
+        : '<span class="material-icons">expand_more</span> Show all ' + visible.length + ' (' + hidden + ' more)';
+    }
+  }
 
   var isEmpty = visible.length === 0;
   document.getElementById('favEmptyState').style.display = isEmpty ? 'flex' : 'none';

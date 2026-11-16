@@ -100,40 +100,6 @@
 .qa-item-type { font-size:var(--fs-micro); color: var(--az-muted,#707070); margin-bottom: .35rem; }
 .qa-item-badge { font-size:var(--fs-micro); padding: .15rem .5rem; margin-top: .4rem; }
 
-/* ── Phone: the account list becomes a thumbnail strip ──
-   Stacked full-width, three accounts pushed the hero — the detail they
-   select — about 400px down the page, so you scrolled past the list to
-   see what you had picked. Across, each account is a thumbnail sized to
-   show two and a bit, which both shortens the column and signals there
-   is more to the side. Scroll-snap makes the swipe land on a card. */
-@media (max-width: 575.98px) {
-  .qa-list {
-    flex-direction: row;
-    gap: .5rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    /* room for the active card s shadow, and the edge it is inset from */
-    padding: .25rem .25rem .5rem;
-    margin: -.25rem -.25rem -.5rem;
-    scrollbar-width: none;
-  }
-  .qa-list::-webkit-scrollbar { display: none; }
-
-  .qa-item {
-    flex: 0 0 auto;
-    width: 10.5rem;
-    scroll-snap-align: start;
-    padding: .625rem .75rem;
-  }
-  /* The left accent bar belongs to a stacked row; across, the border and
-     fill already mark the selection. */
-  .qa-item.active::before { display: none; }
-  .qa-item-top { margin-bottom: .25rem; }
-  .qa-item .val { font-size:var(--fs-body); }
-  .qa-item-badge { margin-top: .3rem; }
-}
 
 .acct-main-col { display: flex; flex-direction: column; gap: 1.25rem; }
 
@@ -682,9 +648,9 @@ html.dark .qa-chip:hover { color: #d9e4ea; border-color: #1aad6e; background: #1
   </div>
   </main>
   <footer class="app-footer" role="contentinfo">
-  <div>Copyright 2025. All Rights Reserved <a href="#">Terms and conditions</a><a href="about-app.html" target="_blank">About App</a></div>
+  <div>Copyright 2025. All Rights Reserved <a href="../terms-and-conditions.html">Terms and conditions</a><a href="../about-app.html">About App</a></div>
   <div class="d-flex align-items-center gap-2">
-    <a href="accessibility-commitment.html" target="_blank">Accessibility</a>
+    <a href="../accessibility-commitment.html">Accessibility</a>
     <div class="acc-btns">
       <button class="acc-btn" aria-label="Decrease font size">A<sup>-</sup></button>
       <button class="acc-btn" aria-label="Default font size">A</button>
