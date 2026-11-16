@@ -1,0 +1,358 @@
+/* ══════════════════════════════════════════════════════════════
+   FINTECH V2 — candidate token + surface layer
+   ──────────────────────────────────────────────────────────────
+   Scoped to `body.v2`, so this file is INERT on every existing
+   page. Add the `v2` class to a body to opt that page in.
+
+   What it changes, and nothing else:
+     1. Type scale   — re-anchored up one step; money gets a hero size
+     2. Surfaces     — tinted page ground, borderless elevated cards
+     3. Radius       — one 4-step scale replacing ~10 ad-hoc values
+     4. Elevation    — 3 tokens replacing ~15 one-off box-shadows
+     5. Accent roles — navy = primary action, green = state/accent,
+                       blue = links only
+     6. Motion       — hover lift, balance count-up, 150-180ms easing
+
+   Accent note: brand green #2ed88e carries white text at 1.85:1 and
+   the dashboard's #1AAD6E at ~2.9:1 — both fail AA, so neither can
+   be a filled CTA. Navy #16303d gives 13.78:1 with white and becomes
+   the single primary. Green keeps navy text on mint (7.43:1) for
+   chips and owns active/positive/progress states.
+   ══════════════════════════════════════════════════════════════ */
+
+body.v2 {
+  /* ── Type scale (root stays 14px; px here keeps full control and
+        avoids inflating every rem padding in the legacy sheets) ── */
+  --fs-micro:    11px;
+  --fs-caption:  12px;
+  --fs-small:    13px;
+  --fs-label:    13px;
+  --fs-body:     14px;
+  --fs-subhead:  15px;
+  --fs-section:  17px;
+  --fs-heading:  20px;
+  --fs-title:    26px;
+  --fs-display:  30px;
+  --fs-hero:     44px;   /* money only */
+
+  /* ── Radius scale ── */
+  --r-xs:   6px;
+  --r-sm:  10px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-pill: 999px;
+
+  /* ── Elevation scale ── */
+  --e-1: 0 1px 2px rgba(16,36,48,.05), 0 1px 3px rgba(16,36,48,.05);
+  --e-2: 0 1px 2px rgba(16,36,48,.04), 0 6px 18px rgba(16,36,48,.07);
+  --e-3: 0 2px 6px rgba(16,36,48,.05), 0 16px 36px rgba(16,36,48,.11);
+
+  /* ── Surfaces ── */
+  --surface-page:  #eef3f6;
+  --surface-card:  #ffffff;
+  --surface-sunk:  #f5f8fa;
+  --surface-line:  #e9eff3;
+
+  /* ── Ink ── */
+  --ink:        #16303d;
+  --ink-muted:  #5c6b75;  /* 5.50:1 on white — was #707070 at 4.95:1 */
+
+  /* ── Accent roles ── */
+  --primary:        #16303d;
+  --primary-hover:  #0d2029;
+  --accent:         #2ed88e;   /* state / indicator only */
+  --accent-ink:     #047857;   /* green that may carry text, 5.48:1 */
+  --accent-tint:    #e8f8f0;
+  --link:           #00538A;
+
+  --pos: #047857;
+  --neg: #16303d;              /* debits are ink, not alarm red */
+
+  --ease: cubic-bezier(.4,.15,.2,1);
+}
+
+/* ══ 1. PAGE GROUND ══════════════════════════════════════════
+   NOTE: every `!important` below exists only to out-rank this
+   page's own 217-line inline <style> block, which hard-codes
+   borders, radii and shadows with `!important`. On a page whose
+   styling lives in shared CSS, this whole layer is plain
+   declarations. That is the argument for consolidating the
+   inline blocks before rolling any of this out. */
+body.v2,
+body.v2 .app-main,
+body.v2 .main-body { background: var(--surface-page) !important; }
+
+/* ══ 2. CARD SURFACES ════════════════════════════════════════
+   Each panel is its own floating card: no border, 16px radius,
+   one soft elevation. */
+body.v2 .rd-panel,
+body.v2 .rd-left .rd-d1,
+body.v2 .rd-left .rd-d5,
+body.v2 .rd-left .rd-d2,
+body.v2 #spendingAnalysis {
+  border: none !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface-card) !important;
+  box-shadow: var(--e-2) !important;
+  transition: box-shadow .18s var(--ease), transform .18s var(--ease);
+}
+body.v2 .rd-panel { padding: 1.375rem 1.5rem !important; }
+body.v2 #spendingAnalysis {
+  border-top-left-radius: var(--r-lg) !important;
+  border-top-right-radius: var(--r-lg) !important;
+}
+
+/* Cards that are themselves a click target lift on hover */
+body.v2 .rd-right .rd-panel:hover,
+body.v2 #spendingAnalysis:hover {
+  box-shadow: var(--e-3) !important;
+  transform: translateY(-2px);
+}
+
+body.v2 .rd-wrap  { gap: 1.25rem; margin: 0 1.75rem 1.5rem; }
+body.v2 .rd-left  { gap: 1.25rem !important; }
+body.v2 .rd-right { gap: 1.25rem; }
+
+/* ══ 3. PANEL TITLES ═════════════════════════════════════════
+   Was 10.5px uppercase grey on every card — admin-console texture.
+   Now a real card title. */
+body.v2 .rd-ph-title {
+  font-size: var(--fs-subhead);
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: -.005em;
+}
+body.v2 .rd-ph-action,
+body.v2 .rd-ph + a,
+body.v2 a[style*="var(--az-blue)"] {
+  font-size: var(--fs-caption) !important;
+  color: var(--link) !important;
+  font-weight: 600;
+}
+
+/* ══ 4. HERO BALANCE ═════════════════════════════════════════ */
+body.v2 .bal-lbl,
+body.v2 .bal-sublbl {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+body.v2 .bal-amount-row { align-items: baseline; gap: .4rem; }
+body.v2 .bal-currency-sym {
+  font-size: var(--fs-subhead) !important;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: .02em;
+}
+body.v2 .bal-amount {
+  font-size: var(--fs-hero) !important;
+  font-weight: 700 !important;
+  letter-spacing: -.025em !important;
+  line-height: 1.02 !important;
+  color: var(--ink) !important;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+body.v2 .bal-change {
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent-tint);
+  border-radius: var(--r-pill);
+  padding: .22rem .6rem;
+}
+
+/* Account split tiles — sunken, roomier, bigger values */
+body.v2 .bal-acc-row { gap: .625rem; }
+body.v2 .bal-acc-item {
+  background: var(--surface-sunk);
+  border-radius: var(--r-md);
+  padding: .75rem .875rem !important;
+  transition: background .15s var(--ease);
+}
+body.v2 .bal-acc-item:hover { background: #eef3f7; }
+body.v2 .bal-acc-divider { display: none; }
+body.v2 .bal-acc-lbl { font-size: var(--fs-caption); color: var(--ink-muted); }
+body.v2 .bal-acc-val {
+  font-size: var(--fs-section);
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: .15rem;
+}
+
+/* ══ 5. BUTTONS ══════════════════════════════════════════════ */
+body.v2 .v2-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: .375rem;
+  min-height: 40px;
+  padding: 0 1.125rem;
+  border-radius: var(--r-sm);
+  font-family: 'Poppins','Roboto',sans-serif;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  transition: background .15s var(--ease), box-shadow .18s var(--ease),
+              transform .18s var(--ease), border-color .15s var(--ease);
+}
+body.v2 .v2-btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: var(--e-1);
+}
+body.v2 .v2-btn-primary:hover {
+  background: var(--primary-hover);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--e-2);
+}
+body.v2 .v2-btn-primary:active { transform: translateY(0); box-shadow: var(--e-1); }
+
+body.v2 .v2-btn-secondary {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px #dce5ea;
+}
+body.v2 .v2-btn-secondary:hover {
+  background: var(--surface-sunk);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px #c8d5dd;
+}
+body.v2 .v2-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(46,216,142,.4);
+}
+
+/* ══ 6. TRANSACTION ROWS ═════════════════════════════════════ */
+body.v2 .v2-tx {
+  display: flex; align-items: center; gap: .875rem;
+  padding: .875rem .5rem !important;
+  margin: 0 -.5rem;
+  border-bottom: 1px solid var(--surface-line) !important;
+  border-radius: var(--r-sm);
+  transition: background .15s var(--ease);
+}
+body.v2 .v2-tx:hover { background: var(--surface-sunk); }
+body.v2 .v2-tx-icon {
+  width: 38px; height: 38px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunk);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+body.v2 .v2-tx-icon .material-icons { font-size: 19px !important; color: var(--ink-muted) !important; }
+body.v2 .v2-tx-name { font-size: var(--fs-body) !important; font-weight: 600; color: var(--ink); }
+body.v2 .v2-tx-meta { font-size: var(--fs-caption) !important; color: var(--ink-muted) !important; margin-top: .1rem; }
+body.v2 .v2-tx-amt {
+  font-size: var(--fs-body) !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+body.v2 .v2-tx-amt.neg { color: var(--neg) !important; }
+body.v2 .v2-tx-amt.pos { color: var(--pos) !important; }
+
+/* ══ 7. SPENDING ANALYSIS ════════════════════════════════════
+   Form is right (magnitude by category → length), so length keeps
+   doing the encoding and every bar wears ONE hue. Marks go 4px→8px
+   with pill ends; track recedes; labels wear ink tokens. */
+body.v2 .v2-bar-row { display: flex; flex-direction: column; gap: .3rem; }
+body.v2 .v2-bar-head { display: flex; justify-content: space-between; align-items: baseline; }
+body.v2 .v2-bar-lbl { font-size: var(--fs-caption); color: var(--ink-muted); }
+body.v2 .v2-bar-val {
+  font-size: var(--fs-small); font-weight: 600; color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+body.v2 .v2-bar-track {
+  height: 8px;
+  background: var(--surface-line);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+body.v2 .v2-bar-fill {
+  height: 100%;
+  background: var(--ink);
+  border-radius: var(--r-pill);
+  transform-origin: left center;
+  animation: v2BarIn .7s var(--ease) both;
+}
+@keyframes v2BarIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+body.v2 .v2-budget {
+  margin-top: 1.125rem; padding-top: 1rem;
+  border-top: 1px solid var(--surface-line);
+}
+body.v2 .v2-budget-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .5rem; }
+body.v2 .v2-budget-lbl { font-size: var(--fs-caption); color: var(--ink-muted); }
+body.v2 .v2-budget-val { font-size: var(--fs-small); color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+body.v2 .v2-budget-val span { color: var(--ink-muted); font-weight: 400; }
+
+/* ══ 8. CHIPS & STATUS ═══════════════════════════════════════ */
+body.v2 .mc-status-chip,
+body.v2 .pc-tag,
+body.v2 .nt-badge {
+  border-radius: var(--r-pill) !important;
+  font-size: var(--fs-micro) !important;
+  font-weight: 600 !important;
+  letter-spacing: .02em !important;
+  padding: .2rem .55rem !important;
+}
+body.v2 .mc-status-active {
+  background: var(--accent-tint) !important;
+  color: var(--ink) !important;
+  border: none !important;
+}
+
+/* Card selector rows */
+body.v2 .card-sel-row {
+  border-left: none !important;
+  border-radius: var(--r-md);
+  margin: 0 .75rem .25rem;
+  padding: .75rem !important;
+}
+body.v2 .card-sel-row[style*="f0f7ff"],
+body.v2 .card-sel-row.is-active { background: var(--accent-tint) !important; }
+body.v2 .card-sel-name { font-size: var(--fs-body) !important; }
+
+/* Right-rail rows */
+body.v2 .av-nav-link,
+body.v2 .ac-item {
+  border-radius: var(--r-md);
+  transition: background .15s var(--ease);
+}
+body.v2 .av-nav-link:hover,
+body.v2 .ac-item:hover { background: var(--surface-sunk); }
+body.v2 .ac-amt { font-size: var(--fs-body); font-weight: 700; }
+body.v2 .ac-pay-btn {
+  border-radius: var(--r-pill) !important;
+  font-weight: 600;
+  background: var(--accent-tint) !important;
+  color: var(--ink) !important;
+  border: none !important;
+}
+body.v2 .ac-pay-btn:hover { background: #d6f2e4 !important; }
+
+/* ══ 9. PROMO CAROUSEL ═══════════════════════════════════════
+   Was ringed in a hard 1.5px #cbd5e1 outline, which made it the
+   loudest object on the page — above the balance. Same card
+   treatment as everything else, so it stops shouting. */
+body.v2 #pcWrap,
+body.v2 .pc-outer {
+  border: none !important;
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--e-2) !important;
+}
+body.v2 .pc-outer { box-shadow: none !important; }
+body.v2 .pc-slide { height: 104px; }
+body.v2 .pc-cta   { border-radius: var(--r-pill); font-weight: 600; }
+body.v2 .pc-title { font-size: var(--fs-section); }
+
+/* ══ 10. MOTION GUARD ════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  body.v2 *,
+  body.v2 .v2-bar-fill { animation: none !important; transition: none !important; }
+  body.v2 .rd-panel:hover { transform: none; }
+}

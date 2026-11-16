@@ -415,6 +415,105 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
   .page-top-bar > .btn-request-card { flex: 1 1 100%; }
 }
 
+/* ══ Selected item points at its detail ═════════════════════════════
+   These screens pair a picker with a detail panel, and the only thing
+   tying them together was a shared green. The selected card now has a
+   chevron in the gutter beside it.
+
+   Detached and unfilled on purpose. A filled notch welded to the card
+   edge is the speech-bubble idiom — it reads as the card saying
+   something. Floating clear of both surfaces, two strokes read as a
+   direction marker instead: this continues over there. Kept small and
+   hairline so it does not invite a click. */
+.qa-item.active,
+.crd-qa-item.active,
+.ptl-qa-item.active { overflow: visible; }
+/* .ptl-qa-item draws the same left accent bar, so it needs the same radius */
+.ptl-qa-item.active::before { border-radius: .75rem 0 0 .75rem; }
+.qa-item.active::after,
+.crd-qa-item.active::after,
+.ptl-qa-item.active::after {
+  content: ''; position: absolute; z-index: 1;
+  width: 11px; height: 11px;
+  border-top: 3px solid var(--az-green, #1aad6e);
+  border-right: 3px solid var(--az-green, #1aad6e);
+  pointer-events: none;
+}
+/* Side by side: the chevron sits close against the card it belongs to,
+   rather than floating mid-gutter — it reads as that card pointing. */
+@media (min-width: 576px) {
+  .qa-item.active::after,
+  .crd-qa-item.active::after,
+  .ptl-qa-item.active::after {
+    top: 50%; right: -16px;
+    transform: translateY(-50%) rotate(45deg);
+  }
+}
+/* Stacked: the detail sits below the strip, so it points down. */
+@media (max-width: 575.98px) {
+  /* Its own strip leaves 7px below the card — not enough for the chevron. */
+  .crd-qa-list { padding-bottom: 1.5rem !important; margin-bottom: -1.5rem !important; }
+
+  .qa-item.active::after,
+  .crd-qa-item.active::after,
+  .ptl-qa-item.active::after {
+    left: 50%; bottom: -13px;
+    transform: translateX(-50%) rotate(135deg);
+  }
+}
+
+/* ══ Master-detail list on a phone ═══════════════════════════════════
+   Accounts, facilities, chequebooks, tasks and favourites all pair a
+   left-hand picker with a detail panel. Stacked full-width, the pickers
+   pushed that detail — the thing they select — most of a screen down, so
+   you scrolled past the list to see what you had chosen. Across, each
+   entry is a thumbnail sized to show two and a bit, which both shortens
+   the column and signals there is more to the side.
+
+   Scoped through .qa-panel because several pages and css/chequebooks.css
+   and css/my-tasks.css each carry their own .qa-list rule after this
+   file; at equal specificity theirs would win. */
+@media (max-width: 575.98px) {
+  /* The panel is a grid item, and a grid item defaults to min-width:auto —
+     so a nowrap row of thumbnails props its track open instead of
+     scrolling inside it (payments-favorites blew out to 1253px in a
+     339px column). */
+  .qa-panel { min-width: 0; }
+
+  .qa-panel .qa-list,
+  .ptl-hub .ptl-qa-list {
+    flex-direction: row;
+    /* my-tasks.css sets wrap; across, the row has to stay one line */
+    flex-wrap: nowrap;
+    gap: .5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    /* Room for the active card s shadow and for the chevron below it,
+       which hangs 19px past the card; the scroller clips on y. */
+    padding: .25rem .25rem 1.5rem;
+    margin: -.25rem -.25rem -1.5rem;
+    scrollbar-width: none;
+  }
+  .qa-panel .qa-list::-webkit-scrollbar,
+  .ptl-hub .ptl-qa-list::-webkit-scrollbar { display: none; }
+
+  .qa-panel .qa-item,
+  .ptl-hub .ptl-qa-item {
+    flex: 0 0 auto;
+    width: 10.5rem;
+    scroll-snap-align: start;
+    padding: .625rem .75rem;
+  }
+  /* The left accent bar reads as a row marker; across, the border and
+     fill already mark the selection. */
+  .qa-panel .qa-item.active::before { display: none; }
+  .qa-panel .qa-item-top { margin-bottom: .25rem; }
+  .qa-panel .qa-item .val { font-size: var(--fs-body); }
+  .qa-panel .qa-item-badge { margin-top: .3rem; }
+}
+
 /* The amount / number visibility toggle, as an outlined chip beside the
    heading it belongs to. Quiet on purpose: it hides figures, it does not
    start a journey. */
@@ -791,8 +890,55 @@ td, th, input[inputmode="numeric"], input[type="tel"] {
 
 /* ── Footer ─────────────────────────────────────── */
 .app-footer { border-top: 1px solid var(--az-border); background: #fff; padding: .625rem 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-caption); color: var(--az-muted); }
-.app-footer a { color: var(--az-blue); text-decoration: none; margin: 0 .5rem; }
-.app-footer a:hover { color: #003f6b; text-decoration: underline; }
+/* The copyright line and the two links sat adjacent with only a margin
+   between them, so the whole row read as one run-on sentence. A middot
+   before each link separates them, and the links get a real hover target
+   rather than 10px of text. */
+.app-footer a {
+  color: var(--az-blue); text-decoration: none;
+  margin: 0; padding: .1rem .15rem; border-radius: 3px;
+  transition: color .12s, background .12s;
+}
+.app-footer a:hover { color: #003f6b; text-decoration: underline; text-underline-offset: 2px; }
+.app-footer a:focus-visible { outline: 2px solid var(--az-blue); outline-offset: 1px; }
+
+/* The pre-login pages carry their own inline-styled footer; same link
+   treatment so both shells read alike. */
+.pl-footer a {
+  color: var(--az-blue); text-decoration: none;
+  padding: .1rem .15rem; border-radius: 3px;
+  transition: color .12s;
+}
+.pl-footer a:hover { color: #003f6b; text-decoration: underline; text-underline-offset: 2px; }
+.pl-footer a:focus-visible { outline: 2px solid var(--az-blue); outline-offset: 1px; }
+.pl-footer > div:first-child a::before {
+  content: '·';
+  display: inline-block;
+  margin: 0 .5rem 0 .55rem;
+  color: #c3ccd2;
+}
+
+/* The login and onboarding shells have their own footer class; same
+   separator so every shell reads alike. */
+.l-footer > div:first-child a::before,
+.az-footer > div:first-child a::before {
+  content: '·';
+  display: inline-block;
+  margin: 0 .5rem 0 .55rem;
+  color: #c3ccd2;
+}
+.l-footer a:hover, .az-footer a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* Separator before each link in the copyright line */
+.app-footer > div:first-child a::before {
+  content: '·';
+  display: inline-block;
+  margin: 0 .5rem 0 .55rem;
+  color: #c3ccd2;
+  text-decoration: none;
+}
+/* Left as normal inline flow — making it a flex row collapses the
+   whitespace around the year span and yields "Copyright2026". */
 .acc-btns { display: flex; align-items: center; gap: .3125rem; }
 .acc-btn { border: 1px solid var(--az-border); background: #fff; border-radius: .1875rem; padding: .125rem .4375rem; cursor: pointer; font-family: 'Poppins','Roboto',sans-serif; font-size:var(--fs-micro); font-weight:600; }
 .acc-btn-dark { background: var(--az-navy); color: #fff; border-color: var(--az-navy); font-size:var(--fs-small); padding: .125rem .375rem; }

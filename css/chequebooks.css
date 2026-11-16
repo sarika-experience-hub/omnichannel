@@ -277,3 +277,70 @@ html.dark .gao-locked-note { background:#16242f; border-color:#243545; color:#9f
 .az-modal .btn-submit:active { transform:translateY(0); }
 
 html.dark .gao-locate-btn { background:#12302a; border-color:#1d5243; color:#e6eef3; }
+
+/* ══ Cheque list on a phone ═══════════════════════════════════════════
+   Seven columns and a 780px minimum inside a 354px screen meant sideways
+   scrolling inside a vertically scrolling page — you had to drag the table
+   to read a payee or an amount.
+
+   Each row becomes a card instead, laid out by what you actually scan for:
+   payee and amount on the main line, cheque number and status above them,
+   the two dates as quiet meta beneath.
+
+   The account number column is dropped entirely. Every row in this table
+   belongs to the same chequebook, so it repeats the same value down the
+   page — and the panel directly above already states it. */
+@media (max-width: 575.98px) {
+  .cheq-table-wrap { overflow-x: visible; }
+  .cheq-table { min-width: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+  .cheq-table thead { display: none; }
+  .cheq-table tbody, .cheq-table tr, .cheq-table td { display: block; }
+
+  .cheq-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .15rem .75rem;
+    padding: .7rem .85rem;
+    margin-bottom: .5rem;
+    background: #fff;
+    border: 1px solid var(--az-border, #e2e8ec);
+    border-radius: .625rem;
+  }
+  .cheq-table tbody tr:last-child { margin-bottom: 0; }
+  .cheq-table td { padding: 0; border: none; }
+
+  /* Cheque number, labelled since the header row is gone */
+  .cheq-table td:nth-child(1) {
+    grid-column: 1; grid-row: 1;
+    font-size: var(--fs-micro); font-weight: 600;
+    color: var(--az-muted, #707070); letter-spacing: .03em;
+  }
+  .cheq-table td:nth-child(1)::before { content: 'CHEQUE '; }
+
+  /* Account number — the same on every row, and stated in the panel above */
+  .cheq-table td:nth-child(2) { display: none; }
+
+  .cheq-table td:nth-child(3) { grid-column: 2; grid-row: 1; justify-self: end; }
+
+  /* Payee and amount carry the row */
+  .cheq-table td:nth-child(4) {
+    grid-column: 1; grid-row: 2;
+    font-weight: 600; color: var(--az-navy, #16303d);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .cheq-table td:nth-child(5) {
+    grid-column: 2; grid-row: 2; justify-self: end;
+    font-weight: 700; white-space: nowrap;
+  }
+
+  /* Both dates on one quiet line */
+  .cheq-table td:nth-child(6),
+  .cheq-table td:nth-child(7) {
+    grid-row: 3; font-size: var(--fs-micro);
+    color: var(--az-muted, #707070); white-space: nowrap;
+  }
+  .cheq-table td:nth-child(6) { grid-column: 1; }
+  .cheq-table td:nth-child(7) { grid-column: 2; justify-self: end; }
+  .cheq-table td:nth-child(6)::before { content: 'Value '; }
+  .cheq-table td:nth-child(7)::before { content: 'Trade '; }
+}

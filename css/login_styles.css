@@ -598,3 +598,14 @@ body {
   .l-form-side { padding:.75rem 1.25rem 1rem; }
   .otp-inp { width:38px; height:44px; font-size:var(--fs-section); }
 }
+
+/* Footer links: the same separator and hover the rest of the app uses. */
+.l-footer a { padding: .1rem .15rem; border-radius: 3px; }
+.l-footer a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.l-footer a:focus-visible { outline: 2px solid var(--az-blue,#00538A); outline-offset: 1px; }
+.l-footer > div:first-child a::before {
+  content: '·';
+  display: inline-block;
+  margin: 0 .5rem 0 .55rem;
+  color: #c3ccd2;
+}
